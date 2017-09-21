@@ -1,0 +1,41 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "The backend server for 20 dollars is 20 dollars application",
+  "main": "index.js",
+  "scripts": {
+    "dev": "SET NODE_ENV=development && nodemon ./bin/www",
+    "grunt": "grunt",
+    "start": "node ./bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lori-dalkin/SOEN343.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lori-dalkin/SOEN343/issues"
+  },
+  "homepage": "https://github.com/lori-dalkin/SOEN343#readme",
+  "dependencies": {
+    "body-parser": "^1.18.1",
+    "cookie-parser": "^1.4.3",
+    "errorhandler": "^1.5.0",
+    "express": "^4.15.4",
+    "method-override": "^2.3.9",
+    "morgan": "^1.8.2"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.16.5",
+    "@types/cookie-parser": "^1.4.1",
+    "@types/errorhandler": "0.0.31",
+    "@types/method-override": "0.0.30",
+    "@types/morgan": "^1.7.33",
+    "grunt": "^1.0.1",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-ts": "^6.0.0-beta.16",
+    "typescript": "^2.5.2"
+  }
+}
