@@ -3,6 +3,7 @@
 BackEnd:
 
 How to install:
+
 	0) Install git/git bash
 	1) Install nodejs latest release
 	2) Go to ./Backend in cmd or git bash
@@ -11,6 +12,7 @@ How to install:
 		-When install new dependencies with npm install add --save so it will be added to package.json
 
 How to build and run:
+
 	0) Go to ./Backend in cmd or git bash
 	1) run "npm run grunt" to compile
 	2) run "npm start" to start the server
