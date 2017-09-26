@@ -23,3 +23,7 @@ FrontEnd:
 	2) ??
 	3) ??
 	4) profit
+DBSetup:
+download newest version of postpressql.
+use pg admin4 to make a db called DBpixelperformance with the superuser password being "admin"
+Run the sql found in DBinitialization.sql
