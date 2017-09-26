@@ -5,7 +5,8 @@ import * as logger from "morgan";
 import * as path from "path";
 import errorHandler = require("errorhandler");
 import methodOverride = require("method-override");
-
+import { Electronic } from "./electronic"
+import { Monitor } from "./monitor"
 /**
  * The server.
  *
@@ -92,6 +93,8 @@ export class Server {
 
     //error handling
     this.app.use(errorHandler());
+	let monitor = new Monitor(1, 1, "1", "1", 1, 1);
+	monitor.save();
 }
 
   /**
