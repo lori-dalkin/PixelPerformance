@@ -1,4 +1,4 @@
-abstract class Electronic {
+export abstract class Electronic {
     id: number;
 	weight: number ;
 	modelNumber: string;
