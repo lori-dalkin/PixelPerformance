@@ -123,8 +123,7 @@ export class Server {
 
     //error handling
     this.app.use(errorHandler());
-	let monitor = new Monitor(1, 1, "1", "1", 1, 1);
-	monitor.save();
+	
 }
 
   /**
