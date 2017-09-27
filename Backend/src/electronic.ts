@@ -1,9 +1,9 @@
 export abstract class Electronic {
-    id: number;
-	weight: number ;
-	modelNumber: string;
-	brand: string;
-	price: number;
+    protected id: number;
+	protected weight: number ;
+	protected modelNumber: string;
+	protected brand: string;
+	protected price: number;
     constructor(id: number, weight: number, modelNumber: string, brand: string, price: number) {
 		this.id = id;
 		this.weight = weight;

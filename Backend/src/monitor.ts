@@ -7,7 +7,8 @@ export class Monitor extends Electronic {
 		super(id, weight, modelNumber, brand, price);
 		this.size = size;
     }
-     save():boolean {
+
+    save():boolean {
 		db.none('INSERT INTO monitors VALUES ('+this.id +','+this.weight+','+this.modelNumber+','+this.brand+','+this.price+','+this.size+')')
 			.then(function(){
 				console.log("monitor added to db");})
@@ -16,5 +17,16 @@ export class Monitor extends Electronic {
 				return false;
 			});
 		return true;
-	 }
+	}
+	 
+	public static find(id:string): Electronic{
+		let monitor:Monitor;
+		db.one('SELECT * FROM monitors WHERE id =' + id +';')
+			.then(function(row){
+				monitor = new Monitor(row.id,row.weight,row.modelNumber, row.brand, row.price, row.size)
+			}).catch(function (err) {
+				console.log("No matching object found");
+			});
+		return monitor
+	}
 }
