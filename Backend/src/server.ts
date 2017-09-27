@@ -59,7 +59,7 @@ export class Server {
 	let router: express.Router;
 	router = express.Router();
 	// some dummy data
-	let monitor = new Monitor(1, 1, "modelNumber", "brand", 1, 1);
+	let monitor = new Monitor('1', 1, "modelNumber", "brand", 1, 1);
 	let monitors = new Array(monitor, monitor, monitor);
 	let token = jwt.sign({ foo: 'bar' }, 'shhhhh');
 	//home page

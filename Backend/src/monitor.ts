@@ -3,7 +3,7 @@ import { dbconnection } from "./dbconnection"
 var db = new dbconnection().getDBConnector();
 export class Monitor extends Electronic {
 	size: number;
-    constructor(id: number, weight: number, modelNumber: string, brand: string, price: number, size: number) {
+    constructor(id: string, weight: number, modelNumber: string, brand: string, price: number, size: number) {
 		super(id, weight, modelNumber, brand, price);
 		this.size = size;
     }
