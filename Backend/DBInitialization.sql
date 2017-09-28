@@ -20,6 +20,6 @@ CREATE TABLE desktops(
 	ram int,
 	cpus int,
 	hardDrive int,
-	dimensions real,
+	dimensions varchar(20),
 	PRIMARY KEY(id)
 );

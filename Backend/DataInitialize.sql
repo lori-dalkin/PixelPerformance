@@ -1,0 +1,15 @@
+INSERT INTO desktops(weight, modelNumber, brand, price, processor, ram, cpus, harddrive, dimensions) VALUES(24,'DCM231234','Dell',785.55,'Intell i7',16,8,1000,'47.5x47.5x20');
+INSERT INTO desktops(weight, modelNumber, brand, price, processor, ram, cpus, harddrive, dimensions) VALUES(24,'DCM459872','Dell',1002.65,'Intell i7',12,4,500,'45x47.5x18');
+INSERT INTO desktops(weight, modelNumber, brand, price, processor, ram, cpus, harddrive, dimensions) VALUES(24,'DCM023684','Dell',2058.33,'Intell i7',32,4,2000,'40x45x20');
+INSERT INTO desktops(weight, modelNumber, brand, price, processor, ram, cpus, harddrive, dimensions) VALUES(24,'M5M369854','HP',754.36,'AMD FX 8350',8,8,500,'46x47x16');
+INSERT INTO desktops(weight, modelNumber, brand, price, processor, ram, cpus, harddrive, dimensions) VALUES(24,'M5M658742','HP',875.75,'AMD FX 9590',8,2,1000,'48x45x21');
+INSERT INTO desktops(weight, modelNumber, brand, price, processor, ram, cpus, harddrive, dimensions) VALUES(24,'M5M698752','HP',952.40,'AMD Ryzen',16,4,500,'47x47.5x20');
+INSERT INTO desktops(weight, modelNumber, brand, price, processor, ram, cpus, harddrive, dimensions) VALUES(24,'M5M215741','HP',1010.52,'Intell i5',16,8,240,'47.5x47.5x20');
+INSERT INTO desktops(weight, modelNumber, brand, price, processor, ram, cpus, harddrive, dimensions) VALUES(24,'DTC04P91234','Lenovo',500.36,'Intell i5',6,2,128,'45x48x17');
+INSERT INTO desktops(weight, modelNumber, brand, price, processor, ram, cpus, harddrive, dimensions) VALUES(24,'DTC04P91984','Lenovo',870.20,'AMD FX 8350',12,4,500,'44x45x19');
+INSERT INTO desktops(weight, modelNumber, brand, price, processor, ram, cpus, harddrive, dimensions) VALUES(24,'DTC11H88704','Lenovo',647.22,'Intell i5',8,8,1000,'48x46x22');
+INSERT INTO desktops(weight, modelNumber, brand, price, processor, ram, cpus, harddrive, dimensions) VALUES(24,'WLP3258JK','Acer',706.35,'Intell i7',12,4,240,'42x40x20');
+INSERT INTO desktops(weight, modelNumber, brand, price, processor, ram, cpus, harddrive, dimensions) VALUES(24,'WLP3402DC','Acer',687.25,'Intell i5',8,4,128,'47.5x47.5x20');
+INSERT INTO desktops(weight, modelNumber, brand, price, processor, ram, cpus, harddrive, dimensions) VALUES(24,'WLP1120NS','Acer',769.36,'AMD Ryzen',6,8,500,'48x47.5x15');
+INSERT INTO desktops(weight, modelNumber, brand, price, processor, ram, cpus, harddrive, dimensions) VALUES(24,'WLP8549CG','Acer',968.36,'Intell i5',16,8,500,'45x45x20');
+INSERT INTO desktops(weight, modelNumber, brand, price, processor, ram, cpus, harddrive, dimensions) VALUES(24,'WLP1299AH','Acer',642.01,'Intell i7',8,8,500,'46.2x44x15');
