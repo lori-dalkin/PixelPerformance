@@ -13,3 +13,8 @@ INSERT INTO desktops(weight, modelNumber, brand, price, processor, ram, cpus, ha
 INSERT INTO desktops(weight, modelNumber, brand, price, processor, ram, cpus, harddrive, dimensions) VALUES(24,'WLP1120NS','Acer',769.36,'AMD Ryzen',6,8,500,'48x47.5x15');
 INSERT INTO desktops(weight, modelNumber, brand, price, processor, ram, cpus, harddrive, dimensions) VALUES(24,'WLP8549CG','Acer',968.36,'Intell i5',16,8,500,'45x45x20');
 INSERT INTO desktops(weight, modelNumber, brand, price, processor, ram, cpus, harddrive, dimensions) VALUES(24,'WLP1299AH','Acer',642.01,'Intell i7',8,8,500,'46.2x44x15');
+
+INSERT INTO tablets(weight, modelnumber, brand, price, processor, ram, cpus, harddrive, os, displaysize, dimensions, battery, camera) VALUES(19, 'A1432', 'Apple', 579.00, 'Apple A9', 2, 2, 128, 'IOS', 9.7, '240x169.5x7.5', 32.4, True);
+INSERT INTO tablets(weight, modelnumber, brand, price, processor, ram, cpus, harddrive, os, displaysize, dimensions, battery, camera) VALUES(21, 'A1435', 'Apple', 1299.00, 'Apple A10X', 4, 6, 512, 'IOS', 10.5, '250.6x174.1x6.1', 30.4, True);
+INSERT INTO tablets(weight, modelnumber, brand, price, processor, ram, cpus, harddrive, os, displaysize, dimensions, battery, camera) VALUES(20, 'SM-T1818WZKEXAC', 'Samsung', 699.00, 'T810', 3, 8, 256, 'Android', 9.7, '237.3x169x5.6', 5870, True);
+INSERT INTO tablets(weight, modelnumber, brand, price, processor, ram, cpus, harddrive, os, displaysize, dimensions, battery, camera) VALUES(20, 'Z500M', 'Asus', 357.76, 'MTK MT8176', 4, 4, 64, 'Android', 9.7, '240.5x163.7.5x5.8', 22, True);
