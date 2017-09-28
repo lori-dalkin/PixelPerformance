@@ -84,7 +84,9 @@ export class WebPortal {
 	});
 	
 	router.get("/api/products/:id",function (req, res) {
-		res.send({data: monitor})
+		let electronic: Electronic;
+		electronic = this.catalog.getProduct(req.params.id);
+		res.send({data: electronic});
 	});
 
 	//use router middleware
