@@ -41,3 +41,15 @@ CREATE TABLE tablets(
     camera bool,
     PRIMARY KEY(id)
 );
+
+CREATE TABLE TelevisionSet(
+
+	id UUID DEFAULT uuid_generate_v1(),
+	weight dec(4, 2),
+	modelNumber varchar(20) UNIQUE,
+	brand varchar(30),
+	price dec(6, 2),
+	dimensions varchar(20),
+	type varchar(20),
+	PRIMARY KEY(id)
+);
