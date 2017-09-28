@@ -16,7 +16,7 @@ export class Catalog {
 
 	private loadMonitors(): void {
 		let monitor:Monitor
-        db.one('SELECT * FROM monitors')
+        db.many('SELECT * FROM monitors')
             .then(function(rows){
             	for(let row of rows){
                 	monitor = new Monitor(row.id,row.weight,row.modelNumber, row.brand, row.price, row.size);
@@ -29,7 +29,7 @@ export class Catalog {
 
 	private loadDesktops(): void {
         let desktop:Desktop
-        db.one('SELECT * FROM desktops')
+        db.many('SELECT * FROM desktops')
             .then(function(rows){
                 for(let row of rows){
                     desktop = new Desktop(row.id,row.weight,row.modelNumber, row.brand, row.price, row.processor, row.ram, row.cpus, row.hardDrive, row.dimensions)
