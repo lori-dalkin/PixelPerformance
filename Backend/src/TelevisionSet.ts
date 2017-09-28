@@ -33,7 +33,7 @@ export  class TelevisionSet extends Electronic{
 	//Retrieve a set based on a unique ID
     public static find(id: string): Electronic {
         let televisionSet: TelevisionSet;
-        db.none('SELECT * FROM TelevisionSet WHERE id =' + id + ';')
+        db.one('SELECT * FROM TelevisionSet WHERE id =' + id + ';')
             .then(function (row) {
                 televisionSet = new TelevisionSet(row.id, row.weight, row.modelNumber, row.brand, row.price, row.dimensions, row.type)
             }).catch(function (err) {
