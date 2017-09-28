@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar'; 
@@ -19,31 +20,42 @@ const styles = theme => ({
 
 const theme = createMuiTheme({
   palette: {
-    primary: blue, // Purple and green play nicely together.
+    primary: blue,
     secondary: pink
   }
 });
 
-function App(props) {
+class App extends Component {
 	
-	const classes = props.classes;
-	return (
-		<Router>
-		  <MuiThemeProvider theme={theme}>
-			  <div className={classes.root}>
-			    <AppBar position="static">
-				    <Toolbar>
-				    	<Typography type="title" color="inherit">
-				        Fin Fin Tech Application
-				      </Typography>
-			      </Toolbar>
-			    </AppBar>
-			    <Route exact path="/" />
-			    <Route path="/admin" component={Login} />
-			  </div>
-		  </MuiThemeProvider>
-	  </Router>
-	  )
+	componentDidMount(){
+		const authentication = this.props.authentication;
+		if(authentication === undefined || 
+			 authentication.user === undefined || 
+			 authentication.token === undefined){
+			window.location.hash = "#/";
+		}
+	}
+
+	render() {
+		const classes = this.props.classes;
+		return (
+			<Router>
+			  <MuiThemeProvider theme={theme}>
+				  <div className={classes.root}>
+				    <AppBar position="static">
+					    <Toolbar>
+					    	<Typography type="title" color="inherit">
+					        Fin Fin Tech Application
+					      </Typography>
+				      </Toolbar>
+				    </AppBar>
+				    <Route exact path="/" component={Login} />
+				    <Route path="/products" />
+				  </div>
+			  </MuiThemeProvider>
+		  </Router>
+		  )
+	}
 
 };
 
@@ -51,4 +63,11 @@ App.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(App);
+const mapStateToProps = ({ authentication }) => ({
+  authentication
+});
+
+const mapDispatchToProps = {
+};
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(App));
