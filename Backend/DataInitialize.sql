@@ -13,3 +13,9 @@ INSERT INTO desktops(weight, modelNumber, brand, price, processor, ram, cpus, ha
 INSERT INTO desktops(weight, modelNumber, brand, price, processor, ram, cpus, harddrive, dimensions) VALUES(24,'WLP1120NS','Acer',769.36,'AMD Ryzen',6,8,500,'48x47.5x15');
 INSERT INTO desktops(weight, modelNumber, brand, price, processor, ram, cpus, harddrive, dimensions) VALUES(24,'WLP8549CG','Acer',968.36,'Intell i5',16,8,500,'45x45x20');
 INSERT INTO desktops(weight, modelNumber, brand, price, processor, ram, cpus, harddrive, dimensions) VALUES(24,'WLP1299AH','Acer',642.01,'Intell i7',8,8,500,'46.2x44x15');
+
+INSERT INTO TelevisionSet(weight, modelNumber, brand, price, dimensions,type) VALUES(41 ,'OLED55B6P','LG',4719.18,'48.40x29.90x8.90', 'OLED');
+INSERT INTO TelevisionSet(weight, modelNumber, brand, price, dimensions,type) VALUES(55 ,'OLED65C7P','LG',13001.43,'57.20x34.40x8.50', 'OLED');
+INSERT INTO TelevisionSet(weight, modelNumber, brand, price, dimensions,type) VALUES(19 ,'43UJ6300','LG',1339.41,'38.50x24.20x7.40', 'LED');
+INSERT INTO TelevisionSet(weight, modelNumber, brand, price, dimensions,type) VALUES(19 ,'UN40MU6300FXZA','Samsung',900,'36.10x23.50x11.30', 'UHD');
+INSERT INTO TelevisionSet(weight, modelNumber, brand, price, dimensions,type) VALUES(31 ,'M50-D1','Vizio',1302.46,'44.40x27.98x8.70', 'LED');
