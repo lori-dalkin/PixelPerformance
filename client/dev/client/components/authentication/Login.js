@@ -27,15 +27,15 @@ class Login extends Component {
   constructor(props){
     super(props);
     this.state = {
-      username: "",
+      email: "",
       password: ""
     }
     this.login = () => {
-      this.props.attemptLogin({ username: this.state.username, password: this.state.password });
+      this.props.attemptLogin({ email: this.state.email, password: this.state.password });
     }
     this.syncStateToInputValue = (field, event) => {
-      if(field === "username"){
-        this.setState({...this.state, username: event.target.value});
+      if(field === "email"){
+        this.setState({...this.state, email: event.target.value});
       }else{
         this.setState({...this.state, password: event.target.value});
       }
@@ -62,11 +62,11 @@ class Login extends Component {
               <form style={formStyle} noValidate autoComplete="off">
                 <TextField
                   style={{ maxWidth: "20rem" }}
-                  id="username"
-                  label="Username"
+                  id="email"
+                  label="Email"
                   fullWidth
                   margin="normal"
-                  onChange={(event) => this.syncStateToInputValue("username", event)}
+                  onChange={(event) => this.syncStateToInputValue("email", event)}
                 />
                 <TextField
                   style={{ maxWidth: "20rem" }}

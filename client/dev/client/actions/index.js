@@ -6,7 +6,7 @@ export const attemptLogin = (credentials) => {
 	return (dispatch) => {
     dispatch(showLoading());
     return callApi('api/users/logon', 'post', {
-      username: credentials.username,
+      email: credentials.email,
       password: credentials.password,
     }).then(res => dispatch(receiveAttemptLogin(res)));
   };
