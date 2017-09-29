@@ -56,7 +56,7 @@ CREATE TABLE televisionsets(
 );
 
 CREATE TABLE admins(
-	
+
 	id UUID DEFAULT uuid_generate_v1(),
 	fname varchar(20),
 	lname varchar(20),
