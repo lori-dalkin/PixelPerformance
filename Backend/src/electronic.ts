@@ -4,6 +4,7 @@ export abstract class Electronic {
 	protected modelNumber: string;
 	protected brand: string;
 	protected price: number;
+
     constructor(id: string, weight: number, modelNumber: string, brand: string, price: number) {
 		this.id = id;
 		this.weight = weight;
@@ -11,5 +12,14 @@ export abstract class Electronic {
 		this.brand = brand;
 		this.price = price;
     }
+
+    public getId(): string{ return this.id;}
+    public getWeight(): number { return this.weight;}
+    public getModelNumber(): string { return this.modelNumber;}
+    public getBrand(): string { return this.brand;}
+    public getPrice(): number { return this.price;}
+
     abstract save():boolean;
+
+
 }

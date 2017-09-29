@@ -8,36 +8,39 @@ import errorHandler = require("errorhandler");
 import methodOverride = require("method-override");
 import { Electronic } from "./electronic"
 import { Monitor } from "./monitor"
+import {Catalog} from "./catalog";
 /**
- * The server.
+ * The web portal.
  *
- * @class Server
+ * @class WebPortal
  */
-export class Server {
+export class WebPortal {
 
   public app: express.Application;
+  protected catalog: Catalog;
 
   /**
    * Bootstrap the application.
    *
-   * @class Server
+   * @class WebPortal
    * @method bootstrap
    * @static
    * @return {ng.auto.IInjectorService} Returns the newly created injector for this app.
    */
-  public static bootstrap(): Server {
-    return new Server();
+  public static bootstrap(): WebPortal {
+    return new WebPortal();
   }
 
   /**
    * Constructor.
    *
-   * @class Server
+   * @class WebPortal
    * @constructor
    */
   constructor() {
     //create expressjs application
     this.app = express();
+    this.catalog = new Catalog();
 
     //configure application
     this.config();
@@ -52,7 +55,7 @@ export class Server {
   /**
    * Create REST API routes
     *
-   * @class Server
+   * @class WebPortal
    * @method api
    */
   public api() {
@@ -63,7 +66,7 @@ export class Server {
 	let monitors = new Array(monitor, monitor, monitor);
 	let token = jwt.sign({ foo: 'bar' }, 'shhhhh');
 	//home page
-
+  let routingCatalog = this.catalog;
 	router.get('/', function (req, res) {
 		res.send('20 dollars is 20 dollars backend home page')
 	});
@@ -81,7 +84,9 @@ export class Server {
 	});
 	
 	router.get("/api/products/:id",function (req, res) {
-		res.send({data: monitor})
+		let electronic: Electronic;
+		electronic = routingCatalog.getProduct(req.params.id);
+		res.send({data: electronic});
 	});
 
 	//use router middleware
@@ -91,7 +96,7 @@ export class Server {
   /**
    * Configure application
    *
-   * @class Server
+   * @class WebPortal
    * @method config
    */
   public config() {
@@ -135,7 +140,7 @@ export class Server {
   /**
    * Create router
    *
-   * @class Server
+   * @class WebPortal
    * @method api
    */
   public routes() {
