@@ -73,7 +73,14 @@ export class WebPortal {
   let routingCatalog = this.catalog;
 	router.get('/', function (req, res) {
 		res.send('20 dollars is 20 dollars backend home page')
-	});
+  });
+  router.get("/secretDebug",
+  function(req, res, next){
+    console.log(req.get('Authorization'));
+    next();
+  }, function(req, res){
+    res.json("debugging");
+});
 	router.post("/api/users/logon", function (req, res) {
     console.log(req.body);
     let body = req.body as any;
@@ -83,7 +90,7 @@ export class WebPortal {
       var password = body.password;
     }
     // usually this would be a database call:
-    let user = Admin.find(email);
+    let user = Admin.findByEmail(email);
     if( ! user ){
       res.status(401).json({message:"no such user found"});
     }
@@ -97,7 +104,10 @@ export class WebPortal {
     } else {
       res.status(401).json({message:"passwords did not match"});
     }
-	});
+  });
+  router.get("/secret/", passport.authenticate('jwt', { session: false }), function(req, res){
+    res.json({message: "Success! You can not see this without a token"});
+  });
 	router.post("/api/users/logoff", function (req, res) {
 		res.send({data: true})
 	});
@@ -153,7 +163,9 @@ export class WebPortal {
     this.app.use(function(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
         err.status = 404;
         next(err);
-    });
+    });  
+    
+    
     var users = [
       {
         id: 1,
@@ -184,7 +196,7 @@ export class WebPortal {
       }
     });
     
-    passport.use("passport",strategy);
+    passport.use(strategy);
     
 	
 }
