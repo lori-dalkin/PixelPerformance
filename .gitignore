@@ -2,4 +2,4 @@
 node_modules/
 .tscache/
 dist/
-build/
+client/build/js/app.min.js
