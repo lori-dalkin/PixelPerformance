@@ -5,6 +5,7 @@ import * as logger from "morgan";
 import * as path from "path";
 import * as jwt from "jsonwebtoken";
 import * as corser from "corser";
+var cors = require('cors');
 import * as passport from "passport";
 import * as passportJWT from "passport-jwt";
 import errorHandler = require("errorhandler");
@@ -111,15 +112,15 @@ export class WebPortal {
 	router.post("/api/users/logout", function (req, res) {
 		res.send({data: true})
 	});
-	router.get("/api/products/",corser.create(),passport.authenticate('jwt', { session: false }), function (req, res) {
+	router.get("/api/products/",passport.authenticate('jwt', { session: false }), function (req, res) {
     let electronics = routingCatalog.getProductPage(1,null);
 		res.send({data: electronics})
 	});
-	router.post("/api/products/",corser.create(),passport.authenticate('jwt', { session: false }),function (req, res) {
+	router.post("/api/products/",passport.authenticate('jwt', { session: false }),function (req, res) {
 		res.send({data:routingCatalog.addProduct(req.body)});
 	});
 	
-	router.get("/api/products/:id",corser.create(),passport.authenticate('jwt', { session: false }),function (req, res) {
+	router.get("/api/products/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
 		let electronic: Electronic;
 		electronic = routingCatalog.getProduct(req.params.id);
 		res.send({data: electronic});
@@ -158,8 +159,9 @@ export class WebPortal {
 
  
     // ## CORS middleware
-    this.app.use(corser.create());
-
+    //this.app.use(corser.create());
+    var corsOptions = { allowedHeaders: ['Content-Type', 'Authorization']}; 
+    this.app.use(cors(corsOptions));
     //catch 404 and forward to error handler
     this.app.use(function(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
         err.status = 404;
