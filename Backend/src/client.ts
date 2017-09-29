@@ -22,6 +22,7 @@ export class Client extends User {
                 client = new Client(row.id, row.fname, row.lname, row.email, row.password, row.address, row.phone)
             }).catch(function (err) {
                 console.log("No matching object found");
+                return null;
             });
         return client;
     }

@@ -5,10 +5,13 @@ import * as logger from "morgan";
 import * as path from "path";
 import * as jwt from "jsonwebtoken";
 import * as corser from "corser";
+import * as passport from "passport";
+import * as passportJWT from "passport-jwt";
 import errorHandler = require("errorhandler");
 import methodOverride = require("method-override");
-import { Electronic } from "./electronic"
-import { Monitor } from "./monitor"
+import { Electronic } from "./electronic";
+import { Monitor } from "./monitor";
+import { Admin } from "./admin";
 import {Catalog} from "./catalog";
 /**
  * The web portal.
@@ -72,7 +75,28 @@ export class WebPortal {
 		res.send('20 dollars is 20 dollars backend home page')
 	});
 	router.post("/api/users/logon", function (req, res) {
-		res.send({data: token})
+    console.log(req.body);
+    let body = req.body as any;
+    console.log(body);
+    if(body.email && body.password){
+      var email = body.email;
+      var password = body.password;
+    }
+    // usually this would be a database call:
+    let user = Admin.find(email);
+    if( ! user ){
+      res.status(401).json({message:"no such user found"});
+    }
+    console.log(user);
+    //add hasing.
+    if(user.password === req.body.password) {
+      // from now on we'll identify the user by the id and the id is the only personalized value that goes into our token
+      var payload = {id: user.id};
+      var token = jwt.sign(payload, 'tasmanianDevil');
+      res.json({message: "ok", token: token});
+    } else {
+      res.status(401).json({message:"passwords did not match"});
+    }
 	});
 	router.post("/api/users/logoff", function (req, res) {
 		res.send({data: true})
@@ -124,28 +148,44 @@ export class WebPortal {
  
     // ## CORS middleware
     this.app.use(corser.create());
-    /*var allowCrossDomain = function(req, res, next) {
-        res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-          
-        // intercept OPTIONS method
-        if ('OPTIONS' == req.method) {
-          res.send(200);
-        }
-        else {
-          next();
-        }
-    };
-    this.app.use(allowCrossDomain);*/
+
     //catch 404 and forward to error handler
     this.app.use(function(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
         err.status = 404;
         next(err);
     });
-
+    var users = [
+      {
+        id: 1,
+        name: 'jonathanmh',
+        password: '%2yx4'
+      },
+      {
+        id: 2,
+        name: 'test',
+        password: 'test'
+      }
+    ];
     //error handling
     this.app.use(errorHandler());
+
+    let ExtractJwt = passportJWT.ExtractJwt;
+    let JwtStrategy = passportJWT.Strategy;
+    var jwtOptions = {jwtFromRequest:ExtractJwt.fromAuthHeaderAsBearerToken(),secretOrKey :'tasmanianDevil' }
+    
+    var strategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
+      console.log('payload received', jwt_payload);
+      // usually this would be a database call:
+      var user = Admin.find(jwt_payload.id);
+      if (user) {
+        next(null, user);
+      } else {
+        next(null, false);
+      }
+    });
+    
+    passport.use("passport",strategy);
+    
 	
 }
 
