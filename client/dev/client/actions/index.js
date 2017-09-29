@@ -85,21 +85,17 @@ function shouldGetProducts(state) {
 
 export const getProducts = (filter = "") => {
     return function (dispatch, getState) {
-        if (getState().authorization && getState().authorization.token) {
+        if (getState().authentication && getState().authentication.token) {
             if (shouldGetProducts(getState())) {
                 dispatch(getProductsRequest());
                 
-                let endPoint = 'api/products';
+                let endPoint = 'api/products/';
 
                 if (filter) {
                     endPoint = `api/products/${filter}`
                 }
 
-                let headers = {
-                    'Authroization': `Bearer ${getState().authorization.token}`
-                };
-
-                return callApi(endPoint, 'get', headers).then(
+                return callApi(endPoint, 'get', undefined, `Bearer ${getState().authentication.token}`).then(
                     res => dispatch(getProductsSuccess(res.data)),
                     error => dispatch(getProductsFailure(error))
                 );
