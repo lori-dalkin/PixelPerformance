@@ -5,11 +5,11 @@ const initialState = {
     error: "",
     productFilter: {},
     products: [],
-    productViewOpen: false
+    productViewOpen: false,
+    selectedProduct: {}
 };
 
 export default function (state = initialState, action) {
-    console.log(action.type);
     switch (action.type) {
         case SET_PRODUCTS_FILTER:
             return {
@@ -36,8 +36,7 @@ export default function (state = initialState, action) {
             };
             break;
         case SHOW_PRODUCT_VIEW_DIALOG:
-            console.log("reducer received");
-            return { ...state, productViewOpen: true };
+            return { ...state, productViewOpen: true, selectedProduct: action.product };
             break;
         case HIDE_PRODUCT_VIEW_DIALOG:
             return { ...state, productViewOpen: false };

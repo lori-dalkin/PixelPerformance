@@ -111,9 +111,8 @@ export const showSnackbar = () => {
 export const hideSnackbar = () => {
     return { type: HIDE_SNACKBAR };
 }
-export const showProductView = (id) => {
-    console.log("action dispatched with id" + id);
-    return { type: SHOW_PRODUCT_VIEW_DIALOG };
+export const showProductView = (product) => {
+    return { type: SHOW_PRODUCT_VIEW_DIALOG, product };
 }
 export const hideProductView = () => {
     return { type: HIDE_PRODUCT_VIEW_DIALOG };
