@@ -19,7 +19,7 @@ ProductList.propTypes = {
         PropTypes.shape({
             id: PropTypes.string.isRequired,
             brand: PropTypes.string.isRequired,
-            price: PropTypes.string.isRequired
+            price: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
         }).isRequired
     ).isRequired,
     onProductClick: PropTypes.func.isRequired

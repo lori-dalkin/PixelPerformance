@@ -1,19 +1,20 @@
 import { ACCEPT_LOGIN, SET_TOKEN, DELETE_TOKEN, REJECT_LOGIN, ATTEMPT_LOGIN, HIDE_SNACKBAR, SHOW_SNACKBAR, 
     SET_PRODUCTS_FILTER, GET_PRODUCTS_REQUEST, GET_PRODUCTS_SUCCESS, GET_PRODUCTS_FAILURE,
-    SHOW_PRODUCT_VIEW_DIALOG, HIDE_PRODUCT_VIEW_DIALOG, GET_SPECIFIC_PRODUCT, ADD_PRODUCT } from './action-types';
+    SHOW_PRODUCT_VIEW_DIALOG, HIDE_PRODUCT_VIEW_DIALOG, GET_SPECIFIC_PRODUCT, ADD_PRODUCT_REQUEST,
+    ADD_PRODUCT_SUCCESS, ADD_PRODUCT_FAILURE, SHOW_ADD_PRODUCT_DIALOG, HIDE_ADD_PRODUCT_DIALOG } from './action-types';
 import callApi from '../utils/apiCaller';
 
 export const attemptLogin = (credentials) => {
 	return (dispatch) => {
-    dispatch(showLoading());
-    return callApi('api/users/login', 'post', {
-      email: credentials.email,
-      password: credentials.password,
-    }).then(
-        res => dispatch(receiveAttemptLogin(res)),
-        error => dispatch(receiveAttemptLogin({ data: undefined }))
-    );
-  };
+        dispatch(showLoading());
+        return callApi('api/users/login', 'post', {
+            email: credentials.email,
+            password: credentials.password,
+        }).then(
+            res => dispatch(receiveAttemptLogin(res)),
+            error => dispatch(receiveAttemptLogin({ data: undefined }))
+        );
+    };
 }
 
 export const showLoading = () => {
@@ -102,6 +103,8 @@ export const getProducts = (filter = "") => {
                     error => dispatch(getProductsFailure(error))
                 );
             }
+        } else {
+
         }
     };
 }
@@ -112,45 +115,60 @@ export const hideSnackbar = () => {
     return { type: HIDE_SNACKBAR };
 }
 
-export const addProduct = (param) => {
-  return (dispatch) => {
-    return callApi('api/products', 'post', {
-        id: param.id,
-        weight: param.weight,
-        modelNumber: param.modelNumber,
-        brand: param.brand,
-        price: param.price,
-        electronicType: param.electronicType,
-        processor: param.processor,
-        ram: param.ram,
-        hardDrive: param.hardDrive,
-        cpus: param.cpus,
-        os: param.os,
-        dimensions: param.dimensions,
-        type: param.type,
-        displaySize: param.displaySize,
-        battery: param.battery,
-        camera: param.camera,
-        touchscreen: param.touchscreen,
-        size: param.size,
-    }).then(res => dispatch(receiveAddAttempt(res)));
+export const addProductRequest = () => {
+    return {
+        type: ADD_PRODUCT_REQUEST
+    };
+}
+
+export const addProductSuccess = (result) => {
+    return {
+        type: ADD_PRODUCT_SUCCESS,
+        product: result.data
+    };
+}
+
+export const addProductFailure = (error) => {
+    return {
+        type: ADD_PRODUCT_FAILURE
+    };
+}
+
+function shouldAddProduct(state) {
+    if (!state.product.addProduct.addingProduct) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+export const addProduct = (body) => {
+  return (dispatch, getState) => {
+    if (getState().authentication && getState().authentication.token) {
+        if (shouldAddProduct(getState())) {
+            dispatch(addProductRequest);
+
+            return callApi('api/products', 'post', body, `Bearer ${getState().authentication.token}`).then(
+                res => dispatch(addProductSuccess(res)),
+                error => dispatch(addProductFailure())
+            );
+        }
+    }
   };
+}
+
 export const showProductView = (id) => {
-    console.log("action dispatched with id" + id);
     return { type: SHOW_PRODUCT_VIEW_DIALOG };
 }
+
 export const hideProductView = () => {
     return { type: HIDE_PRODUCT_VIEW_DIALOG };
 }
 
-export const receiveAddAttempt = (result) => {
-    if(result.data !== undefined){
-        return {
-            type: CONFIRM_ADD,
-        };
-    }else{
-        return {
-            type: REJECT_ADD
-        };
-    }
-};
+export const showAddProduct = () => {
+    return { type: SHOW_ADD_PRODUCT_DIALOG };
+}
+
+export const hideAddProduct = () => {
+    return { type: HIDE_ADD_PRODUCT_DIALOG };
+}
