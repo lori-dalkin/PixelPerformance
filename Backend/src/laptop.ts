@@ -14,7 +14,8 @@ export class Laptop extends ComputerSystem {
 				price: number, processor: string, ram: number, cpus: number,
 				hardDrive: number, os: string, displaySize: number,
 				battery: number, camera: boolean, touchscreen: boolean) {
-		super(id, weight, modelNumber, brand, price, processor, ram, cpus, hardDrive, os);
+		let electronicType = "Laptop";
+		super(id, weight, modelNumber, brand, price, electronicType, processor, ram, cpus, hardDrive, os);
 		this.displaySize = displaySize;
 		this.battery = battery;
 		this.camera = camera;
