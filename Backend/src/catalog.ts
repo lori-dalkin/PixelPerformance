@@ -122,12 +122,37 @@ export class Catalog {
                     desired.push(this.electronics[i]);
             }
         }
-        //10 items per page
-        var startProduct = page * 10;
+        //100 items per page
+        var startProduct = page * 100;
         return desired.slice(startProduct,startProduct+10); //includes the first num, not the second. If not in bounds, should return empty array. To be dealt with in frontend
     }
     
-	public addProduct(type:string, ): boolean {
+	public addProduct(data): boolean {
+        let electronic: Electronic;
+        switch(data.electronicType)
+        {
+            case "TelevisionSet":
+                electronic = new TelevisionSet(data.id, parseInt(data.weight), data.modelNumber, data.brand, parseFloat(data.price), data.dimensions, data.type);
+                break;
+            case "Monitors":
+                electronic = new Monitor(data.id, data.weight, data.modelNumber, data.brand, data.price, data.size);
+                break;
+            case "Desktop":
+                electronic = new Desktop(data.id, data.weight, data.modelNumber, data.brand, data.price, data.processor, data.ram, data.cpus, data.hardDrive, data.os, data.dimensions);
+                break;
+            case "Laptop":
+                electronic = new Laptop(data.id, data.weight, data.modelNumber, data.brand, data.price, data.processor, data.ram, data.cpus,
+                    data.hardDrive, data.os, data.displaySize, data.battery, data.camera, data.touchscreen);
+                break;
+            case "Tablet":
+                electronic = new Tablet(data.id, data.weight, data.modelNumber, data.brand, data.price, data.processor, data.ram,
+                    data.cpus, data.hardDrive, data.os, data.displaySize, data.dimensions, data.battery, data.camera);
+                break;
+            default:
+                return false;
+        }
+        electronic.save();
+        this.electronics.push(electronic);
 		return true;
 	}
 }
