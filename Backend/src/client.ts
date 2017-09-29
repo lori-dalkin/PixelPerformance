@@ -3,11 +3,12 @@ import { User } from "./user";
 
 var db =   new dbconnection().getDBConnector();
 
-protected address: string;
-protected phone: string;
-
 export class Client extends User {
-    constructor(id: string, fname: string, lname: string, email: string, password: string) {
+
+	protected address: string;
+	protected phone: string;
+
+    constructor(id: string, fname: string, lname: string, email: string, password: string, address: string, phone: string) {
         super(id, fname, lname, email, password);
         this.address = address;
         this.phone = phone;
