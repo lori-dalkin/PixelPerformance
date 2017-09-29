@@ -74,13 +74,7 @@ export class WebPortal {
 	router.get('/', function (req, res) {
 		res.send('20 dollars is 20 dollars backend home page')
   });
-  router.get("/secretDebug",
-  function(req, res, next){
-    console.log(req.get('Authorization'));
-    next();
-  }, function(req, res){
-    res.json("debugging");
-});
+
 	router.post("/api/users/logon", function (req, res) {
     console.log(req.body);
     let body = req.body as any;
@@ -90,20 +84,24 @@ export class WebPortal {
       var password = body.password;
     }
     // usually this would be a database call:
-    let user = Admin.findByEmail(email);
-    if( ! user ){
-      res.status(401).json({message:"no such user found"});
-    }
-    console.log(user);
-    //add hasing.
-    if(user.password === req.body.password) {
-      // from now on we'll identify the user by the id and the id is the only personalized value that goes into our token
-      var payload = {id: user.id};
-      var token = jwt.sign(payload, 'tasmanianDevil');
-      res.json({message: "ok", token: token});
-    } else {
-      res.status(401).json({message:"passwords did not match"});
-    }
+    Admin.findByEmail(email).then(function(data:Admin){
+      let user:Admin = data;
+      if( ! user ){
+        res.status(401).json({message:"no such user found"});
+      }
+      console.log(user);
+      console.log(user.password);
+      console.log(req.body.password);
+      //add hasing.
+      if(user.password.replace(/ /g,'') == req.body.password.replace(/ /g,'')) {
+        // from now on we'll identify the user by the id and the id is the only personalized value that goes into our token
+        var payload = {id: user.id};
+        var token = jwt.sign(payload, 'tasmanianDevil');
+        res.json({message: "ok", data: token});
+      } else {
+        res.status(401).json({message:"passwords did not match"});
+      }
+    })
   });
   router.get("/secret/", passport.authenticate('jwt', { session: false }), function(req, res){
     res.json({message: "Success! You can not see this without a token"});
@@ -111,14 +109,14 @@ export class WebPortal {
 	router.post("/api/users/logoff", function (req, res) {
 		res.send({data: true})
 	});
-	router.get("/api/products/", function (req, res) {
+	router.get("/api/products/",passport.authenticate('jwt', { session: false }), function (req, res) {
 		res.send({data: monitors})
 	});
-	router.post("/api/products/",function (req, res) {
+	router.post("/api/products/",passport.authenticate('jwt', { session: false }),function (req, res) {
 		res.send({data: monitor})
 	});
 	
-	router.get("/api/products/:id",function (req, res) {
+	router.get("/api/products/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
 		let electronic: Electronic;
 		electronic = routingCatalog.getProduct(req.params.id);
 		res.send({data: electronic});
@@ -188,12 +186,14 @@ export class WebPortal {
     var strategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
       console.log('payload received', jwt_payload);
       // usually this would be a database call:
-      var user = Admin.find(jwt_payload.id);
-      if (user) {
-        next(null, user);
-      } else {
-        next(null, false);
-      }
+      Admin.find(jwt_payload.id).then(function(user:Admin){
+        console.log(user);
+        if (user !=null) {
+          next(null, user);
+        } else {
+          next(null, false);
+        }
+      });
     });
     
     passport.use(strategy);
