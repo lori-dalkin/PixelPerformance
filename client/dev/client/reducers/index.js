@@ -1,9 +1,11 @@
 import {combineReducers} from 'redux';
 
 import authentication from './authentication';
+import snackbar from './snackbar';
 
 const reducers = combineReducers({
-	authentication
+	authentication,
+	snackbar
 });
 
 export default reducers
