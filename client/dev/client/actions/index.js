@@ -150,7 +150,7 @@ export const addProduct = (body) => {
   return (dispatch, getState) => {
     if (getState().authentication && getState().authentication.token) {
         if (shouldAddProduct(getState())) {
-            dispatch(addProductRequest);
+            dispatch(addProductRequest());
 
             return callApi('api/products', 'post', body, `Bearer ${getState().authentication.token}`).then(
                 res => dispatch(addProductSuccess(res)),
