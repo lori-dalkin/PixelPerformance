@@ -1,4 +1,4 @@
-import { SET_PRODUCTs_FILTER, GET_PRODUCTS_REQUEST, GET_PRODUCTS } from '../actions/action-types.js'
+import { SET_PRODUCTS_FILTER, GET_PRODUCTS_REQUEST, GET_PRODUCTS_SUCCESS, GET_PRODUCTS_FAILURE } from '../actions/action-types.js'
 
 const initialState = {
     isFetching: false,
@@ -9,7 +9,7 @@ const initialState = {
 
 export default function (state = initialState, action) {
     switch (action.type) {
-        case SET_PRODUCT_FILTER:
+        case SET_PRODUCTS_FILTER:
             return {
                 ...state,
                 productFilter: action.filter

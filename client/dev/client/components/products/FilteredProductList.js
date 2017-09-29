@@ -1,7 +1,7 @@
-import { connect } from 'react-redux'
-import ProductList from './ProductList'
+import { connect } from 'react-redux';
+import ProductList from './ProductList';
 
-const getFilteredProducts = (products, filter) {
+const getFilteredProducts = (products, filter) => {
     return products;
 }
 

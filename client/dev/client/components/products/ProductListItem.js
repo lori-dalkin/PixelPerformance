@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
 import TextField from 'material-ui/TextField';
 
-const ProductListItem ({ onClick, picture, name, price }) => (
+const ProductListItem = ({ onClick, picture, name, price }) => (
     <Grid item xs={12}>
 
     </Grid>

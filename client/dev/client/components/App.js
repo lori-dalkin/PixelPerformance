@@ -11,6 +11,7 @@ import pink from 'material-ui/colors/pink';
 require('../../scss/style.scss');
 
 import Login from './authentication/Login';
+import ProductPage from './products/ProductPage';
 
 const styles = theme => ({
 	root: {
@@ -50,7 +51,7 @@ class App extends Component {
 				      </Toolbar>
 				    </AppBar>
 				    <Route exact path="/" component={Login} />
-				    <Route path="/products" />
+				    <Route path="/products" component={ProductPage} />
 				  </div>
 			  </MuiThemeProvider>
 		  </Router>
