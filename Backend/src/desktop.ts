@@ -41,6 +41,7 @@ export class Desktop extends ComputerSystem{
                 desktop = new Desktop(row.id,row.weight,row.modelNumber, row.brand, row.price, row.processor, row.ram, row.cpus, row.hardDrive, row.os, row.dimensions)
             }).catch(function (err) {
             console.log("No matching object found");
+            return null;
         });
         return desktop;
     }

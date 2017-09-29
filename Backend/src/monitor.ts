@@ -28,6 +28,7 @@ export class Monitor extends Electronic {
 				monitor = new Monitor(row.id,row.weight,row.modelNumber, row.brand, row.price, row.size)
 			}).catch(function (err) {
 				console.log("No matching object found");
+				return null;
 			});
 		return monitor
 	}

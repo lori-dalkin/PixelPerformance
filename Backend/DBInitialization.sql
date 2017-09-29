@@ -43,6 +43,24 @@ CREATE TABLE tablets(
     PRIMARY KEY(id)
 );
 
+CREATE TABLE laptops(
+	id UUID DEFAULT uuid_generate_v1(),
+	weight dec(4,2),
+	modelNumber varchar(20) UNIQUE,
+	brand varchar(30),
+	price dec(6,2),
+	processor varchar(20),
+	ram int,
+	cpus int,
+	hardDrive int,
+	os varchar(15),
+	displaySize dec(3,1),
+	battery int,
+	camera bool,
+	touchscreen boolm
+	PRIMARY KEY(id)
+);
+
 CREATE TABLE televisionsets(
 
 	id UUID DEFAULT uuid_generate_v1(),

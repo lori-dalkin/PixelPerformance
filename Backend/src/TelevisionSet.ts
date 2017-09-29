@@ -38,6 +38,7 @@ export  class TelevisionSet extends Electronic{
                 televisionSet = new TelevisionSet(row.id, row.weight, row.modelNumber, row.brand, row.price, row.dimensions, row.type)
             }).catch(function (err) {
                 console.log("No matching object found");
+                return null;
             });
         return televisionSet;
     }

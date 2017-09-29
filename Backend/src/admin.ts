@@ -21,4 +21,18 @@ export class Admin extends User {
     return admin;
 }
 
+
+    public static findByEmail(email: string): User
+    {
+        let admin: User;
+        db.one('SELECT * FROM admins WHERE email ='+ email + ';')
+            .then(function (row) {
+                admin = new Admin(row.id, row.fname, row.lname, row.email, row.password)
+            }).catch(function (err) {
+                console.log("No matching object found");
+                return null;
+            });
+        return admin;
+    }
+
 }
