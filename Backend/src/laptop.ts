@@ -26,10 +26,10 @@ export class Laptop extends ComputerSystem {
 	 * Method to persist an object of type Laptop to the database *
 	 **************************************************************/
 	save(): boolean {
-		let queryParameters = [this.id, this.weight, this.modelNumber,
-							   this.brand, this.price, this.processor,
+		let queryParameters = ["'"+this.id+"'", this.weight,"'"+ this.modelNumber +"'",
+								"'"+this.brand +"'", this.price, "'"+this.processor +"'",
 							   this.ram, this.cpus, this.hardDrive,
-							   this.os, this.displaySize, this.battery,
+							   "'"+this.os+"'", this.displaySize, this.battery,
 							   this.camera, this.touchscreen];
 		let queryText = 'INSERT INTO laptops VALUES (' + queryParameters.join(',') + ')';
 

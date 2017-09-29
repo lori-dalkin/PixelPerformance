@@ -23,7 +23,7 @@ export class Tablet extends ComputerSystem{
     * Method to persist an object of type Tablet to the database
      ****************************************************************/
     save():boolean{
-        db.none('INSERT INTO tablets VALUES ('+this.id +','+this.weight+','+this.modelNumber+','+this.brand+','+this.price+','+this.processor+',' + this.ram + ','+this.cpus+','+this.hardDrive+','+this.os+','+this.displaySize+','+this.dimensions+','+this.battery+','+this.camera+')')
+        db.none("INSERT INTO tablets VALUES ('"+this.id +"',"+this.weight+",'"+this.modelNumber+"','"+this.brand+"',"+this.price+",'"+this.processor+"'," + this.ram + ','+this.cpus+','+this.hardDrive+",'"+this.os+"',"+this.displaySize+",'"+this.dimensions+"',"+this.battery+','+this.camera+')')
             .then(function(){
                 console.log("Tablet added to db");})
             .catch(function (err) {

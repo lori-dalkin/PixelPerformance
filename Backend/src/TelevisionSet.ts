@@ -18,7 +18,7 @@ export  class TelevisionSet extends Electronic{
 
 	//Save Television Set onto database
     save(): boolean {
-        db.none('INSERT INTO televisionsets VALUES (' + this.id + ',' + this.weight + ',' + this.modelNumber + ',' + this.brand + ',' + this.price + ',' + this.dimensions + ',' + this.type + ')')
+        db.none("INSERT INTO televisionsets VALUES ('" + this.id + "'," + this.weight + ",'" + this.modelNumber + "','" + this.brand + "'," + this.price + ",'" + this.dimensions + "','" + this.type + "')")
             .then(function () {
                 console.log("Television added to db");
             })

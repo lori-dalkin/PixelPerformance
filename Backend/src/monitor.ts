@@ -11,7 +11,7 @@ export class Monitor extends Electronic {
     public getSize(): number {return this.size;}
 
     save():boolean {
-		db.none('INSERT INTO monitors VALUES ('+this.id +','+this.weight+','+this.modelNumber+','+this.brand+','+this.price+','+this.size+')')
+		db.none("INSERT INTO monitors VALUES ('"+this.id +"',"+this.weight+",'"+this.modelNumber+"','"+this.brand+"',"+this.price+','+this.size+')')
 			.then(function(){
 				console.log("monitor added to db");})
 			.catch(function (err) {
