@@ -36,4 +36,4 @@ INSERT INTO monitors(weight, modelNumber, brand, price, size) VALUES(15 ,'DELLX2
 INSERT INTO monitors(weight, modelNumber, brand, price, size) VALUES(18 ,'DELLX27','Dell',4719.18, 27);
 
 INSERT INTO admins(fname, lname, email, password) VALUES('Super','Admin','superadmin@pp.com',001);
-INSERT INTO clients(fname, lname, email, password, address, phone) VALUES('John','Smith','jsmith@gmail.com',010,'Canada','555-5555';)
+INSERT INTO clients(fname, lname, email, password, address, phone) VALUES('John','Smith','jsmith@gmail.com',010,'Canada','555-5555');
