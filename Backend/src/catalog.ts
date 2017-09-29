@@ -16,28 +16,31 @@ export class Catalog {
 
 	private loadMonitors(): void {
 		let monitor:Monitor
+		let monitors = this.electronics;
         db.many('SELECT * FROM monitors')
             .then(function(rows){
             	for(let row of rows){
                 	monitor = new Monitor(row.id,row.weight,row.modelNumber, row.brand, row.price, row.size);
-                	this.electronics.push(monitor);
+                	monitors.push(monitor);
 				}
             }).catch(function (err) {
-            console.log("No monitors found");
-        });
+            console.log("No monitors found"+ err);
+		});
 	}
 
 	private loadDesktops(): void {
-        let desktop:Desktop
+		let desktop:Desktop;
+		let desktops = this.electronics;
         db.many('SELECT * FROM desktops')
             .then(function(rows){
                 for(let row of rows){
                     desktop = new Desktop(row.id,row.weight,row.modelNumber, row.brand, row.price, row.processor, row.ram, row.cpus, row.hardDrive, row.os, row.dimensions)
-                    this.electronics.push(desktop);
+					desktops.push(desktop);
+					console.log(desktops);
                 }
             }).catch(function (err) {
-            console.log("No desktops found");
-        });
+            console.log("No desktops found"+ err);
+		});
 	}
 
 	public getProduct(productId:string): Electronic {

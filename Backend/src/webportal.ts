@@ -66,7 +66,7 @@ export class WebPortal {
 	let monitors = new Array(monitor, monitor, monitor);
 	let token = jwt.sign({ foo: 'bar' }, 'shhhhh');
 	//home page
-
+  let routingCatalog = this.catalog;
 	router.get('/', function (req, res) {
 		res.send('20 dollars is 20 dollars backend home page')
 	});
@@ -85,7 +85,7 @@ export class WebPortal {
 	
 	router.get("/api/products/:id",function (req, res) {
 		let electronic: Electronic;
-		electronic = this.catalog.getProduct(req.params.id);
+		electronic = routingCatalog.getProduct(req.params.id);
 		res.send({data: electronic});
 	});
 
