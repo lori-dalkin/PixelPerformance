@@ -3,9 +3,11 @@ import * as cookieParser from "cookie-parser";
 import * as express from "express";
 import * as logger from "morgan";
 import * as path from "path";
+import * as jwt from "jsonwebtoken";
 import errorHandler = require("errorhandler");
 import methodOverride = require("method-override");
-
+import { Electronic } from "./electronic"
+import { Monitor } from "./monitor"
 /**
  * The server.
  *
@@ -49,12 +51,41 @@ export class Server {
 
   /**
    * Create REST API routes
-   *
+    *
    * @class Server
    * @method api
    */
   public api() {
-    //empty for now
+	let router: express.Router;
+	router = express.Router();
+	// some dummy data
+	let monitor = new Monitor('1', 1, "modelNumber", "brand", 1, 1);
+	let monitors = new Array(monitor, monitor, monitor);
+	let token = jwt.sign({ foo: 'bar' }, 'shhhhh');
+	//home page
+
+	router.get('/', function (req, res) {
+		res.send('20 dollars is 20 dollars backend home page')
+	});
+	router.post("/api/users/logon", function (req, res) {
+		res.send({data: token})
+	});
+	router.post("/api/users/logoff", function (req, res) {
+		res.send({data: true})
+	});
+	router.get("/api/products/", function (req, res) {
+		res.send({data: monitors})
+	});
+	router.post("/api/products/",function (req, res) {
+		res.send({data: monitor})
+	});
+	
+	router.get("/api/products/:id",function (req, res) {
+		res.send({data: monitor})
+	});
+
+	//use router middleware
+	this.app.use(router);
   }
 
   /**
@@ -92,6 +123,7 @@ export class Server {
 
     //error handling
     this.app.use(errorHandler());
+	
 }
 
   /**
