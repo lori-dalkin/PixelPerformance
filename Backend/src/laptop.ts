@@ -55,6 +55,7 @@ export class Laptop extends ComputerSystem {
 			})
 			.catch(function(err) {
 				console.log("No matching object found");
+				return null;
 			})
 		return laptop;
 	}
