@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Button from 'material-ui/Button';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar'; 
 import Typography from 'material-ui/Typography';
@@ -10,7 +11,9 @@ import blue from 'material-ui/colors/blue';
 import pink from 'material-ui/colors/pink';
 require('../../scss/style.scss');
 
+import { setToken, deleteToken } from '../actions/index';
 import Login from './authentication/Login';
+import ProductPage from './products/ProductPage';
 
 const styles = theme => ({
 	root: {
@@ -25,14 +28,31 @@ const theme = createMuiTheme({
   }
 });
 
+const getCookie = (name) => {
+  var value = "; " + document.cookie;
+  var parts = value.split("; " + name + "=");
+  if (parts.length == 2) return parts.pop().split(";").shift();
+}
+
 class App extends Component {
 	
-	componentDidMount(){
-		const authentication = this.props.authentication;
-		if(authentication === undefined || 
-			 authentication.user === undefined || 
+	componentWillMount(){
+		const token = getCookie("token");
+		if(token !== undefined){
+			this.props.setToken(token);
+		} else {
+			this.props.deleteToken();
+		}
+	}
+
+	componentWillReceiveProps(nextProps){
+		const authentication = nextProps.authentication;
+		if(authentication === undefined ||  
 			 authentication.token === undefined){
 			window.location.hash = "#/";
+		}
+		else if(window.location.hash === "#/" && authentication !== undefined && authentication.token !== undefined ){
+			window.location.hash = "#/products";
 		}
 	}
 
@@ -44,13 +64,16 @@ class App extends Component {
 				  <div className={classes.root}>
 				    <AppBar position="static">
 					    <Toolbar>
-					    	<Typography type="title" color="inherit">
-					        Fin Fin Tech Application
+					    	<Typography style={{ flex: '1' }} type="title" color="inherit">
+					        Pixel Performance
 					      </Typography>
+					      {	this.props.authentication.token !== undefined && 
+					      	<Button color="contrast" onClick={this.props.deleteToken}>Logout</Button> 
+					      }
 				      </Toolbar>
 				    </AppBar>
 				    <Route exact path="/" component={Login} />
-				    <Route path="/products" />
+				    <Route path="/products" component={ProductPage} />
 				  </div>
 			  </MuiThemeProvider>
 		  </Router>
@@ -68,6 +91,8 @@ const mapStateToProps = ({ authentication }) => ({
 });
 
 const mapDispatchToProps = {
+	setToken,
+	deleteToken
 };
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(App));
