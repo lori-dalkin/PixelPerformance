@@ -20,6 +20,7 @@
   "homepage": "https://github.com/lori-dalkin/SOEN343#readme",
   "dependencies": {
     "@types/passport": "^0.3.4",
+    "@types/uuid": "^3.4.2",
     "bcrypt": "^1.0.3",
     "bluebird": "^3.5.0",
     "body-parser": "^1.18.1",
@@ -35,7 +36,8 @@
     "passport": "^0.4.0",
     "passport-jwt": "^3.0.0",
     "pg": "^7.3.0",
-    "pg-promise": "^5.9.7"
+    "pg-promise": "^5.9.7",
+    "uuid": "^3.1.0"
   },
   "devDependencies": {
     "@types/body-parser": "^1.16.5",

@@ -1,3 +1,4 @@
+import * as uuid from "uuid";
 import { Electronic } from "./electronic"
 import { Monitor } from "./monitor"
 import { dbconnection } from "./dbconnection"
@@ -132,21 +133,21 @@ export class Catalog {
         switch(data.electronicType)
         {
             case "TelevisionSet":
-                electronic = new TelevisionSet(data.id, parseInt(data.weight), data.modelNumber, data.brand, parseFloat(data.price), data.dimensions, data.type);
+                electronic = new TelevisionSet(uuid.v1(), parseInt(data.weight), data.modelNumber, data.brand, parseFloat(data.price), data.dimensions, data.type);
                 break;
             case "Monitors":
-                electronic = new Monitor(data.id, data.weight, data.modelNumber, data.brand, data.price, data.size);
+                electronic = new Monitor(uuid.v1(), parseInt(data.weight), data.modelNumber, data.brand,parseFloat(data.price), parseInt(data.size));
                 break;
             case "Desktop":
-                electronic = new Desktop(data.id, data.weight, data.modelNumber, data.brand, data.price, data.processor, data.ram, data.cpus, data.hardDrive, data.os, data.dimensions);
+                electronic = new Desktop(uuid.v1(), parseInt(data.weight), data.modelNumber, data.brand, parseFloat(data.price), data.processor, parseInt(data.ram), parseInt(data.cpus), parseInt(data.hardDrive), data.os, data.dimensions);
                 break;
             case "Laptop":
-                electronic = new Laptop(data.id, data.weight, data.modelNumber, data.brand, data.price, data.processor, data.ram, data.cpus,
-                    data.hardDrive, data.os, data.displaySize, data.battery, data.camera, data.touchscreen);
+                electronic = new Laptop(uuid.v1(), parseInt(data.weight), data.modelNumber, data.brand, parseFloat(data.price), data.processor, parseInt(data.ram),  parseInt(data.cpus),
+				parseInt(data.hardDrive), data.os, parseFloat(data.displaySize), parseInt(data.battery), data.camera == 'true', data.touchscreen =='true');
                 break;
             case "Tablet":
-                electronic = new Tablet(data.id, data.weight, data.modelNumber, data.brand, data.price, data.processor, data.ram,
-                    data.cpus, data.hardDrive, data.os, data.displaySize, data.dimensions, data.battery, data.camera);
+                electronic = new Tablet(uuid.v1(), parseInt(data.weight), data.modelNumber, data.brand,parseFloat(data.price), data.processor, parseInt(data.ram),
+				parseInt(data.cpus), parseInt(data.hardDrive), data.os, parseFloat(data.displaySize), data.dimensions, parseInt(data.battery), data.camera=='true');
                 break;
             default:
                 return false;

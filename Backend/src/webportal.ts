@@ -116,7 +116,7 @@ export class WebPortal {
 		res.send({data: electronics})
 	});
 	router.post("/api/products/",passport.authenticate('jwt', { session: false }),function (req, res) {
-		res.send({data: monitor})
+		res.send({data:routingCatalog.addProduct(req.body)});
 	});
 	
 	router.get("/api/products/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
