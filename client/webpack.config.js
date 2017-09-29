@@ -35,6 +35,7 @@ module.exports = {
         filename: 'js/app.min.js'
     },
     plugins: [
-        new webpack.optimize.OccurrenceOrderPlugin()
+        new webpack.optimize.OccurrenceOrderPlugin(),
+        new webpack.NormalModuleReplacementPlugin(/\/iconv-loader$/, 'node-noop')
     ]
 };

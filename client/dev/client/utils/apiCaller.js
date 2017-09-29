@@ -1,7 +1,7 @@
 import 'fetch';
 
 const API_PORT = 8080;
-const API_URL = "localhost";
+const API_URL = "http://localhost";
 
 export default function callApi(endpoint, method = 'get', body) {
   return fetch(`${API_URL}:${API_PORT}/${endpoint}`, {
