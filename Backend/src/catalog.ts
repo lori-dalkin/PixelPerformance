@@ -32,7 +32,7 @@ export class Catalog {
         db.many('SELECT * FROM desktops')
             .then(function(rows){
                 for(let row of rows){
-                    desktop = new Desktop(row.id,row.weight,row.modelNumber, row.brand, row.price, row.processor, row.ram, row.cpus, row.hardDrive, row.dimensions)
+                    desktop = new Desktop(row.id,row.weight,row.modelNumber, row.brand, row.price, row.processor, row.ram, row.cpus, row.hardDrive, row.os, row.dimensions)
                     this.electronics.push(desktop);
                 }
             }).catch(function (err) {
