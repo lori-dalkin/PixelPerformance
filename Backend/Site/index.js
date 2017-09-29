@@ -1,7 +1,5 @@
 // file: index.js
 
-var express = require("express");
-var app = express();
 var _ = require("lodash");
 var express = require("express");
 var bodyParser = require("body-parser");
@@ -26,16 +24,8 @@ var users = [
   }
 ];
 
-app.get("/", function(req, res) {
-  res.json({message: "Express is up!"});
-});
-
-app.listen(2999, function() {
-  console.log("Express running");
-});
-
 var jwtOptions = {}
-jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();;
 jwtOptions.secretOrKey = 'tasmanianDevil';
 
 var strategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
@@ -51,6 +41,7 @@ var strategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
 
 passport.use(strategy);
 
+var app = express();
 app.use(passport.initialize());
 
 // parse application/x-www-form-urlencoded
@@ -85,4 +76,20 @@ app.post("/login", function(req, res) {
   } else {
     res.status(401).json({message:"passwords did not match"});
   }
+});
+
+app.get("/secret", passport.authenticate('jwt', { session: false }), function(req, res){
+  res.json({message: "Success! You can not see this without a token"});
+});
+
+app.get("/secretDebug",
+  function(req, res, next){
+    console.log(req.get('Authorization'));
+    next();
+  }, function(req, res){
+    res.json("debugging");
+});
+
+app.listen(3000, function() {
+  console.log("Express running");
 });
