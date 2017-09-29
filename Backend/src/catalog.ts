@@ -84,10 +84,22 @@ export class Catalog {
 	}
 
 	public getProductPage(page:number, type:string): Electronic[] {
-		
-		let monitor = new Monitor('1', 1, "modelNumber", "brand", 1, 1);
-		return new Array(monitor, monitor, monitor);
-	}
+        var desired: Electronic[];
+        if(type == null){
+            desired = this.electronics;
+        }
+        else{
+            for (var i = 0; i < this.electronics.length; i++)
+            {
+                if(Electronic[i].electronicType == type)
+                    desired.push(this.electronics[i]);
+            }
+        }
+        //10 items per page
+        var startProduct = page * 10;
+        return desired.slice(startProduct,startProduct+10); //includes the first num, not the second. If not in bounds, should return empty array. To be dealt with in frontend
+    }
+    
 	public addProduct(type:string, ): boolean {
 		return true;
 	}
