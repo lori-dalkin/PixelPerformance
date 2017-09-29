@@ -43,7 +43,7 @@ CREATE TABLE tablets(
     PRIMARY KEY(id)
 );
 
-CREATE TABLE TelevisionSet(
+CREATE TABLE televisionsets(
 
 	id UUID DEFAULT uuid_generate_v1(),
 	weight dec(4, 2),
@@ -55,11 +55,24 @@ CREATE TABLE TelevisionSet(
 	PRIMARY KEY(id)
 );
 
-CREATE TABLE Admin{
-	
+CREATE TABLE admins(
+
 	id UUID DEFAULT uuid_generate_v1(),
 	fname varchar(20),
 	lname varchar(20),
 	email varchar(30),
+	password CHAR(128),
 	PRIMARY KEY(id)
-}
+);
+
+CREATE TABLE clients(
+
+	id UUID DEFAULT uuid_generate_v1(),
+	fname varchar(20),
+	lname varchar(20),
+	email varchar(30),
+	password CHAR(128),
+	address varchar(30),
+	phone varchar(30),
+	PRIMARY KEY(id)
+);

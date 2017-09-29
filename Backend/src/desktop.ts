@@ -12,6 +12,11 @@ export class Desktop extends ComputerSystem{
         this.dimensions = dimensions;
     }
 
+    /***************
+    * Accessors
+     ***************/
+    public getDimensions(): string { return this.dimensions;}
+
     /****************************************************************
     * Method to persist an object of type Desktop to the database
      ****************************************************************/

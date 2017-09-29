@@ -1,0 +1,3 @@
+export const ATTEMPT_LOGIN = "ATTEMPT_LOGIN";
+export const REJECT_LOGIN  = "REJECT_LOGIN";
+export const ACCEPT_LOGIN  = "ACCEPT_LOGIN";
