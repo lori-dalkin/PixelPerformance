@@ -11,7 +11,7 @@ export class Admin extends User {
     
     public static find(id:string): User{
     let admin: User;
-    db.one('SELECT * FROM admin WHERE id =' + id + ';')
+    db.one('SELECT * FROM admins WHERE id =' + id + ';')
         .then(function (row) {
             admin = new Admin(row.id, row.fname, row.lname, row.email, row.password)
         }).catch(function (err) {
