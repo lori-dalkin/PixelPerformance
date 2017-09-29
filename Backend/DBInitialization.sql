@@ -1,5 +1,8 @@
+CREATE DATABASE IF NOT EXISTS "DBpixelperformance";
+
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+DROP TABLE IF EXISTS monitors;
 CREATE TABLE monitors(
     id UUID DEFAULT uuid_generate_v1(),
 	weight dec(4, 2),
@@ -10,6 +13,7 @@ CREATE TABLE monitors(
 	PRIMARY KEY(id)
 );
 
+DROP TABLE IF EXISTS desktops;
 CREATE TABLE desktops(
 	id UUID DEFAULT uuid_generate_v1(),
 	weight dec(4, 2),
@@ -25,6 +29,7 @@ CREATE TABLE desktops(
 	PRIMARY KEY(id)
 );
 
+DROP TABLE IF EXISTS tablets;
 CREATE TABLE tablets(
     id UUID DEFAULT uuid_generate_v1(),
     weight dec(4,2),
@@ -43,6 +48,7 @@ CREATE TABLE tablets(
     PRIMARY KEY(id)
 );
 
+DROP TABLE IF EXISTS laptops;
 CREATE TABLE laptops(
 	id UUID DEFAULT uuid_generate_v1(),
 	weight dec(4,2),
@@ -61,6 +67,7 @@ CREATE TABLE laptops(
 	PRIMARY KEY(id)
 );
 
+DROP TABLE IF EXISTS televisionsets;
 CREATE TABLE televisionsets(
 
 	id UUID DEFAULT uuid_generate_v1(),
@@ -73,6 +80,7 @@ CREATE TABLE televisionsets(
 	PRIMARY KEY(id)
 );
 
+DROP TABLE IF EXISTS admins;
 CREATE TABLE admins(
 
 	id UUID DEFAULT uuid_generate_v1(),
@@ -83,6 +91,7 @@ CREATE TABLE admins(
 	PRIMARY KEY(id)
 );
 
+DROP TABLE IF EXISTS clients;
 CREATE TABLE clients(
 
 	id UUID DEFAULT uuid_generate_v1(),
