@@ -1,10 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import FilteredProductList from './FilteredProductList';
-import { getProducts } from '../../actions';
+import ProductViewDialog from './ProductViewDialog';
+import { getProducts, hideProductView } from '../../actions';
 
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
+import Button from 'material-ui/Button';
+import AddIcon from 'material-ui-icons/Add';
 import Typography from 'material-ui/Typography';
 
 const productPaperStyle = {
@@ -34,23 +37,26 @@ class ProductPage extends React.Component {
 						</Paper>
 					</Grid>
 				</Grid>
+				<ProductViewDialog open={this.props.product.productViewOpen} handleRequestClose={this.props.hideProductView} />
+				<Button style={{ position: 'fixed', bottom: '2rem', right: '2rem' }} fab color="accent" aria-label="add">
+	        <AddIcon />
+	      </Button>
 			</div>
 		);
 	}
 }
 
-const mapStateToProps = state => {
-	return {
-		authentication: state.authentication,
-		product: state.product
-	};
-}
+const mapStateToProps = ({authentication, product}) => ({
+	authentication,
+	product
+});
 
 const mapDispatchToProps = dispatch => {
 	return {
 		onLoad: (filter = "") => {
 			dispatch(getProducts(filter));
-		}
+		},
+		hideProductView: () => dispatch(hideProductView())
 	};
 }
 
