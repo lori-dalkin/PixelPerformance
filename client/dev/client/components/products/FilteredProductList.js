@@ -1,6 +1,8 @@
 import { connect } from 'react-redux';
 import ProductList from './ProductList';
 
+import { showProductView } from '../../actions/index';
+
 const getFilteredProducts = (products, filter) => {
     return products;
 }
@@ -13,8 +15,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onProductClick: id => {
-            dispatch(loadProductView(id))
+        onProductClick: (id, brand) => {
+            dispatch(showProductView(id, brand))
         }
     };
 }

@@ -6,7 +6,7 @@ import snackbar from './snackbar';
 
 const reducers = combineReducers({
 	authentication,
-    product,
+  product,
 	snackbar
 });
 

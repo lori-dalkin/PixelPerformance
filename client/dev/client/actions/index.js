@@ -108,14 +108,13 @@ export const getProducts = (filter = "") => {
 export const showSnackbar = () => {
     return { type: SHOW_SNACKBAR };
 }
-
 export const hideSnackbar = () => {
     return { type: HIDE_SNACKBAR };
 }
-export const showProductView = () => {
+export const showProductView = (id) => {
+    console.log("action dispatched with id" + id);
     return { type: SHOW_PRODUCT_VIEW_DIALOG };
 }
-
 export const hideProductView = () => {
     return { type: HIDE_PRODUCT_VIEW_DIALOG };
 }

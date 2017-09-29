@@ -8,7 +8,7 @@ const ProductList = ({products, onProductClick}) => {
     return (
         <Grid container spacing={8} style={{ margin: '0px', marginTop: '5px' }}>
             {products.map(product => (
-              <ProductListItem key={productId++} {...product} onClick={ () => onProductClick(product.id) } />
+              <ProductListItem key={productId++} {...product} onClick={ () => onProductClick(product.id, product.brand) } />
             ))}
         </Grid>
     );

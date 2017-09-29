@@ -15,7 +15,6 @@ import { setToken, deleteToken } from '../../actions/index';
 class ProductViewDialog extends Component {
 
 	render() {
-		const classes = this.props.classes;
 		return (
 				<Dialog open={this.props.open} transition={Slide} onRequestClose={this.props.handleRequestClose}>
           <DialogTitle>{"Use Google's location service?"}</DialogTitle>

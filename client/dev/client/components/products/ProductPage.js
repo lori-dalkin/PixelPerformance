@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import FilteredProductList from './FilteredProductList';
 import ProductViewDialog from './ProductViewDialog';
-import { getProducts, showProductView, hideProductView } from '../../actions';
+import { getProducts } from '../../actions';
 
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
@@ -21,7 +21,6 @@ class ProductPage extends React.Component {
 
 	componentDidMount() {
 		this.props.onLoad();
-		this.props.showProductView();
 	}
 
 	render() {
@@ -47,20 +46,16 @@ class ProductPage extends React.Component {
 	}
 }
 
-const mapStateToProps = state => {
-	return {
-		authentication: state.authentication,
-		product: state.product
-	};
-}
+const mapStateToProps = ({authentication, product}) => ({
+	authentication,
+	product
+});
 
 const mapDispatchToProps = dispatch => {
 	return {
 		onLoad: (filter = "") => {
 			dispatch(getProducts(filter));
-		},
-		showProductView,
-		hideProductView
+		}
 	};
 }
 

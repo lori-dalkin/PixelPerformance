@@ -1,4 +1,4 @@
-import { SET_PRODUCTS_FILTER, GET_PRODUCTS_REQUEST, GET_PRODUCTS_SUCCESS, GET_PRODUCTS_FAILURE, SHOW_PRODUCT_VIEW, HIDE_PRODUCT_VIEW } from '../actions/action-types.js'
+import { SET_PRODUCTS_FILTER, GET_PRODUCTS_REQUEST, GET_PRODUCTS_SUCCESS, GET_PRODUCTS_FAILURE, SHOW_PRODUCT_VIEW_DIALOG, HIDE_PRODUCT_VIEW_DIALOG } from '../actions/action-types.js'
 
 const initialState = {
     isFetching: false,
@@ -9,6 +9,7 @@ const initialState = {
 };
 
 export default function (state = initialState, action) {
+    console.log(action.type);
     switch (action.type) {
         case SET_PRODUCTS_FILTER:
             return {
@@ -34,10 +35,11 @@ export default function (state = initialState, action) {
                 error: action.error
             };
             break;
-        case SHOW_PRODUCT_VIEW:
+        case SHOW_PRODUCT_VIEW_DIALOG:
+            console.log("reducer received");
             return { ...state, productViewOpen: true };
             break;
-        case HIDE_PRODUCT_VIEW:
+        case HIDE_PRODUCT_VIEW_DIALOG:
             return { ...state, productViewOpen: false };
             break;
         default:
