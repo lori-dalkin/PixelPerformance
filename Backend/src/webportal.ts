@@ -4,6 +4,7 @@ import * as express from "express";
 import * as logger from "morgan";
 import * as path from "path";
 import * as jwt from "jsonwebtoken";
+import * as corser from "corser";
 import errorHandler = require("errorhandler");
 import methodOverride = require("method-override");
 import { Electronic } from "./electronic"
@@ -122,8 +123,8 @@ export class WebPortal {
 
  
     // ## CORS middleware
-
-    var allowCrossDomain = function(req, res, next) {
+    this.app.use(corser.create());
+    /*var allowCrossDomain = function(req, res, next) {
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
         res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -136,7 +137,7 @@ export class WebPortal {
           next();
         }
     };
-    this.app.use(allowCrossDomain);
+    this.app.use(allowCrossDomain);*/
     //catch 404 and forward to error handler
     this.app.use(function(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
         err.status = 404;
