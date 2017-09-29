@@ -77,7 +77,7 @@ export class WebPortal {
 
   });
 
-	router.post("/api/users/logon", function (req, res) {
+	router.post("/api/users/login", function (req, res) {
     console.log(req.body);
     let body = req.body as any;
     console.log(body);
@@ -108,7 +108,7 @@ export class WebPortal {
   router.get("/secret/", passport.authenticate('jwt', { session: false }), function(req, res){
     res.json({message: "Success! You can not see this without a token"});
   });
-	router.post("/api/users/logoff", function (req, res) {
+	router.post("/api/users/logout", function (req, res) {
 		res.send({data: true})
 	});
 	router.get("/api/products/",passport.authenticate('jwt', { session: false }), function (req, res) {
