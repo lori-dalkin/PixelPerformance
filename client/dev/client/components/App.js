@@ -13,6 +13,7 @@ require('../../scss/style.scss');
 
 import { setToken, deleteToken } from '../actions/index';
 import Login from './authentication/Login';
+import ProductPage from './products/ProductPage';
 
 const styles = theme => ({
 	root: {
@@ -39,6 +40,8 @@ class App extends Component {
 		const token = getCookie("token");
 		if(token !== undefined){
 			this.props.setToken(token);
+		} else {
+			this.props.deleteToken();
 		}
 	}
 
@@ -70,7 +73,7 @@ class App extends Component {
 				      </Toolbar>
 				    </AppBar>
 				    <Route exact path="/" component={Login} />
-				    <Route path="/products" />
+				    <Route path="/products" component={ProductPage} />
 				  </div>
 			  </MuiThemeProvider>
 		  </Router>
