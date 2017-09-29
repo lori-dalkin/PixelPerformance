@@ -4,6 +4,7 @@ import { dbconnection } from "./dbconnection"
 import {Desktop} from "./desktop";
 import {Tablet} from "./tablet";
 import {TelevisionSet} from "./TelevisionSet";
+import {Laptop} from "./laptop";
 
 var db = new dbconnection().getDBConnector();
 export class Catalog {
@@ -12,12 +13,18 @@ export class Catalog {
 
 	constructor(){
 		this.electronics = [];
+
+		//Load all entities from the database
 		this.loadMonitors();
 		this.loadDesktops();
 		this.loadTablets();
 		this.loadTelevisions();
+		this.loadLaptops();
 	}
 
+	/*********************************************************
+	* Load functions for all persisted data in the database
+	 *********************************************************/
 	private loadMonitors(): void {
 		let monitor:Monitor
 		let monitors = this.electronics;
@@ -74,6 +81,23 @@ export class Catalog {
         });
     }
 
+    private loadLaptops(): void {
+        let lp:Laptop;
+        let lps = this.electronics;
+        db.many('SELECT * FROM laptops')
+            .then(function(rows){
+                for(let row of rows){
+                    lp = new Laptop(row.id, row.weight, row.modelNumber, row.brand, row.price, row.processor, row.ram, row.cpus, row.hardDrive, row.os, row.displaySize, row.battery, row.camera, row.touchscreen);
+                    lps.push(lp);
+                }
+            }).catch(function (err) {
+            console.log("No laptops found"+ err);
+        });
+    }
+
+    /****************************************************
+    * Function to retrieve a single product via it's id
+     ****************************************************/
 	public getProduct(productId:string): Electronic {
 		let elecIterator = this.electronics;
 		for(var iter = 0; iter < this.electronics.length; iter++){
@@ -83,11 +107,26 @@ export class Catalog {
 		return null;
 	}
 
+	/********************************************************
+	* Function to retrieve a list of products based on type
+	 ********************************************************/
 	public getProductPage(page:number, type:string): Electronic[] {
-		
-		let monitor = new Monitor('1', 1, "modelNumber", "brand", 1, 1);
-		return new Array(monitor, monitor, monitor);
-	}
+        var desired: Electronic[];
+        if(type == null){
+            desired = this.electronics;
+        }
+        else{
+            for (var i = 0; i < this.electronics.length; i++)
+            {
+                if(Electronic[i].electronicType == type)
+                    desired.push(this.electronics[i]);
+            }
+        }
+        //10 items per page
+        var startProduct = page * 10;
+        return desired.slice(startProduct,startProduct+10); //includes the first num, not the second. If not in bounds, should return empty array. To be dealt with in frontend
+    }
+    
 	public addProduct(type:string, ): boolean {
 		return true;
 	}

@@ -71,8 +71,10 @@ export class WebPortal {
 	let token = jwt.sign({ foo: 'bar' }, 'shhhhh');
 	//home page
   let routingCatalog = this.catalog;
-	router.get('/', function (req, res) {
+
+  router.get('/', function (req, res) {
 		res.send('20 dollars is 20 dollars backend home page')
+
   });
 
 	router.post("/api/users/logon", function (req, res) {
@@ -113,6 +115,7 @@ export class WebPortal {
 		res.send({data: monitors})
 	});
 	router.post("/api/products/",passport.authenticate('jwt', { session: false }),function (req, res) {
+
 		res.send({data: monitor})
 	});
 	
