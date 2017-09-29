@@ -9,30 +9,43 @@ export class Admin extends User {
     }
 
     
-    public static find(id:string): User{
+    public static async find(id:string){
     let admin: User;
-    db.one('SELECT * FROM admins WHERE id =' + id + ';')
+    //return new Admin("id", "fname", "lname", "email", "password");
+    db.one("SELECT * FROM admins WHERE id ='" + id + "';")
         .then(function (row) {
             admin = new Admin(row.id, row.fname, row.lname, row.email, row.password)
         }).catch(function (err) {
             console.log("No matching object found");
             return null;
         });
-    return admin;
+        return new Promise(resolve => {
+            setTimeout(() => {
+              resolve(admin);
+            }, 500);
+    });
 }
 
 
-    public static findByEmail(email: string): User
+    public static async findByEmail(email: string)
     {
+        //return new Admin("id", "fname", "lname", "email", "password");
         let admin: User;
-        db.one('SELECT * FROM admins WHERE email ='+ email + ';')
+        db.one("SELECT * FROM admins WHERE email ='"+ email + "';")
             .then(function (row) {
-                admin = new Admin(row.id, row.fname, row.lname, row.email, row.password)
+                console.log(row);
+                admin = new Admin(row.id, row.fname, row.lname, row.email, row.password);
             }).catch(function (err) {
                 console.log("No matching object found");
+                console.log(err);
                 return null;
             });
-        return admin;
+        return new Promise(resolve => {
+                setTimeout(() => {
+                  resolve(admin);
+                }, 2000);
+        });
+
     }
 
 }
