@@ -54,3 +54,12 @@ CREATE TABLE TelevisionSet(
 	type varchar(20),
 	PRIMARY KEY(id)
 );
+
+CREATE TABLE Admin{
+	
+	id UUID DEFAULT uuid_generate_v1(),
+	fname varchar(20),
+	lname varchar(20),
+	email varchar(30),
+	PRIMARY KEY(id)
+}
