@@ -21,11 +21,11 @@ export class Desktop extends ComputerSystem{
     * Method to persist an object of type Desktop to the database
      ****************************************************************/
     save():boolean{
-        db.none('INSERT INTO desktops VALUES ('+this.id +','+this.weight+','+this.modelNumber+','+this.brand+','+this.price+','+this.processor+',' + this.ram + ','+this.cpus+','+this.hardDrive+','+this.os+','+this.dimensions+')')
+        db.none("INSERT INTO desktops VALUES ('"+this.id +"',"+this.weight+",'"+this.modelNumber+"','"+this.brand+"',"+this.price+",'"+this.processor+"'," + this.ram + ','+this.cpus+','+this.hardDrive+",'"+this.os+"','"+this.dimensions+"')")
             .then(function(){
                 console.log("Desktop added to db");})
             .catch(function (err) {
-                console.log("Error adding Desktop to the db");
+                console.log("Error adding Desktop to the db: " + err);
                 return false;
             });
         return true;
