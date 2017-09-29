@@ -18,11 +18,11 @@ export class AddProductComponent extends Component {
             modelNumber: '',
             brand: '',
             price: '',
-            category: '',
+            electronicType: '',
             processor: '',
             ram: '',
             hardDrive: '',
-            cpu: '',
+            cpus: '',
             os: '',
             dimensions: '',
             type: '',
@@ -30,7 +30,7 @@ export class AddProductComponent extends Component {
             displaySize: '',
             battery: '',
             camera: '',
-            touchScreen: '',
+            touchscreen: '',
             size: ''
         };
         this.updateState = this.updateState.bind(this);
@@ -54,19 +54,18 @@ export class AddProductComponent extends Component {
             modelNumber: this.state.modelNumber,
             brand: this.state.brand,
             price: this.state.price,
-            category: this.state.category,
+            electronicType: this.state.electronicType,
             processor: this.state.processor,
             ram: this.state.ram,
             hardDrive: this.state.hardDrive,
-            cpu: this.state.cpu,
+            cpus: this.state.cpus,
             os: this.state.os,
             dimensions: this.state.dimensions,
             type: this.state.type,
-            computerType: this.state.computerType,
             displaySize: this.state.displaySize,
             battery: this.state.battery,
             camera: this.state.camera,
-            touchScreen: this.state.touchScreen,
+            touchscreen: this.state.touchscreen,
             size: this.state.size
         });
         this.handleClose(event);
@@ -140,14 +139,14 @@ export class AddProductComponent extends Component {
                             value={this.state.value}
                             onChange={this.updateState}
                         />
-                        <SelectField name="category" value={this.state.value} onChange={this.updateState}>
-                            <MenuItem value="televisionSet" primaryText="Television Set"/>
-                            <MenuItem value="computerSystem" primaryText="Computer System"/>
-                            <MenuItem value="monitor" primaryText="Monitor"/>
+                        <SelectField name="electronicType" value={this.state.value} onChange={this.updateState}>
+                            <MenuItem value="TelevisionSet" primaryText="Television Set"/>
+                            <MenuItem value="ComputerSystem" primaryText="Computer System"/>
+                            <MenuItem value="Monitor" primaryText="Monitor"/>
                         </SelectField>
                         <div>
                             {(() => {
-                                switch (this.state.category) {
+                                switch (this.state.electronicType) {
                                     case "televisionSet":
                                         return (
                                             <div>
@@ -206,14 +205,15 @@ export class AddProductComponent extends Component {
                                                     onChange={this.updateState}
                                                 />
                                                 <SelectField name="computerType" value={this.state.value} onChange={this.updateState}>
-                                                    <MenuItem value="desktop" primaryText="Desktop"/>
-                                                    <MenuItem value="laptop" primaryText="Laptop"/>
-                                                    <MenuItem value="tablet" primaryText="Tablet"/>
+                                                    <MenuItem value="Desktop" primaryText="Desktop"/>
+                                                    <MenuItem value="Laptop" primaryText="Laptop"/>
+                                                    <MenuItem value="Tablet" primaryText="Tablet"/>
                                                 </SelectField>
                                                 <div>
                                                     {(() => {
                                                         switch (this.state.computerType) {
                                                             case "desktop":
+                                                                this.setState({ electronicType: "Desktop"});
                                                                 return (
                                                                     <div>
                                                                         <TextField
@@ -226,6 +226,7 @@ export class AddProductComponent extends Component {
                                                                     </div>
                                                                 );
                                                             case "laptop":
+                                                                this.setState({ electronicType: "Laptop"});
                                                                 return (
                                                                     <div>
                                                                         <TextField
@@ -259,6 +260,7 @@ export class AddProductComponent extends Component {
                                                                     </div>
                                                                 );
                                                             case "tablet":
+                                                                this.setState({ electronicType: "Tablet"});
                                                                 return (
                                                                     <div>
                                                                         <TextField
