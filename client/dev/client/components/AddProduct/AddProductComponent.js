@@ -1,9 +1,15 @@
-import React, { Component } from 'react';
-import Grid from 'material-ui/Grid';
-import Paper from 'material-ui/Paper';
-import Topography from 'material-ui/Topography';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+
 import TextField from 'material-ui/TextField';
-import Button from 'material-ui/Button';
+import Button from 'material-ui/Button'
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+
+import MonitorFormElements from '/MonitorFormElements';
+import ComputerSystemFormElements from '/ComputerSystemFormElements';
+import TelevisionSetFormElements from '/TelevisionSetFormElements';
 
 export class AddProductComponent extends Component {
 
@@ -15,77 +21,118 @@ export class AddProductComponent extends Component {
             modelNumber: '',
             brand: '',
             price: '',
-            category: ''
-        }
+            category: '',
+            processor: '',
+            ram: '',
+            hardDrive: '',
+            cpu: '',
+            os: '',
+            dimensions: '',
+            type: '',
+            computerType: '',
+            displaySize: '',
+            battery: '',
+            camera: '',
+            touchScreen: '',
+            size: ''
+        };
+        this.updateState = this.updateState.bind(this);
+        this.addProduct = this.addProduct.bind(this);
     }
 
-    updateState(e) {
-        this.setState({[e.target.name]: e.target.value,});
+    updateState(event) {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+        this.setState({[name]: value});
     }
 
-    addProduct(e) {
+    addProduct(event) {
         // Add product function.
     }
 
-    change(e){
-        category = document.querySelector('#electronicsCategory').value;
-        if (category.equals('televisonSet')){
-            // Smthg
-        }else if (category.equals('computerSystem')){
-            // Smthg
-        }else if (category.equals('monitor')){
-            // Smthg
-        }
-    }
-
     render(){
-        return(
-            <div>
-                <Grid container spacing={24} justify="center">
-                    <Grid item xs={10} md={5} lg={4}>
-                        <Paper style={panelPadding}>
-                            <Topography content="h3">
-                                Add Product Form
-                            </Topography>
-                            <br />
-                            <form onSubmit{this.addProduct}>
-                                <TextField
-                                    id="id"
-                                    label="ProductID"
-                                    onChange={this.updateState}
-                                />
-                                <TextField
-                                    id="weight"
-                                    label="Weight"
-                                />
-                                <TextField
-                                    id="modelNumber"
-                                    label="Model Number"
-                                    onChange={this.updateState}
-                                />
-                                <TextField
-                                    id="brand"
-                                    label="Brand"
-                                    onChange={this.updateState}
-                                />
-                                <TextField
-                                    id="price"
-                                    label="Price"
-                                    onChange={this.updateState}
-                                />
-                                <SelectField id="electronicsCategory" onChange={this.updateState}>
-                                    <MenuItem value="televisionSet" onChange={this.change} primaryText="Television Set"/>
-                                    <MenuItem value="computerSystem" onChange={this.change} primaryText="Computer System"/>
-                                    <MenuItem value="monitor" onChange={this.change} primaryText="Monitor"/>
-                                </SelectField>
+        const actions =[
+            <FlatButton
+                label="Cancel"
+                primary={true}
+                onClick={this.handleClose}
+            />,
+            <FlatButton
+                label="Submit"
+                primary={true}
+                disabled={true}
+                onClick={this.handleClose}
+            />,
+        ];
 
-                                <Button type="submit">Submit</Button>
-                                <Button type="button" onClick={reset}>Clear</Button>
-                            </form>
-                        </Paper>
-                    </Grid>
-                </Grid>
+        return (
+            <div>
+                <RaisedButton label="Add Product Model" onClick={this.handleOpen} />
+                <Dialog
+                    title="Add Product Form"
+                    actions={actions}
+                    model={true}
+                    open={this.state.open}
+                >
+                    <form onSubmit={addProduct}>
+                        <TextField
+                            id="id"
+                            name="id"
+                            label="ProductID"
+                            value={this.state.value}
+                            onChange={this.updateState}
+                        />
+                        <TextField
+                            id="weight"
+                            name="weight"
+                            label="Weight"
+                            value={this.state.value}
+                            onChange={this.updateState}
+                        />
+                        <TextField
+                            id="modelNumber"
+                            name="modelNumber"
+                            label="Model Number"
+                            value={this.state.value}
+                            onChange={this.updateState}
+                        />
+                        <TextField
+                            id="brand"
+                            name="brand"
+                            label="Brand"
+                            value={this.state.value}
+                            onChange={this.updateState}
+                        />
+                        <TextField
+                            id="price"
+                            name="price"
+                            label="Price"
+                            value={this.state.value}
+                            onChange={this.updateState}
+                        />
+                        <SelectField name="category" value={this.state.value} onChange={this.updateState}>
+                            <MenuItem value="televisionSet" primaryText="Television Set"/>
+                            <MenuItem value="computerSystem" primaryText="Computer System"/>
+                            <MenuItem value="monitor" primaryText="Monitor"/>
+                        </SelectField>
+                        <div>
+                            if (this.state.category.equals('televisionSet')){
+                                <TelevisionSetFormElements dimensions={this.state.dimensions} type={this.state.type} />
+                            }else if (props.computerType.equals('computerSystem')){
+                                <ComputerSystemFormElements props={this.state} />
+                            }else if (props.computerType.equals('monitor')){
+                                <MonitorFormElements props={this.state} />
+                            }else{
+                                <p />
+                            }
+                        </div>
+
+                        <Button type="submit">Submit</Button>
+                        <Button type="button" onClick={reset}>Clear</Button>
+                    </form>
+                </Dialog>
             </div>
-        )
+        );
     }
 }
