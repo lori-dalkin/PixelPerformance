@@ -19,6 +19,10 @@ const formStyle = {
 }
 
 class Login extends Component {
+  componentDidMount(){
+    this.props.attemptLogin({username: "jacob", password: "password"});
+  }
+
   render() {
     return (
       <div style={{ flexGrow: '1', marginTop: '30px' }}>

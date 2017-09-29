@@ -7,6 +7,10 @@ module.exports = {
         contentBase: './build',
         port: 3000
     },
+    node: {
+        dns: 'mock',
+        net: 'mock'
+    },
     devtool: 'cheap-module-eval-source-map',
     entry: './dev/client/index.js',
     module: {
@@ -19,6 +23,10 @@ module.exports = {
             {
                 test: /\.scss/,
                 loader: 'style-loader!css-loader!sass-loader'
+            },
+            { 
+                test: /\.json$/, 
+                loader: "json-loader"
             }
         ]
     },
