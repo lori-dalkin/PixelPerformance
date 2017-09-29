@@ -57,7 +57,7 @@ CREATE TABLE laptops(
 	displaySize dec(3,1),
 	battery int,
 	camera bool,
-	touchscreen boolm
+	touchscreen bool,
 	PRIMARY KEY(id)
 );
 

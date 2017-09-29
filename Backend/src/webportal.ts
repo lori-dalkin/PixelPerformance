@@ -71,39 +71,48 @@ export class WebPortal {
 	let token = jwt.sign({ foo: 'bar' }, 'shhhhh');
 	//home page
   let routingCatalog = this.catalog;
-	router.get('/', function (req, res) {
+
+  router.get('/', function (req, res) {
 		res.send('20 dollars is 20 dollars backend home page')
 	});
+
 	router.post("/api/users/logon", function (req, res) {
-    console.log(req.body);
-    let body = req.body as any;
-    console.log(body);
-    if(body.email && body.password){
-      var email = body.email;
-      var password = body.password;
-    }
-    // usually this would be a database call:
-    let user = Admin.find(email);
-    if( ! user ){
-      res.status(401).json({message:"no such user found"});
-    }
-    console.log(user);
-    //add hasing.
-    if(user.password === req.body.password) {
-      // from now on we'll identify the user by the id and the id is the only personalized value that goes into our token
-      var payload = {id: user.id};
-      var token = jwt.sign(payload, 'tasmanianDevil');
-      res.json({message: "ok", token: token});
-    } else {
-      res.status(401).json({message:"passwords did not match"});
-    }
+        console.log(req.body);
+        let body = req.body as any;
+        console.log(body);
+
+        if(body.email && body.password){
+          var email = body.email;
+          var password = body.password;
+        }
+
+        // usually this would be a database call:
+        let user = Admin.find(email);
+        if( ! user ){
+          res.status(401).json({message:"no such user found"});
+        }
+
+        console.log(user);
+        //add hasing.
+
+        if(user.password === req.body.password) {
+          // from now on we'll identify the user by the id and the id is the only personalized value that goes into our token
+          var payload = {id: user.id};
+          var token = jwt.sign(payload, 'tasmanianDevil');
+          res.json({message: "ok", token: token});
+        } else {
+          res.status(401).json({message:"passwords did not match"});
+        }
 	});
+
 	router.post("/api/users/logoff", function (req, res) {
 		res.send({data: true})
 	});
+
 	router.get("/api/products/", function (req, res) {
 		res.send({data: monitors})
 	});
+
 	router.post("/api/products/",function (req, res) {
 		res.send({data: monitor})
 	});
