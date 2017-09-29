@@ -13,6 +13,7 @@ const initialState = {
         addProductOpen: false,
         error: false
     }
+    selectedProduct: {}
 };
 
 export default function (state = initialState, action) {
@@ -44,7 +45,7 @@ export default function (state = initialState, action) {
             };
             break;
         case SHOW_PRODUCT_VIEW_DIALOG:
-            return { ...state, productViewOpen: true };
+            return { ...state, productViewOpen: true, selectedProduct: action.product };
             break;
         case HIDE_PRODUCT_VIEW_DIALOG:
             return { ...state, productViewOpen: false };

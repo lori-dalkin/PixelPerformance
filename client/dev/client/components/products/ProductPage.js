@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import FilteredProductList from './FilteredProductList';
 import ProductViewDialog from './ProductViewDialog';
 import ProductAddDialog from './ProductAddDialog';
-import { getProducts, showAddProduct, hideAddProduct } from '../../actions';
+import { getProducts, hideProductView, showAddProduct, hideAddProduct } from '../../actions';
 
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
@@ -64,7 +64,8 @@ const mapDispatchToProps = dispatch => {
 		},
 		hideAddProduct: () => {
 			dispatch(hideAddProduct());
-		}
+		},
+		hideProductView: () => dispatch(hideProductView())
 	};
 }
 

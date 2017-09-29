@@ -19,10 +19,10 @@ How to build and run:
 	
 FrontEnd:
 
-	1) Install react
-	2) ??
-	3) ??
-	4) profit
+	1) npm install webpack -g
+	2) npm install
+	3) webpack
+	4) npm start
 DBSetup:
 download newest version of postpressql.
 use pg admin4 to make a db called DBpixelperformance with the superuser password being "admin"

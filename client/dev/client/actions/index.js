@@ -121,6 +121,10 @@ export const addProductRequest = () => {
     };
 }
 
+export const showProductView = (product) => {
+    return { type: SHOW_PRODUCT_VIEW_DIALOG, product };
+}
+
 export const addProductSuccess = (result) => {
     return {
         type: ADD_PRODUCT_SUCCESS,
@@ -155,10 +159,6 @@ export const addProduct = (body) => {
         }
     }
   };
-}
-
-export const showProductView = (id) => {
-    return { type: SHOW_PRODUCT_VIEW_DIALOG };
 }
 
 export const hideProductView = () => {

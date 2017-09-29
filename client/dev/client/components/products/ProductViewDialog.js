@@ -10,26 +10,25 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import Slide from 'material-ui/transitions/Slide';
 
-import { setToken, deleteToken } from '../../actions/index';
-
 class ProductViewDialog extends Component {
 
 	render() {
 		return (
 				<Dialog open={this.props.open} transition={Slide} onRequestClose={this.props.handleRequestClose}>
-          <DialogTitle>{"Use Google's location service?"}</DialogTitle>
+          <DialogTitle>{`Item ${this.props.product.selectedProduct.brand} ${this.props.product.selectedProduct.electronicType}`}</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Let Google help apps determine location. This means sending anonymous location data to
-              Google, even when no apps are running.
+              <strong>ID: </strong>{this.props.product.selectedProduct.id}<br/>
+              <strong>Brand: </strong>{this.props.product.selectedProduct.brand}<br/>
+              <strong>Size: </strong>{this.props.product.selectedProduct.size}<br/>
+              <strong>Type: </strong>{this.props.product.selectedProduct.electronicType}<br/>
+              <strong>Price: </strong>{`$${this.props.product.selectedProduct.weight} CDN`}<br/>
+              <strong>Weight: </strong>{`${this.props.product.selectedProduct.weight} lbs`}<br/>
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.props.handleRequestClose} color="primary">
-              Disagree
-            </Button>
-            <Button onClick={this.props.handleRequestClose} color="primary">
-              Agree
+              Back
             </Button>
           </DialogActions>
         </Dialog>
@@ -42,9 +41,6 @@ const mapStateToProps = ({ product }) => ({
   product
 });
 
-const mapDispatchToProps = {
-	setToken,
-	deleteToken
-};
+const mapDispatchToProps = {};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductViewDialog);

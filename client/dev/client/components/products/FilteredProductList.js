@@ -15,8 +15,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onProductClick: (id, brand) => {
-            dispatch(showProductView(id, brand))
+        onProductClick: (product) => {
+            dispatch(showProductView(product))
         }
     };
 }
