@@ -10,7 +10,7 @@ export  class TelevisionSet extends Electronic{
     type: string;
 
     constructor(id: string, weight: number, modelNumber: string, brand: string, price: number, dimensions: string , type : string) {
-        super(id, weight, modelNumber, brand, price);
+        super(id, weight, modelNumber, brand, price,"TelevisionSet");
         this.dimensions = dimensions;
         this.type = type;
     }

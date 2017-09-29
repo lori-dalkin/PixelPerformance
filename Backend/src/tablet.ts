@@ -12,7 +12,7 @@ export class Tablet extends ComputerSystem{
 	
 	constructor(id: string, weight: number, modelNumber: string, brand: string, price: number, processor: string, ram: number,
                 cpus: number, hardDrive: number, os: string, displaySize: number, dimensions: string, battery: number, camera: boolean){
-                	super(id, weight, modelNumber, brand, price, processor, ram, cpus, hardDrive, os);
+                	super(id, weight, modelNumber, brand, price, "Tablet", processor, ram, cpus, hardDrive, os);
                 	this.displaySize = displaySize;
                 	this.dimensions = dimensions;
                 	this.battery = battery;
