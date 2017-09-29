@@ -42,4 +42,3 @@ export  class TelevisionSet extends Electronic{
         return televisionSet;
     }
 }
-}
