@@ -5,7 +5,7 @@ import { ACCEPT_LOGIN, SET_TOKEN, DELETE_TOKEN, REJECT_LOGIN, ATTEMPT_LOGIN, HID
 export const attemptLogin = (credentials) => {
 	return (dispatch) => {
     dispatch(showLoading());
-    return callApi('api/users/logon', 'post', {
+    return callApi('api/users/login', 'post', {
       email: credentials.email,
       password: credentials.password,
     }).then(res => dispatch(receiveAttemptLogin(res)));
