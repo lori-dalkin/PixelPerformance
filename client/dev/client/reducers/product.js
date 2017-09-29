@@ -12,7 +12,7 @@ const initialState = {
         addingProduct: false,
         addProductOpen: false,
         error: false
-    }
+    },
     selectedProduct: {}
 };
 

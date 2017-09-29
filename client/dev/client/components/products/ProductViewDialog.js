@@ -22,7 +22,7 @@ class ProductViewDialog extends Component {
               <strong>Brand: </strong>{this.props.product.selectedProduct.brand}<br/>
               <strong>Size: </strong>{this.props.product.selectedProduct.size}<br/>
               <strong>Type: </strong>{this.props.product.selectedProduct.electronicType}<br/>
-              <strong>Price: </strong>{`$${this.props.product.selectedProduct.weight} CDN`}<br/>
+              <strong>Price: </strong>{`$${this.props.product.selectedProduct.price} CDN`}<br/>
               <strong>Weight: </strong>{`${this.props.product.selectedProduct.weight} lbs`}<br/>
             </DialogContentText>
           </DialogContent>
