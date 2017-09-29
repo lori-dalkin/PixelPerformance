@@ -1,4 +1,4 @@
-import { ATTEMPT_LOGIN } from '../actions/action-types';
+import { ATTEMPT_LOGIN, ACCEPT_LOGIN } from '../actions/action-types';
 
 const initialState = {};
 

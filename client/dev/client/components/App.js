@@ -45,7 +45,7 @@ class App extends Component {
 				    <AppBar position="static">
 					    <Toolbar>
 					    	<Typography type="title" color="inherit">
-					        Fin Fin Tech Application
+					        Pixel Performance
 					      </Typography>
 				      </Toolbar>
 				    </AppBar>
