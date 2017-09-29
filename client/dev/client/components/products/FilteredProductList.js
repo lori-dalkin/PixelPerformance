@@ -14,7 +14,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         onProductClick: id => {
-            dispatch(loadModalData(id))
+            dispatch(loadProductView(id))
         }
     };
 }

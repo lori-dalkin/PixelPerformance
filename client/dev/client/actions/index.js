@@ -4,7 +4,7 @@ import callApi from '../utils/apiCaller';
 export const attemptLogin = (credentials) => {
 	return (dispatch) => {
     dispatch(showLoading());
-    return callApi('api/users/logon', 'post', {
+    return callApi('api/users/login', 'post', {
       email: credentials.email,
       password: credentials.password,
     }).then(
@@ -85,7 +85,7 @@ function shouldGetProducts(state) {
 
 export const getProducts = (filter = "") => {
     return function (dispatch, getState) {
-        // if (getState().authorization && getState().authorization.token) {
+        if (getState().authorization && getState().authorization.token) {
             if (shouldGetProducts(getState())) {
                 dispatch(getProductsRequest());
                 
@@ -96,7 +96,7 @@ export const getProducts = (filter = "") => {
                 }
 
                 let headers = {
-                    // 'Authroization': `Bearer ${getState().authorization.token}`
+                    'Authroization': `Bearer ${getState().authorization.token}`
                 };
 
                 return callApi(endPoint, 'get', headers).then(
@@ -104,7 +104,7 @@ export const getProducts = (filter = "") => {
                     error => dispatch(getProductsFailure(error))
                 );
             }
-        // }
+        }
     };
 }
 export const showSnackbar = () => {

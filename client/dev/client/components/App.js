@@ -40,6 +40,8 @@ class App extends Component {
 		const token = getCookie("token");
 		if(token !== undefined){
 			this.props.setToken(token);
+		} else {
+			this.props.deleteToken();
 		}
 	}
 

@@ -22,7 +22,7 @@ const ProductListItem = ({ onClick, brand, price }) => (
 			<Button 
 				raised 
 				color='primary'
-				onClick={ () => this.props.onClick() }
+				onClick={ () => onClick() }
 			>
 				View Info
 			</Button>

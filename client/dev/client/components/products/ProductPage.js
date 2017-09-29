@@ -41,6 +41,7 @@ class ProductPage extends React.Component {
 
 const mapStateToProps = state => {
 	return {
+		authentication: state.authentication,
 		product: state.product
 	};
 }
