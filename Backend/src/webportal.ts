@@ -120,12 +120,23 @@ export class WebPortal {
     //use override middlware
     this.app.use(methodOverride());
 
-    //enable cors
-    this.app.use(function(req, res, next) {
-      res.header("Access-Control-Allow-Origin", "*");
-      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-      next();
-    });
+ 
+    // ## CORS middleware
+
+    var allowCrossDomain = function(req, res, next) {
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+          
+        // intercept OPTIONS method
+        if ('OPTIONS' == req.method) {
+          res.send(200);
+        }
+        else {
+          next();
+        }
+    };
+    this.app.use(allowCrossDomain);
     //catch 404 and forward to error handler
     this.app.use(function(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
         err.status = 404;
