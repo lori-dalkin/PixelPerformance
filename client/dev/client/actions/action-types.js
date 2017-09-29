@@ -7,3 +7,7 @@ export const DELETE_TOKEN = "DELETE_TOKEN";
 
 export const SHOW_SNACKBAR = "SHOW_SNACKBAR";
 export const HIDE_SNACKBAR = "HIDE_SNACKBAR";
+
+export const ADD_PRODUCT = 'ADD_PRODUCT';
+export const CONFIRM_ADD = 'CONFIRM_ADD';
+export const REJECT_ADD = 'REJECT_ADD';

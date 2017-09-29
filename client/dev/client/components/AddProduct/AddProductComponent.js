@@ -2,13 +2,17 @@ import React, {Component} from 'react';
 
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
-import Button from 'material-ui/Button';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+
+import { addProduct } from '../../actions/index';
 
 export class AddProductComponent extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            open: false,
             id: '',
             weight: '',
             modelNumber: '',
@@ -30,7 +34,7 @@ export class AddProductComponent extends Component {
             size: ''
         };
         this.updateState = this.updateState.bind(this);
-        this.addProduct = this.addProduct.bind(this);
+        this.add = this.add.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleOpen = this.handleOpen.bind(this);
     }
@@ -42,26 +46,48 @@ export class AddProductComponent extends Component {
         this.setState({[name]: value});
     }
 
-    addProduct(event) {
-        // Add product function.
+    add = (event) => {
+        event.preventDefault();
+        this.props.addProduct({
+            id: this.state.id,
+            weight: this.state.weight,
+            modelNumber: this.state.modelNumber,
+            brand: this.state.brand,
+            price: this.state.price,
+            category: this.state.category,
+            processor: this.state.processor,
+            ram: this.state.ram,
+            hardDrive: this.state.hardDrive,
+            cpu: this.state.cpu,
+            os: this.state.os,
+            dimensions: this.state.dimensions,
+            type: this.state.type,
+            computerType: this.state.computerType,
+            displaySize: this.state.displaySize,
+            battery: this.state.battery,
+            camera: this.state.camera,
+            touchScreen: this.state.touchScreen,
+            size: this.state.size
+        });
+        this.handleClose(event);
     }
 
-    handleClose(event){
-        // Add close function.
-    }
+    handleClose = () => {
+        this.setState({open: false});
+    };
 
-    handleOpen(event){
-        // Add open function.
-    }
+    handleOpen = () => {
+        this.setState({open: true});
+    };
 
     render(){
         const actions =[
-            <Button
+            <FlatButton
                 label="Cancel"
                 primary={true}
                 onClick={this.handleClose}
             />,
-            <Button
+            <FlatButton
                 label="Submit"
                 primary={true}
                 disabled={true}
@@ -71,14 +97,14 @@ export class AddProductComponent extends Component {
 
         return (
             <div>
-                <Button label="Add Product Model" onClick={this.handleOpen} />
+                <RaisedButton label="Add Product Model" onClick={this.handleOpen} />
                 <Dialog
                     title="Add Product Form"
                     actions={actions}
                     model={true}
                     open={this.state.open}
                 >
-                    <form onSubmit={addProduct}>
+                    <form onSubmit={this.add}>
                         <TextField
                             id="id"
                             name="id"
@@ -293,3 +319,13 @@ export class AddProductComponent extends Component {
         );
     }
 }
+
+const mapStateToProps = ({ param }) => ({
+    param
+});
+
+const mapDispatchToProps = {
+    addProduct
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddProductComponent);
