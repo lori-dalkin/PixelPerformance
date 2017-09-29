@@ -19,11 +19,11 @@ INSERT INTO tablets(weight, modelnumber, brand, price, processor, ram, cpus, har
 INSERT INTO tablets(weight, modelnumber, brand, price, processor, ram, cpus, harddrive, os, displaysize, dimensions, battery, camera) VALUES(20, 'SM-T1818WZKEXAC', 'Samsung', 699.00, 'T810', 3, 8, 256, 'Android', 9.7, '237.3x169x5.6', 5870, True);
 INSERT INTO tablets(weight, modelnumber, brand, price, processor, ram, cpus, harddrive, os, displaysize, dimensions, battery, camera) VALUES(20, 'Z500M', 'Asus', 357.76, 'MTK MT8176', 4, 4, 64, 'Android', 9.7, '240.5x163.7.5x5.8', 22, True);
 
-INSERT INTO TelevisionSet(weight, modelNumber, brand, price, dimensions,type) VALUES(41 ,'OLED55B6P','LG',4719.18,'48.40x29.90x8.90', 'OLED');
-INSERT INTO TelevisionSet(weight, modelNumber, brand, price, dimensions,type) VALUES(55 ,'OLED65C7P','LG',7601.43,'57.20x34.40x8.50', 'OLED');
-INSERT INTO TelevisionSet(weight, modelNumber, brand, price, dimensions,type) VALUES(19 ,'43UJ6300','LG',1339.41,'38.50x24.20x7.40', 'LED');
-INSERT INTO TelevisionSet(weight, modelNumber, brand, price, dimensions,type) VALUES(19 ,'UN40MU6300FXZA','Samsung',900,'36.10x23.50x11.30', 'UHD');
-INSERT INTO TelevisionSet(weight, modelNumber, brand, price, dimensions,type) VALUES(31 ,'M50-D1','Vizio',1302.46,'44.40x27.98x8.70', 'LED');
+INSERT INTO televisionsets(weight, modelNumber, brand, price, dimensions,type) VALUES(41 ,'OLED55B6P','LG',4719.18,'48.40x29.90x8.90', 'OLED');
+INSERT INTO televisionsets(weight, modelNumber, brand, price, dimensions,type) VALUES(55 ,'OLED65C7P','LG',7601.43,'57.20x34.40x8.50', 'OLED');
+INSERT INTO televisionsets(weight, modelNumber, brand, price, dimensions,type) VALUES(19 ,'43UJ6300','LG',1339.41,'38.50x24.20x7.40', 'LED');
+INSERT INTO televisionsets(weight, modelNumber, brand, price, dimensions,type) VALUES(19 ,'UN40MU6300FXZA','Samsung',900,'36.10x23.50x11.30', 'UHD');
+INSERT INTO televisionsets(weight, modelNumber, brand, price, dimensions,type) VALUES(31 ,'M50-D1','Vizio',1302.46,'44.40x27.98x8.70', 'LED');
 
 INSERT INTO monitors(weight, modelNumber, brand, price, size) VALUES(13 ,'OLEDLG21X','LG', 432.00, 21);
 INSERT INTO monitors(weight, modelNumber, brand, price, size) VALUES(17 ,'OLEDLG24X','LG', 656.00, 24);
@@ -34,3 +34,6 @@ INSERT INTO monitors(weight, modelNumber, brand, price, size) VALUES(19 ,'SAMXK2
 INSERT INTO monitors(weight, modelNumber, brand, price, size) VALUES(11 ,'DELLX21','Dell',419.18, 21);
 INSERT INTO monitors(weight, modelNumber, brand, price, size) VALUES(15 ,'DELLX24','Dell',519.18, 24);
 INSERT INTO monitors(weight, modelNumber, brand, price, size) VALUES(18 ,'DELLX27','Dell',4719.18, 27);
+
+INSERT INTO admins(fname, lname, email, password) VALUES('Super','Admin','superadmin@pp.com',001);
+INSERT INTO clients(fname, lname, email, password, address, phone) VALUES('John','Smith','jsmith@gmail.com',010,'Canada','555-5555';)
