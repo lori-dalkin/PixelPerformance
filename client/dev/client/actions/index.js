@@ -1,4 +1,6 @@
-import { ACCEPT_LOGIN, SET_TOKEN, DELETE_TOKEN, REJECT_LOGIN, ATTEMPT_LOGIN, HIDE_SNACKBAR, SHOW_SNACKBAR, SET_PRODUCTS_FILTER, GET_PRODUCTS_REQUEST, GET_PRODUCTS_SUCCESS, GET_PRODUCTS_FAILURE, ADD_PRODUCT } from './action-types';
+import { ACCEPT_LOGIN, SET_TOKEN, DELETE_TOKEN, REJECT_LOGIN, ATTEMPT_LOGIN, HIDE_SNACKBAR, SHOW_SNACKBAR, 
+    SET_PRODUCTS_FILTER, GET_PRODUCTS_REQUEST, GET_PRODUCTS_SUCCESS, GET_PRODUCTS_FAILURE,
+    SHOW_PRODUCT_VIEW_DIALOG, HIDE_PRODUCT_VIEW_DIALOG, GET_SPECIFIC_PRODUCT, ADD_PRODUCT } from './action-types';
 import callApi from '../utils/apiCaller';
 
 export const attemptLogin = (credentials) => {
@@ -106,7 +108,6 @@ export const getProducts = (filter = "") => {
 export const showSnackbar = () => {
     return { type: SHOW_SNACKBAR };
 }
-
 export const hideSnackbar = () => {
     return { type: HIDE_SNACKBAR };
 }
@@ -134,6 +135,12 @@ export const addProduct = (param) => {
         size: param.size,
     }).then(res => dispatch(receiveAddAttempt(res)));
   };
+export const showProductView = (id) => {
+    console.log("action dispatched with id" + id);
+    return { type: SHOW_PRODUCT_VIEW_DIALOG };
+}
+export const hideProductView = () => {
+    return { type: HIDE_PRODUCT_VIEW_DIALOG };
 }
 
 export const receiveAddAttempt = (result) => {
