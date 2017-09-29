@@ -16,6 +16,7 @@ export class Admin extends User {
             admin = new Admin(row.id, row.fname, row.lname, row.email, row.password)
         }).catch(function (err) {
             console.log("No matching object found");
+            return null;
         });
     return admin;
 }
