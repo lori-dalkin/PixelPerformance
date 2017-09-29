@@ -7,11 +7,15 @@ var db = new dbconnection().getDBConnector();
 export class Desktop extends ComputerSystem{
     dimensions: string;
 
-    constructor(id: string, weight: number, modelNumber: string, brand: string, price: number, processor: string, ram: number,
-                cpus: number, hardDrive: number, os: string, dimensions: string) {
-        super(id, weight, modelNumber, brand, price, processor, ram, cpus, hardDrive, os);
+    constructor(id: string, weight: number, modelNumber: string, brand: string, price: number, processor: string, ram: number, cpus: number, hardDrive: number, os: string, dimensions: string) {
+        super(id, weight, modelNumber, brand, price, "Desktop", processor, ram, cpus, hardDrive, os);
         this.dimensions = dimensions;
     }
+
+    /***************
+    * Accessors
+     ***************/
+    public getDimensions(): string { return this.dimensions;}
 
     /****************************************************************
     * Method to persist an object of type Desktop to the database
@@ -37,6 +41,7 @@ export class Desktop extends ComputerSystem{
                 desktop = new Desktop(row.id,row.weight,row.modelNumber, row.brand, row.price, row.processor, row.ram, row.cpus, row.hardDrive, row.os, row.dimensions)
             }).catch(function (err) {
             console.log("No matching object found");
+            return null;
         });
         return desktop;
     }

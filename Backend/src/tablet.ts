@@ -12,7 +12,7 @@ export class Tablet extends ComputerSystem{
 	
 	constructor(id: string, weight: number, modelNumber: string, brand: string, price: number, processor: string, ram: number,
                 cpus: number, hardDrive: number, os: string, displaySize: number, dimensions: string, battery: number, camera: boolean){
-                	super(id, weight, modelNumber, brand, price, processor, ram, cpus, hardDrive, os);
+                	super(id, weight, modelNumber, brand, price, "Tablet", processor, ram, cpus, hardDrive, os);
                 	this.displaySize = displaySize;
                 	this.dimensions = dimensions;
                 	this.battery = battery;
@@ -43,6 +43,7 @@ export class Tablet extends ComputerSystem{
                 tablet = new Tablet(row.id,row.weight,row.modelNumber, row.brand, row.price, row.processor, row.ram, row.cpus, row.hardDrive, row.os, row.displaySize, row.dimensions, row.battery, row.camera)
             }).catch(function (err) {
             console.log("No matching object found");
+            return null;
         });
         return tablet;
     }

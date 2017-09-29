@@ -4,9 +4,11 @@ var db = new dbconnection().getDBConnector();
 export class Monitor extends Electronic {
 	size: number;
     constructor(id: string, weight: number, modelNumber: string, brand: string, price: number, size: number) {
-		super(id, weight, modelNumber, brand, price);
+		super(id, weight, modelNumber, brand, price,"Monitor");
 		this.size = size;
     }
+
+    public getSize(): number {return this.size;}
 
     save():boolean {
 		db.none('INSERT INTO monitors VALUES ('+this.id +','+this.weight+','+this.modelNumber+','+this.brand+','+this.price+','+this.size+')')
@@ -26,6 +28,7 @@ export class Monitor extends Electronic {
 				monitor = new Monitor(row.id,row.weight,row.modelNumber, row.brand, row.price, row.size)
 			}).catch(function (err) {
 				console.log("No matching object found");
+				return null;
 			});
 		return monitor
 	}
