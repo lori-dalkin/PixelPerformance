@@ -78,6 +78,7 @@ app.post("/login", function(req, res) {
   }
 });
 
+//use Bearer <token> to test secret access
 app.get("/secret", passport.authenticate('jwt', { session: false }), function(req, res){
   res.json({message: "Success! You can not see this without a token"});
 });
