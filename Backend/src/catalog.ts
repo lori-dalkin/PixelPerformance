@@ -136,7 +136,7 @@ export class Catalog {
             case "TelevisionSet":
                 electronic = new TelevisionSet(uuid.v1(), parseInt(data.weight), data.modelNumber, data.brand, parseFloat(data.price), data.dimensions, data.type);
                 break;
-            case "Monitors":
+            case "Monitor":
                 electronic = new Monitor(uuid.v1(), parseInt(data.weight), data.modelNumber, data.brand,parseFloat(data.price), parseInt(data.size));
                 break;
             case "Desktop":
