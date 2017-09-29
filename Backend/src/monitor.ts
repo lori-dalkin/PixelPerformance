@@ -4,7 +4,7 @@ var db = new dbconnection().getDBConnector();
 export class Monitor extends Electronic {
 	size: number;
     constructor(id: string, weight: number, modelNumber: string, brand: string, price: number, size: number) {
-		super(id, weight, modelNumber, brand, price);
+		super(id, weight, modelNumber, brand, price,"Monitor");
 		this.size = size;
     }
 
