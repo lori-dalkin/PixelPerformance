@@ -61,7 +61,7 @@ CREATE TABLE admins(
 	fname varchar(20),
 	lname varchar(20),
 	email varchar(30),
-	password BINARY(64)
+	password CHAR(128),
 	PRIMARY KEY(id)
 );
 
@@ -71,7 +71,8 @@ CREATE TABLE clients(
 	fname varchar(20),
 	lname varchar(20),
 	email varchar(30),
-	password BINARY(64),
+	password CHAR(128),
 	address varchar(30),
-	phone varchar(30)
+	phone varchar(30),
+	PRIMARY KEY(id)
 );
