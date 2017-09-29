@@ -43,18 +43,6 @@ CREATE TABLE tablets(
     PRIMARY KEY(id)
 );
 
-CREATE TABLE TelevisionSet(
-
-	id UUID DEFAULT uuid_generate_v1(),
-	weight dec(4, 2),
-	modelNumber varchar(20) UNIQUE,
-	brand varchar(30),
-	price dec(6, 2),
-	dimensions varchar(20),
-	type varchar(20),
-	PRIMARY KEY(id)
-);
-
 CREATE TABLE laptops(
 	id UUID DEFAULT uuid_generate_v1(),
 	weight dec(4,2),
@@ -69,5 +57,40 @@ CREATE TABLE laptops(
 	displaySize dec(3,1),
 	battery int,
 	camera bool,
-	touchscreen bool
+	touchscreen boolm
+	PRIMARY KEY(id)
+);
+
+CREATE TABLE televisionsets(
+
+	id UUID DEFAULT uuid_generate_v1(),
+	weight dec(4, 2),
+	modelNumber varchar(20) UNIQUE,
+	brand varchar(30),
+	price dec(6, 2),
+	dimensions varchar(20),
+	type varchar(20),
+	PRIMARY KEY(id)
+);
+
+CREATE TABLE admins(
+
+	id UUID DEFAULT uuid_generate_v1(),
+	fname varchar(20),
+	lname varchar(20),
+	email varchar(30),
+	password CHAR(128),
+	PRIMARY KEY(id)
+);
+
+CREATE TABLE clients(
+
+	id UUID DEFAULT uuid_generate_v1(),
+	fname varchar(20),
+	lname varchar(20),
+	email varchar(30),
+	password CHAR(128),
+	address varchar(30),
+	phone varchar(30),
+	PRIMARY KEY(id)
 );
