@@ -3,9 +3,12 @@ import 'fetch';
 const API_PORT = 8080;
 const API_URL = "http://localhost";
 
-export default function callApi(endpoint, method = 'get', body) {
+export default function callApi(endpoint, method = 'get', headers, body) {
   return fetch(`${API_URL}:${API_PORT}/${endpoint}`, {
-    headers: { 'content-type': 'application/json' },
+    headers: { 
+      'content-type': 'application/json',
+      ...headers
+    },
     method,
     body: JSON.stringify(body),
   })

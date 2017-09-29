@@ -7,29 +7,44 @@ export const attemptLogin = (credentials) => {
     return callApi('api/users/logon', 'post', {
       email: credentials.email,
       password: credentials.password,
-    }).then(res => dispatch(receiveAttemptLogin(res)));
+    }).then(
+        res => dispatch(receiveAttemptLogin(res)),
+        error => dispatch(receiveAttemptLogin({ data: undefined }))
+    );
   };
 }
 
 export const showLoading = () => {
-  return {
-    type: ATTEMPT_LOGIN,
-  };
+    return {
+        type: ATTEMPT_LOGIN,
+    };
 }
 
 export const receiveAttemptLogin = (result) => {
-  if(result.data !== undefined){
-  	return {
-      type: ACCEPT_LOGIN,
-      token: result.data,
-    };
-  }else{
-    return {
-      type: REJECT_LOGIN
-    };
-  }
+    if (result.data !== undefined) {
+        return {
+            type: ACCEPT_LOGIN,
+            token: result.data,
+        };
+    } else {
+        return {
+            type: REJECT_LOGIN
+        };
+    }
 }
 
+export const setToken = (token) => {
+    return {
+        type: SET_TOKEN,
+        token: token
+    };
+}
+
+export const deleteToken = () => {
+    return {
+        type: DELETE_TOKEN
+    };
+}
 
 export const setProductFilter = (filter) => {
     return {
@@ -41,7 +56,7 @@ export const setProductFilter = (filter) => {
 export const getProductsRequest = () => {
     return {
         type: GET_PRODUCTS_REQUEST
-  };
+    };
 }
 
 export const getProductsSuccess = (products) => {
@@ -51,23 +66,11 @@ export const getProductsSuccess = (products) => {
     };
 }
 
-export const setToken = (token) => {
-  return {
-    type: SET_TOKEN,
-    token: token
-  };
-}
-
 export const getProductsFailure = (error) => {
     return {
         type: GET_PRODUCTS_FAILURE,
         error: error
     };
-}
-export const deleteToken = () => {
-  return {
-    type: DELETE_TOKEN
-  };
 }
 
 function shouldGetProducts(state) {
@@ -82,26 +85,32 @@ function shouldGetProducts(state) {
 
 export const getProducts = (filter = "") => {
     return function (dispatch, getState) {
-        if (shouldGetProducts(getState())) {
-            dispatch(getProductsRequest());
-            
-            let endPoint = 'api/products';
+        // if (getState().authorization && getState().authorization.token) {
+            if (shouldGetProducts(getState())) {
+                dispatch(getProductsRequest());
+                
+                let endPoint = 'api/products';
 
-            if (filter) {
-                endPoint = `api/products/${filter}`
+                if (filter) {
+                    endPoint = `api/products/${filter}`
+                }
+
+                let headers = {
+                    // 'Authroization': `Bearer ${getState().authorization.token}`
+                };
+
+                return callApi(endPoint, 'get', headers).then(
+                    res => dispatch(getProductsSuccess(res.data)),
+                    error => dispatch(getProductsFailure(error))
+                );
             }
-
-            return callApi(endPoint, 'get').then(
-                res => dispatch(getProductsSuccess(res)),
-                error => dispatch(getProductsFailure(error))
-            );
-        }
+        // }
     };
 }
 export const showSnackbar = () => {
-  return { type: SHOW_SNACKBAR };
+    return { type: SHOW_SNACKBAR };
 }
 
 export const hideSnackbar = () => {
-  return { type: HIDE_SNACKBAR };
+    return { type: HIDE_SNACKBAR };
 }

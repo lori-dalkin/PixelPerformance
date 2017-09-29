@@ -4,10 +4,11 @@ import ProductListItem from './ProductListItem';
 import Grid from 'material-ui/Grid';
 
 const ProductList = ({products, onProductClick}) => {
+    let productId = 1;
     return (
-        <Grid container spacing={8}>
+        <Grid container spacing={8} style={{ margin: '0px', marginTop: '5px' }}>
             {products.map(product => (
-              <ProductListItem key={product.id} {...product} onClick={ () => onProductClick(product.id) } />
+              <ProductListItem key={productId++} {...product} onClick={ () => onProductClick(product.id) } />
             ))}
         </Grid>
     );
@@ -16,8 +17,8 @@ const ProductList = ({products, onProductClick}) => {
 ProductList.propTypes = {
     products: PropTypes.arrayOf(
         PropTypes.shape({
-            id: PropTypes.number.isRequired,
-            name: PropTypes.string.isRequired,
+            id: PropTypes.string.isRequired,
+            brand: PropTypes.string.isRequired,
             price: PropTypes.number.isRequired
         }).isRequired
     ).isRequired,
