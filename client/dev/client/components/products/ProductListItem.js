@@ -33,7 +33,7 @@ const ProductListItem = ({ onClick, brand, price }) => (
 ProductListItem.propTypes = {
     onClick: PropTypes.func.isRequired,
     brand: PropTypes.string.isRequired,
-    price: PropTypes.string.isRequired
+    price: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 };
 
 export default ProductListItem;
