@@ -1,10 +1,10 @@
 export abstract class Electronic {
-    protected id: string;
-	protected weight: number ;
-	protected modelNumber: string;
-	protected brand: string;
-	protected price: number;
-	protected electronicType: string;
+    private id: string;
+	private weight: number ;
+	private modelNumber: string;
+	private brand: string;
+	private price: number;
+	private electronicType: string;
 
     constructor(id: string, weight: number, modelNumber: string, brand: string, price: number, electronicType: string) {
 
