@@ -63,7 +63,7 @@ export class Monitor extends Electronic {
     }
 
     public async modify(): Promise<boolean>{
-    	return db.none("UPDATE monitors SET weight = this.weight, modelNumber = this.modelNumber, brand = this.brand, price = this.price, size = this.size WHERE id = '"+ this.id + "';")
+    	return db.none("UPDATE monitors SET weight = '" + this.getWeight() + "', modelNumber = '" + this.getModelNumber() + "', brand = '" + this.getBrand() + "', price = '" + this.getPrice() + "', size = '" + this.getSize() + "' WHERE id = '"+ this.id + "';")
     		.then(function(){
     			console.log("monitor was modified");
     			return true;
