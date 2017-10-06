@@ -14,6 +14,7 @@ import { Electronic } from "./electronic";
 import { Monitor } from "./monitor";
 import { Admin } from "./admin";
 import {Catalog} from "./catalog";
+import { Client } from "./client";
 /**
  * The web portal.
  *
@@ -55,8 +56,10 @@ export class WebPortal {
 
     //add api
     this.api();
-  }
+   
 
+  }
+  
   /**
    * Create REST API routes
     *
@@ -168,19 +171,6 @@ export class WebPortal {
         next(err);
     });  
     
-    
-    var users = [
-      {
-        id: 1,
-        name: 'jonathanmh',
-        password: '%2yx4'
-      },
-      {
-        id: 2,
-        name: 'test',
-        password: 'test'
-      }
-    ];
     //error handling
     this.app.use(errorHandler());
 
@@ -212,7 +202,7 @@ export class WebPortal {
    * @class WebPortal
    * @method api
    */
-  public routes() {
+  public async routes() {
     //empty for now
   }
 }
