@@ -27,7 +27,7 @@ export class Catalog {
 	* Load functions for all persisted data in the database
 	 *********************************************************/
 	private loadMonitors(): void {
-		let monitor:Monitor
+		let monitor:Monitor;
 		let monitors = this.electronics;
         db.many('SELECT * FROM monitors')
             .then(function(rows){
