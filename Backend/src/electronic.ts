@@ -30,10 +30,10 @@ export abstract class Electronic {
     public setPrice(price: number): void { this.price = price; }
     public setElectronicType(elecType: string): void { this.electronicType = elecType; }
 
-    abstract save(): Promise<boolean>;
+    abstract async save(): Promise<boolean>;
 
-    // abstract modify(): Promise<boolean>;
+    // abstract async modify(): Promise<boolean>;
     //
-    // abstract delete(): Promise<boolean>;
+    // abstract async delete(): Promise<boolean>;
 
 }
