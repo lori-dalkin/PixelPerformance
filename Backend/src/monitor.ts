@@ -42,9 +42,16 @@ export class Monitor extends Electronic {
 	}
 
 	public static async findAll(){
+		console.log("entering find all");
 		return db.many('SELECT * FROM monitors;')
-			.then(function(row){
-				return row as Electronic[];
+			.then(function(data){
+				let monitors: Monitor[] = data;
+                let monitorObjects: Electronic[] = new Array<Electronic>();
+                for(let i=0;i< monitors.length;i++){
+					monitorObjects.push(new Monitor( monitors[i].id,monitors[i].weight,monitors[i].modelNumber, monitors[i].brand, monitors[i].price, monitors[i].size));
+				}
+				console.log(monitorObjects);
+                return  monitorObjects;
 			}).catch(function (err){
 				console.log("There was an error retrieving all monitors: " + err);
 				return null;

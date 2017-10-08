@@ -22,13 +22,15 @@ export class Catalog {
 		this.loadDesktops();
 		this.loadTablets();
 		this.loadTelevisions();
-		this.loadLaptops();
+        this.loadLaptops();
+        
+        
 	}
 
 	/*********************************************************
 	* Load functions for all persisted data in the database
 	 *********************************************************/
-	private loadMonitors(): void {
+	private async loadMonitors() {
 		let monitor:Monitor;
 		let monitors = this.electronics;
         db.many('SELECT * FROM monitors')
@@ -39,7 +41,9 @@ export class Catalog {
 				}
             }).catch(function (err) {
             console.log("No monitors found"+ err);
-		});
+        });
+        var monitorss = await Monitor.findAll();
+        console.log(monitorss);
 	}
 
 	private loadDesktops(): void {

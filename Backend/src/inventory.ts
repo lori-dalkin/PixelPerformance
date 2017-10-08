@@ -20,7 +20,9 @@ export class Inventory {
     public setinventoryType(inventoryType:Electronic): void{this.inventoryType = inventoryType;}
     public getinventoryType():Electronic{return this.inventoryType;}
 
-
+    public setElectornics(eletronics:Electronic[]):void{
+        Inventory.eletronics = eletronics;
+    }
     public async delete(): Promise<boolean>{
         return db.none("DELETE FROM inventories WHERE serialNumber ='"+ this.serialNumber + "';")
             .then(function () {
