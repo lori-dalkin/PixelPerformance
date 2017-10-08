@@ -42,7 +42,7 @@ export class Client extends User {
         let client: User;
         db.one('SELECT * FROM clients WHERE id =' + id + ';')
             .then(function (row) {
-                client = new Client(row.id, row.fname, row.lname, row.email, row.password, row.address, row.phone)
+                client = new Client(row.id, row.fname, row.lname, row.email, row.password, row.address, row.phone);
             }).catch(function (err) {
                 console.log("No matching object found: "+ err);
                 return null;
@@ -51,10 +51,17 @@ export class Client extends User {
     }
 
     public static async findAll(): Promise<User[]> {
-        let clients: User;
+        console.log("Client findall called");
         return db.many('SELECT * FROM clients')
             .then(function (data) {
-               return data as User[];
+                console.log("data of findall for client");
+                let clients: Client[] = data;
+                let clientObjects: User[] = new Array<User>();
+                for(var i=0; i<clients.length; i++){
+                    clientObjects.push(new Client(clients[i].getId(),clients[i].getFName(),clients[i].getLName(),
+                    clients[i].getEmail(), clients[i].getPassword(), clients[i].getAddress(), clients[i].getPhone()));
+                }
+                return clientObjects;
             }).catch(function (err) {
                 console.log("Error in getting all clients:" + err);
                 return null;

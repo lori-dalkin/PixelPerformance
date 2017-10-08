@@ -8,7 +8,6 @@ export class Admin extends User {
         super(id, fname, lname, email, password);
     }
 
-    
     public static async find(id:string){
     let admin: User;
     //return new Admin("id", "fname", "lname", "email", "password");
@@ -25,8 +24,6 @@ export class Admin extends User {
             }, 500);
     });
 }
-
-
     public static async findByEmail(email: string)
     {
         //return new Admin("id", "fname", "lname", "email", "password");
@@ -47,5 +44,32 @@ export class Admin extends User {
         });
 
     }
+
+    public static async findAll(): Promise<User[]>{
+        return db.many('SELECT * FROM admins')
+            .then(function (data){
+                let admins: Admin[] = data;
+                let adminObjects: User[] = new Array<User>();
+                for(var i=0; i<admins.length; i++){
+                    adminObjects.push(new Admin(admins[i].getId(),admins[i].getFName(),admins[i].getLName(),
+                    admins[i].getEmail(), admins[i].getPassword()));
+                }
+                return adminObjects;
+            }).catch(function(err){
+                console.log("Error: Admins could not be retrieved - " + err);
+                return null;
+            });
+    }
+
+    public async delete(): Promise<boolean>{
+        return db.none("DELETE FROM admins WHERE id ='"+ this.id + "';")
+            .then(function () {
+                return true;
+            }).catch(function(err){
+                console.log("Error: No such object found for deletion - " + err);
+                return false;
+            });
+    }
+        
 
 }
