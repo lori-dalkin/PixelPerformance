@@ -42,7 +42,6 @@ export class Monitor extends Electronic {
 	}
 
 	public static async findAll(){
-		console.log("entering find all");
 		return db.many('SELECT * FROM monitors;')
 			.then(function(data){
                 let monitorObjects: Electronic[] = new Array<Electronic>();
