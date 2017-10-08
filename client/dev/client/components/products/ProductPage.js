@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import FilteredProductList from './FilteredProductList';
 import ProductViewDialog from './ProductViewDialog';
 import ProductAddDialog from './ProductAddDialog';
+import ProductTypeDropdown from './ProductTypeDropdown';
 import { getProducts, hideProductView, showAddProduct, hideAddProduct } from '../../actions';
 
 import Grid from 'material-ui/Grid';
@@ -31,9 +32,16 @@ class ProductPage extends React.Component {
 				<Grid container spacing={24} justify='center'>
 					<Grid item xs={6} >
 						<Paper style={productPaperStyle}>
-							<Typography type='display1' component='h3'>
-								Products
-							</Typography>
+							<Grid container spacing={24} justify='center'>
+								<Grid item xs={9}>
+									<Typography type='display1' component='h3'>
+										Products
+									</Typography>
+								</Grid>
+								<Grid item xs={3}>
+									<ProductTypeDropdown />
+								</Grid>
+							</Grid>
 							{ this.props.product.isFetching && <CircularProgress color="accent" style={{ width: '30px'}} /> }
 							<FilteredProductList />
 						</Paper>
