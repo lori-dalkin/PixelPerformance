@@ -28,14 +28,13 @@ export class Client extends User {
     }
 
     public async delete(): Promise<boolean>{
-    db.none("DELETE FROM clients WHERE id ='"+ this.id + "';")
+    return db.none("DELETE FROM clients WHERE id ='"+ this.id + "';")
         .then(function () {
             return true;
         }).catch(function (err) {
             console.log("No matching object found for delete:"+ err);
             return false;
         });
-        return true;
     }
 
     public static find(id:string): User

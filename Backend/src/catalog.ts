@@ -6,15 +6,17 @@ import {Desktop} from "./desktop";
 import {Tablet} from "./tablet";
 import {TelevisionSet} from "./TelevisionSet";
 import {Laptop} from "./laptop";
+import {Inventory } from "./inventory";
 
 var db = new dbconnection().getDBConnector();
 export class Catalog {
 
+    inventories: Inventory[];
 	electronics: Electronic[];
 
 	constructor(){
 		this.electronics = [];
-
+        this.inventories = [];
 		//Load all entities from the database
 		this.loadMonitors();
 		this.loadDesktops();
