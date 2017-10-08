@@ -26,7 +26,7 @@ export class Catalog {
         dataPromises.push(this.loadLaptops());
         
         Promise.all(dataPromises).then( ()=>{
-            Inventory.setElectornics(this.electronics);
+            Inventory.setElectronics(this.electronics);
             this.loadInventory();
         });
         
