@@ -1,10 +1,10 @@
 export abstract class Electronic {
-    private id: string;
-	private weight: number ;
-	private modelNumber: string;
-	private brand: string;
-	private price: number;
-	private electronicType: string;
+    protected id: string;
+	protected weight: number ;
+    protected modelNumber: string;
+    protected brand: string;
+    protected price: number;
+    protected electronicType: string;
 
     constructor(id: string, weight: number, modelNumber: string, brand: string, price: number, electronicType: string) {
 
@@ -16,24 +16,25 @@ export abstract class Electronic {
 		this.electronicType = electronicType;
     }
 
-    protected getId(): string{ return this.id;}
-    protected getWeight(): number { return this.weight;}
-    protected getModelNumber(): string { return this.modelNumber;}
-    protected getBrand(): string { return this.brand;}
-    protected getPrice(): number { return this.price;}
-    protected getElectronicType(): string { return this.electronicType; }
+    public getId(): string{ return this.id;}
+    public getWeight(): number { return this.weight;}
+    public getModelNumber(): string { return this.modelNumber;}
+    public getBrand(): string { return this.brand;}
+    public getPrice(): number { return this.price;}
+    public getElectronicType(): string { return this.electronicType; }
 
-	protected setId(id: string): void { this.id = id; }
-	protected setWeight(weight: number): void { this.weight = weight; }
-	protected setModelNumber(modelNum: string): void { this.modelNumber = modelNum; }
-	protected setBrand(brand: string): void { this.brand = brand; }
-	protected setPrice(price: number): void { this.price = price; }
-	protected setElectronicType(elecType: string): void { this.electronicType = elecType; }
+    public setId(id: string): void { this.id = id; }
+    public setWeight(weight: number): void { this.weight = weight; }
+    public setModelNumber(modelNum: string): void { this.modelNumber = modelNum; }
+    public setBrand(brand: string): void { this.brand = brand; }
+    public setPrice(price: number): void { this.price = price; }
+    public setElectronicType(elecType: string): void { this.electronicType = elecType; }
 
-    abstract save():boolean;
+    abstract async save();
+    //abstract async save(): Promise<boolean>;
 
-    abstract modify(): boolean;
-
-    abstract delete(): boolean;
+    // abstract async modify(): Promise<boolean>;
+    //
+    // abstract async delete(): Promise<boolean>;
 
 }

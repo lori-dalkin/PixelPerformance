@@ -103,3 +103,10 @@ CREATE TABLE clients(
 	phone varchar(30),
 	PRIMARY KEY(id)
 );
+
+DROP TABLE IF EXISTS inventories;
+CREATE TABLE inventories(
+	id UUID DEFAULT uuid_generate_v1(),
+	electronicID UUID,
+	PRIMARY KEY(id)
+);

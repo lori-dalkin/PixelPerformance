@@ -13,8 +13,9 @@ import methodOverride = require("method-override");
 import { Electronic } from "./electronic";
 import { Monitor } from "./monitor";
 import { Admin } from "./admin";
-import {Catalog} from "./catalog";
+import { Catalog } from "./catalog";
 import { Client } from "./client";
+import { UserManagement } from "./usermanagement" 
 /**
  * The web portal.
  *
@@ -24,6 +25,7 @@ export class WebPortal {
 
   public app: express.Application;
   protected catalog: Catalog;
+  protected usermanagement: UserManagement;
 
   /**
    * Bootstrap the application.
@@ -47,6 +49,7 @@ export class WebPortal {
     //create expressjs application
     this.app = express();
     this.catalog = new Catalog();
+    this.usermanagement = new UserManagement();
 
     //configure application
     this.config();
@@ -56,8 +59,6 @@ export class WebPortal {
 
     //add api
     this.api();
-   
-
   }
   
   /**

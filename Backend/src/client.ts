@@ -28,14 +28,13 @@ export class Client extends User {
     }
 
     public async delete(): Promise<boolean>{
-    db.none("DELETE FROM clients WHERE id ='"+ this.id + "';")
+    return db.none("DELETE FROM clients WHERE id ='"+ this.id + "';")
         .then(function () {
             return true;
         }).catch(function (err) {
             console.log("No matching object found for delete:"+ err);
             return false;
         });
-        return true;
     }
 
     public static find(id:string): User
@@ -43,7 +42,7 @@ export class Client extends User {
         let client: User;
         db.one('SELECT * FROM clients WHERE id =' + id + ';')
             .then(function (row) {
-                client = new Client(row.id, row.fname, row.lname, row.email, row.password, row.address, row.phone)
+                client = new Client(row.id, row.fname, row.lname, row.email, row.password, row.address, row.phone);
             }).catch(function (err) {
                 console.log("No matching object found: "+ err);
                 return null;
@@ -52,10 +51,14 @@ export class Client extends User {
     }
 
     public static async findAll(): Promise<User[]> {
-        let clients: User;
         return db.many('SELECT * FROM clients')
             .then(function (data) {
-               return data as User[];
+                let clientObjects: User[] = new Array<User>();
+                for(var i=0; i<data.length; i++){
+                    clientObjects.push(new Client(data[i].id,data[i].fname,data[i].lname,
+                    data[i].email, data[i].password, data[i].address, data[i].phone));
+                }
+                return clientObjects;
             }).catch(function (err) {
                 console.log("Error in getting all clients:" + err);
                 return null;
