@@ -5,7 +5,7 @@ var db =   new dbconnection().getDBConnector();
 
 export class Inventory {
 
-    private static eletronics :Electronic[] = new Array<Electronic>();
+    private static electronics :Electronic[] = new Array<Electronic>();
     private serialNumber: string;
 	private inventoryType: Electronic;
 
@@ -20,7 +20,12 @@ export class Inventory {
     public setinventoryType(inventoryType:Electronic): void{this.inventoryType = inventoryType;}
     public getinventoryType():Electronic{return this.inventoryType;}
 
-
+    public static setElectronics(eletronics:Electronic[]):void{
+        Inventory.electronics = eletronics;
+    }
+    public static getElectronics():Electronic[]{
+        return Inventory.electronics;
+    }
     public async delete(): Promise<boolean>{
         return db.none("DELETE FROM inventories WHERE serialNumber ='"+ this.serialNumber + "';")
             .then(function () {
@@ -44,17 +49,25 @@ export class Inventory {
 
     public static async findAll(): Promise<Inventory[]> {
         return db.many('SELECT * FROM clients')
-            .then(function (data:Inventory[]) {
-                let inventories: Inventory[] = data;
+            .then(function (data) {
                 let inventoryObjects: Inventory[] = new Array<Inventory>();
-                for(let i=0;i<inventories.length;i++){
-                    inventoryObjects.push(new Inventory(inventories[i].serialNumber, null));
+                for(let i=0;i<data.length;i++){
+                    inventoryObjects.push(new Inventory(data[i].serialNumber, Inventory.getProduct(data[i].electronicID)));
                 }
                 return inventoryObjects;
             }).catch(function (err) {
-                console.log("Error in getting all clients:" + err);
+                console.log("Error in getting all inventory:" + err);
                 return null;
             });
     } 
+
+    public static getProduct(productId:string): Electronic {
+		let elecIterator = Inventory.getElectronics();
+		for(var iter = 0; iter < elecIterator.length; iter++){
+			if(productId == elecIterator[iter].getId())
+				return elecIterator[iter];
+		}
+		return null;
+	}
 
 }

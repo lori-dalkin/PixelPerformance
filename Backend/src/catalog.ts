@@ -17,35 +17,36 @@ export class Catalog {
 	constructor(){
 		this.electronics = [];
         this.inventories = [];
-		//Load all entities from the database
-		this.loadMonitors();
-		this.loadDesktops();
-		this.loadTablets();
-		this.loadTelevisions();
-		this.loadLaptops();
+        //Load all entities from the database
+        let dataPromises = new Array<Promise<void>>();
+		dataPromises.push(this.loadMonitors());
+		dataPromises.push(this.loadDesktops());
+		dataPromises.push(this.loadTablets());
+		dataPromises.push(this.loadTelevisions());
+        dataPromises.push(this.loadLaptops());
+        
+        Promise.all(dataPromises).then( ()=>{
+            Inventory.setElectronics(this.electronics);
+            this.loadInventory();
+        });
+        
 	}
 
 	/*********************************************************
 	* Load functions for all persisted data in the database
 	 *********************************************************/
-	private loadMonitors(): void {
-		let monitor:Monitor;
-		let monitors = this.electronics;
-        db.many('SELECT * FROM monitors')
-            .then(function(rows){
-            	for(let row of rows){
-                	monitor = new Monitor(row.id, row.weight, row.modelNumber, row.brand, row.price, row.size);
-                	monitors.push(monitor);
-				}
-            }).catch(function (err) {
-            console.log("No monitors found"+ err);
-		});
+	private async loadMonitors(): Promise<void> {
+        return Monitor.findAll().then((data)=>{
+            for(let i=0;i<data.length;i++){
+                this.electronics.push(data[i]);
+            }
+        });
 	}
 
-	private loadDesktops(): void {
+	private async loadDesktops(): Promise<void> {
 		let desktop:Desktop;
 		let desktops = this.electronics;
-        db.many('SELECT * FROM desktops')
+        return db.many('SELECT * FROM desktops')
             .then(function(rows){
                 for(let row of rows){
                     desktop = new Desktop(row.id, row.weight, row.modelNumber, row.brand, row.price, row.processor, row.ram, row.cpus, row.hardDrive, row.os, row.dimensions)
@@ -56,10 +57,10 @@ export class Catalog {
 		});
 	}
 
-    private loadTablets(): void {
+    private async loadTablets(): Promise<void>{
         let tablet:Tablet;
         let tablets = this.electronics;
-        db.many('SELECT * FROM tablets')
+        return db.many('SELECT * FROM tablets')
             .then(function(rows){
                 for(let row of rows){
                     tablet = new Tablet(row.id, row.weight, row.modelNumber, row.brand, row.price, row.processor, row.ram, row.cpus, row.hardDrive, row.os, row.displaySize, row.dimensions, row.battery, row.camera)
@@ -70,10 +71,10 @@ export class Catalog {
         });
     }
 
-    private loadTelevisions(): void {
+    private async loadTelevisions(): Promise<void> {
         let tv:TelevisionSet;
         let tvs = this.electronics;
-        db.many('SELECT * FROM tablets')
+        return db.many('SELECT * FROM tablets')
             .then(function(rows){
                 for(let row of rows){
                     tv = new TelevisionSet(row.id,row.weight,row.modelNumber, row.brand, row.price, row.dimensions, row.type);
@@ -84,10 +85,10 @@ export class Catalog {
         });
     }
 
-    private loadLaptops(): void {
+    private async loadLaptops(): Promise<void> {
         let lp:Laptop;
         let lps = this.electronics;
-        db.many('SELECT * FROM laptops')
+        return db.many('SELECT * FROM laptops')
             .then(function(rows){
                 for(let row of rows){
                     lp = new Laptop(row.id, row.weight, row.modelNumber, row.brand, row.price, row.processor, row.ram, row.cpus, row.hardDrive, row.os, row.displaySize, row.battery, row.camera, row.touchscreen);
@@ -95,6 +96,14 @@ export class Catalog {
                 }
             }).catch(function (err) {
             console.log("No laptops found"+ err);
+        });
+    }
+
+    private async loadInventory(): Promise<void> {
+       return Inventory.findAll().then((data)=>{
+            for(let i=0;i<data.length;i++){
+                this.inventories.push(data[i]);
+            }
         });
     }
 
