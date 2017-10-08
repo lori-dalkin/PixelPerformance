@@ -35,7 +35,7 @@ export class Tablet extends ComputerSystem{
      /****************************************************************
     * Method to persist an object of type Tablet to the database
      ****************************************************************/
-    public async save(): boolean {
+    public async save(): Promise<boolean> {
         db.none("'INSERT INTO tablets VALUES ('"+ this.getId() +"','"+ this.getWeight() +"','"+this.getModelNumber()+"','"+this.getBrand()+"','"+this.getPrice()+"','"+this.processor+"','" + this.ram + "','"+this.cpus+"','"+this.hardDrive+"','"+this.os+"','"+this.getDisplaySize()+"','"+this.getDimensions()+"','"+this.getBattery()+"','"+this.getCamera()+"')'")
             .then(function(){
                 console.log("Tablet added to db");})
@@ -49,7 +49,7 @@ export class Tablet extends ComputerSystem{
      /*********************************************************************************************
     * Method to retrieve a persisted object in the database corresponding to the passed id value
      ********************************************************************************************/
-    public static find(id:string): Electronic{
+    public static async find(id:string): Promise<Tablet>{
         let tablet:Tablet;
         db.none("'SELECT * FROM tablets WHERE id ='" + id +"';'")
             .then(function(row){
@@ -61,6 +61,24 @@ export class Tablet extends ComputerSystem{
         return tablet;
     }
 
+    /*******************************************************
+     * Method to return all tablets saved in the database
+     *******************************************************/
+    public static async findAll(){
+        let tablets: Electronic[];
+        let tablet: Tablet;
+        return db.many('SELECT * FROM tablets')
+            .then(function (rows) {
+                return rows as Electronic[];
+            }).catch(function (err) {
+                console.log("Error in getting all tablets:" + err);
+                return null;
+            });
+    }
+
+    /*******************************************************
+     * Method to update the current object in the database
+     *******************************************************/
     public async modify(): Promise<boolean> {
         db.none("'UPDATE tablets SET id='" + this.getId() + "',weight='" + this.getWeight() + "',modelNumber='" +
             this.getModelNumber() + "',brand='" + this.getBrand() + "',price='" + this.getPrice() +
@@ -76,6 +94,9 @@ export class Tablet extends ComputerSystem{
         return true;
     }
 
+    /********************************************************
+     * Method to remove the current object from the database
+     ********************************************************/
     public async delete(): Promise<boolean> {
         db.none("DELETE FROM tablets WHERE id ='"+ this.getId() + "';")
             .then(function () {
