@@ -51,15 +51,12 @@ export class Client extends User {
     }
 
     public static async findAll(): Promise<User[]> {
-        console.log("Client findall called");
         return db.many('SELECT * FROM clients')
             .then(function (data) {
-                console.log("data of findall for client");
-                let clients: Client[] = data;
                 let clientObjects: User[] = new Array<User>();
-                for(var i=0; i<clients.length; i++){
-                    clientObjects.push(new Client(clients[i].getId(),clients[i].getFName(),clients[i].getLName(),
-                    clients[i].getEmail(), clients[i].getPassword(), clients[i].getAddress(), clients[i].getPhone()));
+                for(var i=0; i<data.length; i++){
+                    clientObjects.push(new Client(data[i].id,data[i].fname,data[i].lname,
+                    data[i].email, data[i].password, data[i].address, data[i].phone));
                 }
                 return clientObjects;
             }).catch(function (err) {

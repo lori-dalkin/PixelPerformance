@@ -48,11 +48,10 @@ export class Admin extends User {
     public static async findAll(): Promise<User[]>{
         return db.many('SELECT * FROM admins')
             .then(function (data){
-                let admins: Admin[] = data;
                 let adminObjects: User[] = new Array<User>();
-                for(var i=0; i<admins.length; i++){
-                    adminObjects.push(new Admin(admins[i].getId(),admins[i].getFName(),admins[i].getLName(),
-                    admins[i].getEmail(), admins[i].getPassword()));
+                for(var i=0; i<data.length; i++){
+                    adminObjects.push(new Admin(data[i].id,data[i].fname,data[i].lname,
+                    data[i].email, data[i].password));
                 }
                 return adminObjects;
             }).catch(function(err){

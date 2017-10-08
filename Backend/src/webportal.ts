@@ -59,8 +59,6 @@ export class WebPortal {
 
     //add api
     this.api();
-   
-    console.log(this.usermanagement.getUserById('7d6c1791-abbb-11e7-9e30-4bb3c9bd2a61'));
   }
   
   /**

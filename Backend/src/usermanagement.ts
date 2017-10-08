@@ -12,8 +12,6 @@ export class UserManagement {
 
 	constructor(){
 		this.users = [];
-
-        console.log("User Management constructor called");
 		//Load all entities from the database
 		this.loadClient();
 		this.loadAdmin();
@@ -43,7 +41,6 @@ export class UserManagement {
     * Function to retrieve a single user by id
      ****************************************************/
 	public getUserById(userId:string): User {
-        console.log(this.users);
         for(var i = 0; i<this.users.length; i++)
         {
             if(this.users[i].getId() == userId)
@@ -53,7 +50,7 @@ export class UserManagement {
     }
     
     /****************************************************
-     * Funtion to retrieve a single user by email
+     * Function to retrieve a single user by email
     ****************************************************/
     public getUserByEmail(email:string): User {
         for(var i = 0; i<this.users.length; i++)
