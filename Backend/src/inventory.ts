@@ -52,16 +52,16 @@ export class Inventory {
             .then(function (data) {
                 let inventoryObjects: Inventory[] = new Array<Inventory>();
                 for(let i=0;i<data.length;i++){
-                    inventoryObjects.push(new Inventory(data[i].serialNumber, this.getProduct(data[i].electronicID)));
+                    inventoryObjects.push(new Inventory(data[i].serialNumber, Inventory.getProduct(data[i].electronicID)));
                 }
                 return inventoryObjects;
             }).catch(function (err) {
-                console.log("Error in getting all clients:" + err);
+                console.log("Error in getting all inventory:" + err);
                 return null;
             });
     } 
 
-    private getProduct(productId:string): Electronic {
+    public static getProduct(productId:string): Electronic {
 		let elecIterator = Inventory.getElectronics();
 		for(var iter = 0; iter < elecIterator.length; iter++){
 			if(productId == elecIterator[iter].getId())
