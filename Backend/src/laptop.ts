@@ -31,7 +31,32 @@ export class Laptop extends ComputerSystem {
 							   this.ram, this.cpus, this.hardDrive,
 							   "'"+this.os+"'", this.displaySize, this.battery,
 							   this.camera, this.touchscreen];
-		let queryText = 'INSERT INTO laptops VALUES (' + queryParameters.join(',') + ')';
+		let queryText = 'INSERT INTO laptops SET weight=' + this.weight + ',modelNumber=' + this.modelNumber + ',brand=' + this.brand
+						+ ',price=' + this.price + ', processor=' + this.processor + ',ram' + this.ram + ',cpus=' + this.cpus 
+						+ ',hardDrive=' + this.hardDrive + ',os=' + this.os + ',displaySize=' + this.displaySize + ',battery='+ this.battery
+						+ ',camera=' + this.camera + ',touchscreen=' +this.touchscreen + 'WHERE id =' + this.id;
+
+		db.none(queryText)
+			.then(function() {
+				console.log("Laptop added to db");
+			})
+			.catch(function(err) {
+				console.log("Error updating Laptop in the db");
+				return false;
+			});
+		return true;
+	}
+
+	/**************************************************************
+	 * Method to persist an object of type Laptop to the database *
+	 **************************************************************/
+	update(): boolean {
+		let queryParameters = ["'"+this.id+"'", this.weight,"'"+ this.modelNumber +"'",
+								"'"+this.brand +"'", this.price, "'"+this.processor +"'",
+							   this.ram, this.cpus, this.hardDrive,
+							   "'"+this.os+"'", this.displaySize, this.battery,
+							   this.camera, this.touchscreen];
+		let queryText = 'UPDATE laptops VALUES (' + queryParameters.join(',') + ')';
 
 		db.none(queryText)
 			.then(function() {
