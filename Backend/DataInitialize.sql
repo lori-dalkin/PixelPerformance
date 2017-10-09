@@ -49,3 +49,5 @@ INSERT INTO admins(fname, lname, email, password) VALUES('Super','Admin','supera
 
 DELETE FROM clients;
 INSERT INTO clients(fname, lname, email, password, address, phone) VALUES('John','Smith','jsmith@gmail.com',010,'Canada','555-5555');
+
+DELETE FROM inventories;
