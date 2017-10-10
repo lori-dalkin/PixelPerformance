@@ -35,6 +35,16 @@ export class Inventory {
                 return false;
             });
     }
+    public async save(): Promise<boolean> {
+		return db.none("INSERT INTO inventories VALUES ('"+this.serialNumber +"','"+this.inventoryType.getId()+"');")
+			.then(function(){
+				console.log("monitor added to db");
+				return true;
+			}).catch(function (err) {
+				console.log("Error adding monitor to the db: " + err);
+				return false;
+			});
+	}
 
     public static find(serialNumber:string): Promise<Inventory>
     {
