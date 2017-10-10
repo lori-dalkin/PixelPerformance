@@ -5,10 +5,10 @@ import { Electronic } from "./electronic";
 var db = new dbconnection().getDBConnector();
 
 export class Laptop extends ComputerSystem {
-	private displaySize: number;
-	private battery: number;
-	private camera: boolean;
-	private touchscreen: boolean;
+	displaySize: number;
+	battery: number;
+    camera: boolean;
+	touchscreen: boolean;
 
 	constructor(id: string, weight: number, modelNumber: string, brand: string,
 				price: number, processor: string, ram: number, cpus: number,
@@ -38,19 +38,18 @@ export class Laptop extends ComputerSystem {
 	 * Method to persist an object of type Laptop to the database *
 	 **************************************************************/
 	save(): boolean {
-		let queryParameters = ["'"+this.id+"'", this.weight,"'"+ this.modelNumber +"'",
-								"'"+this.brand +"'", this.price, "'"+this.processor +"'",
+		let queryParameters = ["'"+this.getId()+"'", this.getWeight(),"'"+ this.getModelNumber() +"'",
+								"'"+this.getBrand() +"'", this.getPrice(), "'"+this.processor +"'",
 							   this.ram, this.cpus, this.hardDrive,
-							   "'"+this.os+"'", this.displaySize, this.battery,
-							   this.camera, this.touchscreen];
-		let queryText = 'UPDATE laptops VALUES (' + queryParameters.join(',') + ')';
-
+							   "'"+this.os+"'", this.getDisplaySize(), this.getBattery(),
+							   this.getCamera(), this.getTouchscreen()];
+		let queryText = 'INSERT INTO laptops (id,weight,modelnumber,brand,price,processor,ram,cpus,harddrive,os,displaysize,battery,camera,touchscreen)VALUES (' + queryParameters.join(',') + ');';
 		db.none(queryText)
 			.then(function() {
 				console.log("Laptop added to db");
 			})
 			.catch(function(err) {
-				console.log("Error adding Laptop to the db");
+				console.log("Error adding Laptop to the db" + err);
 				return false;
 			});
 		return true;
@@ -59,14 +58,17 @@ export class Laptop extends ComputerSystem {
 	/***************************************************************************************
 	 * Method to retrieve a persisted object from the database corresponding to a given id *
 	 ***************************************************************************************/
-	public static find(id: string): Electronic {
+	public static async find(id: string): Promise<Laptop> {
 		let laptop: Laptop;
-		db.none('SELECT * FROM laptops WHERE id =' + id + ';')
+		console.log('SELECT * FROM laptops WHERE id =' + "'" +id + "'" + ';');
+		db.one("SELECT * FROM laptops WHERE id ='"  +id +  "';")
 			.then(function(row){
-				laptop = new Laptop(row.id,row.weight,row.modelNumber,row.brand,row.price,row.processor,row.ram,row.cpus,row.hardDrive,row.os,row.displaySize,row.battery,row.camera,row.touchscreen);
+				console.log("Matching object found");
+				return new Laptop(row.id,row.weight,row.modelNumber,row.brand,row.price,row.processor,row.ram,row.cpus,row.hardDrive,row.os,row.displaySize,row.battery,row.camera,row.touchscreen);
+
 			})
 			.catch(function(err) {
-				console.log("No matching object found");
+				console.log("No matching object found" + err);
 				return null;
 			})
 		return laptop;
@@ -75,17 +77,17 @@ export class Laptop extends ComputerSystem {
 	 * Method to modify an object of type Laptop to the database *
 	 **************************************************************/
 	public async modify(): Promise<boolean> {
-		let queryText = 'INSERT INTO laptops SET weight=' + this.weight + ',modelNumber=' + this.modelNumber + ',brand=' + this.brand
-						+ ',price=' + this.price + ', processor=' + this.processor + ',ram' + this.ram + ',cpus=' + this.cpus 
-						+ ',hardDrive=' + this.hardDrive + ',os=' + this.os + ',displaySize=' + this.displaySize + ',battery='+ this.battery
-						+ ',camera=' + this.camera + ',touchscreen=' +this.touchscreen + 'WHERE id =' + this.id;
-
+		let queryText = 'UPDATE laptops SET weight=' + this.getWeight() + ',modelNumber=' + "'"+ this.getModelNumber() + "'" + ',brand=' + "'"+ this.getBrand() + "'"
+						+ ',price=' + this.getPrice() + ', processor=' + "'"+ this.processor + "'" + ',ram=' + this.ram + ',cpus=' + this.cpus 
+						+ ',hardDrive=' + this.hardDrive + ',os=' + "'"+ this.os + "'" + ',displaySize=' + this.getDisplaySize() + ',battery='+ this.getBattery()
+						+ ',camera=' + this.getCamera() + ',touchscreen=' +this.getTouchscreen() + ' WHERE id =' +  "'"+ this.getId() + "'";
 		db.none(queryText)
 			.then(function() {
+				console.log("Modified Laptop in the db");
 				return true;
 			})
 			.catch(function(err) {
-				console.log("Error modifying Laptop in the db");
+				console.log("Error modifying Laptop in the db" + err);
 				return false;
 			});
 		return true;
@@ -96,6 +98,7 @@ export class Laptop extends ComputerSystem {
 	public async delete(): Promise<boolean> {
         db.none("DELETE FROM laptops WHERE id ='"+ this.getId() + "';")
             .then(function () {
+				console.log("Laptop object deleted in db: ");
                 return true;
             }).catch(function (err) {
             console.log("No matching object found for delete: "+ err);
@@ -107,7 +110,7 @@ export class Laptop extends ComputerSystem {
 	/*******************************************************
      * Method to return all laptops saved in the database
      *******************************************************/
-    public static async findAll(){
+    public static async findAll(): Promise<Electronic[]>{
         let laptops: Electronic[];
         let laptop: Laptop;
         return db.many('SELECT * FROM laptops')
