@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button } from 'material-ui/Button';
-import Menu, { MenuItem } from 'material-ui/Menu';
+import { MenuItem } from 'material-ui/Menu';
+import Select from 'material-ui/Select';
 
 import { setProductFilter } from '../../actions'
 
@@ -9,51 +9,35 @@ class ProductTypeDropdown extends Component {
 
     constructor(props) {
         super(props);
+
         this.state = {
-            value: 'none',
-            anchorEl: null,
-            open: false
+            filterType: "none",
         };
+
+        this.handleChange = this.handleChange.bind(this);
     }
 
-    handleClick = event => {
-        this.setState({ open: true, anchorEl: event.currentTarget });
-    };
-
-    handleRequestClose = () => {
-        this.setState({ open: false });
-    };
-
-    handleChange = (event) => {
-        this.setState({ value: event.target.value });
-        this.props.setProductFilter(this.state.value);
+    handleChange = (field, event) => {
+        this.setState({[field]: event.target.value},()=>{
+            if(this.state.filterType !== "none"){
+                const filter = "?type=" + this.state.filterType;
+                alert(filter);
+                setProductFilter(filter);
+            }
+        });
     };
 
     render() {
         return (
             <div>
-                <Button
-                    raised
-                    aria-owns={this.state.open ? 'dowpdown-menu' : null}
-                    aria-haspopup="true"
-                    onClick={this.handleClick}
-                >
-                    Select Filter
-                </Button>
-                <Menu
-                    id="downdown-menu"
-                    anchorEl={this.state.anchorEl}
-                    open={this.state.open}
-                    onRequestClose={this.handleRequestClose}
-                    onChange={this.handleChange}
-                >
-                    <MenuItem value={'none'}>No Filter</MenuItem>
-                    <MenuItem value={'televisionSet'}>TelevisionSet</MenuItem>
-                    <MenuItem value={'monitor'}>Monitor</MenuItem>
-                    <MenuItem value={'desktop'}>Desktop</MenuItem>
-                    <MenuItem value={'laptop'}>Laptop</MenuItem>
-                    <MenuItem value={'tablet'}>Tablet</MenuItem>
-                </Menu>
+                    <Select name="filterType" value={this.state.filterType} onChange={(event) => this.handleChange("filterType", event)}>
+                        <MenuItem value="none">Select Filter</MenuItem>
+                        <MenuItem value="televisionSet">TelevisionSet</MenuItem>
+                        <MenuItem value="monitor">Monitor</MenuItem>
+                        <MenuItem value="desktop">Desktop</MenuItem>
+                        <MenuItem value="laptop">Laptop</MenuItem>
+                        <MenuItem value="tablet">Tablet</MenuItem>
+                    </Select>
             </div>
         );
     }
