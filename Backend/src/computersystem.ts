@@ -30,6 +30,5 @@ export abstract class ComputerSystem extends Electronic{
     public setHardDrive(hardDrive: number) { this.hardDrive = hardDrive; }
     public setOs(os: string) { this.os = os; }
 
-    //save function
-    abstract save():boolean;
+  
 }
