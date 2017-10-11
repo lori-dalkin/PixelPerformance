@@ -77,7 +77,7 @@ export class Tablet extends ComputerSystem{
                 }
                 return  tablets;
             }).catch(function (err){
-                console.log("There was an error retrieving all monitors: " + err);
+                console.log("There was an error retrieving all tablets: " + err);
                 return null;
             });
     }
