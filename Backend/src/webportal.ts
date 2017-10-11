@@ -114,11 +114,6 @@ export class WebPortal {
     res.json({message: "Success! You can not see this without a token"});
   });
 
-  router.delete("/api/inventory/:electronicId",passport.authenticate('jwt', { session: false }),function (req, res) {
-    routingCatalog.deleteInventory(req.params.electronicId).then((success)=>{
-      res.send({data: success});
-    });
-  });
 
 	router.post("/api/users/logout", function (req, res) {
 		res.send({data: true});
@@ -146,7 +141,13 @@ export class WebPortal {
   router.get("/api/inventories/product/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
 		let inventories = routingCatalog.getAllInventories( req.params.id);
 		res.send({data: inventories });
-	});
+  });
+  
+  router.delete("/api/inventories/product/:electronicId",passport.authenticate('jwt', { session: false }),function (req, res) {
+    routingCatalog.deleteInventory(req.params.electronicId).then((success)=>{
+      res.send({data: success});
+    });
+  });
 	//use router middleware
 	this.app.use(router);
   }
