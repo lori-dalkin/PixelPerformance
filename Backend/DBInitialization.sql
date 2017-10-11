@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS monitors;
 CREATE TABLE monitors(
     id UUID DEFAULT uuid_generate_v1(),
 	weight dec(4, 2),
-	modelNumber varchar(20) UNIQUE,
+	"modelNumber" varchar(20) UNIQUE,
 	brand varchar(30),
 	price dec(6,2),
     size int,
@@ -17,13 +17,13 @@ DROP TABLE IF EXISTS desktops;
 CREATE TABLE desktops(
 	id UUID DEFAULT uuid_generate_v1(),
 	weight dec(4, 2),
-	modelNumber varchar(20) UNIQUE,
+	"modelNumber" varchar(20) UNIQUE,
 	brand varchar(30),
 	price dec(6, 2),
 	processor varchar(20),
 	ram int,
 	cpus int,
-	hardDrive int,
+	"hardDrive" int,
 	os varchar(15),
 	dimensions varchar(20),
 	PRIMARY KEY(id)
@@ -33,15 +33,15 @@ DROP TABLE IF EXISTS tablets;
 CREATE TABLE tablets(
     id UUID DEFAULT uuid_generate_v1(),
     weight dec(4,2),
-    modelNumber varchar(20) UNIQUE,
+    "modelNumber" varchar(20) UNIQUE,
     brand varchar(30),
     price dec(6,2),
     processor varchar(20),
     ram int,
     cpus int,
-    hardDrive int,
+    "hardDrive" int,
     os varchar(15),
-    displaySize dec(3,1),
+    "displaySize" dec(3,1),
     dimensions varchar(20),
     battery int,
     camera bool,
@@ -52,15 +52,15 @@ DROP TABLE IF EXISTS laptops;
 CREATE TABLE laptops(
 	id UUID DEFAULT uuid_generate_v1(),
 	weight dec(4,2),
-	modelNumber varchar(20) UNIQUE,
+	"modelNumber" varchar(20) UNIQUE,
 	brand varchar(30),
 	price dec(6,2),
 	processor varchar(20),
 	ram int,
 	cpus int,
-	hardDrive int,
+	"hardDrive" int,
 	os varchar(15),
-	displaySize dec(3,1),
+	"displaySize" dec(3,1),
 	battery int,
 	camera bool,
 	touchscreen bool,
@@ -72,7 +72,7 @@ CREATE TABLE televisionsets(
 
 	id UUID DEFAULT uuid_generate_v1(),
 	weight dec(4, 2),
-	modelNumber varchar(20) UNIQUE,
+	"modelNumber" varchar(20) UNIQUE,
 	brand varchar(30),
 	price dec(6, 2),
 	dimensions varchar(20),
@@ -106,7 +106,7 @@ CREATE TABLE clients(
 
 DROP TABLE IF EXISTS inventories;
 CREATE TABLE inventories(
-	id UUID DEFAULT uuid_generate_v1(),
-	electronicID UUID,
-	PRIMARY KEY(id)
+	"serialNumber" UUID DEFAULT uuid_generate_v1(),
+	"electronicID" UUID,
+	PRIMARY KEY("serialNumber")
 );
