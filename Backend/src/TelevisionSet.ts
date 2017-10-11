@@ -26,7 +26,7 @@ export class TelevisionSet extends Electronic {
 
     //Save Television Set onto database
     save(): boolean {
-        db.none("INSERT INTO televisionsets VALUES ('" + this.id + "'," + this.weight + ",'" + this.modelNumber + "','" + this.brand + "'," + this.price + ",'" + this.dimensions + "','" + this.type + "')")
+        db.none("INSERT INTO televisionsets VALUES ('" + this.getId() + "'," + this.getWeight() + ",'" + this.getModelNumber() + "','" + this.getBrand() + "'," + this.getPrice() + ",'" + this.getDimension() + "','" + this.getType() + "')")
             .then(function () {
                 console.log("Television added to db");
             })
@@ -41,7 +41,7 @@ export class TelevisionSet extends Electronic {
     //Retrieve a set based on a unique ID
     public static async find(id: string): Promise<Electronic> {
         let televisionSet: TelevisionSet;
-        db.one('SELECT * FROM televisionsets WHERE id =' + id + ';')
+        return db.one('SELECT * FROM televisionsets WHERE id =' + id + ';')
             .then(function (row) {
                 televisionSet = new TelevisionSet(row.id, row.weight, row.modelNumber, row.brand, row.price, row.dimensions, row.type)
             }).catch(function (err) {
@@ -68,14 +68,14 @@ export class TelevisionSet extends Electronic {
     }
     //Modify data in the db with current attributes
     public async modify(): Promise<boolean> {
-        return db.none("UPDATE tablets SET weight=" + this.getWeight() + ", modelNumber='" +
+        return db.none("UPDATE televisionsets SET weight=" + this.getWeight() + ", modelNumber='" +
             this.getModelNumber() + "', brand='" + this.getBrand() + "', price=" + this.getPrice() +
             ", dimensions='" + this.getDimension() + "', type='" + this.getType() + "';").
             then(function () {
-                console.log("Tablet was modified.");
+                console.log("televisionset was modified.");
                 return true;
             }).catch(function (err) {
-                console.log("Could not update tablet: " + err);
+                console.log("Could not update televisionset: " + err);
                 return false;
             });
     }
