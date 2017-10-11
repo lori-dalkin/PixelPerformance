@@ -28,7 +28,7 @@ export class Desktop extends ComputerSystem {
     public async save(): Promise<boolean> {
         let queryValues = ["'"+this.getId()+"'", this.getWeight(), "'"+this.getModelNumber()+"'",
                            "'"+this.getBrand()+"'", this.getPrice(), "'"+this.getProcessor()+"'",
-                           this.getRam(), this.getCpu(), this.getHardDrive(),
+                           this.getRam(), this.getCpus(), this.getHardDrive(),
                            "'"+this.getOs()+"'", "'"+this.getDimensions()+"'"];
         return db.none("INSERT INTO desktops VALUES (" + queryValues.join(',') + ")")
             .then(function() {
@@ -88,7 +88,7 @@ export class Desktop extends ComputerSystem {
                        + "', price=" + this.getPrice()
                        + ", processor='" + this.getProcessor()
                        + "', ram=" + this.getRam()
-                       + ", cpus=" + this.getCpu()
+                       + ", cpus=" + this.getCpus()
                        + ", hardDrive=" + this.getHardDrive()
                        + ", os='" + this.getOs()
                        + ", dimensions='" + this.getDimensions()
