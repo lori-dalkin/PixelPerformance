@@ -16,5 +16,19 @@ export abstract class ComputerSystem extends Electronic{
         this.hardDrive = hardDrive;
         this.os = os;
     }
-    abstract save():boolean;
+
+    //mutators and accessors
+    public getProcessor(): string { return this.processor; }
+    public getRam(): number { return this.ram; }
+    public getCpu(): number { return this.cpus; }
+    public getHardDriver(): number { return this.hardDrive; }
+    public getOs(): string {return this.os;}
+
+    public setProcessor(processor: string) { this.processor = processor; }
+    public setRam(ram: number) { this.ram = ram; }
+    public setCpu(cpus: number) { this.cpus = cpus;}
+    public setHardDrive(hardDrive: number) { this.hardDrive = hardDrive; }
+    public setOs(os: string) { this.os = os; }
+
+  
 }
