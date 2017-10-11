@@ -5,10 +5,10 @@ import { Electronic } from "./electronic";
 var db = new dbconnection().getDBConnector();
 
 export class Laptop extends ComputerSystem {
-	displaySize: number;
-	battery: number;
-    camera: boolean;
-	touchscreen: boolean;
+	private displaySize: number;
+	private battery: number;
+    private camera: boolean;
+	private touchscreen: boolean;
 
 	constructor(id: string, weight: number, modelNumber: string, brand: string,
 				price: number, processor: string, ram: number, cpus: number,
@@ -61,7 +61,7 @@ export class Laptop extends ComputerSystem {
 	public static async find(id: string): Promise<Laptop> {
 		let laptop: Laptop;
 		console.log('SELECT * FROM laptops WHERE id =' + "'" +id + "'" + ';');
-		db.one("SELECT * FROM laptops WHERE id ='"  +id +  "';")
+		return db.one("SELECT * FROM laptops WHERE id ='"  +id +  "';")
 			.then(function(row){
 				console.log("Matching object found");
 				return new Laptop(row.id,row.weight,row.modelNumber,row.brand,row.price,row.processor,row.ram,row.cpus,row.hardDrive,row.os,row.displaySize,row.battery,row.camera,row.touchscreen);
@@ -71,7 +71,6 @@ export class Laptop extends ComputerSystem {
 				console.log("No matching object found" + err);
 				return null;
 			})
-		return laptop;
 	}
 	/**************************************************************
 	 * Method to modify an object of type Laptop to the database *
@@ -81,7 +80,7 @@ export class Laptop extends ComputerSystem {
 						+ ',price=' + this.getPrice() + ', processor=' + "'"+ this.processor + "'" + ',ram=' + this.ram + ',cpus=' + this.cpus 
 						+ ',hardDrive=' + this.hardDrive + ',os=' + "'"+ this.os + "'" + ',displaySize=' + this.getDisplaySize() + ',battery='+ this.getBattery()
 						+ ',camera=' + this.getCamera() + ',touchscreen=' +this.getTouchscreen() + ' WHERE id =' +  "'"+ this.getId() + "'";
-		db.none(queryText)
+		return db.none(queryText)
 			.then(function() {
 				console.log("Modified Laptop in the db");
 				return true;
@@ -90,13 +89,13 @@ export class Laptop extends ComputerSystem {
 				console.log("Error modifying Laptop in the db" + err);
 				return false;
 			});
-		return true;
+
 	}
 	/**************************************************************
 	 * Method to delete an object of type Laptop to the database *
 	 **************************************************************/
 	public async delete(): Promise<boolean> {
-        db.none("DELETE FROM laptops WHERE id ='"+ this.getId() + "';")
+        return db.none("DELETE FROM laptops WHERE id ='"+ this.getId() + "';")
             .then(function () {
 				console.log("Laptop object deleted in db: ");
                 return true;
@@ -104,7 +103,6 @@ export class Laptop extends ComputerSystem {
             console.log("No matching object found for delete: "+ err);
             return false;
         });
-        return true;
 	}
 	
 	/*******************************************************
