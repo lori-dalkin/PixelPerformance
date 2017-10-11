@@ -44,17 +44,11 @@ export class Catalog {
 	}
 
 	private async loadDesktops(): Promise<void> {
-		let desktop:Desktop;
-		let desktops = this.electronics;
-        return db.many('SELECT * FROM desktops')
-            .then(function(rows){
-                for(let row of rows){
-                    desktop = new Desktop(row.id, row.weight, row.modelNumber, row.brand, row.price, row.processor, row.ram, row.cpus, row.hardDrive, row.os, row.dimensions)
-					desktops.push(desktop);
-                }
-            }).catch(function (err) {
-            console.log("No desktops found"+ err);
-		});
+		return Desktop.findAll().then((data) => {
+            for(let i=0; i < data.length; i++) {
+                this.electronics.push(data[i]);
+            }
+        });
 	}
 
     private async loadTablets(): Promise<void>{
