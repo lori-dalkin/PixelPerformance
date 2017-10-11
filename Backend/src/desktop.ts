@@ -61,7 +61,7 @@ export class Desktop extends ComputerSystem {
      *******************************************************/
     public static async findAll(): Promise<Electronic[]>{
         return db.many('SELECT * FROM desktops;')
-            .then(function(rows){
+            .then(function(rows) {
                 let desktops: Electronic[] = new Array<Electronic>();
                 for(let i=0; i < rows.length; i++) {
                     desktops.push(new Desktop(rows[i].id, rows[i].weight, rows[i].modelNumber,
@@ -70,7 +70,7 @@ export class Desktop extends ComputerSystem {
                                               rows[i].os, rows[i].dimensions));
                 }
                 return desktops;
-            }).catch(function (err){
+            }).catch(function (err) {
                 console.log("There was an error retrieving all desktops: " + err);
                 return null;
             });
