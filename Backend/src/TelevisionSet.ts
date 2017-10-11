@@ -34,7 +34,6 @@ export class TelevisionSet extends Electronic {
                 console.log("Error in adding Television to the db " + err);
                 return false;
             });
-        return true;
     }
 
 
@@ -48,7 +47,6 @@ export class TelevisionSet extends Electronic {
                 console.log("No matching object found");
                 return null;
             });
-        return televisionSet;
     }
 
     //Find all the televisions in the db;

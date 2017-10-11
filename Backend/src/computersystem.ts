@@ -20,8 +20,8 @@ export abstract class ComputerSystem extends Electronic{
     //mutators and accessors
     public getProcessor(): string { return this.processor; }
     public getRam(): number { return this.ram; }
-    public getCpu(): number { return this.cpus; }
-    public getHardDriver(): number { return this.hardDrive; }
+    public getCpus(): number { return this.cpus; }
+    public getHardDrive(): number { return this.hardDrive; }
     public getOs(): string {return this.os;}
 
     public setProcessor(processor: string) { this.processor = processor; }
