@@ -131,7 +131,6 @@ export class WebPortal {
 	});
 
   router.get("/api/inventories/product/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
-		
 		let inventories = routingCatalog.getAllInventories( req.params.id);
 		res.send({data: inventories });
 	});

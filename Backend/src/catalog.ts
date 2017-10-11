@@ -138,10 +138,10 @@ export class Catalog {
         var startProduct = (page-1) * 100;
         return desired.slice(startProduct,startProduct+100); //includes the first num, not the second. If not in bounds, should return empty array. To be dealt with in frontend
     }
-    public getAllInventories( electronicType:string): Inventory[] {
+    public getAllInventories( electronicId:string): Inventory[] {
         var desired: Inventory[];
         for(let i=0;i<this.inventories.length;i++){
-            if(electronicType == this.inventories[i].getinventoryType().getId()){
+            if(electronicId == this.inventories[i].getinventoryType().getId()){
                 desired.push(this.inventories[i]);
             }
         }
