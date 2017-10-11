@@ -130,6 +130,9 @@ export class WebPortal {
 		res.send({data: electronic});
 	});
 
+	router.post("/api/products/:id/modify",passport.authenticate('jwt', { session: false }),function (req, res) {
+        res.send({data:routingCatalog.modifyProduct(req.body)});
+    });
 	//use router middleware
 	this.app.use(router);
   }

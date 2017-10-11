@@ -169,4 +169,62 @@ export class Catalog {
         this.electronics.push(electronic);
 		return true;
 	}
+
+	public modifyProduct(data): boolean {
+	    let elec = this.getProduct(data.id);
+
+	    //set general electronic fields
+	    elec.setWeight(parseInt(data.weight));
+	    elec.setBrand(data.brand);
+	    elec.setPrice(parseFloat(data.price));
+	    elec.setModelNumber(data.modelNumber);
+
+	    switch(elec.getElectronicType()){
+            case "TelevisionSet":
+                var tv: TelevisionSet = <TelevisionSet> elec;
+                tv.setDimensions(data.dimensions);
+                tv.modify();
+                break;
+            case "Monitor":
+                var monitor: Monitor = <Monitor> elec;
+                monitor.setSize(data.parseInt(data.size));
+                monitor.modify();
+                break;
+            case "Desktop":
+                var desktop : Desktop = <Desktop> elec;
+                desktop.setProcessor(data.processor);
+                desktop.setRam(parseInt(data.ram));
+                desktop.setCpus(parseInt(data.cpus));
+                desktop.setHardDrive(data.hardDrive);
+                desktop.setOs(data.os);
+                desktop.setDimensions(data.dimensions);
+                desktop.modify();
+                break;
+            case "Laptop":
+                let laptop: Laptop = <Laptop> elec;
+                laptop.setProcessor(data.processor);
+                laptop.setRam(parseInt(data.ram));
+                laptop.setCpus(parseInt(data.cpus));
+                laptop.setHardDrive(parseInt(data.hardDrive));
+                laptop.setOs(data.os);
+                laptop.setDisplaySize(parseInt(data.displaySize));
+                laptop.setBattery(parseInt(data.battery));
+                laptop.setCamera(data.camera == 'true');
+                laptop.setTouchScreen(data.touchscreen == 'true');
+                laptop.modify();
+                break;
+            case "Tablet":
+                var tablet: Tablet = <Tablet> elec;
+                tablet.setDimensions(data.dimensions);
+                tablet.setBattery(parseInt(data.battery));
+                tablet.setDisplaySize(parseInt(data.displaySize));
+                tablet.setCamera(data.camera == 'true');
+                tablet.modify();
+                break;
+            default:
+                console.log("returning false");
+                return false;
+        }
+        return true;
+    }
 }
