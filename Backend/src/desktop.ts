@@ -25,19 +25,18 @@ export class Desktop extends ComputerSystem {
     /**************************************************************
     * Method to persist an object of type Desktop to the database *
      **************************************************************/
-    public save(): boolean {
-        let queryValues = ["'"+this.id+"'", this.weight, "'"+this.modelNumber+"'",
-                           "'"+this.brand+"'", this.price, "'"+this.processor+"'",
-                           this.ram, this.cpus, this.hardDrive,
-                           "'"+this.os+"'", "'"+this.dimensions+"'"];
-        db.none("INSERT INTO desktops VALUES (" + queryValues.join(',') + ")")
+    public async save(): Promise<boolean> {
+        let queryValues = ["'"+this.getId()+"'", this.getWeight(), "'"+this.getModelNumber()+"'",
+                           "'"+this.getBrand()+"'", this.getPrice(), "'"+this.getProcessor()+"'",
+                           this.getRam(), this.getCpus(), this.getHardDrive(),
+                           "'"+this.getOs()+"'", "'"+this.getDimensions()+"'"];
+        return db.none("INSERT INTO desktops VALUES (" + queryValues.join(',') + ")")
             .then(function() {
                 console.log("Desktop added to db");})
             .catch(function (err) {
                 console.log("Error adding Desktop to the db: " + err);
                 return false;
             });
-        return true;
     }
 
     /*********************************************************************************************
@@ -85,11 +84,11 @@ export class Desktop extends ComputerSystem {
                        + ", modelNumber='" + this.getModelNumber()
                        + "', brand='" + this.getBrand()
                        + "', price=" + this.getPrice()
-                       + ", processor='" + this.processor
-                       + "', ram=" + this.ram
-                       + ", cpus=" + this.cpus
-                       + ", hardDrive=" + this.hardDrive
-                       + ", os='" + this.os
+                       + ", processor='" + this.getProcessor()
+                       + "', ram=" + this.getRam()
+                       + ", cpus=" + this.getCpus()
+                       + ", hardDrive=" + this.getHardDrive()
+                       + ", os='" + this.getOs()
                        + ", dimensions='" + this.getDimensions()
                        + "' WHERE id = '"+ this.getId() + "';")
             .then(function () {
@@ -106,9 +105,9 @@ export class Desktop extends ComputerSystem {
      * Method to remove the current object from the database
      ********************************************************/    
     public async delete(): Promise<boolean> {
-        return db.none("DELETE FROM monitors WHERE id ='"+ this.id + "';")
+        return db.none("DELETE FROM monitors WHERE id ='"+ this.getId() + "';")
             .then(function () {
-                console.log("Desktop object [id: " + this.id + "] was deleted.");
+                console.log("Desktop object [id: " + this.getId() + "] was deleted.");
                 return true;
             }).catch(function (err) {
                 console.log("No matching object found for delete: " + err);
