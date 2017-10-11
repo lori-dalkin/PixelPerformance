@@ -130,6 +130,9 @@ export class WebPortal {
 		res.send({data: electronic});
 	});
 
+    router.post("api/inventory/:electronicId", passport.authenticate('jwt', { session: false }), function (req, res) {
+        res.send({ data: routingCatalog.addInventory(req.params.electronidId) });
+    });
 	//use router middleware
 	this.app.use(router);
   }

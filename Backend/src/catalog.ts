@@ -168,5 +168,19 @@ export class Catalog {
         electronic.save();
         this.electronics.push(electronic);
 		return true;
-	}
+    }
+
+    public addInventory(electronidId : string): Promise<boolean> {
+        let electronic: Electronic;
+        for (var i = 0; i < this.electronics.length; i++){
+            if (this.electronics[i].getModelNumber() == electronidId) {
+                electronic = this.electronics[i];
+                break;
+            }
+        }
+        let inventoryObj: Inventory = new Inventory(electronidId, electronic);
+        let success = await inventoryObj.save();
+       
+
+    }
 }
