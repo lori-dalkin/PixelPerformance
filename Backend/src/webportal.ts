@@ -113,6 +113,11 @@ export class WebPortal {
   router.get("/secret/", passport.authenticate('jwt', { session: false }), function(req, res){
     res.json({message: "Success! You can not see this without a token"});
   });
+
+  router.post(" delete/api/inventory/:electronicId",passport.authenticate('jwt', { session: false }),function (req, res) {
+      res.send({data:routingCatalog.deleteInventory(req.params.id)});
+  });
+
 	router.post("/api/users/logout", function (req, res) {
 		res.send({data: true})
 	});
