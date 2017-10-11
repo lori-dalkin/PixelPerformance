@@ -1,5 +1,3 @@
-
-
 import { dbconnection } from "./dbconnection";
 import { Electronic } from "./electronic";
 import uuid = require("uuid");
@@ -14,6 +12,7 @@ export class TelevisionSet extends Electronic {
         this.dimensions = dimensions;
         this.type = type;
     }
+    
     //Mutators and Accessors
     public setDimensions(dimensions: string) { this.dimensions = dimensions; }
     public setType(type: string) { this.type = type; }
@@ -22,13 +21,12 @@ export class TelevisionSet extends Electronic {
     public getType(): string { return this.type; }
 
 
-
-
     //Save Television Set onto database
     async save(): Promise<boolean> {
        return db.none("INSERT INTO televisionsets VALUES ('" + this.getId() + "'," + this.getWeight() + ",'" + this.getModelNumber() + "','" + this.getBrand() + "'," + this.getPrice() + ",'" + this.getDimension() + "','" + this.getType() + "')")
             .then(function () {
                 console.log("Television added to db");
+                return true;
             })
             .catch(function (err) {
                 console.log("Error in adding Television to the db " + err);
@@ -36,13 +34,13 @@ export class TelevisionSet extends Electronic {
             });
     }
 
-
     //Retrieve a set based on a unique ID
     public static async find(id: string): Promise<Electronic> {
         let televisionSet: TelevisionSet;
         return db.one('SELECT * FROM televisionsets WHERE id =' + id + ';')
             .then(function (row) {
-                televisionSet = new TelevisionSet(row.id, row.weight, row.modelNumber, row.brand, row.price, row.dimensions, row.type)
+                televisionSet = new TelevisionSet(row.id, row.weight, row.modelNumber, row.brand, row.price, row.dimensions, row.type);
+                return televisionSet;
             }).catch(function (err) {
                 console.log("No matching object found");
                 return null;
@@ -64,6 +62,7 @@ export class TelevisionSet extends Electronic {
                 return null;
             });
     }
+
     //Modify data in the db with current attributes
     public async modify(): Promise<boolean> {
         return db.none("UPDATE televisionsets SET weight=" + this.getWeight() + ", modelNumber='" +
@@ -77,6 +76,7 @@ export class TelevisionSet extends Electronic {
                 return false;
             });
     }
+
     //delete television Set
     public async delete(): Promise<boolean> {
         
@@ -90,7 +90,4 @@ export class TelevisionSet extends Electronic {
             });
     }
 
-
 }
-
-
