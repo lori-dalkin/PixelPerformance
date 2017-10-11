@@ -140,6 +140,9 @@ export class Catalog {
         return desired.slice(startProduct,startProduct+100); //includes the first num, not the second. If not in bounds, should return empty array. To be dealt with in frontend
     }
     
+    /********************************************************
+	* Function to add a new product
+	 ********************************************************/
 	public addProduct(data): boolean {
         let electronic: Electronic;
         switch(data.electronicType)
@@ -168,5 +171,27 @@ export class Catalog {
         electronic.save();
         this.electronics.push(electronic);
 		return true;
-	}
+    }
+    
+    /********************************************************
+	* Function to delete an existing product
+	 ********************************************************/
+    public async deleteProduct(productId:string): Promise<boolean> {
+        for(var i = 0; i < this.electronics.length; i++)
+        {
+            if(productId == this.electronics[i].getId())
+            {
+                let success = await this.electronics[i].delete();
+                if(success)
+                {
+                    this.electronics.splice(i,i);
+                    return Promise.resolve(true);
+                }
+                else
+                    return Promise.resolve(false);
+            }
+        }
+        return Promise.resolve(false); //Product to be deleted could not be found.
+    } 
 }
+

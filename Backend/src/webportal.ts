@@ -128,7 +128,13 @@ export class WebPortal {
 		let electronic: Electronic;
 		electronic = routingCatalog.getProduct(req.params.id);
 		res.send({data: electronic});
-	});
+  });
+  
+  router.delete("/api/products/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
+		routingCatalog.deleteProduct(req.params.id).then((success)=>{
+      res.send({data: success});
+    });
+  });
 
 	//use router middleware
 	this.app.use(router);
