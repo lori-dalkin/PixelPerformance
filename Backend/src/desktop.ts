@@ -32,7 +32,9 @@ export class Desktop extends ComputerSystem {
                            "'"+this.getOs()+"'", "'"+this.getDimensions()+"'"];
         return db.none("INSERT INTO desktops VALUES (" + queryValues.join(',') + ")")
             .then(function() {
-                console.log("Desktop added to db");})
+                console.log("Desktop added to the database.");
+                return true;
+            })
             .catch(function (err) {
                 console.log("Error adding Desktop to the db: " + err);
                 return false;
