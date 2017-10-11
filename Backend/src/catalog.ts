@@ -108,30 +108,31 @@ export class Catalog {
     }
 
     /**************************************************************************************************
-     * Function to delete an instance of a product via it's id
+     * Function to delete an instance of a product's inventory via it's id
      * Deletes the first instance of the product found in the inventory array regardless of it's serial number
      **************************************************************************************************/
-    public deleteInventory(electronicID: string): boolean{
-	    let inventoryArray = this.inventories;
-	    let invToDelete : Inventory;
-	    let indexToDelete: number;
+    public async deleteInventory(electronicID: string): Promise<boolean> {
+        console.log(this.inventories);
 
-	    for(let iter = 0; iter < inventoryArray.length; iter++){
-	        if(inventoryArray[iter].getinventoryType().getId() == electronicID) {
-                invToDelete = inventoryArray[iter];
-                indexToDelete = iter;
+        for (let iterator = 0; iterator < this.inventories.length; iterator++) {
+            console.log(this.inventories.length);
+            if (this.inventories[iterator].getinventoryType().getId() == electronicID) {
+                console.log("Deletion was successful");
+                let success = await this.inventories[iterator].delete();
+                if (success){
+                    console.log("Inventory " + this.inventories[iterator].getserialNumber() + " has been deleted");
+                    this.inventories.splice(iterator, 1);
+                    return Promise.resolve(true);
+                }
+                else{
+                    console.log("Could not delete inventory for " + electronicID);
+                    return Promise.resolve(false);
+                }
+
             }
         }
-        if (invToDelete == null){
-	        console.log("No inventory for electronic matching the given ID");
-	        return false;
-        }
-        else{
-            if(invToDelete.delete())
-                inventoryArray.splice(indexToDelete, 1);
-            else console.log("Object inventory has not been depleted");
-        }
-	    return true;
+        console.log("There was no inventory for item " + electronicID + " to delete");
+        return Promise.resolve(false);
     }
 
     /****************************************************

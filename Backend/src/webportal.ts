@@ -114,7 +114,7 @@ export class WebPortal {
     res.json({message: "Success! You can not see this without a token"});
   });
 
-  router.post(" delete/api/inventory/:electronicId",passport.authenticate('jwt', { session: false }),function (req, res) {
+  router.post("/delete/api/inventory/:electronicId",passport.authenticate('jwt', { session: false }),function (req, res) {
       res.send({data:routingCatalog.deleteInventory(req.params.electronicId)});
   });
 
