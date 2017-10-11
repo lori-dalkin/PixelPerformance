@@ -146,7 +146,6 @@ export class Catalog {
 	 ********************************************************/
 	public getProductPage(page:number, type:string): Electronic[] {
 		var desired: Electronic[];
-		console.log(this.electronics);
         if(type == null){
             desired = this.electronics;
         }
@@ -160,6 +159,15 @@ export class Catalog {
         //100 items per page
         var startProduct = (page-1) * 100;
         return desired.slice(startProduct,startProduct+100); //includes the first num, not the second. If not in bounds, should return empty array. To be dealt with in frontend
+    }
+    public getAllInventories( electronicId:string): Inventory[] {
+        var desired: Inventory[];
+        for(let i=0;i<this.inventories.length;i++){
+            if(electronicId == this.inventories[i].getinventoryType().getId()){
+                desired.push(this.inventories[i]);
+            }
+        }
+        return desired;
     }
     
 	public addProduct(data): boolean {
