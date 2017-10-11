@@ -109,11 +109,16 @@ export class Laptop extends ComputerSystem {
      * Method to return all laptops saved in the database
      *******************************************************/
     public static async findAll(): Promise<Electronic[]>{
-        let laptops: Electronic[];
         let laptop: Laptop;
         return db.many('SELECT * FROM laptops')
             .then(function (rows) {
-                return rows as Electronic[];
+				let laptops: Electronic[] = new Array<Electronic>();
+                for(let i=0; i< rows.length; i++){
+					laptops.push(new Laptop(rows[i].id,rows[i].weight,rows[i].modelNumber, rows[i].brand,
+					rows[i].price,rows[i].processor, rows[i].ram, rows[i].cpus, rows[i].hardDrive, rows[i].os,
+					rows[i].displaySize, rows[i].battery, rows[i].camera,rows[i].touchscreen));
+					}
+					return  laptops;
             }).catch(function (err) {
                 console.log("Error in getting all laptops:" + err);
                 return null;
