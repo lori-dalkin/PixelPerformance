@@ -44,17 +44,11 @@ export class Catalog {
 	}
 
 	private async loadDesktops(): Promise<void> {
-		let desktop:Desktop;
-		let desktops = this.electronics;
-        return db.many('SELECT * FROM desktops')
-            .then(function(rows){
-                for(let row of rows){
-                    desktop = new Desktop(row.id, row.weight, row.modelNumber, row.brand, row.price, row.processor, row.ram, row.cpus, row.hardDrive, row.os, row.dimensions)
-					desktops.push(desktop);
-                }
-            }).catch(function (err) {
-            console.log("No desktops found"+ err);
-		});
+		return Desktop.findAll().then((data) => {
+            for(let i=0; i < data.length; i++) {
+                this.electronics.push(data[i]);
+            }
+        });
 	}
 
     private async loadTablets(): Promise<void>{
@@ -105,6 +99,34 @@ export class Catalog {
                 this.inventories.push(data[i]);
             }
         });
+    }
+
+    /**************************************************************************************************
+     * Function to delete an instance of a product's inventory via it's id
+     * Deletes the first instance of the product found in the inventory array regardless of it's serial number
+     **************************************************************************************************/
+    public async deleteInventory(electronicID: string): Promise<boolean> {
+        console.log(this.inventories);
+
+        for (let iterator = 0; iterator < this.inventories.length; iterator++) {
+            console.log(this.inventories.length);
+            if (this.inventories[iterator].getinventoryType().getId() == electronicID) {
+                console.log("Deletion was successful");
+                let success = await this.inventories[iterator].delete();
+                if (success){
+                    console.log("Inventory " + this.inventories[iterator].getserialNumber() + " has been deleted");
+                    this.inventories.splice(iterator, 1);
+                    return Promise.resolve(true);
+                }
+                else{
+                    console.log("Could not delete inventory for " + electronicID);
+                    return Promise.resolve(false);
+                }
+
+            }
+        }
+        console.log("There was no inventory for item " + electronicID + " to delete");
+        return Promise.resolve(false);
     }
 
     /****************************************************
