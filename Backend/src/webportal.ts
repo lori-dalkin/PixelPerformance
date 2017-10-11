@@ -115,7 +115,7 @@ export class WebPortal {
   });
 
   router.post(" delete/api/inventory/:electronicId",passport.authenticate('jwt', { session: false }),function (req, res) {
-      res.send({data:routingCatalog.deleteInventory(req.params.id)});
+      res.send({data:routingCatalog.deleteInventory(req.params.electronicId)});
   });
 
 	router.post("/api/users/logout", function (req, res) {

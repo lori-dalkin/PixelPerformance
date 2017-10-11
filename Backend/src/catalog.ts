@@ -107,6 +107,33 @@ export class Catalog {
         });
     }
 
+    /**************************************************************************************************
+     * Function to delete an instance of a product via it's id
+     * Deletes the first instance of the product found in the inventory array regardless of it's serial number
+     **************************************************************************************************/
+    public deleteInventory(electronicID: string): boolean{
+	    let inventoryArray = this.inventories;
+	    let invToDelete : Inventory;
+	    let indexToDelete: number;
+
+	    for(let iter = 0; iter < inventoryArray.length; iter++){
+	        if(inventoryArray[iter].getinventoryType().getId() == electronicID) {
+                invToDelete = inventoryArray[iter];
+                indexToDelete = iter;
+            }
+        }
+        if (invToDelete == null){
+	        console.log("No inventory for electronic matching the given ID");
+	        return false;
+        }
+        else{
+            if(invToDelete.delete())
+                inventoryArray.splice(indexToDelete, 1);
+            else console.log("Object inventory has not been depleted");
+        }
+	    return true;
+    }
+
     /****************************************************
     * Function to retrieve a single product via it's id
      ****************************************************/
