@@ -26,6 +26,12 @@ class ProductPage extends React.Component {
 		this.props.onLoad();
 	}
 
+    componentDidUpdate() {
+        if(this.props.product.filterSet){
+            this.props.onReload();
+		}
+    }
+
 	render() {
 		return (
 			<div style={{ marginTop: '30px' }}> 
@@ -67,6 +73,9 @@ const mapDispatchToProps = dispatch => {
 		onLoad: (filter = "") => {
 			dispatch(getProducts(filter));
 		},
+        onReload: () => {
+            dispatch(getProducts());
+        },
 		showAddProduct: () => {
 			dispatch(showAddProduct());
 		},

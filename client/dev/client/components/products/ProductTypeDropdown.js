@@ -19,10 +19,13 @@ class ProductTypeDropdown extends Component {
 
     handleChange = (field, event) => {
         this.setState({[field]: event.target.value},()=>{
-            if(this.state.filterType !== "none"){
+            if(this.state.filterType === "none"){
+                // alert(this.state.filterType);
+                this.props.setProductFilter("");
+            }else{
                 const filter = "?type=" + this.state.filterType;
-                alert(filter);
-                setProductFilter(filter);
+                // alert(filter);
+                this.props.setProductFilter(filter);
             }
         });
     };
