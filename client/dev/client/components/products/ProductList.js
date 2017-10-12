@@ -14,7 +14,7 @@ const ProductList = ({products, onProductClick, onProductDelete}) => {
           <TableRow>
             <TableCell>Product Brand</TableCell>
             <TableCell numeric>Price</TableCell>
-            <TableCell numeric/>
+            <TableCell numeric>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

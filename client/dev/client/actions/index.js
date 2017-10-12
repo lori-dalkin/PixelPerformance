@@ -158,6 +158,17 @@ export const addProduct = (body) => {
   };
 }
 
+export const deleteProduct = (product) => {
+  return (dispatch, getState) => {
+    if (getState().authentication && getState().authentication.token) {
+      return callApi('api/products/' + product.id, 'delete', '', `Bearer ${getState().authentication.token}`).then(
+          res => dispatch(getProductsRequest()),
+          error => console.log("error in deleting")
+      );
+    }
+  };
+}
+
 export const hideProductView = () => {
     return { type: actions.HIDE_PRODUCT_VIEW_DIALOG };
 }

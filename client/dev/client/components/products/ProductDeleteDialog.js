@@ -10,6 +10,8 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import Slide from 'material-ui/transitions/Slide';
 
+import { deleteProduct } from '../../actions';
+
 class ProductDeleteDialog extends Component {
 
 	render() {
@@ -23,7 +25,7 @@ class ProductDeleteDialog extends Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.props.handleRequestClose} color="accent">
+            <Button onClick={() => {this.props.deleteProduct(this.props.product.selectedProduct); this.props.handleRequestClose()}} color="accent">
               Delete
             </Button>
             <Button onClick={this.props.handleRequestClose}>
@@ -40,6 +42,8 @@ const mapStateToProps = ({ product }) => ({
   product
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  deleteProduct
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductDeleteDialog);
