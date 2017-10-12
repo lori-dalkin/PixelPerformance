@@ -20,11 +20,9 @@ class ProductTypeDropdown extends Component {
     handleChange = (field, event) => {
         this.setState({[field]: event.target.value},()=>{
             if(this.state.filterType === "none"){
-                // alert(this.state.filterType);
                 this.props.setProductFilter("");
             }else{
-                const filter = "?type=" + this.state.filterType;
-                // alert(filter);
+                const filter = `?type=${this.state.filterType}`;
                 this.props.setProductFilter(filter);
             }
         });
@@ -38,8 +36,8 @@ class ProductTypeDropdown extends Component {
                         <MenuItem value="televisionSet">TelevisionSet</MenuItem>
                         <MenuItem value="monitor">Monitor</MenuItem>
                         <MenuItem value="desktop">Desktop</MenuItem>
-                        <MenuItem value="laptop">Laptop</MenuItem>
-                        <MenuItem value="tablet">Tablet</MenuItem>
+                        <MenuItem value="Laptop">Laptop</MenuItem>
+                        <MenuItem value="Tablet">Tablet</MenuItem>
                     </Select>
             </div>
         );
@@ -50,8 +48,12 @@ const mapStateToProps = ({product}) => ({
     product
 });
 
-const mapDispatchToProps = {
-    setProductFilter
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setProductFilter: (filter) => {
+            dispatch(setProductFilter(filter));
+        }
+    }
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductTypeDropdown);

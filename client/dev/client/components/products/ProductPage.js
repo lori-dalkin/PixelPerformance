@@ -26,11 +26,13 @@ class ProductPage extends React.Component {
 		this.props.onLoad();
 	}
 
-    componentDidUpdate() {
+    /*componentDidUpdate() {
         if(this.props.product.filterSet){
             this.props.onReload();
+		}else{
+        	alert("hahahhaha");
 		}
-    }
+    }*/
 
 	render() {
 		return (
@@ -70,12 +72,12 @@ const mapStateToProps = ({authentication, product}) => ({
 
 const mapDispatchToProps = dispatch => {
 	return {
-		onLoad: (filter = "") => {
+		onLoad: (filter = "?type=monitor") => {
 			dispatch(getProducts(filter));
 		},
-        onReload: () => {
-            dispatch(getProducts());
-        },
+        /*onReload: (filter = "?type=Monitor") => {
+            dispatch(getProducts(filter));
+        },*/
 		showAddProduct: () => {
 			dispatch(showAddProduct());
 		},
