@@ -14,11 +14,10 @@ const defaultDropDownsProduct = {
     os: '',
     dimensions: '',
     type: '',
-    computerType: 'Desktop',
     displaySize: '',
     battery: '',
     camera: '',
-    touchscreen: '',
+    touchScreen: '',
     size: ''
 };
 
@@ -113,6 +112,7 @@ export default function (state = initialState, action) {
             };
             break;
         case actions.ADD_PRODUCT_SUCCESS:
+            console.log(state);
             return {
                 ...state,
                 addProduct: {

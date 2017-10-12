@@ -104,10 +104,6 @@ export const hideSnackbar = () => {
     return { type: actions.HIDE_SNACKBAR };
 }
 
-export const addProductRequest = () => {
-    return { type: actions.ADD_PRODUCT_REQUEST };
-}
-
 export const showProductView = (product) => {
     return { 
 		type: actions.SHOW_PRODUCT_VIEW_DIALOG,
@@ -115,16 +111,17 @@ export const showProductView = (product) => {
 	};
 }
 
-export const addProductSuccess = (result) => {
-    return {
-        type: actions.ADD_PRODUCT_SUCCESS,
-        product: result.data
-    };
-}
+export const addProductRequest = () => { return { type: actions.ADD_PRODUCT_REQUEST }; }
 
-export const addProductFailure = (error) => {
-    return { type: actions.ADD_PRODUCT_FAILURE };
-}
+export const addProductSuccess = (result) => { return { type: actions.ADD_PRODUCT_SUCCESS }; }
+
+export const addProductFailure = (error) => { return { type: actions.ADD_PRODUCT_FAILURE }; }
+
+export const showAddProduct = () => { return { type: actions.SHOW_ADD_PRODUCT_DIALOG }; }
+
+export const hideAddProduct = () => { return { type: actions.HIDE_ADD_PRODUCT_DIALOG }; }
+
+export const addProductSuccessSnackbar = () => { return { type: actions.ADD_PRODUCT_SUCCESS_SNACKBAR }; }
 
 function shouldAddProduct(state) {
     if (!state.product.addProduct.addingProduct) {
@@ -140,8 +137,20 @@ export const addProduct = (body) => {
         if (shouldAddProduct(getState())) {
             dispatch(addProductRequest());
 
+            body = {
+                ...body,
+                electronictype: body.electronicType,
+                displaysize: body.displaySize,
+                harddrive: body.hardDrive,
+                touchscreen: body.touchScreen
+            };
+
             return callApi('api/products', 'post', body, `Bearer ${getState().authentication.token}`).then(
-                res => dispatch(addProductSuccess(res)),
+                res => {
+                    dispatch(addProductSuccess(res));
+                    dispatch(addProductSuccessSnackbar());
+                    dispatch(getProducts());
+                },
                 error => dispatch(addProductFailure())
             );
         }
@@ -161,10 +170,6 @@ export const deleteProduct = (product) => {
 }
 
 export const hideProductView = () => { return { type: actions.HIDE_PRODUCT_VIEW_DIALOG }; }
-
-export const showAddProduct = () => { return { type: actions.SHOW_ADD_PRODUCT_DIALOG }; }
-
-export const hideAddProduct = () => { return { type: actions.HIDE_ADD_PRODUCT_DIALOG }; }
 
 export const showDeleteProduct = (product) => {
     return { 
@@ -198,14 +203,28 @@ function shouldModifyProduct(state) {
     }
 }
 
+export const modifyProductSuccessSnackbar = () => { return { type: actions.MODIFY_PRODUCT_SUCCESS_SNACKBAR }; }
+
 export const modifyProduct = (body) => {
     return (dispatch, getState) => {
         if (getState().authentication && getState().authentication.token && getState().product.modifyProduct) {
             if (shouldModifyProduct(getState())) {
                 dispatch(modifyProductRequest());
 
+                body = {
+                    ...body,
+                    electronictype: body.electronicType,
+                    displaysize: body.displaySize,
+                    harddrive: body.hardDrive,
+                    touchscreen: body.touchScreen
+                };
+
                 return callApi(`modify/api/products/${getState().product.dropDownsProduct.id}`, 'post', body, `Bearer ${getState().authentication.token}`).then(
-                    res => dispatch(modifyProductSuccess(res)),
+                    res => {
+                        dispatch(modifyProductSuccess(res));
+                        dispatch(modifyProductSuccessSnackbar());
+                        dispatch(getProducts());
+                    },
                     error => dispatch(modifyProductFailure())
                 );
             }

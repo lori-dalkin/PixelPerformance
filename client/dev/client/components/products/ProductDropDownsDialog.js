@@ -29,7 +29,9 @@ class ProductDropDownsDialog extends Component {
     this.state = this.props.product.dropDownsProduct;
 
     this.syncStateToInputValue = (field, event) => {
-      this.setState({...this.state, [field]: event.target.value});
+      this.setState({...this.state, [field]: event.target.value}, () => {
+        this.props.product.dropDownsProduct = this.state;
+      });
     }
   }
 
@@ -89,8 +91,10 @@ class ProductDropDownsDialog extends Component {
                 <Select style={{ marginTop: '16px', ...fullWidthStyle }} name="electronicType" 
                         value={this.state.electronicType} onChange={(event) => this.syncStateToInputValue("electronicType", event)}>
                   <MenuItem value="TelevisionSet">TelevisionSet</MenuItem>
-                  <MenuItem value="ComputerSystem">ComputerSystem</MenuItem>
                   <MenuItem value="Monitor">Monitor</MenuItem>
+                  <MenuItem value="Desktop">Desktop</MenuItem>
+                  <MenuItem value="Laptop">Laptop</MenuItem>
+                  <MenuItem value="Tablet">Tablet</MenuItem>
                 </Select>
               </Grid>
             </Grid>
@@ -121,7 +125,9 @@ class ProductDropDownsDialog extends Component {
                       </Grid>
                     </Grid>
                   );
-                case "ComputerSystem":
+                case "Desktop":
+                case "Laptop":
+                case "Tablet":
                   return (
                     <Grid container spacing={24} justify='center'>
                       <Grid item xs={4}>
@@ -149,12 +155,12 @@ class ProductDropDownsDialog extends Component {
                           style={fullWidthStyle}
                           id="hardDrive"
                           name="hardDrive"
-                          label="Harddrive"
+                          label="Hard Drive"
                           onChange={(event) => this.syncStateToInputValue("hardDrive", event)}
                           value={this.state.hardDrive}
                         />
                       </Grid> 
-                      <Grid item xs={4}>
+                      <Grid item xs={6}>
                         <TextField
                           style={fullWidthStyle}
                           id="cpu"
@@ -164,7 +170,7 @@ class ProductDropDownsDialog extends Component {
                           value={this.state.cpu}
                         />
                       </Grid>
-                      <Grid item xs={4}>
+                      <Grid item xs={6}>
                         <TextField
                           style={fullWidthStyle}
                           id="os"
@@ -174,16 +180,8 @@ class ProductDropDownsDialog extends Component {
                           value={this.state.os}
                         />
                       </Grid>
-                      <Grid item xs={4}>
-                        <Select style={{ marginTop: '16px', ...fullWidthStyle }} value={this.state.computerType} 
-                                name="computerType" onChange={(event) => this.syncStateToInputValue("computerType", event)}>
-                          <MenuItem value="Desktop">Desktop</MenuItem>
-                          <MenuItem value="Laptop">Laptop</MenuItem>
-                          <MenuItem value="Tablet">Tablet</MenuItem>
-                        </Select>
-                      </Grid>
                       {(() => {
-                        switch (this.state.computerType) {
+                        switch (this.state.electronicType) {
                           case "Desktop":
                             return (
                               <Grid style={clearGridContainerWidth} container spacing={24} justify='flex-start'>

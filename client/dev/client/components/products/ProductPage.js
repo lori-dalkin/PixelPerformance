@@ -5,13 +5,14 @@ import ProductViewDialog from './ProductViewDialog';
 import ProductAddDialog from './ProductAddDialog';
 import ProductModifyDialog from './ProductModifyDialog';
 import ProductDeleteDialog from './ProductDeleteDialog';
-import { getProducts, hideProductView, showAddProduct, hideAddProduct, hideModifyProduct, hideDeleteProduct } from '../../actions';
+import * as actions from '../../actions';
 
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
 import AddIcon from 'material-ui-icons/Add';
 import Typography from 'material-ui/Typography';
+import Snackbar from 'material-ui/Snackbar';
 import { LinearProgress } from 'material-ui/Progress';
 
 const productPaperStyle = {
@@ -48,25 +49,40 @@ class ProductPage extends React.Component {
 				<Button style={{ position: 'fixed', bottom: '2rem', right: '2rem' }} fab color="accent" aria-label="add" onClick={ () => this.props.showAddProduct() }>
 	        		<AddIcon />
 	      		</Button>
+	      		<Snackbar
+		          anchorOrigin={{
+		            vertical: 'bottom',
+		            horizontal: 'left',
+		          }}
+		          open={this.props.snackbar.open}
+		          autoHideDuration={3000}
+		          onRequestClose={this.props.hideSnackbar}
+		          SnackbarContentProps={{
+		            'aria-describedby': 'message-id',
+		          }}
+		          message={<span id="message-id">{this.props.snackbar.message}</span>}
+		        />
 			</div>
 		);
 	}
 }
 
-const mapStateToProps = ({authentication, product}) => ({
+const mapStateToProps = ({authentication, product, snackbar}) => ({
 	authentication,
-	product
+	product,
+	snackbar
 });
 
 const mapDispatchToProps = dispatch => {
 	return {
-		onLoad: (filter = "") => dispatch(getProducts(filter)),
-		showAddProduct: () => dispatch(showAddProduct()),
-		hideAddProduct: () => dispatch(hideAddProduct()),
-		hideProductView: () => dispatch(hideProductView()),
-		showModifyProduct: () => dispatch(showModifyProduct()),
-		hideModifyProduct: () => dispatch(hideModifyProduct()),
-		hideProductDelete: () => dispatch(hideDeleteProduct())
+		onLoad: (filter = "") => dispatch(actions.getProducts(filter)),
+		showAddProduct: () => dispatch(actions.showAddProduct()),
+		hideAddProduct: () => dispatch(actions.hideAddProduct()),
+		hideProductView: () => dispatch(actions.hideProductView()),
+		showModifyProduct: () => dispatch(actions.showModifyProduct()),
+		hideModifyProduct: () => dispatch(actions.hideModifyProduct()),
+		hideProductDelete: () => dispatch(actions.hideDeleteProduct()),
+		hideSnackbar: () => dispatch(actions.hideSnackbar())
 	};
 }
 
