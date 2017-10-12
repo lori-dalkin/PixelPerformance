@@ -162,7 +162,7 @@ export class Catalog {
         return desired.slice(startProduct,startProduct+100); //includes the first num, not the second. If not in bounds, should return empty array. To be dealt with in frontend
     }
     public getAllInventories( electronicId:string): Inventory[] {
-        var desired: Inventory[];
+        var desired: Inventory[] = [];
         for(let i=0;i<this.inventories.length;i++){
             if(electronicId == this.inventories[i].getinventoryType().getId()){
                 desired.push(this.inventories[i]);
@@ -223,6 +223,80 @@ export class Catalog {
             }
         }
         return Promise.resolve(false); //Product to be deleted could not be found.
-    } 
+    }
+
+    public async modifyProduct(electronicID: string, data): Promise<boolean> {
+        console.log(data);
+        let modSuccess: boolean = true;
+        for(let index = 0; index < this.electronics.length; index++) {
+            if (this.electronics[index].getId() == electronicID) {
+                let elec: Electronic = this.electronics[index];
+
+                console.log(elec);
+                //set general electronic fields
+                elec.setWeight(data.weight);
+                elec.setBrand(data.brand);
+                elec.setPrice(data.price);
+                elec.setModelNumber(data.modelnumber);
+
+                if (elec.getElectronicType() == "Television") {
+                    console.log("Item is a television");
+                    var tv: TelevisionSet = <TelevisionSet> elec;
+                    tv.setDimensions(data.dimensions);
+                    modSuccess = await tv.modify();
+                }
+                else if (elec.getElectronicType() == "Monitor") {
+                    console.log("Item is a monitor");
+                    var monitor: Monitor = <Monitor> elec;
+                    monitor.setSize(data.size);
+                    modSuccess = await monitor.modify();
+                }
+                else if (elec.getElectronicType() == "Desktop") {
+                    console.log("Item is a desktop");
+                    var desktop: Desktop = <Desktop> elec;
+                    desktop.setProcessor(data.processor);
+                    desktop.setRam(parseInt(data.ram));
+                    desktop.setCpu(parseInt(data.cpus));
+                    desktop.setHardDrive(data.hardDrive);
+                    desktop.setOs(data.os);
+                    desktop.setDimensions(data.dimensions);
+                    modSuccess = await desktop.modify();
+                }
+                else if (elec.getElectronicType() == "Laptop") {
+                    console.log("Item is a laptop");
+                    let laptop: Laptop = <Laptop> elec;
+                    laptop.setProcessor(data.processor);
+                    laptop.setRam(parseInt(data.ram));
+                    laptop.setCpu(parseInt(data.cpus));
+                    laptop.setHardDrive(parseInt(data.hardDrive));
+                    laptop.setOs(data.os);
+                    laptop.setDisplaySize(parseInt(data.displaySize));
+                    laptop.setBattery(parseInt(data.battery));
+                    laptop.setCamera(data.camera == 'true');
+                    laptop.setTouchscreen(data.touchscreen == 'true');
+                    modSuccess = await laptop.modify();
+                }
+                else if (elec.getElectronicType() == "Tablet") {
+                    console.log("Item is a tablet");
+                    var tablet: Tablet = <Tablet> elec;
+                    tablet.setDimensions(data.dimensions);
+                    tablet.setBattery(parseInt(data.battery));
+                    tablet.setDisplaySize(parseInt(data.displaySize));
+                    tablet.setCamera(data.camera == 'true');
+                    modSuccess = await tablet.modify();
+                }
+                else {
+                    modSuccess = false;
+                }
+
+                if (modSuccess)
+                    console.log("Modification completed successfully");
+                else console.log("Error: unable to modify object in the database");
+                return Promise.resolve(modSuccess);
+            }
+        }
+        console.log("Object doesn't exist in the database");
+        return Promise.resolve(false);
+    }
 }
 

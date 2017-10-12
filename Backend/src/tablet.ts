@@ -6,10 +6,10 @@ import uuid = require("uuid");
 var db = new dbconnection().getDBConnector();
 
 export class Tablet extends ComputerSystem{
-	displaySize: number;
-	dimensions: string;
-	battery: number;
-	camera: boolean;
+	private displaySize: number;
+	private dimensions: string;
+	private battery: number;
+	private camera: boolean;
 	
 	constructor(id: string, weight: number, modelNumber: string, brand: string, price: number, processor: string, ram: number,
                 cpus: number, hardDrive: number, os: string, displaySize: number, dimensions: string, battery: number, camera: boolean){
