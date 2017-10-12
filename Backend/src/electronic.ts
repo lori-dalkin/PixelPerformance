@@ -33,8 +33,8 @@ export abstract class Electronic {
     abstract async save();
     //abstract async save(): Promise<boolean>;
 
-    // abstract async modify(): Promise<boolean>;
-    //
-    // abstract async delete(): Promise<boolean>;
+    //abstract async modify(): Promise<boolean>;
+    
+    abstract async delete(): Promise<boolean>;
 
 }
