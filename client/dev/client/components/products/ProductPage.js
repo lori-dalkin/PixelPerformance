@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import FilteredProductList from './FilteredProductList';
 import ProductViewDialog from './ProductViewDialog';
 import ProductAddDialog from './ProductAddDialog';
-import { getProducts, hideProductView, showAddProduct, hideAddProduct } from '../../actions';
+import ProductModifyDialog from './ProductModifyDialog';
+import { getProducts, hideProductView, showAddProduct, hideAddProduct, showModifyProduct, hideModifyProduct } from '../../actions';
 
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
@@ -41,6 +42,7 @@ class ProductPage extends React.Component {
 				</Grid>
 				<ProductViewDialog open={this.props.product.productViewOpen} handleRequestClose={this.props.hideProductView} />
 				<ProductAddDialog open={this.props.product.addProduct.addProductOpen} handleRequestClose={this.props.hideAddProduct} />
+				<ProductModifyDialog open={this.props.product.modifyProduct.modifyProductOpen} handleRequestClose={this.props.hideModifyProduct} />
 				<Button style={{ position: 'fixed', bottom: '2rem', right: '2rem' }} fab color="accent" aria-label="add" onClick={ () => this.props.showAddProduct() }>
 	        		<AddIcon />
 	      		</Button>
@@ -56,16 +58,12 @@ const mapStateToProps = ({authentication, product}) => ({
 
 const mapDispatchToProps = dispatch => {
 	return {
-		onLoad: (filter = "") => {
-			dispatch(getProducts(filter));
-		},
-		showAddProduct: () => {
-			dispatch(showAddProduct());
-		},
-		hideAddProduct: () => {
-			dispatch(hideAddProduct());
-		},
-		hideProductView: () => dispatch(hideProductView())
+		onLoad: (filter = "") => dispatch(getProducts(filter)),
+		showAddProduct: () => dispatch(showAddProduct()),
+		hideAddProduct: () => dispatch(hideAddProduct()),
+		hideProductView: () => dispatch(hideProductView()),
+		showModifyProduct: () => dispatch(showModifyProduct()),
+		hideModifyProduct: () => dispatch(hideModifyProduct())
 	};
 }
 

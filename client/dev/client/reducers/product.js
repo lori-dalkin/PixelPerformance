@@ -1,6 +1,9 @@
-import { SET_PRODUCTS_FILTER, GET_PRODUCTS_REQUEST, GET_PRODUCTS_SUCCESS, GET_PRODUCTS_FAILURE, 
-    SHOW_PRODUCT_VIEW_DIALOG, HIDE_PRODUCT_VIEW_DIALOG, ADD_PRODUCT_REQUEST, ADD_PRODUCT_SUCCESS, ADD_PRODUCT_FAILURE, 
-    SHOW_ADD_PRODUCT_DIALOG, HIDE_ADD_PRODUCT_DIALOG } from '../actions/action-types.js'
+import { ACCEPT_LOGIN, SET_TOKEN, DELETE_TOKEN, REJECT_LOGIN, ATTEMPT_LOGIN, HIDE_SNACKBAR, SHOW_SNACKBAR, 
+    SET_PRODUCTS_FILTER, GET_PRODUCTS_REQUEST, GET_PRODUCTS_SUCCESS, GET_PRODUCTS_FAILURE,
+    SHOW_PRODUCT_VIEW_DIALOG, HIDE_PRODUCT_VIEW_DIALOG, GET_SPECIFIC_PRODUCT, ADD_PRODUCT_REQUEST,
+    ADD_PRODUCT_SUCCESS, ADD_PRODUCT_FAILURE, SHOW_ADD_PRODUCT_DIALOG, HIDE_ADD_PRODUCT_DIALOG,
+    SHOW_MODIFY_PRODUCT_DIALOG, HIDE_MODIFY_PRODUCT_DIALOG, MODIFY_PRODUCT_REQUEST, MODIFY_PRODUCT_SUCCESS,
+    MODIFY_PRODUCT_FAILURE } from '../actions/action-types';
 
 const initialState = {
     isFetching: false,
@@ -12,6 +15,13 @@ const initialState = {
         addingProduct: false,
         addProductOpen: false,
         error: false
+    },
+    modifyProduct: {
+        id: '',
+        modifyingProduct: false,
+        modifyProductOpen: false,
+        error: false,
+        state: {}
     },
     selectedProduct: {}
 };
@@ -73,17 +83,14 @@ export default function (state = initialState, action) {
                 ...state,
                 addProduct: {
                     ...state.addProduct,
-                    addingProduct: true
+                    addingProduct: true,
+                    error: false
                 }
             };
             break;
         case ADD_PRODUCT_SUCCESS:
-            let currProducts = state.products;
-            currProducts.push(action.product);
-            console.log('here');
             return {
                 ...state,
-                product: currProducts,
                 addProduct: {
                     ...state.addProduct,
                     error: false,
@@ -100,6 +107,54 @@ export default function (state = initialState, action) {
                     addingProduct: false
                 }
             };
+            break;
+        case SHOW_MODIFY_PRODUCT_DIALOG:
+            return {
+                ...state,
+                modifyProduct: {
+                    ...state.modifyProduct,
+                    modifyProductOpen: true
+                }
+            };
+            break;
+        case HIDE_MODIFY_PRODUCT_DIALOG:
+            return {
+                ...state,
+                modifyProduct: {
+                    ...state.modifyProduct,
+                    modifyProductOpen: false
+                }
+            };
+            break;
+        case MODIFY_PRODUCT_REQUEST:
+            return {
+                ...state,
+                modifyProduct: {
+                    ...state.modifyProduct,
+                    modifyingProduct: true,
+                    error: false
+                }
+            };
+            break;
+        case MODIFY_PRODUCT_SUCCESS:
+            return {
+                ...state,
+                modifyProduct: {
+                    ...state.modifyProduct,
+                    modifyingProduct: false,
+                    error: false
+                }
+            };
+            break;
+        case MODIFY_PRODUCT_FAILURE:
+            return {
+                ...state,
+                modifyProduct: {
+                    ...state.modifyProduct,
+                    modifyingProduct: false,
+                    error: true
+                }
+            }
             break;
         default:
             return state;

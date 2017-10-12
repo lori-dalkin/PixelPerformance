@@ -1,7 +1,9 @@
 import { ACCEPT_LOGIN, SET_TOKEN, DELETE_TOKEN, REJECT_LOGIN, ATTEMPT_LOGIN, HIDE_SNACKBAR, SHOW_SNACKBAR, 
     SET_PRODUCTS_FILTER, GET_PRODUCTS_REQUEST, GET_PRODUCTS_SUCCESS, GET_PRODUCTS_FAILURE,
     SHOW_PRODUCT_VIEW_DIALOG, HIDE_PRODUCT_VIEW_DIALOG, GET_SPECIFIC_PRODUCT, ADD_PRODUCT_REQUEST,
-    ADD_PRODUCT_SUCCESS, ADD_PRODUCT_FAILURE, SHOW_ADD_PRODUCT_DIALOG, HIDE_ADD_PRODUCT_DIALOG } from './action-types';
+    ADD_PRODUCT_SUCCESS, ADD_PRODUCT_FAILURE, SHOW_ADD_PRODUCT_DIALOG, HIDE_ADD_PRODUCT_DIALOG,
+    SHOW_MODIFY_PRODUCT_DIALOG, HIDE_MODIFY_PRODUCT_DIALOG, MODIFY_PRODUCT_REQUEST, MODIFY_PRODUCT_SUCCESS,
+    MODIFY_PRODUCT_FAILURE } from './action-types';
 import callApi from '../utils/apiCaller';
 
 export const attemptLogin = (credentials) => {
@@ -18,9 +20,7 @@ export const attemptLogin = (credentials) => {
 }
 
 export const showLoading = () => {
-    return {
-        type: ATTEMPT_LOGIN,
-    };
+    return { type: ATTEMPT_LOGIN };
 }
 
 export const receiveAttemptLogin = (result) => {
@@ -44,9 +44,7 @@ export const setToken = (token) => {
 }
 
 export const deleteToken = () => {
-    return {
-        type: DELETE_TOKEN
-    };
+    return { type: DELETE_TOKEN };
 }
 
 export const setProductFilter = (filter) => {
@@ -57,9 +55,7 @@ export const setProductFilter = (filter) => {
 }
 
 export const getProductsRequest = () => {
-    return {
-        type: GET_PRODUCTS_REQUEST
-    };
+    return { type: GET_PRODUCTS_REQUEST };
 }
 
 export const getProductsSuccess = (products) => {
@@ -103,8 +99,6 @@ export const getProducts = (filter = "") => {
                     error => dispatch(getProductsFailure(error))
                 );
             }
-        } else {
-
         }
     };
 }
@@ -116,9 +110,7 @@ export const hideSnackbar = () => {
 }
 
 export const addProductRequest = () => {
-    return {
-        type: ADD_PRODUCT_REQUEST
-    };
+    return { type: ADD_PRODUCT_REQUEST };
 }
 
 export const showProductView = (product) => {
@@ -133,9 +125,7 @@ export const addProductSuccess = (result) => {
 }
 
 export const addProductFailure = (error) => {
-    return {
-        type: ADD_PRODUCT_FAILURE
-    };
+    return { type: ADD_PRODUCT_FAILURE };
 }
 
 function shouldAddProduct(state) {
@@ -161,14 +151,41 @@ export const addProduct = (body) => {
   };
 }
 
-export const hideProductView = () => {
-    return { type: HIDE_PRODUCT_VIEW_DIALOG };
+export const hideProductView = () => { return { type: HIDE_PRODUCT_VIEW_DIALOG }; }
+
+export const showAddProduct = () => { return { type: SHOW_ADD_PRODUCT_DIALOG }; }
+
+export const hideAddProduct = () => { return { type: HIDE_ADD_PRODUCT_DIALOG }; }
+
+export const showModifyProduct = () => { return { type: SHOW_MODIFY_PRODUCT_DIALOG }; }
+
+export const hideModifyProduct = () => { return { type: HIDE_MODIFY_PRODUCT_DIALOG }; }
+
+export const modifyProductRequest = () => { return { type: MODIFY_PRODUCT_REQUEST }; }
+
+export const modifyProductSuccess = () => { return { type: MODIFY_PRODUCT_SUCCESS }; }
+
+export const modifyProductFailure = () => { return { type: MODIFY_PRODUCT_FAILURE }; }
+
+function shouldModifyProduct(state) {
+    if (!state.product.modifyProduct.modifyingProduct) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
-export const showAddProduct = () => {
-    return { type: SHOW_ADD_PRODUCT_DIALOG };
-}
+export const modifyProduct = (body) => {
+    return (dispatch, getState) => {
+        if (getState().authentication && getState().authentication.token && getState().product.modifyProduct) {
+            if (shouldModifyProduct(getState())) {
+                dispatch(modifyProductRequest());
 
-export const hideAddProduct = () => {
-    return { type: HIDE_ADD_PRODUCT_DIALOG };
+                return callApi(`modify/api/products/${getState().product.modifyProduct.id}`, 'post', body, `Bearer ${getState().authentication.token}`).then(
+                    res => dispatch(modifyProductSuccess(res)),
+                    error => dispatch(modifyProductFailure())
+                );
+            }
+        }
+    };
 }
