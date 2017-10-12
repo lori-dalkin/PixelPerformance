@@ -52,44 +52,26 @@ export class Catalog {
 	}
 
     private async loadTablets(): Promise<void>{
-        let tablet:Tablet;
-        let tablets = this.electronics;
-        return db.many('SELECT * FROM tablets')
-            .then(function(rows){
-                for(let row of rows){
-                    tablet = new Tablet(row.id, row.weight, row.modelNumber, row.brand, row.price, row.processor, row.ram, row.cpus, row.hardDrive, row.os, row.displaySize, row.dimensions, row.battery, row.camera)
-                    tablets.push(tablet);
-                }
-            }).catch(function (err) {
-            console.log("No tablets found"+ err);
+        return Tablet.findAll().then((data) => {
+            for(let i=0; i < data.length; i++) {
+                this.electronics.push(data[i]);
+            }
         });
     }
 
     private async loadTelevisions(): Promise<void> {
-        let tv:TelevisionSet;
-        let tvs = this.electronics;
-        return db.many('SELECT * FROM tablets')
-            .then(function(rows){
-                for(let row of rows){
-                    tv = new TelevisionSet(row.id,row.weight,row.modelNumber, row.brand, row.price, row.dimensions, row.type);
-                    tvs.push(tv);
-                }
-            }).catch(function (err) {
-            console.log("No tablets found"+ err);
+        return TelevisionSet.findAll().then((data) => {
+            for(let i=0; i < data.length; i++) {
+                this.electronics.push(data[i]);
+            }
         });
     }
 
     private async loadLaptops(): Promise<void> {
-        let lp:Laptop;
-        let lps = this.electronics;
-        return db.many('SELECT * FROM laptops')
-            .then(function(rows){
-                for(let row of rows){
-                    lp = new Laptop(row.id, row.weight, row.modelNumber, row.brand, row.price, row.processor, row.ram, row.cpus, row.hardDrive, row.os, row.displaySize, row.battery, row.camera, row.touchscreen);
-                    lps.push(lp);
-                }
-            }).catch(function (err) {
-            console.log("No laptops found"+ err);
+        return Laptop.findAll().then((data) => {
+            for(let i=0; i < data.length; i++) {
+                this.electronics.push(data[i]);
+            }
         });
     }
 
