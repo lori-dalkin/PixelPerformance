@@ -170,7 +170,7 @@ export class Catalog {
 		return true;
     }
 
-    public async addInventory(electronidId: string): Promise<boolean> {
+    public  addInventory(electronidId: string): boolean {
         console.log("adding to inventory: " + electronidId);
         let electronic: Electronic;
         for (var i = 0; i < this.electronics.length; i++){
@@ -182,14 +182,14 @@ export class Catalog {
         }
         let inventoryObj: Inventory = new Inventory(electronidId, electronic);
         this.inventories.push(inventoryObj);
-        let success = await inventoryObj.save();
+        let success =  inventoryObj.save();
         if (success) {
             console.log("Inventory " + electronidId + " has been added");
-            return Promise.resolve(true);
+            return true;
         }
         else {
             console.log("Could not add inventory for " + electronidId);
-            return Promise.resolve(false);
+            return false;
         }
         
        

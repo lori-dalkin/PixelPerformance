@@ -116,9 +116,7 @@ export class WebPortal {
 
 
   router.post("/api/inventories/:electronicId", passport.authenticate('jwt', { session: false }), function (req, res) {
-      routingCatalog.addInventory(req.params.electronicId).then((success) => {
-          res.send({ data: success });
-      });
+      res.send({ data: routingCatalog.addInventory(req.params.electronicId) });
   });
 	router.post("/api/users/logout", function (req, res) {
 		res.send({data: true})
