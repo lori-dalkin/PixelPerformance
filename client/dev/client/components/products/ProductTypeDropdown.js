@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { MenuItem } from 'material-ui/Menu';
 import Select from 'material-ui/Select';
 
-import { setProductFilter } from '../../actions'
+import { setProductFilter, getProducts } from '../../actions'
 
 class ProductTypeDropdown extends Component {
 
@@ -19,12 +19,12 @@ class ProductTypeDropdown extends Component {
 
     handleChange = (field, event) => {
         this.setState({[field]: event.target.value},()=>{
-            if(this.state.filterType === "none"){
-                this.props.setProductFilter("");
-            }else{
-                const filter = `?type=${this.state.filterType}`;
-                this.props.setProductFilter(filter);
+            let filter = "";
+            if(this.state.filterType !== "none"){
+                filter = `?type=${this.state.filterType}`;
             }
+            this.props.setProductFilter(filter);
+            this.props.getProducts(filter);
         });
     };
 
@@ -33,9 +33,9 @@ class ProductTypeDropdown extends Component {
             <div>
                     <Select name="filterType" value={this.state.filterType} onChange={(event) => this.handleChange("filterType", event)}>
                         <MenuItem value="none">Select Filter</MenuItem>
-                        <MenuItem value="televisionSet">TelevisionSet</MenuItem>
-                        <MenuItem value="monitor">Monitor</MenuItem>
-                        <MenuItem value="desktop">Desktop</MenuItem>
+                        <MenuItem value="TelevisionSet">TelevisionSet</MenuItem>
+                        <MenuItem value="Monitor">Monitor</MenuItem>
+                        <MenuItem value="Desktop">Desktop</MenuItem>
                         <MenuItem value="Laptop">Laptop</MenuItem>
                         <MenuItem value="Tablet">Tablet</MenuItem>
                     </Select>
@@ -52,6 +52,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         setProductFilter: (filter) => {
             dispatch(setProductFilter(filter));
+        },
+        getProducts: (filter) => {
+            dispatch(getProducts(filter));
         }
     }
 };
