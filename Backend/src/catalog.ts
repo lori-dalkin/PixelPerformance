@@ -145,14 +145,15 @@ export class Catalog {
 	* Function to retrieve a list of products based on type
 	 ********************************************************/
 	public getProductPage(page:number, type:string): Electronic[] {
-		var desired: Electronic[];
+        var desired: Electronic[] = [];
+        console.log("desired eletronic type:" + type);
         if(type == null){
             desired = this.electronics;
         }
         else{
             for (var i = 0; i < this.electronics.length; i++)
             {
-                if(Electronic[i].electronicType == type)
+                if(this.electronics[i].getElectronicType() == type)
                     desired.push(this.electronics[i]);
             }
         }

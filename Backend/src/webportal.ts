@@ -119,7 +119,8 @@ export class WebPortal {
 		res.send({data: true});
 	});
 	router.get("/api/products/",passport.authenticate('jwt', { session: false }), function (req, res) {
-    let electronics = routingCatalog.getProductPage(1,req.params.type);
+    console.log(req);
+    let electronics = routingCatalog.getProductPage(1,req.query.type);
 		res.send({data: electronics});
 	});
 	router.post("/api/products/",passport.authenticate('jwt', { session: false }),function (req, res) {
