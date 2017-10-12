@@ -6,7 +6,8 @@ import { modifyProduct as action } from '../../actions';
 const mapStateToProps = ({product}) => ({
   product,
   loading: product.modifyProduct.modifyingProduct,
-  title: 'Modify Product'
+  title: 'Modify Product',
+  actionButtonLabel: 'Modify'
 });
 
 const mapDispatchToProps = {

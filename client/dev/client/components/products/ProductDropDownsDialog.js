@@ -26,29 +26,17 @@ class ProductDropDownsDialog extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-        weight: '',
-        modelNumber: '',
-        brand: '',
-        price: '',
-        electronicType: 'TelevisionSet',
-        processor: '',
-        ram: '',
-        hardDrive: '',
-        cpus: '',
-        os: '',
-        dimensions: '',
-        type: '',
-        computerType: 'Desktop',
-        displaySize: '',
-        battery: '',
-        camera: '',
-        touchscreen: '',
-        size: ''
-    };
+    this.state = this.props.product.dropDownsProduct;
 
     this.syncStateToInputValue = (field, event) => {
       this.setState({...this.state, [field]: event.target.value});
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // Dialog is being opened
+    if (nextProps.open) {
+      this.setState({...this.state, ...nextProps.product.dropDownsProduct});
     }
   }
 
@@ -64,6 +52,7 @@ class ProductDropDownsDialog extends Component {
                   name="weight"
                   label="Weight"
                   onChange={(event) => this.syncStateToInputValue("weight", event)}
+                  value={this.state.weight}
                 />
               </Grid>
               <Grid item xs={4}>
@@ -72,6 +61,7 @@ class ProductDropDownsDialog extends Component {
                   name="modelNumber"
                   label="Model Number"
                   onChange={(event) => this.syncStateToInputValue("modelNumber", event)}
+                  value={this.state.modelNumber}
                 />
               </Grid>
               <Grid item xs={4}>
@@ -80,6 +70,7 @@ class ProductDropDownsDialog extends Component {
                   name="brand"
                   label="Brand"
                   onChange={(event) => this.syncStateToInputValue("brand", event)}
+                  value={this.state.brand}
                 />
               </Grid>
             </Grid>
@@ -91,6 +82,7 @@ class ProductDropDownsDialog extends Component {
                   name="price"
                   label="Price"
                   onChange={(event) => this.syncStateToInputValue("price", event)}
+                  value={this.state.price}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -114,6 +106,7 @@ class ProductDropDownsDialog extends Component {
                           name="dimensions"
                           label="Dimensions"
                           onChange={(event) => this.syncStateToInputValue("dimensions", event)}
+                          value={this.state.dimensions}
                         />
                       </Grid>
                       <Grid item xs={6}>
@@ -123,6 +116,7 @@ class ProductDropDownsDialog extends Component {
                           name="type"
                           label="Type"
                           onChange={(event) => this.syncStateToInputValue("type", event)}
+                          value={this.state.type}
                         />
                       </Grid>
                     </Grid>
@@ -137,6 +131,7 @@ class ProductDropDownsDialog extends Component {
                           name="processor"
                           label="Processor"
                           onChange={(event) => this.syncStateToInputValue("processor", event)}
+                          value={this.state.processor}
                         />
                       </Grid>
                       <Grid item xs={4}>
@@ -146,6 +141,7 @@ class ProductDropDownsDialog extends Component {
                           name="ram"
                           label="RAM"
                           onChange={(event) => this.syncStateToInputValue("ram", event)}
+                          value={this.state.ram}
                         />
                       </Grid>
                       <Grid item xs={4}>
@@ -155,6 +151,7 @@ class ProductDropDownsDialog extends Component {
                           name="hardDrive"
                           label="Harddrive"
                           onChange={(event) => this.syncStateToInputValue("hardDrive", event)}
+                          value={this.state.hardDrive}
                         />
                       </Grid> 
                       <Grid item xs={4}>
@@ -164,6 +161,7 @@ class ProductDropDownsDialog extends Component {
                           name="cpu"
                           label="CPU"
                           onChange={(event) => this.syncStateToInputValue("cpu", event)}
+                          value={this.state.cpu}
                         />
                       </Grid>
                       <Grid item xs={4}>
@@ -173,6 +171,7 @@ class ProductDropDownsDialog extends Component {
                           name="os"
                           label="OS"
                           onChange={(event) => this.syncStateToInputValue("os", event)}
+                          value={this.state.os}
                         />
                       </Grid>
                       <Grid item xs={4}>
@@ -195,6 +194,7 @@ class ProductDropDownsDialog extends Component {
                                     name="dimensions"
                                     label="Dimensions"
                                     onChange={(event) => this.syncStateToInputValue("dimensions", event)}
+                                    value={this.state.dimensions}
                                   />
                                 </Grid>
                               </Grid>
@@ -209,6 +209,7 @@ class ProductDropDownsDialog extends Component {
                                     name="displaySize"
                                     label="Display Size"
                                     onChange={(event) => this.syncStateToInputValue("displaySize", event)}
+                                    value={this.state.displaySize}
                                   />
                                 </Grid>
                                 <Grid item xs={6}>
@@ -218,6 +219,7 @@ class ProductDropDownsDialog extends Component {
                                     name="battery"
                                     label="Battery"
                                     onChange={(event) => this.syncStateToInputValue("battery", event)}
+                                    value={this.state.battery}
                                   />
                                 </Grid>
                                 <Grid item xs={6}>
@@ -227,6 +229,7 @@ class ProductDropDownsDialog extends Component {
                                     name="camera"
                                     label="Camera"
                                     onChange={(event) => this.syncStateToInputValue("camera", event)}
+                                    value={this.state.camera}
                                   />
                                 </Grid>
                                 <Grid item xs={6}>
@@ -236,6 +239,7 @@ class ProductDropDownsDialog extends Component {
                                     name="touchScreen"
                                     label="Touch Screen"
                                     onChange={(event) => this.syncStateToInputValue("touchScreen", event)}
+                                    value={this.state.touchScreen}
                                   />
                                 </Grid>
                               </Grid>
@@ -250,6 +254,7 @@ class ProductDropDownsDialog extends Component {
                                     name="displaySize"
                                     label="Display Size"
                                     onChange={(event) => this.syncStateToInputValue("displaySize", event)}
+                                    value={this.state.displaySize}
                                   />
                                 </Grid>
                                 <Grid item xs={6}>
@@ -259,6 +264,7 @@ class ProductDropDownsDialog extends Component {
                                     name="battery"
                                     label="Battery"
                                     onChange={(event) => this.syncStateToInputValue("battery", event)}
+                                    value={this.state.battery}
                                   />
                                 </Grid>
                                 <Grid item xs={6}>
@@ -268,6 +274,7 @@ class ProductDropDownsDialog extends Component {
                                     name="camera"
                                     label="Camera"
                                     onChange={(event) => this.syncStateToInputValue("camera", event)}
+                                    value={this.state.camera}
                                   />
                                 </Grid>
                                 <Grid item xs={6}>
@@ -277,6 +284,7 @@ class ProductDropDownsDialog extends Component {
                                     name="dimensions"
                                     label="Dimensions"
                                     onChange={(event) => this.syncStateToInputValue("dimension", event)}
+                                    value={this.state.dimensions}
                                   />
                                 </Grid>
                               </Grid>
@@ -297,6 +305,7 @@ class ProductDropDownsDialog extends Component {
                           name="size"
                           label="Size"
                           onChange={(event) => this.syncStateToInputValue("size", event)}
+                          value={this.state.size}
                         />
                       </Grid>
                     </Grid>
@@ -311,7 +320,7 @@ class ProductDropDownsDialog extends Component {
               Cancel
             </Button>
             <Button onClick={() => this.props.action(this.state)} color="primary">
-              Add
+              {this.props.actionButtonLabel}
             </Button>
             {this.props.loading && <CircularProgress color="accent" style={{ width: '30px'}} />}
           </DialogActions>

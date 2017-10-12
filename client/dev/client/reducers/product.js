@@ -1,9 +1,26 @@
-import { ACCEPT_LOGIN, SET_TOKEN, DELETE_TOKEN, REJECT_LOGIN, ATTEMPT_LOGIN, HIDE_SNACKBAR, SHOW_SNACKBAR, 
-    SET_PRODUCTS_FILTER, GET_PRODUCTS_REQUEST, GET_PRODUCTS_SUCCESS, GET_PRODUCTS_FAILURE,
-    SHOW_PRODUCT_VIEW_DIALOG, HIDE_PRODUCT_VIEW_DIALOG, GET_SPECIFIC_PRODUCT, ADD_PRODUCT_REQUEST,
-    ADD_PRODUCT_SUCCESS, ADD_PRODUCT_FAILURE, SHOW_ADD_PRODUCT_DIALOG, HIDE_ADD_PRODUCT_DIALOG,
-    SHOW_MODIFY_PRODUCT_DIALOG, HIDE_MODIFY_PRODUCT_DIALOG, MODIFY_PRODUCT_REQUEST, MODIFY_PRODUCT_SUCCESS,
-    MODIFY_PRODUCT_FAILURE } from '../actions/action-types';
+import * as actions from '../actions/action-types.js'
+
+const defaultDropDownsProduct = {
+    id: '',
+    weight: '',
+    modelNumber: '',
+    brand: '',
+    price: '',
+    electronicType: 'TelevisionSet',
+    processor: '',
+    ram: '',
+    hardDrive: '',
+    cpus: '',
+    os: '',
+    dimensions: '',
+    type: '',
+    computerType: 'Desktop',
+    displaySize: '',
+    battery: '',
+    camera: '',
+    touchscreen: '',
+    size: ''
+};
 
 const initialState = {
     isFetching: false,
@@ -11,65 +28,72 @@ const initialState = {
     productFilter: {},
     products: [],
     productViewOpen: false,
+    productDeleteOpen: false,
     addProduct: {
         addingProduct: false,
         addProductOpen: false,
         error: false
     },
     modifyProduct: {
-        id: '',
         modifyingProduct: false,
         modifyProductOpen: false,
-        error: false,
-        state: {}
+        error: false
     },
+    dropDownsProduct: defaultDropDownsProduct,
     selectedProduct: {}
 };
 
 export default function (state = initialState, action) {
     switch (action.type) {
-        case SET_PRODUCTS_FILTER:
+        case actions.SET_PRODUCTS_FILTER:
             return {
                 ...state,
                 productFilter: action.filter
             };
             break;
-        case GET_PRODUCTS_REQUEST:
+        case actions.GET_PRODUCTS_REQUEST:
             return {
                 ...state,
                 isFetching: true
             };
             break;
-        case GET_PRODUCTS_SUCCESS:
+        case actions.GET_PRODUCTS_SUCCESS:
             return {
                 ...state,
                 products: action.products,
                 isFetching: false
             };
             break;
-        case GET_PRODUCTS_FAILURE:
+        case actions.GET_PRODUCTS_FAILURE:
             return {
                 ...state,
                 error: action.error,
                 isFetching: false
             };
             break;
-        case SHOW_PRODUCT_VIEW_DIALOG:
+        case actions.SHOW_PRODUCT_VIEW_DIALOG:
             return { ...state, productViewOpen: true, selectedProduct: action.product };
             break;
-        case HIDE_PRODUCT_VIEW_DIALOG:
+        case actions.HIDE_PRODUCT_VIEW_DIALOG:
             return { ...state, productViewOpen: false };
             break;
-        case SHOW_ADD_PRODUCT_DIALOG:
+        case actions.SHOW_DELETE_PRODUCT_DIALOG:
+            return { ...state, productDeleteOpen: true, selectedProduct: action.product };
+            break;
+        case actions.HIDE_DELETE_PRODUCT_DIALOG:
+            return { ...state, productDeleteOpen: false };
+            break;
+        case actions.SHOW_ADD_PRODUCT_DIALOG:
             return { 
                 ...state,
                 addProduct: {
                     ...state.addProduct,
                     addProductOpen: true 
-                }
+                },
+                dropDownsProduct: defaultDropDownsProduct
             };
             break;
-        case HIDE_ADD_PRODUCT_DIALOG:
+        case actions.HIDE_ADD_PRODUCT_DIALOG:
             return { 
                 ...state,
                 addProduct: {
@@ -78,7 +102,7 @@ export default function (state = initialState, action) {
                 }
             };
             break;
-        case ADD_PRODUCT_REQUEST:
+        case actions.ADD_PRODUCT_REQUEST:
             return {
                 ...state,
                 addProduct: {
@@ -88,7 +112,7 @@ export default function (state = initialState, action) {
                 }
             };
             break;
-        case ADD_PRODUCT_SUCCESS:
+        case actions.ADD_PRODUCT_SUCCESS:
             return {
                 ...state,
                 addProduct: {
@@ -98,7 +122,7 @@ export default function (state = initialState, action) {
                 }
             };
             break;
-        case ADD_PRODUCT_FAILURE:
+        case actions.ADD_PRODUCT_FAILURE:
             return {
                 ...state,
                 addProduct: {
@@ -108,16 +132,20 @@ export default function (state = initialState, action) {
                 }
             };
             break;
-        case SHOW_MODIFY_PRODUCT_DIALOG:
+        case actions.SHOW_MODIFY_PRODUCT_DIALOG:
             return {
                 ...state,
                 modifyProduct: {
                     ...state.modifyProduct,
                     modifyProductOpen: true
+                },
+                dropDownsProduct: {
+                    ...defaultDropDownsProduct,
+                    ...action.product
                 }
             };
             break;
-        case HIDE_MODIFY_PRODUCT_DIALOG:
+        case actions.HIDE_MODIFY_PRODUCT_DIALOG:
             return {
                 ...state,
                 modifyProduct: {
@@ -126,7 +154,7 @@ export default function (state = initialState, action) {
                 }
             };
             break;
-        case MODIFY_PRODUCT_REQUEST:
+        case actions.MODIFY_PRODUCT_REQUEST:
             return {
                 ...state,
                 modifyProduct: {
@@ -136,7 +164,7 @@ export default function (state = initialState, action) {
                 }
             };
             break;
-        case MODIFY_PRODUCT_SUCCESS:
+        case actions.MODIFY_PRODUCT_SUCCESS:
             return {
                 ...state,
                 modifyProduct: {
@@ -146,7 +174,7 @@ export default function (state = initialState, action) {
                 }
             };
             break;
-        case MODIFY_PRODUCT_FAILURE:
+        case actions.MODIFY_PRODUCT_FAILURE:
             return {
                 ...state,
                 modifyProduct: {

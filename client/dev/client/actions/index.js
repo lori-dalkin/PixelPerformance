@@ -1,9 +1,4 @@
-import { ACCEPT_LOGIN, SET_TOKEN, DELETE_TOKEN, REJECT_LOGIN, ATTEMPT_LOGIN, HIDE_SNACKBAR, SHOW_SNACKBAR, 
-    SET_PRODUCTS_FILTER, GET_PRODUCTS_REQUEST, GET_PRODUCTS_SUCCESS, GET_PRODUCTS_FAILURE,
-    SHOW_PRODUCT_VIEW_DIALOG, HIDE_PRODUCT_VIEW_DIALOG, GET_SPECIFIC_PRODUCT, ADD_PRODUCT_REQUEST,
-    ADD_PRODUCT_SUCCESS, ADD_PRODUCT_FAILURE, SHOW_ADD_PRODUCT_DIALOG, HIDE_ADD_PRODUCT_DIALOG,
-    SHOW_MODIFY_PRODUCT_DIALOG, HIDE_MODIFY_PRODUCT_DIALOG, MODIFY_PRODUCT_REQUEST, MODIFY_PRODUCT_SUCCESS,
-    MODIFY_PRODUCT_FAILURE } from './action-types';
+import * as actions from './action-types';
 import callApi from '../utils/apiCaller';
 
 export const attemptLogin = (credentials) => {
@@ -20,54 +15,54 @@ export const attemptLogin = (credentials) => {
 }
 
 export const showLoading = () => {
-    return { type: ATTEMPT_LOGIN };
+    return { type: actions.ATTEMPT_LOGIN };
 }
 
 export const receiveAttemptLogin = (result) => {
     if (result.data !== undefined) {
         return {
-            type: ACCEPT_LOGIN,
+            type: actions.ACCEPT_LOGIN,
             token: result.data,
         };
     } else {
         return {
-            type: REJECT_LOGIN
+            type: actions.REJECT_LOGIN
         };
     }
 }
 
 export const setToken = (token) => {
     return {
-        type: SET_TOKEN,
+        type: actions.SET_TOKEN,
         token: token
     };
 }
 
 export const deleteToken = () => {
-    return { type: DELETE_TOKEN };
+    return { type: actions.DELETE_TOKEN };
 }
 
 export const setProductFilter = (filter) => {
     return {
-        type: SET_PRODUCTS_FILTER,
+        type: actions.SET_PRODUCTS_FILTER,
         productFilter: filter
     }
 }
 
 export const getProductsRequest = () => {
-    return { type: GET_PRODUCTS_REQUEST };
+    return { type: actions.GET_PRODUCTS_REQUEST };
 }
 
 export const getProductsSuccess = (products) => {
     return {
-        type: GET_PRODUCTS_SUCCESS,
+        type: actions.GET_PRODUCTS_SUCCESS,
         products: products
     };
 }
 
 export const getProductsFailure = (error) => {
     return {
-        type: GET_PRODUCTS_FAILURE,
+        type: actions.GET_PRODUCTS_FAILURE,
         error: error
     };
 }
@@ -103,29 +98,32 @@ export const getProducts = (filter = "") => {
     };
 }
 export const showSnackbar = () => {
-    return { type: SHOW_SNACKBAR };
+    return { type: actions.SHOW_SNACKBAR };
 }
 export const hideSnackbar = () => {
-    return { type: HIDE_SNACKBAR };
+    return { type: actions.HIDE_SNACKBAR };
 }
 
 export const addProductRequest = () => {
-    return { type: ADD_PRODUCT_REQUEST };
+    return { type: actions.ADD_PRODUCT_REQUEST };
 }
 
 export const showProductView = (product) => {
-    return { type: SHOW_PRODUCT_VIEW_DIALOG, product };
+    return { 
+		type: actions.SHOW_PRODUCT_VIEW_DIALOG,
+		product
+	};
 }
 
 export const addProductSuccess = (result) => {
     return {
-        type: ADD_PRODUCT_SUCCESS,
+        type: actions.ADD_PRODUCT_SUCCESS,
         product: result.data
     };
 }
 
 export const addProductFailure = (error) => {
-    return { type: ADD_PRODUCT_FAILURE };
+    return { type: actions.ADD_PRODUCT_FAILURE };
 }
 
 function shouldAddProduct(state) {
@@ -151,21 +149,46 @@ export const addProduct = (body) => {
   };
 }
 
-export const hideProductView = () => { return { type: HIDE_PRODUCT_VIEW_DIALOG }; }
+export const deleteProduct = (product) => {
+  return (dispatch, getState) => {
+    if (getState().authentication && getState().authentication.token) {
+      return callApi('api/products/' + product.id, 'delete', '', `Bearer ${getState().authentication.token}`).then(
+          res => dispatch(getProductsRequest()),
+          error => console.log("error in deleting")
+      );
+    }
+  };
+}
 
-export const showAddProduct = () => { return { type: SHOW_ADD_PRODUCT_DIALOG }; }
+export const hideProductView = () => { return { type: actions.HIDE_PRODUCT_VIEW_DIALOG }; }
 
-export const hideAddProduct = () => { return { type: HIDE_ADD_PRODUCT_DIALOG }; }
+export const showAddProduct = () => { return { type: actions.SHOW_ADD_PRODUCT_DIALOG }; }
 
-export const showModifyProduct = () => { return { type: SHOW_MODIFY_PRODUCT_DIALOG }; }
+export const hideAddProduct = () => { return { type: actions.HIDE_ADD_PRODUCT_DIALOG }; }
 
-export const hideModifyProduct = () => { return { type: HIDE_MODIFY_PRODUCT_DIALOG }; }
+export const showDeleteProduct = (product) => {
+    return { 
+		type: actions.SHOW_DELETE_PRODUCT_DIALOG,
+		product
+	};
+}
 
-export const modifyProductRequest = () => { return { type: MODIFY_PRODUCT_REQUEST }; }
+export const hideDeleteProduct = () => { return { type: actions.HIDE_DELETE_PRODUCT_DIALOG }; }
 
-export const modifyProductSuccess = () => { return { type: MODIFY_PRODUCT_SUCCESS }; }
+export const showModifyProduct = (product) => { 
+    return { 
+        type: actions.SHOW_MODIFY_PRODUCT_DIALOG,
+        product
+    }; 
+}
 
-export const modifyProductFailure = () => { return { type: MODIFY_PRODUCT_FAILURE }; }
+export const hideModifyProduct = () => { return { type: actions.HIDE_MODIFY_PRODUCT_DIALOG }; }
+
+export const modifyProductRequest = () => { return { type: actions.MODIFY_PRODUCT_REQUEST }; }
+
+export const modifyProductSuccess = () => { return { type: actions.MODIFY_PRODUCT_SUCCESS }; }
+
+export const modifyProductFailure = () => { return { type: actions.MODIFY_PRODUCT_FAILURE }; }
 
 function shouldModifyProduct(state) {
     if (!state.product.modifyProduct.modifyingProduct) {
@@ -181,7 +204,7 @@ export const modifyProduct = (body) => {
             if (shouldModifyProduct(getState())) {
                 dispatch(modifyProductRequest());
 
-                return callApi(`modify/api/products/${getState().product.modifyProduct.id}`, 'post', body, `Bearer ${getState().authentication.token}`).then(
+                return callApi(`modify/api/products/${getState().product.dropDownsProduct.id}`, 'post', body, `Bearer ${getState().authentication.token}`).then(
                     res => dispatch(modifyProductSuccess(res)),
                     error => dispatch(modifyProductFailure())
                 );

@@ -4,14 +4,15 @@ import FilteredProductList from './FilteredProductList';
 import ProductViewDialog from './ProductViewDialog';
 import ProductAddDialog from './ProductAddDialog';
 import ProductModifyDialog from './ProductModifyDialog';
-import { getProducts, hideProductView, showAddProduct, hideAddProduct, showModifyProduct, hideModifyProduct } from '../../actions';
+import ProductDeleteDialog from './ProductDeleteDialog';
+import { getProducts, hideProductView, showAddProduct, hideAddProduct, hideModifyProduct, hideDeleteProduct } from '../../actions';
 
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
 import AddIcon from 'material-ui-icons/Add';
 import Typography from 'material-ui/Typography';
-import { CircularProgress } from 'material-ui/Progress';
+import { LinearProgress } from 'material-ui/Progress';
 
 const productPaperStyle = {
 	padding: '2em'
@@ -30,16 +31,17 @@ class ProductPage extends React.Component {
 		return (
 			<div style={{ marginTop: '30px' }}> 
 				<Grid container spacing={24} justify='center'>
-					<Grid item xs={6} >
+					<Grid item xs={11} md={10} lg={6} >
 						<Paper style={productPaperStyle}>
-							<Typography type='display1' component='h3'>
-								Products
+							<Typography type='display1' gutterBottom component='h3'>
+								Product Listing
 							</Typography>
-							{ this.props.product.isFetching && <CircularProgress color="accent" style={{ width: '30px'}} /> }
-							<FilteredProductList />
+							{ this.props.product.isFetching && <LinearProgress color="accent" style={{ width: '100%' }} /> }
+							{ !this.props.product.isFetching && <FilteredProductList /> }
 						</Paper>
 					</Grid>
 				</Grid>
+				<ProductDeleteDialog open={this.props.product.productDeleteOpen} handleRequestClose={this.props.hideProductDelete} />
 				<ProductViewDialog open={this.props.product.productViewOpen} handleRequestClose={this.props.hideProductView} />
 				<ProductAddDialog open={this.props.product.addProduct.addProductOpen} handleRequestClose={this.props.hideAddProduct} />
 				<ProductModifyDialog open={this.props.product.modifyProduct.modifyProductOpen} handleRequestClose={this.props.hideModifyProduct} />
@@ -63,7 +65,8 @@ const mapDispatchToProps = dispatch => {
 		hideAddProduct: () => dispatch(hideAddProduct()),
 		hideProductView: () => dispatch(hideProductView()),
 		showModifyProduct: () => dispatch(showModifyProduct()),
-		hideModifyProduct: () => dispatch(hideModifyProduct())
+		hideModifyProduct: () => dispatch(hideModifyProduct()),
+		hideProductDelete: () => dispatch(hideDeleteProduct())
 	};
 }
 
