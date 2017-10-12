@@ -53,7 +53,7 @@ export class TelevisionSet extends Electronic {
             .then(function (rows) {
                 let television: Electronic[] = new Array<Electronic>();
                 for (let i = 0; i < rows.length; i++) {
-                    television.push(new TelevisionSet(rows[i].id, rows[i].weight, rows[i].modelNumber, rows[i].brand, rows[i].price,
+                    television.push(new TelevisionSet(rows[i].id, rows[i].weight, rows[i].modelnumber, rows[i].brand, rows[i].price,
                         rows[i].dimensions, rows[i].type));
                 }
                 return television;
@@ -65,7 +65,7 @@ export class TelevisionSet extends Electronic {
 
     //Modify data in the db with current attributes
     public async modify(): Promise<boolean> {
-        return db.none("UPDATE televisionsets SET weight=" + this.getWeight() + ", modelNumber='" +
+        return db.none("UPDATE televisionsets SET weight=" + this.getWeight() + ", modelnumber='" +
             this.getModelNumber() + "', brand='" + this.getBrand() + "', price=" + this.getPrice() +
             ", dimensions='" + this.getDimension() + "', type='" + this.getType() + "';").
             then(function () {
