@@ -148,6 +148,13 @@ export class WebPortal {
       res.send({data: success});
     });
   });
+
+  router.post("/modify/api/products/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
+    routingCatalog.modifyProduct(req.params.id, req.body).then((success) => {
+        res.send({data:success});
+    });
+
+  });
 	//use router middleware
 	this.app.use(router);
   }

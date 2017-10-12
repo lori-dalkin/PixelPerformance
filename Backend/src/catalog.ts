@@ -161,7 +161,7 @@ export class Catalog {
         return desired.slice(startProduct,startProduct+100); //includes the first num, not the second. If not in bounds, should return empty array. To be dealt with in frontend
     }
     public getAllInventories( electronicId:string): Inventory[] {
-        var desired: Inventory[];
+        var desired: Inventory[] = [];
         for(let i=0;i<this.inventories.length;i++){
             if(electronicId == this.inventories[i].getinventoryType().getId()){
                 desired.push(this.inventories[i]);
@@ -222,6 +222,106 @@ export class Catalog {
             }
         }
         return Promise.resolve(false); //Product to be deleted could not be found.
-    } 
+    }
+
+    public async modifyProduct(electronicID: string, data): Promise<boolean> {
+        console.log(data);
+        for(let index = 0; index < this.electronics.length; index++){
+            if(this.electronics[index].getId() == electronicID){
+                let elec: Electronic = this.electronics[index];
+
+                console.log(elec);
+                //set general electronic fields
+                elec.setWeight(data.weight);
+                elec.setBrand(data.brand);
+                elec.setPrice(data.price);
+                elec.setModelNumber(data.modelnumber);
+
+                switch(elec.getElectronicType()){
+                    case "TelevisionSet":
+                        console.log("Item is a television");
+                        var tv: TelevisionSet = <TelevisionSet> elec;
+                        tv.setDimensions(data.dimensions);
+                        tv.modify().then((success) => {
+                            console.log("Television modified.");
+                            return Promise.resolve(true);
+                        }).catch(function (err) {
+                            console.log("Could not modify the Television.");
+                            return Promise.resolve(false);
+                        });
+                        break;
+                    case "Monitor":
+                        console.log("Item is a monitor");
+                        var monitor: Monitor = <Monitor> elec;
+                        monitor.setSize(data.size);
+                        monitor.modify().then((success) => {
+                            console.log("Monitor modified.");
+                            return Promise.resolve(true);
+                        }).catch(function (err) {
+                            console.log("Could not modify the Monitor.");
+                            return Promise.resolve(false);
+                        });
+                        break;
+                    case "Desktop":
+                        console.log("Item is a desktop");
+                        var desktop : Desktop = <Desktop> elec;
+                        desktop.setProcessor(data.processor);
+                        desktop.setRam(parseInt(data.ram));
+                        desktop.setCpu(parseInt(data.cpus));
+                        desktop.setHardDrive(data.hardDrive);
+                        desktop.setOs(data.os);
+                        desktop.setDimensions(data.dimensions);
+                        desktop.modify().then((success) => {
+                            console.log("Desktop modified.");
+                            return Promise.resolve(true);
+                        }).catch(function (err) {
+                            console.log("Could not modify the Desktop.");
+                            return Promise.resolve(false);
+                        });
+                        break;
+                    case "Laptop":
+                        console.log("Item is a laptop");
+                        let laptop: Laptop = <Laptop> elec;
+                        laptop.setProcessor(data.processor);
+                        laptop.setRam(parseInt(data.ram));
+                        laptop.setCpu(parseInt(data.cpus));
+                        laptop.setHardDrive(parseInt(data.hardDrive));
+                        laptop.setOs(data.os);
+                        laptop.setDisplaySize(parseInt(data.displaySize));
+                        laptop.setBattery(parseInt(data.battery));
+                        laptop.setCamera(data.camera == 'true');
+                        laptop.setTouchscreen(data.touchscreen == 'true');
+                        laptop.modify().then((success) => {
+                            console.log("Laptop modified.");
+                            return Promise.resolve(true);
+                        }).catch(function (err) {
+                            console.log("Could not modify the Laptop.");
+                            return Promise.resolve(false);
+                        });
+                        break;
+                    case "Tablet":
+                        console.log("Item is a tablet");
+                        var tablet: Tablet = <Tablet> elec;
+                        tablet.setDimensions(data.dimensions);
+                        tablet.setBattery(parseInt(data.battery));
+                        tablet.setDisplaySize(parseInt(data.displaySize));
+                        tablet.setCamera(data.camera == 'true');
+                        tablet.modify().then((success) => {
+                            console.log("Tablet modified.");
+                            return Promise.resolve(true);
+                        }).catch(function (err) {
+                            console.log("Could not modify the Tablet.");
+                            return Promise.resolve(false);
+                        });
+                        break;
+                    default:
+                        console.log("returning false");
+                        return Promise.resolve(false);
+                }
+            }
+        }
+        console.log("Could not find object to update in database");
+        return Promise.resolve(false);
+    }
 }
 
