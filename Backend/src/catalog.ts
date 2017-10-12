@@ -170,16 +170,28 @@ export class Catalog {
 		return true;
     }
 
-    public addInventory(electronidId : string): Promise<boolean> {
+    public async addInventory(electronidId: string): Promise<boolean> {
+        console.log("adding to inventory: " + electronidId);
         let electronic: Electronic;
         for (var i = 0; i < this.electronics.length; i++){
             if (this.electronics[i].getModelNumber() == electronidId) {
                 electronic = this.electronics[i];
+                console.log("inventory id belongs to a " + electronic.getElectronicType());
                 break;
             }
         }
         let inventoryObj: Inventory = new Inventory(electronidId, electronic);
+        this.inventories.push(inventoryObj);
         let success = await inventoryObj.save();
+        if (success) {
+            console.log("Inventory " + electronidId + " has been added");
+            return Promise.resolve(true);
+        }
+        else {
+            console.log("Could not add inventory for " + electronidId);
+            return Promise.resolve(false);
+        }
+        
        
 
     }
