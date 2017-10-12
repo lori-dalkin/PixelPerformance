@@ -114,16 +114,13 @@ export class WebPortal {
     res.json({message: "Success! You can not see this without a token"});
   });
 
-  router.post("/delete/api/inventory/:electronicId",passport.authenticate('jwt', { session: false }),function (req, res) {
-      res.send({data:routingCatalog.deleteInventory(req.params.electronicId)});
-  });
 
 	router.post("/api/users/logout", function (req, res) {
-		res.send({data: true})
+		res.send({data: true});
 	});
 	router.get("/api/products/",passport.authenticate('jwt', { session: false }), function (req, res) {
-    let electronics = routingCatalog.getProductPage(1,null);
-		res.send({data: electronics})
+    let electronics = routingCatalog.getProductPage(1,req.params.type);
+		res.send({data: electronics});
 	});
 	router.post("/api/products/",passport.authenticate('jwt', { session: false }),function (req, res) {
 		res.send({data:routingCatalog.addProduct(req.body)});
@@ -133,12 +130,24 @@ export class WebPortal {
 		let electronic: Electronic;
 		electronic = routingCatalog.getProduct(req.params.id);
 		res.send({data: electronic});
-	});
+  });
+  
+  router.delete("/api/products/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
+		routingCatalog.deleteProduct(req.params.id).then((success)=>{
+      res.send({data: success});
+    });
+  });
 
   router.get("/api/inventories/product/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
 		let inventories = routingCatalog.getAllInventories( req.params.id);
 		res.send({data: inventories });
-	});
+  });
+  
+  router.delete("/api/inventories/product/:electronicId",passport.authenticate('jwt', { session: false }),function (req, res) {
+    routingCatalog.deleteInventory(req.params.electronicId).then((success)=>{
+      res.send({data: success});
+    });
+  });
 	//use router middleware
 	this.app.use(router);
   }
