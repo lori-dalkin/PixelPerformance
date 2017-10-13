@@ -187,10 +187,10 @@ export class Catalog {
     }
 
 
-    public  addInventory(electronidId: string): boolean {
+    public addInventory(electronidId: string): boolean {
         console.log("adding to inventory: " + electronidId);
         let electronic: Electronic;
-        for (var i = 0; i < this.electronics.length; i++){
+        for (var i = 0; i < this.electronics.length; i++) {
             if (this.electronics[i].getModelNumber() == electronidId) {
                 electronic = this.electronics[i];
                 console.log("inventory id belongs to a " + electronic.getElectronicType());
@@ -199,7 +199,7 @@ export class Catalog {
         }
         let inventoryObj: Inventory = new Inventory(electronidId, electronic);
         this.inventories.push(inventoryObj);
-        let success =  inventoryObj.save();
+        let success = inventoryObj.save();
         if (success) {
             console.log("Inventory " + electronidId + " has been added");
             return true;
@@ -208,7 +208,7 @@ export class Catalog {
             console.log("Could not add inventory for " + electronidId);
             return false;
         }
-        
+    }
        
 
 
