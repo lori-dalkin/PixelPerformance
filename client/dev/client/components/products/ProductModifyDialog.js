@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import ProductDropDownsDialog from './ProductFieldPresentationDialog';
+import ProductFieldPresentationDialog from './ProductFieldPresentationDialog';
 
 import { modifyProduct as action } from '../../actions';
 
@@ -17,6 +17,6 @@ const mapDispatchToProps = {
 const ProductAddDialog = connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(ProductDropDownsDialog);
+)(ProductFieldPresentationDialog);
 
 export default ProductAddDialog;
