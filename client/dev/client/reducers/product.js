@@ -23,8 +23,9 @@ const defaultDropDownsProduct = {
 
 const initialState = {
     isFetching: false,
+    filterSet: false,
     error: "",
-    productFilter: {},
+    productFilter: "",
     products: [],
     productViewOpen: false,
     productDeleteOpen: false,
@@ -47,7 +48,8 @@ export default function (state = initialState, action) {
         case actions.SET_PRODUCTS_FILTER:
             return {
                 ...state,
-                productFilter: action.filter
+                productFilter: action.productFilter,
+                filterSet: true
             };
             break;
         case actions.GET_PRODUCTS_REQUEST:
@@ -60,14 +62,16 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 products: action.products,
-                isFetching: false
+                isFetching: false,
+                filterSet: false
             };
             break;
         case actions.GET_PRODUCTS_FAILURE:
             return {
                 ...state,
                 error: action.error,
-                isFetching: false
+                isFetching: false,
+                filterSet: false
             };
             break;
         case actions.SHOW_PRODUCT_VIEW_DIALOG:

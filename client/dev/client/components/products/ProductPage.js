@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import FilteredProductList from './FilteredProductList';
 import ProductViewDialog from './ProductViewDialog';
 import ProductAddDialog from './ProductAddDialog';
+import ProductTypeDropdown from './ProductTypeDropdown';
 import ProductModifyDialog from './ProductModifyDialog';
 import ProductDeleteDialog from './ProductDeleteDialog';
 import * as actions from '../../actions';
@@ -34,9 +35,16 @@ class ProductPage extends React.Component {
 				<Grid container spacing={0} justify='center'>
 					<Grid item xs={11} md={10} lg={6} >
 						<Paper style={productPaperStyle}>
-							<Typography type='display1' gutterBottom component='h3'>
-								Product Listing
-							</Typography>
+							<Grid container spacing={24} justify='center'>
+								<Grid item xs={9}>
+									<Typography type='display1' gutterBottom component='h3'>
+										Product Listing
+									</Typography>
+								</Grid>
+								<Grid item xs={3}>
+									<ProductTypeDropdown />
+								</Grid>
+							</Grid>
 							{ this.props.product.isFetching && <LinearProgress color="accent" style={{ width: '100%' }} /> }
 							{ !this.props.product.isFetching && <FilteredProductList /> }
 						</Paper>
@@ -84,6 +92,6 @@ const mapDispatchToProps = dispatch => {
 		hideProductDelete: () => dispatch(actions.hideDeleteProduct()),
 		hideSnackbar: () => dispatch(actions.hideSnackbar())
 	};
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductPage);

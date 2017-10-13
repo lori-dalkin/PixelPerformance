@@ -77,7 +77,7 @@ function shouldGetProducts(state) {
     }
 }
 
-export const getProducts = (filter = "") => {
+export const getProducts = (filter) => {
     return function (dispatch, getState) {
         if (getState().authentication && getState().authentication.token) {
             if (shouldGetProducts(getState())) {
