@@ -6,10 +6,10 @@ import uuid = require("uuid");
 var db = new dbconnection().getDBConnector();
 
 export class Tablet extends ComputerSystem{
-	displaySize: number;
-	dimensions: string;
-	battery: number;
-	camera: boolean;
+	private displaySize: number;
+	private dimensions: string;
+	private battery: number;
+	private camera: boolean;
 	
 	constructor(id: string, weight: number, modelNumber: string, brand: string, price: number, processor: string, ram: number,
                 cpus: number, hardDrive: number, os: string, displaySize: number, dimensions: string, battery: number, camera: boolean){
@@ -38,7 +38,7 @@ export class Tablet extends ComputerSystem{
      ****************************************************************/
     public save(): boolean {
        return db.none("INSERT INTO tablets VALUES ('"+ this.getId() +"',"+ this.getWeight() +",'"+this.getModelNumber()+"','"+this.getBrand()+"',"+this.getPrice()+",'"+
-           this.processor+"'," + this.ram + ","+this.cpus+","+this.hardDrive+",'"+this.os+"',"+this.getDisplaySize()+",'"+
+           this.getProcessor()+"'," + this.getRam() + ","+this.getCpus()+","+this.getHardDrive()+",'"+this.getOs()+"',"+this.getDisplaySize()+",'"+
            this.getDimensions()+"',"+this.getBattery()+","+this.getCamera()+")")
             .then(function(){
                 console.log("Tablet added to db");
@@ -55,8 +55,8 @@ export class Tablet extends ComputerSystem{
     public static async find(id:string): Promise<Tablet>{
        return db.one("SELECT * FROM tablets WHERE id='" + id +"';")
             .then(function(row){
-                return new Tablet(row.id,row.weight,row.modelNumber, row.brand, row.price,
-                    row.processor, row.ram, row.cpus, row.hardDrive, row.os, row.displaySize, row.dimensions, row.battery, row.camera)
+                return new Tablet(row.id,row.weight,row.modelnumber, row.brand, row.price,
+                    row.processor, row.ram, row.cpus, row.harddrive, row.os, row.displaysize, row.dimensions, row.battery, row.camera)
             }).catch(function (err) {
             console.log("No matching object found: " + err);
             return null;
@@ -71,13 +71,13 @@ export class Tablet extends ComputerSystem{
             .then(function(rows){
                 let tablets: Electronic[] = new Array<Electronic>();
                 for(let i=0; i< rows.length; i++){
-                    tablets.push(new Tablet(rows[i].id,rows[i].weight,rows[i].modelNumber, rows[i].brand, rows[i].price,
-                        rows[i].processor, rows[i].ram, rows[i].cpus, rows[i].hardDrive, rows[i].os,
-                        rows[i].displaySize, rows[i].dimensions, rows[i].battery, rows[i].camera));
+                    tablets.push(new Tablet(rows[i].id,rows[i].weight,rows[i].modelnumber, rows[i].brand, rows[i].price,
+                        rows[i].processor, rows[i].ram, rows[i].cpus, rows[i].harddrive, rows[i].os,
+                        rows[i].displaysize, rows[i].dimensions, rows[i].battery, rows[i].camera));
                 }
                 return  tablets;
             }).catch(function (err){
-                console.log("There was an error retrieving all monitors: " + err);
+                console.log("There was an error retrieving all tablets: " + err);
                 return null;
             });
     }
@@ -86,10 +86,10 @@ export class Tablet extends ComputerSystem{
      * Method to update the current object in the database
      *******************************************************/
     public async modify(): Promise<boolean> {
-        return db.none("UPDATE tablets SET weight=" + this.getWeight() + ", modelNumber='" +
+        return db.none("UPDATE tablets SET weight=" + this.getWeight() + ", modelnumber='" +
             this.getModelNumber() + "', brand='" + this.getBrand() + "', price=" + this.getPrice() +
             ", processor='" + this.processor + "', ram=" + this.ram + ", cpus=" + this.cpus +
-            ", hardDrive=" + this.hardDrive + ", os='" + this.os + "', displaySize=" + this.getDisplaySize() +
+            ", harddrive=" + this.hardDrive + ", os='" + this.os + "', displaysize=" + this.getDisplaySize() +
             ", dimensions='" + this.getDimensions() + "', battery=" + this.getBattery() + ", camera=" + this.getCamera() +
             " WHERE id = '"+ this.getId() + "';").
             then(function () {

@@ -46,7 +46,7 @@ export class Monitor extends Electronic {
 			.then(function(data){
                 let monitorObjects: Electronic[] = new Array<Electronic>();
                 for(let i=0;i< data.length;i++){
-					monitorObjects.push(new Monitor( data[i].id,data[i].weight,data[i].modelNumber, data[i].brand, data[i].price, data[i].size));
+					monitorObjects.push(new Monitor( data[i].id,parseInt(data[i].weight),data[i].modelnumber, data[i].brand, parseFloat(data[i].price), parseInt(data[i].size)));
 				}
                 return  monitorObjects;
 			}).catch(function (err){
@@ -67,7 +67,8 @@ export class Monitor extends Electronic {
     }
 
     public async modify(): Promise<boolean>{
-    	return db.none("UPDATE monitors SET weight = '" + this.getWeight() + "', modelNumber = '" + this.getModelNumber() + "', brand = '" + this.getBrand() + "', price = '" + this.getPrice() + "', size = '" + this.getSize() + "' WHERE id = '"+ this.id + "';")
+		console.log("UPDATE monitors SET weight=" + this.getWeight() + ", modelnumber='" + this.getModelNumber() + "', brand='" + this.getBrand() + "', price=" + this.getPrice() + ", size=" + this.getSize() + " WHERE id='"+ this.getId() + "';");
+    	return db.none("UPDATE monitors SET weight=" + this.getWeight() + ", modelnumber='" + this.getModelNumber() + "', brand='" + this.getBrand() + "', price=" + this.getPrice() + ", size=" + this.getSize() + " WHERE id='"+ this.getId() + "';")
     		.then(function(){
     			console.log("monitor was modified");
     			return true;

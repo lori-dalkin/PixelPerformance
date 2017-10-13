@@ -106,7 +106,7 @@ CREATE TABLE clients(
 
 DROP TABLE IF EXISTS inventories;
 CREATE TABLE inventories(
-	id UUID DEFAULT uuid_generate_v1(),
-	electronicID UUID,
-	PRIMARY KEY(id)
+	"serialNumber" UUID DEFAULT uuid_generate_v1(),
+	"electronicID" UUID,
+	PRIMARY KEY("serialNumber")
 );

@@ -27,7 +27,7 @@ export class Inventory {
         return Inventory.electronics;
     }
     public async delete(): Promise<boolean>{
-        return db.none("DELETE FROM inventories WHERE serialNumber ='"+ this.serialNumber + "';")
+        return db.none("DELETE FROM inventories WHERE \"serialNumber\" ='"+ this.serialNumber + "';")
             .then(function () {
                 return true;
             }).catch(function (err) {
@@ -58,7 +58,7 @@ export class Inventory {
     }
 
     public static async findAll(): Promise<Inventory[]> {
-        return db.many('SELECT * FROM clients')
+        return db.many('SELECT * FROM inventories')
             .then(function (data) {
                 let inventoryObjects: Inventory[] = new Array<Inventory>();
                 for(let i=0;i<data.length;i++){

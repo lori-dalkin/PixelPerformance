@@ -115,15 +115,15 @@ export class WebPortal {
     });
 
 
-  router.post("/api/inventories/:electronicId", passport.authenticate('jwt', { session: false }), function (req, res) {
-      res.send({ data: routingCatalog.addInventory(req.params.electronicId) });
-  });
+
+
 	router.post("/api/users/logout", function (req, res) {
-		res.send({data: true})
+		res.send({data: true});
 	});
 	router.get("/api/products/",passport.authenticate('jwt', { session: false }), function (req, res) {
-    let electronics = routingCatalog.getProductPage(1,null);
-		res.send({data: electronics})
+    console.log(req);
+    let electronics = routingCatalog.getProductPage(1,req.query.type);
+		res.send({data: electronics});
 	});
 	router.post("/api/products/",passport.authenticate('jwt', { session: false }),function (req, res) {
 		res.send({data:routingCatalog.addProduct(req.body)});
@@ -133,9 +133,36 @@ export class WebPortal {
 		let electronic: Electronic;
 		electronic = routingCatalog.getProduct(req.params.id);
 		res.send({data: electronic});
-	});
+  });
+  
+  router.delete("/api/products/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
+		routingCatalog.deleteProduct(req.params.id).then((success)=>{
+      res.send({data: success});
+    });
+  });
 
-   
+  router.post("/api/inventories/:electronicId", passport.authenticate('jwt', { session: false }), function (req, res) {
+      res.send({ data: routingCatalog.addInventory(req.params.electronicId) });
+  });
+
+  router.get("/api/inventories/product/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
+		let inventories = routingCatalog.getAllInventories( req.params.id);
+		res.send({data: inventories });
+  });
+  
+  router.delete("/api/inventories/product/:electronicId",passport.authenticate('jwt', { session: false }),function (req, res) {
+    routingCatalog.deleteInventory(req.params.electronicId).then((success)=>{
+      res.send({data: success});
+    });
+  });
+
+  router.post("/modify/api/products/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
+    routingCatalog.modifyProduct(req.params.id, req.body).then((success) => {
+        res.send({data:success});
+    });
+
+  });
+
 	//use router middleware
 	this.app.use(router);
   }
