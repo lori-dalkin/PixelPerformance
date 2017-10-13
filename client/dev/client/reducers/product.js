@@ -1,6 +1,4 @@
-import { SET_PRODUCTS_FILTER, GET_PRODUCTS_REQUEST, GET_PRODUCTS_SUCCESS, GET_PRODUCTS_FAILURE, 
-    SHOW_PRODUCT_VIEW_DIALOG, HIDE_PRODUCT_VIEW_DIALOG, ADD_PRODUCT_REQUEST, ADD_PRODUCT_SUCCESS, ADD_PRODUCT_FAILURE, 
-    SHOW_ADD_PRODUCT_DIALOG, HIDE_ADD_PRODUCT_DIALOG } from '../actions/action-types.js'
+import * as actions from '../actions/action-types.js'
 
 const initialState = {
     isFetching: false,
@@ -9,6 +7,7 @@ const initialState = {
     productFilter: "",
     products: [],
     productViewOpen: false,
+    productDeleteOpen: false,
     addProduct: {
         addingProduct: false,
         addProductOpen: false,
@@ -19,20 +18,20 @@ const initialState = {
 
 export default function (state = initialState, action) {
     switch (action.type) {
-        case SET_PRODUCTS_FILTER:
+        case actions.SET_PRODUCTS_FILTER:
             return {
                 ...state,
                 productFilter: action.productFilter,
                 filterSet: true
             };
             break;
-        case GET_PRODUCTS_REQUEST:
+        case actions.GET_PRODUCTS_REQUEST:
             return {
                 ...state,
                 isFetching: true
             };
             break;
-        case GET_PRODUCTS_SUCCESS:
+        case actions.GET_PRODUCTS_SUCCESS:
             return {
                 ...state,
                 products: action.products,
@@ -40,7 +39,7 @@ export default function (state = initialState, action) {
                 filterSet: false
             };
             break;
-        case GET_PRODUCTS_FAILURE:
+        case actions.GET_PRODUCTS_FAILURE:
             return {
                 ...state,
                 error: action.error,
@@ -48,13 +47,19 @@ export default function (state = initialState, action) {
                 filterSet: false
             };
             break;
-        case SHOW_PRODUCT_VIEW_DIALOG:
+        case actions.SHOW_PRODUCT_VIEW_DIALOG:
             return { ...state, productViewOpen: true, selectedProduct: action.product };
             break;
-        case HIDE_PRODUCT_VIEW_DIALOG:
+        case actions.HIDE_PRODUCT_VIEW_DIALOG:
             return { ...state, productViewOpen: false };
             break;
-        case SHOW_ADD_PRODUCT_DIALOG:
+        case actions.SHOW_DELETE_PRODUCT_DIALOG:
+            return { ...state, productDeleteOpen: true, selectedProduct: action.product };
+            break;
+        case actions.HIDE_DELETE_PRODUCT_DIALOG:
+            return { ...state, productDeleteOpen: false };
+            break;
+        case actions.SHOW_ADD_PRODUCT_DIALOG:
             return { 
                 ...state,
                 addProduct: {
@@ -63,7 +68,7 @@ export default function (state = initialState, action) {
                 }
             };
             break;
-        case HIDE_ADD_PRODUCT_DIALOG:
+        case actions.HIDE_ADD_PRODUCT_DIALOG:
             return { 
                 ...state,
                 addProduct: {
@@ -72,7 +77,7 @@ export default function (state = initialState, action) {
                 }
             };
             break;
-        case ADD_PRODUCT_REQUEST:
+        case actions.ADD_PRODUCT_REQUEST:
             return {
                 ...state,
                 addProduct: {
@@ -81,10 +86,9 @@ export default function (state = initialState, action) {
                 }
             };
             break;
-        case ADD_PRODUCT_SUCCESS:
+        case actions.ADD_PRODUCT_SUCCESS:
             let currProducts = state.products;
             currProducts.push(action.product);
-            console.log('here');
             return {
                 ...state,
                 product: currProducts,
@@ -95,7 +99,7 @@ export default function (state = initialState, action) {
                 }
             };
             break;
-        case ADD_PRODUCT_FAILURE:
+        case actions.ADD_PRODUCT_FAILURE:
             return {
                 ...state,
                 addProduct: {

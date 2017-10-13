@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import ProductList from './ProductList';
 
-import { showProductView } from '../../actions/index';
+import { showProductView, showDeleteProduct } from '../../actions/index';
 
 const getFilteredProducts = (products, filter) => {
     return products;
@@ -16,7 +16,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         onProductClick: (product) => {
-            dispatch(showProductView(product))
+            dispatch(showProductView(product));
+        },
+        onProductDelete: (product) => {
+            dispatch(showDeleteProduct(product));
         }
     };
 }

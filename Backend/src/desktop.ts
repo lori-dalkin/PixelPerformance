@@ -47,9 +47,9 @@ export class Desktop extends ComputerSystem {
     public static async find(id: string): Promise<Electronic> {
         return db.one("SELECT * FROM desktops WHERE id='" + id + "';")
             .then(function(row) {
-                return new Desktop(row.id, row.weight, row.modelNumber,
+                return new Desktop(row.id, row.weight, row.modelnumber,
                                    row.brand, row.price, row.processor,
-                                   row.ram, row.cpus, row.hardDrive,
+                                   row.ram, row.cpus, row.harddrive,
                                    row.os, row.dimensions)
             }).catch(function (err) {
                 console.log("No matching object found: " + err);
@@ -65,9 +65,9 @@ export class Desktop extends ComputerSystem {
             .then(function(rows) {
                 let desktops: Electronic[] = new Array<Electronic>();
                 for(let i=0; i < rows.length; i++) {
-                    desktops.push(new Desktop(rows[i].id, rows[i].weight, rows[i].modelNumber,
+                    desktops.push(new Desktop(rows[i].id, rows[i].weight, rows[i].modelnumber,
                                               rows[i].brand, rows[i].price, rows[i].processor,
-                                              rows[i].ram, rows[i].cpus, rows[i].hardDrive,
+                                              rows[i].ram, rows[i].cpus, rows[i].harddrive,
                                               rows[i].os, rows[i].dimensions));
                 }
                 return desktops;
@@ -83,15 +83,15 @@ export class Desktop extends ComputerSystem {
      *******************************************************/
     public async modify(): Promise<boolean> {
         return db.none("UPDATE desktops SET weight=" + this.getWeight()
-                       + ", modelNumber='" + this.getModelNumber()
+                       + ", modelnumber='" + this.getModelNumber()
                        + "', brand='" + this.getBrand()
                        + "', price=" + this.getPrice()
                        + ", processor='" + this.getProcessor()
                        + "', ram=" + this.getRam()
                        + ", cpus=" + this.getCpus()
-                       + ", hardDrive=" + this.getHardDrive()
+                       + ", harddrive=" + this.getHardDrive()
                        + ", os='" + this.getOs()
-                       + ", dimensions='" + this.getDimensions()
+                       + "', dimensions='" + this.getDimensions()
                        + "' WHERE id = '"+ this.getId() + "';")
             .then(function () {
                 console.log("Tablet was modified.");

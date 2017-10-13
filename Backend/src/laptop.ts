@@ -76,10 +76,10 @@ export class Laptop extends ComputerSystem {
 	 * Method to modify an object of type Laptop to the database *
 	 **************************************************************/
 	public async modify(): Promise<boolean> {
-		let queryText = 'UPDATE laptops SET weight=' + this.getWeight() + ',modelNumber=' + "'"+ this.getModelNumber() + "'" + ',brand=' + "'"+ this.getBrand() + "'"
-						+ ',price=' + this.getPrice() + ', processor=' + "'"+ this.processor + "'" + ',ram=' + this.ram + ',cpus=' + this.cpus 
-						+ ',hardDrive=' + this.hardDrive + ',os=' + "'"+ this.os + "'" + ',displaySize=' + this.getDisplaySize() + ',battery='+ this.getBattery()
-						+ ',camera=' + this.getCamera() + ',touchscreen=' +this.getTouchscreen() + ' WHERE id =' +  "'"+ this.getId() + "'";
+		let queryText = "UPDATE laptops SET weight=" + this.getWeight() + ",modelnumber='"+ this.getModelNumber() + "',brand='" + this.getBrand()
+						+ "',price=" + this.getPrice() + ", processor='" +this.processor + "',ram=" + this.ram + ",cpus="+ this.cpus
+						+ ",harddrive=" + this.hardDrive + ",os='" + this.os + "',displaysize=" + this.getDisplaySize() + ",battery="+ this.getBattery()
+						+ ",camera=" + this.getCamera() + ",touchscreen=" +this.getTouchscreen() + " WHERE id ='" + this.getId() + "';";
 		return db.none(queryText)
 			.then(function() {
 				console.log("Modified Laptop in the db");
@@ -114,9 +114,9 @@ export class Laptop extends ComputerSystem {
             .then(function (rows) {
 				let laptops: Electronic[] = new Array<Electronic>();
                 for(let i=0; i< rows.length; i++){
-					laptops.push(new Laptop(rows[i].id,rows[i].weight,rows[i].modelNumber, rows[i].brand,
-					rows[i].price,rows[i].processor, rows[i].ram, rows[i].cpus, rows[i].hardDrive, rows[i].os,
-					rows[i].displaySize, rows[i].battery, rows[i].camera,rows[i].touchscreen));
+					laptops.push(new Laptop(rows[i].id,rows[i].weight,rows[i].modelnumber, rows[i].brand,
+					rows[i].price,rows[i].processor, rows[i].ram, rows[i].cpus, rows[i].harddrive, rows[i].os,
+					rows[i].displaysize, rows[i].battery, rows[i].camera,rows[i].touchscreen));
 					}
 					return  laptops;
             }).catch(function (err) {
