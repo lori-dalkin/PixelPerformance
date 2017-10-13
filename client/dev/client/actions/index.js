@@ -161,8 +161,8 @@ export const addProduct = (body) => {
 export const deleteProduct = (product) => {
   return (dispatch, getState) => {
     if (getState().authentication && getState().authentication.token) {
-      return callApi('api/products/' + product.id, 'delete', '', `Bearer ${getState().authentication.token}`).then(
-          res => dispatch(getProductsRequest()),
+      return callApi(`api/products/${product.id}`, 'delete', undefined, `Bearer ${getState().authentication.token}`).then(
+          res => dispatch(getProducts()),
           error => console.log("error in deleting")
       );
     }
