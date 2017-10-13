@@ -1,13 +1,13 @@
 import { connect } from 'react-redux';
 import ProductDropDownsDialog from './ProductDropDownsDialog';
 
-import { addProduct as action } from '../../actions';
+import { modifyProduct as action } from '../../actions';
 
 const mapStateToProps = ({product}) => ({
   product,
-  loading: product.addProduct.addingProduct,
-  title: 'Add Product',
-  actionButtonLabel: 'Add'
+  loading: product.modifyProduct.modifyingProduct,
+  title: 'Modify Product',
+  actionButtonLabel: 'Modify'
 });
 
 const mapDispatchToProps = {

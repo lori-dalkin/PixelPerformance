@@ -15,9 +15,7 @@ export const attemptLogin = (credentials) => {
 }
 
 export const showLoading = () => {
-    return {
-        type: actions.ATTEMPT_LOGIN,
-    };
+    return { type: actions.ATTEMPT_LOGIN };
 }
 
 export const receiveAttemptLogin = (result) => {
@@ -41,9 +39,7 @@ export const setToken = (token) => {
 }
 
 export const deleteToken = () => {
-    return {
-        type: actions.DELETE_TOKEN
-    };
+    return { type: actions.DELETE_TOKEN };
 }
 
 export const setProductFilter = (filter) => {
@@ -54,9 +50,7 @@ export const setProductFilter = (filter) => {
 }
 
 export const getProductsRequest = () => {
-    return {
-        type: actions.GET_PRODUCTS_REQUEST
-    };
+    return { type: actions.GET_PRODUCTS_REQUEST };
 }
 
 export const getProductsSuccess = (products) => {
@@ -100,8 +94,6 @@ export const getProducts = (filter) => {
                     error => dispatch(getProductsFailure(error))
                 );
             }
-        } else {
-
         }
     };
 }
@@ -112,28 +104,24 @@ export const hideSnackbar = () => {
     return { type: actions.HIDE_SNACKBAR };
 }
 
-export const addProductRequest = () => {
-    return {
-        type: actions.ADD_PRODUCT_REQUEST
-    };
-}
-
 export const showProductView = (product) => {
-    return { type: actions.SHOW_PRODUCT_VIEW_DIALOG, product };
+    return { 
+		type: actions.SHOW_PRODUCT_VIEW_DIALOG,
+		product
+	};
 }
 
-export const addProductSuccess = (result) => {
-    return {
-        type: actions.ADD_PRODUCT_SUCCESS,
-        product: result.data
-    };
-}
+export const addProductRequest = () => { return { type: actions.ADD_PRODUCT_REQUEST }; }
 
-export const addProductFailure = (error) => {
-    return {
-        type: actions.ADD_PRODUCT_FAILURE
-    };
-}
+export const addProductSuccess = (result) => { return { type: actions.ADD_PRODUCT_SUCCESS }; }
+
+export const addProductFailure = (error) => { return { type: actions.ADD_PRODUCT_FAILURE }; }
+
+export const showAddProduct = () => { return { type: actions.SHOW_ADD_PRODUCT_DIALOG }; }
+
+export const hideAddProduct = () => { return { type: actions.HIDE_ADD_PRODUCT_DIALOG }; }
+
+export const addProductSuccessSnackbar = () => { return { type: actions.ADD_PRODUCT_SUCCESS_SNACKBAR }; }
 
 function shouldAddProduct(state) {
     if (!state.product.addProduct.addingProduct) {
@@ -149,8 +137,20 @@ export const addProduct = (body) => {
         if (shouldAddProduct(getState())) {
             dispatch(addProductRequest());
 
+            body = {
+                ...body,
+                electronictype: body.electronicType,
+                displaysize: body.displaySize,
+                harddrive: body.hardDrive,
+                touchscreen: body.touchScreen
+            };
+
             return callApi('api/products', 'post', body, `Bearer ${getState().authentication.token}`).then(
-                res => dispatch(addProductSuccess(res)),
+                res => {
+                    dispatch(addProductSuccess(res));
+                    dispatch(addProductSuccessSnackbar());
+                    dispatch(getProducts());
+                },
                 error => dispatch(addProductFailure())
             );
         }
@@ -169,22 +169,65 @@ export const deleteProduct = (product) => {
   };
 }
 
-export const hideProductView = () => {
-    return { type: actions.HIDE_PRODUCT_VIEW_DIALOG };
-}
-
-export const showAddProduct = () => {
-    return { type: actions.SHOW_ADD_PRODUCT_DIALOG };
-}
-
-export const hideAddProduct = () => {
-    return { type: actions.HIDE_ADD_PRODUCT_DIALOG };
-}
+export const hideProductView = () => { return { type: actions.HIDE_PRODUCT_VIEW_DIALOG }; }
 
 export const showDeleteProduct = (product) => {
-    return { type: actions.SHOW_DELETE_PRODUCT_DIALOG, product };
+    return { 
+		type: actions.SHOW_DELETE_PRODUCT_DIALOG,
+		product
+	};
 }
 
-export const hideDeleteProduct = () => {
-    return { type: actions.HIDE_DELETE_PRODUCT_DIALOG };
+export const hideDeleteProduct = () => { return { type: actions.HIDE_DELETE_PRODUCT_DIALOG }; }
+
+export const showModifyProduct = (product) => { 
+    return { 
+        type: actions.SHOW_MODIFY_PRODUCT_DIALOG,
+        product
+    }; 
+}
+
+export const hideModifyProduct = () => { return { type: actions.HIDE_MODIFY_PRODUCT_DIALOG }; }
+
+export const modifyProductRequest = () => { return { type: actions.MODIFY_PRODUCT_REQUEST }; }
+
+export const modifyProductSuccess = () => { return { type: actions.MODIFY_PRODUCT_SUCCESS }; }
+
+export const modifyProductFailure = () => { return { type: actions.MODIFY_PRODUCT_FAILURE }; }
+
+function shouldModifyProduct(state) {
+    if (!state.product.modifyProduct.modifyingProduct) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+export const modifyProductSuccessSnackbar = () => { return { type: actions.MODIFY_PRODUCT_SUCCESS_SNACKBAR }; }
+
+export const modifyProduct = (body) => {
+    return (dispatch, getState) => {
+        if (getState().authentication && getState().authentication.token && getState().product.modifyProduct) {
+            if (shouldModifyProduct(getState())) {
+                dispatch(modifyProductRequest());
+
+                body = {
+                    ...body,
+                    electronictype: body.electronicType,
+                    displaysize: body.displaySize,
+                    harddrive: body.hardDrive,
+                    touchscreen: body.touchScreen
+                };
+
+                return callApi(`modify/api/products/${getState().product.dropDownsProduct.id}`, 'post', body, `Bearer ${getState().authentication.token}`).then(
+                    res => {
+                        dispatch(modifyProductSuccess(res));
+                        dispatch(modifyProductSuccessSnackbar());
+                        dispatch(getProducts());
+                    },
+                    error => dispatch(modifyProductFailure())
+                );
+            }
+        }
+    };
 }
