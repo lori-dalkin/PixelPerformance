@@ -22,7 +22,7 @@ const clearGridContainerWidth = {
   margin: '0px -12px -12px 0px'
 };
 
-class ProductDropDownsDialog extends Component {
+class ProductFieldPresentationDialog extends Component {
   constructor(props) {
     super(props);
 
@@ -328,4 +328,4 @@ class ProductDropDownsDialog extends Component {
 
 };
 
-export default ProductDropDownsDialog;
+export default ProductFieldPresentationDialog;

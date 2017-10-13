@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import ProductDropDownsDialog from './ProductDropDownsDialog';
+import ProductDropDownsDialog from './ProductFieldPresentationDialog';
 
 import { modifyProduct as action } from '../../actions';
 
