@@ -9,6 +9,9 @@ import Dialog, {
   DialogTitle,
 } from 'material-ui/Dialog';
 import Slide from 'material-ui/transitions/Slide';
+import EditIcon from 'material-ui-icons/ModeEdit';
+
+import { showModifyProduct } from '../../actions';
 
 class ProductViewDialog extends Component {
 
@@ -27,6 +30,7 @@ class ProductViewDialog extends Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
+            <Button onClick={ () => this.props.onProductModify(this.props.product.selectedProduct) } color='default'> <EditIcon /> Modify</Button>
             <Button onClick={this.props.handleRequestClose} color="primary">
               Back
             </Button>
@@ -41,6 +45,12 @@ const mapStateToProps = ({ product }) => ({
   product
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onProductModify: (product) => {
+      dispatch(showModifyProduct(product));
+    }
+  }
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductViewDialog);

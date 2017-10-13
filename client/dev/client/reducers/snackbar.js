@@ -1,18 +1,24 @@
-import { REJECT_LOGIN, SHOW_SNACKBAR, HIDE_SNACKBAR } from '../actions/action-types';
+import * as actions from '../actions/action-types';
 
 const initialState = { open: false };
 
 export default function (state = initialState, action) {
     switch (action.type) {
-    	case SHOW_SNACKBAR:
+    	case actions.SHOW_SNACKBAR:
       	return { ...state, open: true };
       	break;
-      case HIDE_SNACKBAR:
+      case actions.HIDE_SNACKBAR:
       	return { ...state, open: false };
       	break;
-      case REJECT_LOGIN:
+      case actions.REJECT_LOGIN:
       	return { ...state, open: true, message: "Invalid credentials, try again." };
       	break;
+      case actions.ADD_PRODUCT_SUCCESS_SNACKBAR:
+        return { ...state, open: true, message: "Successfully added product." }
+        break;
+      case actions.MODIFY_PRODUCT_SUCCESS_SNACKBAR:
+        return { ...state, open: true, message: "Successfully modified product." }
+        break;
     }
     return state;
 }

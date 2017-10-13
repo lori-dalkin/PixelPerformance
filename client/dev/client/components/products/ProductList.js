@@ -5,7 +5,7 @@ import Grid from 'material-ui/Grid';
 
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 
-const ProductList = ({products, onProductClick, onProductDelete}) => {
+const ProductList = ({products, onProductClick, onProductDelete }) => {
   let productId = 1;
   return (
     <Grid container spacing={8} style={{ margin: '0px', marginTop: '5px' }}>
