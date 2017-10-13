@@ -6,17 +6,15 @@ import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import DeleteIcon from 'material-ui-icons/DeleteForever';
 import DetailsIcon from 'material-ui-icons/InfoOutline';
-import EditIcon from 'material-ui-icons/ModeEdit';
 
 import { TableBody, TableCell, TableRow } from 'material-ui/Table';
 
-const ProductListItem = ({ onClick, brand, price, onDelete, onModify }) => (
+const ProductListItem = ({ onClick, brand, price, onDelete }) => (
 	<TableRow>
     <TableCell>{brand}</TableCell>
     <TableCell numeric>{`$${price}`}</TableCell>
     <TableCell numeric>
     	<Button onClick={onClick} color='primary'> <DetailsIcon /> View Details</Button>
-      <Button onClick={onModify} color='default'> <EditIcon /> Modify</Button>
     	<Button onClick={onDelete} color='accent'> <DeleteIcon /> Delete</Button>
     </TableCell>
   </TableRow>
@@ -25,7 +23,6 @@ const ProductListItem = ({ onClick, brand, price, onDelete, onModify }) => (
 ProductListItem.propTypes = {
   onClick: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
-  onModify: PropTypes.func.isRequired,
   brand: PropTypes.string.isRequired,
   price: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 };

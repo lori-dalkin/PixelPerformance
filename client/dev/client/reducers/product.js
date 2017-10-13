@@ -142,7 +142,8 @@ export default function (state = initialState, action) {
                 dropDownsProduct: {
                     ...defaultDropDownsProduct,
                     ...action.product
-                }
+                },
+                productViewOpen: false
             };
             break;
         case actions.HIDE_MODIFY_PRODUCT_DIALOG:
