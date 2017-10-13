@@ -185,6 +185,33 @@ export class Catalog {
         this.electronics.push(electronic);
 		return true;
     }
+
+
+    public  addInventory(electronidId: string): boolean {
+        console.log("adding to inventory: " + electronidId);
+        let electronic: Electronic;
+        for (var i = 0; i < this.electronics.length; i++){
+            if (this.electronics[i].getModelNumber() == electronidId) {
+                electronic = this.electronics[i];
+                console.log("inventory id belongs to a " + electronic.getElectronicType());
+                break;
+            }
+        }
+        let inventoryObj: Inventory = new Inventory(electronidId, electronic);
+        this.inventories.push(inventoryObj);
+        let success =  inventoryObj.save();
+        if (success) {
+            console.log("Inventory " + electronidId + " has been added");
+            return true;
+        }
+        else {
+            console.log("Could not add inventory for " + electronidId);
+            return false;
+        }
+        
+       
+
+
     
     /********************************************************
 	* Function to delete an existing product
@@ -279,6 +306,7 @@ export class Catalog {
         }
         console.log("Object doesn't exist in the database");
         return Promise.resolve(false);
+
     }
 }
 

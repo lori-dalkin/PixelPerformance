@@ -112,7 +112,9 @@ export class WebPortal {
   });
   router.get("/secret/", passport.authenticate('jwt', { session: false }), function(req, res){
     res.json({message: "Success! You can not see this without a token"});
-  });
+    });
+
+
 
 
 	router.post("/api/users/logout", function (req, res) {
@@ -139,6 +141,10 @@ export class WebPortal {
     });
   });
 
+  router.post("/api/inventories/:electronicId", passport.authenticate('jwt', { session: false }), function (req, res) {
+      res.send({ data: routingCatalog.addInventory(req.params.electronicId) });
+  });
+
   router.get("/api/inventories/product/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
 		let inventories = routingCatalog.getAllInventories( req.params.id);
 		res.send({data: inventories });
@@ -156,6 +162,7 @@ export class WebPortal {
     });
 
   });
+
 	//use router middleware
 	this.app.use(router);
   }
