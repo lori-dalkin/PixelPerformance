@@ -1,5 +1,26 @@
 import * as actions from '../actions/action-types.js'
 
+const defaultDropDownsProduct = {
+    id: '',
+    weight: '',
+    modelNumber: '',
+    brand: '',
+    price: '',
+    electronicType: 'TelevisionSet',
+    processor: '',
+    ram: '',
+    hardDrive: '',
+    cpus: '',
+    os: '',
+    dimensions: '',
+    type: '',
+    displaySize: '',
+    battery: '',
+    camera: '',
+    touchScreen: '',
+    size: ''
+};
+
 const initialState = {
     isFetching: false,
     error: "",
@@ -12,6 +33,12 @@ const initialState = {
         addProductOpen: false,
         error: false
     },
+    modifyProduct: {
+        modifyingProduct: false,
+        modifyProductOpen: false,
+        error: false
+    },
+    dropDownsProduct: defaultDropDownsProduct,
     selectedProduct: {}
 };
 
@@ -61,7 +88,8 @@ export default function (state = initialState, action) {
                 addProduct: {
                     ...state.addProduct,
                     addProductOpen: true 
-                }
+                },
+                dropDownsProduct: defaultDropDownsProduct
             };
             break;
         case actions.HIDE_ADD_PRODUCT_DIALOG:
@@ -78,16 +106,14 @@ export default function (state = initialState, action) {
                 ...state,
                 addProduct: {
                     ...state.addProduct,
-                    addingProduct: true
+                    addingProduct: true,
+                    error: false
                 }
             };
             break;
         case actions.ADD_PRODUCT_SUCCESS:
-            let currProducts = state.products;
-            currProducts.push(action.product);
             return {
                 ...state,
-                product: currProducts,
                 addProduct: {
                     ...state.addProduct,
                     error: false,
@@ -104,6 +130,59 @@ export default function (state = initialState, action) {
                     addingProduct: false
                 }
             };
+            break;
+        case actions.SHOW_MODIFY_PRODUCT_DIALOG:
+            return {
+                ...state,
+                modifyProduct: {
+                    ...state.modifyProduct,
+                    modifyProductOpen: true
+                },
+                dropDownsProduct: {
+                    ...defaultDropDownsProduct,
+                    ...action.product
+                },
+                productViewOpen: false
+            };
+            break;
+        case actions.HIDE_MODIFY_PRODUCT_DIALOG:
+            return {
+                ...state,
+                modifyProduct: {
+                    ...state.modifyProduct,
+                    modifyProductOpen: false
+                }
+            };
+            break;
+        case actions.MODIFY_PRODUCT_REQUEST:
+            return {
+                ...state,
+                modifyProduct: {
+                    ...state.modifyProduct,
+                    modifyingProduct: true,
+                    error: false
+                }
+            };
+            break;
+        case actions.MODIFY_PRODUCT_SUCCESS:
+            return {
+                ...state,
+                modifyProduct: {
+                    ...state.modifyProduct,
+                    modifyingProduct: false,
+                    error: false
+                }
+            };
+            break;
+        case actions.MODIFY_PRODUCT_FAILURE:
+            return {
+                ...state,
+                modifyProduct: {
+                    ...state.modifyProduct,
+                    modifyingProduct: false,
+                    error: true
+                }
+            }
             break;
         default:
             return state;
