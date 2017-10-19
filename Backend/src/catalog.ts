@@ -1,12 +1,12 @@
 import * as uuid from "uuid";
-import { Electronic } from "./electronic"
-import { Monitor } from "./monitor"
-import { dbconnection } from "./dbconnection"
-import {Desktop} from "./desktop";
-import {Tablet} from "./tablet";
-import {TelevisionSet} from "./TelevisionSet";
-import {Laptop} from "./laptop";
-import {Inventory } from "./inventory";
+import { Electronic } from "./Models/electronic"
+import { Monitor } from "./Models/monitor"
+import { dbconnection } from "./Models/dbconnection"
+import {Desktop} from "./Models/desktop";
+import {Tablet} from "./Models/tablet";
+import {TelevisionSet} from "./Models/TelevisionSet";
+import {Laptop} from "./Models/laptop";
+import {Inventory } from "./Models/inventory";
 
 var db = new dbconnection().getDBConnector();
 export class Catalog {

@@ -1,8 +1,8 @@
 import * as uuid from "uuid";
-import { User } from "./user"
-import { Client } from "./client"
-import { Admin } from "./admin"
-import { dbconnection } from "./dbconnection"
+import { User } from "./Models/user"
+import { Client } from "./Models/client"
+import { Admin } from "./Models/admin"
+import { dbconnection } from "./Models/dbconnection"
 
 var db = new dbconnection().getDBConnector();
 
