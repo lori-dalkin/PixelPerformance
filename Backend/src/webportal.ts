@@ -10,11 +10,11 @@ import * as passport from "passport";
 import * as passportJWT from "passport-jwt";
 import errorHandler = require("errorhandler");
 import methodOverride = require("method-override");
-import { Electronic } from "./electronic";
-import { Monitor } from "./monitor";
-import { Admin } from "./admin";
+import { Electronic } from "./Models/electronic";
+import { Monitor } from "./Models/monitor";
+import { Admin } from "./Models/admin";
 import { Catalog } from "./catalog";
-import { Client } from "./client";
+import { Client } from "./Models/client";
 import { UserManagement } from "./usermanagement" 
 /**
  * The web portal.
@@ -110,12 +110,6 @@ export class WebPortal {
       }
     })
   });
-  router.get("/secret/", passport.authenticate('jwt', { session: false }), function(req, res){
-    res.json({message: "Success! You can not see this without a token"});
-    });
-
-
-
 
 	router.post("/api/users/logout", function (req, res) {
 		res.send({data: true});
