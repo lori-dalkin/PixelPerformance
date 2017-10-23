@@ -60,4 +60,15 @@ export class UserManagement {
         }
         return null;
     }
+
+    /***************************************
+    * Function to add a new Client
+     ****************************************/
+    public addClient(data): boolean {
+        let client: Client;
+        client = new Client(uuid.v1(), data.fname, data.lname, data.email, data.password, data.address, data.phone);
+        client.save();
+        this.users.push(client);
+        return true;
+    }
 }
