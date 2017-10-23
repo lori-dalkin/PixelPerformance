@@ -65,23 +65,15 @@ export class Client extends User {
             });
     } 
 
-    public checkPriviledge(route: string): boolean
+    public checkPrivilege(route: string): boolean
     {
-        enum Routes
-        {
-            postProduct = "post/api/products/",
-            deleteProduct = "delete/api/products/:id",
-            postInventory = "post/api/inventories/:electronicId",
-            deleteInventory = "delete/api/inventories/product/:electronicId",
-            modifyProducts = "post/modify/api/products/:id"
-        }
         switch(route)
         {
-            case Routes.postProduct:
-            case Routes.deleteProduct:
-            case Routes.postInventory:
-            case Routes.deleteInventory:
-            case Routes.modifyProducts:
+            case User.Routes.postProduct:
+            case User.Routes.deleteProduct:
+            case User.Routes.postInventory:
+            case User.Routes.deleteInventory:
+            case User.Routes.modifyProducts:
                 return false;
         }
         return true;

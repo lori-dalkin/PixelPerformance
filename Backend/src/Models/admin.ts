@@ -70,7 +70,7 @@ export class Admin extends User {
             });
     }
 
-    public checkPriviledge(route: string): boolean
+    public checkPrivilege(route: string): boolean
     {
         return true;
     }
