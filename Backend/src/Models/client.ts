@@ -83,4 +83,18 @@ export class Client extends User {
     }
     
 
+    public checkPrivilege(route: string): boolean
+    {
+        switch(route)
+        {
+            case User.Routes.postProduct:
+            case User.Routes.deleteProduct:
+            case User.Routes.postInventory:
+            case User.Routes.deleteInventory:
+            case User.Routes.modifyProducts:
+                return false;
+        }
+        return true;
+    }
+
 }
