@@ -159,7 +159,7 @@ export class WebPortal {
     });
   });
 
-  router.post("/modify/api/products/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
+  router.put("/api/products/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
     routingCatalog.modifyProduct(req.params.id, req.body).then((success) => {
         res.send({data:success});
     });
