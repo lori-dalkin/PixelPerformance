@@ -1,3 +1,5 @@
+import * as bcrypt from "bcrypt";
+
 enum Routes
 {
 	getRoot = "get/",
@@ -23,7 +25,7 @@ export abstract class User {
 		this.fname = fname;
 		this.lname = lname;
 		this.email = email;
-		this.password = password;
+		this.password = bcrypt.hashSync(password, 10);
 	}
 
 	public setId(id:string): void{
