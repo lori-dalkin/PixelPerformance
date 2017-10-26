@@ -16,6 +16,9 @@ import { Admin } from "./Models/admin";
 import { Catalog } from "./catalog";
 import { Client } from "./Models/client";
 import { UserManagement } from "./usermanagement" 
+var swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load('./src/swagger.yaml');
 /**
  * The web portal.
  *
@@ -141,8 +144,8 @@ export class WebPortal {
     });
   });
 
-  router.post("/api/inventories/:electronicId", passport.authenticate('jwt', { session: false }), function (req, res) {
-      res.send({ data: routingCatalog.addInventory(req.params.electronicId) });
+  router.post("/api/inventories/product/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+      res.send({ data: routingCatalog.addInventory(req.params.id) });
   });
 
   router.get("/api/inventories/product/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
@@ -150,13 +153,13 @@ export class WebPortal {
 		res.send({data: inventories });
   });
   
-  router.delete("/api/inventories/product/:electronicId",passport.authenticate('jwt', { session: false }),function (req, res) {
-    routingCatalog.deleteInventory(req.params.electronicId).then((success)=>{
+  router.delete("/api/inventories/product/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
+    routingCatalog.deleteInventory(req.params.id).then((success)=>{
       res.send({data: success});
     });
   });
 
-  router.post("/modify/api/products/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
+  router.put("/api/products/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
     routingCatalog.modifyProduct(req.params.id, req.body).then((success) => {
         res.send({data:success});
     });
@@ -194,9 +197,8 @@ export class WebPortal {
     //use override middlware
     this.app.use(methodOverride());
 
- 
+    this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     // ## CORS middleware
-    //this.app.use(corser.create());
     var corsOptions = { allowedHeaders: ['Content-Type', 'Authorization']}; 
     this.app.use(cors(corsOptions));
     //catch 404 and forward to error handler
