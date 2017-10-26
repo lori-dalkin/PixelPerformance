@@ -1,3 +1,4 @@
+import * as bcrypt from "bcrypt";
 import { dbconnection } from "./dbconnection";
 import { User } from "./user";
 
@@ -69,8 +70,9 @@ export class Client extends User {
     * Method to persist Client objects in the database *
      ******************************************************/
     public async save(): Promise<boolean> {
+        let hashedPassword = await bcrypt.hash(this.getPassword(), 10);
         let queryValues = ["'"+this.getId()+"'","'"+this.getFName()+"'","'"+this.getLName()+"'","'"+this.getEmail()+"'",
-                           "'"+this.getPassword()+"'","'"+this.getAddress()+"'", "'"+this.getPhone()+"'"];
+                           "'"+hashedPassword+"'","'"+this.getAddress()+"'", "'"+this.getPhone()+"'"];
         return db.none("INSERT INTO clients VALUES (" + queryValues.join(',') + ")")
             .then(function() {
                 console.log("New Client was added to the database.");
