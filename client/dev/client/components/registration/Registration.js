@@ -30,7 +30,14 @@ class Registration extends Component {
             email: "",
             password: "",
             address: "",
-            phone: ""
+            phone: "",
+            tester: false,
+            fname_error: false,
+            lname_error: false,
+            email_error: false,
+            password_error: false,
+            address_error: false,
+            phone_error: false
         };
         this.register = () => {
             this.props.attemptRegistration({
@@ -45,6 +52,33 @@ class Registration extends Component {
         this.syncStateToInputValue = (field, event) => {
             this.setState({...this.state, [field]: event.target.value});
         }
+        this.validate = () => {
+            if(this.state.fname === "" || this.state.lname === "" || this.state.email === "" || this.state.password === "" || this.state.address === "" || this.state.phone === "") {
+                this.state.fname === "" ? this.setState({ fname_error: true }) : this.setState({ fname_error: false });
+                this.state.lname === "" ? this.setState({ lname_error: true }) : this.setState({ lname_error: false });
+                this.state.email === "" ? this.setState({ email_error: true }) : this.setState({ email_error: false });
+                this.state.password === "" ? this.setState({ password_error: true }) : this.setState({ password_error: false });
+                this.state.address === "" ? this.setState({ address_error: true }) : this.setState({ address_error: false });
+                this.state.phone === "" ? this.setState({ phone_error: true }) :  this.setState({ phone_error: false });
+            }else{
+                this.register();
+                this.resetForm();
+            }
+        };
+        this.resetForm = () => {
+            this.setState({ fname: "" });
+            this.setState({ lname: "" });
+            this.setState({ email: "" });
+            this.setState({ password: "" });
+            this.setState({ address: "" });
+            this.setState({ phone: "" });
+            this.setState({ fname_error: false });
+            this.setState({ lname_error: false });
+            this.setState({ email_error: false });
+            this.setState({ password_error: false });
+            this.setState({ address_error: false });
+            this.setState({ phone_error: false });
+        }
     }
 
     render() {
@@ -53,41 +87,49 @@ class Registration extends Component {
                 <DialogTitle>Registration Form</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        <form style={formStyle} noValidate autoComplete="off">
-                            <Grid container spacing={24} justify='center'>
-                                <Grid item xs={6}>
+                        Create an account to see our selection of electronic items!
+                    </DialogContentText>
+                    <form style={formStyle} noValidate autoComplete="off">
+                        <Grid container spacing={24} justify='center'>
+                            <Grid item xs={6}>
                                 <TextField
                                     style={{ maxWidth: "20rem" }}
                                     id="fname"
                                     label="First Name"
                                     fullWidth
                                     margin="normal"
+                                    helperText={this.state.fname_error ? "Required" : ""}
+                                    error={this.state.fname_error}
                                     onChange={(event) => this.syncStateToInputValue("fname", event)}
                                 />
-                                </Grid>
-                                <Grid item xs={6}>
+                            </Grid>
+                            <Grid item xs={6}>
                                 <TextField
                                     style={{ maxWidth: "20rem" }}
                                     id="lname"
                                     label="Last Name"
                                     fullWidth
                                     margin="normal"
+                                    helperText={this.state.lname_error ? "Required" : ""}
+                                    error={this.state.lname_error}
                                     onChange={(event) => this.syncStateToInputValue("lname", event)}
                                 />
-                                </Grid>
+                            </Grid>
                         </Grid>
                         <Grid container spacing={24} justify='center'>
-                                <Grid item xs={6}>
+                            <Grid item xs={6}>
                                 <TextField
                                     style={{ maxWidth: "20rem" }}
                                     id="email"
                                     label="Email"
                                     fullWidth
                                     margin="normal"
+                                    helperText={this.state.email_error ? "Required" : ""}
+                                    error={this.state.email_error}
                                     onChange={(event) => this.syncStateToInputValue("email", event)}
                                 />
-                                </Grid>
-                                <Grid item xs={6}>
+                            </Grid>
+                            <Grid item xs={6}>
                                 <TextField
                                     style={{ maxWidth: "20rem" }}
                                     id="password"
@@ -95,44 +137,45 @@ class Registration extends Component {
                                     label="Password"
                                     fullWidth
                                     margin="normal"
+                                    helperText={this.state.password_error ? "Required" : ""}
+                                    error={this.state.password_error}
                                     onChange={(event) => this.syncStateToInputValue("password", event)}
                                 />
-                                </Grid>
+                            </Grid>
                         </Grid>
                         <Grid container spacing={24} justify='center'>
-                                <Grid item xs={6}>
+                            <Grid item xs={6}>
                                 <TextField
                                     style={{ maxWidth: "20rem" }}
                                     id="address"
                                     label="Address"
                                     fullWidth
                                     margin="normal"
+                                    helperText={this.state.address_error ? "Required" : ""}
+                                    error={this.state.address_error}
                                     onChange={(event) => this.syncStateToInputValue("address", event)}
                                 />
-                                </Grid>
-                                <Grid item xs={6}>
+                            </Grid>
+                            <Grid item xs={6}>
                                 <TextField
                                     style={{ maxWidth: "20rem" }}
                                     id="phone"
                                     label="Phone Number"
                                     fullWidth
                                     margin="normal"
+                                    helperText={this.state.phone_error ? "Required" : ""}
+                                    error={this.state.phone_error}
                                     onChange={(event) => this.syncStateToInputValue("phone", event)}
                                 />
-                                </Grid>
                             </Grid>
-                </form><br /><br />
-
-                        <Button
-                            raised color="accent"
-                            onClick={this.register}
-                        >
-                            Register
-                        </Button>
-                </DialogContentText>
+                        </Grid>
+                    </form>
             </DialogContent>
             <DialogActions>
-                <Button onClick={this.props.handleRequestClose} color="primary">
+                <Button raised color="accent" onClick={this.validate}>
+                    Register
+                </Button>
+                <Button color="primary" onClick={this.props.handleRequestClose}>
                     Back
                 </Button>
             </DialogActions>

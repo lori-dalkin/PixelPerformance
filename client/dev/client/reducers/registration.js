@@ -1,27 +1,22 @@
-import { ATTEMPT_REGISTRATION, ACCEPT_REGISTRATION, REJECT_REGISTRATION, LOAD_REGISTRATION, HIDE_REGISTRATION } from '../actions/action-types';
+import { ACCEPT_REGISTRATION, REJECT_REGISTRATION, SHOW_REGISTRATION, HIDE_REGISTRATION } from '../actions/action-types';
 
 const initialState = {
-    loading: false,
-    loadPage: false
+    openRegistration: false
 };
 
 export default function (state = initialState, action) {
     switch (action.type) {
-        case LOAD_REGISTRATION:
-            return { ...state, loadPage: true };
-            break;
-        case ATTEMPT_REGISTRATION:
-            return { ...state, loading: true };
+            case SHOW_REGISTRATION:
+            return { ...state, openRegistration: true };
             break;
         case ACCEPT_REGISTRATION:
-            document.cookie = "token=" + action.token;
-            return { ...state, token: action.token, loading: false };
+            return { ...state, openRegistration: false };
             break;
         case REJECT_REGISTRATION:
-            return { ...state, token: undefined, loading: false };
+            return { ...state, openRegistration: false };
             break;
         case HIDE_REGISTRATION:
-            return { ...state, loadPage: false };
+            return { ...state, openRegistration: false };
             break;
     }
     return state;

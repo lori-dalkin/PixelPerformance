@@ -62,7 +62,6 @@ export const receiveAttemptRegistration = (result) => {
     if (result.data !== undefined) {
         return {
             type: actions.ACCEPT_REGISTRATION,
-            token: result.data, // ...
         };
     } else {
         return {
@@ -71,7 +70,7 @@ export const receiveAttemptRegistration = (result) => {
     }
 }
 
-export const loadRegistration = () => { return { type: actions.LOAD_REGISTRATION }; }
+export const showRegistration = () => { return { type: actions.SHOW_REGISTRATION }; }
 
 export const hideRegistration = () => { return { type: actions.HIDE_REGISTRATION }; }
 

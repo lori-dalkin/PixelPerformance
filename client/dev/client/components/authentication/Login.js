@@ -11,7 +11,7 @@ import { CircularProgress } from 'material-ui/Progress';
 
 import Registration from '../registration/Registration';
 
-import { attemptLogin, hideSnackbar, loadRegistration, hideRegistration } from '../../actions/index';
+import { attemptLogin, hideSnackbar, showRegistration, hideRegistration } from '../../actions/index';
 
 import ChangeLogFeed from '../feeds/ChangeLogFeed';
 
@@ -91,8 +91,8 @@ class Login extends Component {
           </Grid>
           <ChangeLogFeed />
         </Grid>
-        <Registration open={this.props.registration.loadPage} handleRequestClose={this.props.hideRegistration} />
-        <Button style={{ position: 'fixed', bottom: '2rem', right: '2rem' }} raised color="accent" onClick={() => this.props.loadRegistration()}>
+        <Registration open={this.props.registration.openRegistration} handleRequestClose={this.props.hideRegistration} />
+        <Button style={{ position: 'fixed', bottom: '2rem', right: '2rem' }} raised color="accent" onClick={() => this.props.showRegistration()}>
           Create an Account
         </Button>
         <Snackbar
@@ -122,8 +122,8 @@ const mapStateToProps = ({ authentication, snackbar, registration }) => ({
 const mapDispatchToProps = {
   attemptLogin,
   hideSnackbar,
-  loadRegistration,
-    hideRegistration
+  showRegistration,
+  hideRegistration
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
