@@ -15,7 +15,8 @@ import { Monitor } from "./Models/monitor";
 import { Admin } from "./Models/admin";
 import { Catalog } from "./catalog";
 import { Client } from "./Models/client";
-import { UserManagement } from "./usermanagement" 
+import { UserManagement } from "./usermanagement" ;
+import { SystemMonitor } from "./Models/systemmonitor";
 /**
  * The web portal.
  *
@@ -26,6 +27,7 @@ export class WebPortal {
   public app: express.Application;
   protected catalog: Catalog;
   protected usermanagement: UserManagement;
+  protected systemmonitor: SystemMonitor;
 
   /**
    * Bootstrap the application.
@@ -50,6 +52,7 @@ export class WebPortal {
     this.app = express();
     this.catalog = new Catalog();
     this.usermanagement = new UserManagement();
+    this.systemmonitor = new SystemMonitor();
 
     //configure application
     this.config();
@@ -105,6 +108,8 @@ export class WebPortal {
         var payload = {id: user.id};
         var token = jwt.sign(payload, 'tasmanianDevil');
         res.json({message: "ok", data: token});
+        let logCall: SystemMonitor;
+        logCall.add(user.id, new Date(), "User: " + user + " logged in.", token);
       } else {
         res.status(401).json({message:"passwords did not match"});
       }
