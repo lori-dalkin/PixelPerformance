@@ -4,12 +4,12 @@ export class SystemMonitor{
 
     private logItems :LogItem[] = new Array<LogItem>();
 
-    public add(id: String, date: Date, description: String, token: String): void {
+    public addActivity(id: String, date: Date, description: String, token: String): void {
         this.logItems.push(new LogItem(id, date, description, token));
     }
 
-    public async findAll(id: String): Promise<LogItem[]> {
-        var records = new Array<LogItem>();
+    public findAll(id: String): LogItem[] {
+        let records = new Array<LogItem>();
 
         for (let i = 0; i <this.logItems.length; i ++){
             if (this.logItems[i].getUserId() == id){

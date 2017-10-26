@@ -17,6 +17,7 @@ import { Catalog } from "./catalog";
 import { Client } from "./Models/client";
 import { UserManagement } from "./usermanagement" ;
 import { SystemMonitor } from "./Models/systemmonitor";
+import { LogItem } from "./Models/logitem";
 /**
  * The web portal.
  *
@@ -109,7 +110,7 @@ export class WebPortal {
         var token = jwt.sign(payload, 'tasmanianDevil');
         res.json({message: "ok", data: token});
         let logCall: SystemMonitor;
-        logCall.add(user.id, new Date(), "User: " + user + " logged in.", token);
+        logCall.addActivity(user.id, new Date(), "User: " + user + " logged in.", token);
       } else {
         res.status(401).json({message:"passwords did not match"});
       }
