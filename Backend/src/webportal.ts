@@ -77,6 +77,7 @@ export class WebPortal {
 	let token = jwt.sign({ foo: 'bar' }, 'shhhhh');
 	//home page
   let routingCatalog = this.catalog;
+  let routingUsers = this.usermanagement;
 
   router.get('/', function (req, res) {
 		res.send('20 dollars is 20 dollars backend home page')
@@ -115,10 +116,15 @@ export class WebPortal {
 	router.post("/api/users/logout", function (req, res) {
 		res.send({data: true});
 	});
+
+	router.post("/api/users/", function (req, res) {
+	    res.send({data: routingUsers.addClient(req.body)});
+    });
+
 	router.get("/api/products/",passport.authenticate('jwt', { session: false }), function (req, res) {
-    console.log(req);
-    let electronics = routingCatalog.getProductPage(1,req.query.type);
-		res.send({data: electronics});
+      console.log(req);
+      let electronics = routingCatalog.getProductPage(1,req.query.type);
+      res.send({data: electronics});
 	});
 	router.post("/api/products/",passport.authenticate('jwt', { session: false }),function (req, res) {
 		res.send({data:routingCatalog.addProduct(req.body)});

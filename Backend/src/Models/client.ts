@@ -63,6 +63,38 @@ export class Client extends User {
                 console.log("Error in getting all clients:" + err);
                 return null;
             });
-    } 
+    }
+    
+    /******************************************************
+    * Method to persist Client objects in the database *
+     ******************************************************/
+    public async save(): Promise<boolean> {
+        let queryValues = ["'"+this.getId()+"'","'"+this.getFName()+"'","'"+this.getLName()+"'","'"+this.getEmail()+"'",
+                           "'"+this.getPassword()+"'","'"+this.getAddress()+"'", "'"+this.getPhone()+"'"];
+        return db.none("INSERT INTO clients VALUES (" + queryValues.join(',') + ")")
+            .then(function() {
+                console.log("New Client was added to the database.");
+                return true;
+            })
+            .catch(function (err) {
+                console.log("Error adding Client to the db: " + err);
+                return false;
+            });
+    }
+    
+
+    public checkPrivilege(route: string): boolean
+    {
+        switch(route)
+        {
+            case User.Routes.postProduct:
+            case User.Routes.deleteProduct:
+            case User.Routes.postInventory:
+            case User.Routes.deleteInventory:
+            case User.Routes.modifyProducts:
+                return false;
+        }
+        return true;
+    }
 
 }
