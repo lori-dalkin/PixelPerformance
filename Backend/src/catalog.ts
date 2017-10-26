@@ -4,7 +4,6 @@ import { Monitor } from "./Models/monitor"
 import { dbconnection } from "./Models/dbconnection"
 import {Desktop} from "./Models/desktop";
 import {Tablet} from "./Models/tablet";
-import {TelevisionSet} from "./Models/TelevisionSet";
 import {Laptop} from "./Models/laptop";
 import {Inventory } from "./Models/inventory";
 
@@ -22,7 +21,6 @@ export class Catalog {
 		dataPromises.push(this.loadMonitors());
 		dataPromises.push(this.loadDesktops());
 		dataPromises.push(this.loadTablets());
-		dataPromises.push(this.loadTelevisions());
         dataPromises.push(this.loadLaptops());
         
         Promise.all(dataPromises).then( ()=>{
@@ -59,14 +57,7 @@ export class Catalog {
         });
     }
 
-    private async loadTelevisions(): Promise<void> {
-        return TelevisionSet.findAll().then((data) => {
-            for(let i=0; i < data.length; i++) {
-                this.electronics.push(data[i]);
-            }
-        });
-    }
-
+  
     private async loadLaptops(): Promise<void> {
         return Laptop.findAll().then((data) => {
             for(let i=0; i < data.length; i++) {
@@ -160,9 +151,7 @@ export class Catalog {
         let electronic: Electronic;
         switch(data.electronicType)
         {
-            case "TelevisionSet":
-                electronic = new TelevisionSet(uuid.v1(), parseInt(data.weight), data.modelNumber, data.brand, parseFloat(data.price), data.dimensions, data.type);
-                break;
+         
             case "Monitor":
                 electronic = new Monitor(uuid.v1(), parseInt(data.weight), data.modelNumber, data.brand,parseFloat(data.price), parseInt(data.size));
                 break;
@@ -248,13 +237,8 @@ export class Catalog {
                 elec.setPrice(data.price);
                 elec.setModelNumber(data.modelnumber);
 
-                if (elec.getElectronicType() == "Television") {
-                    console.log("Item is a television");
-                    var tv: TelevisionSet = <TelevisionSet> elec;
-                    tv.setDimensions(data.dimensions);
-                    modSuccess = await tv.modify();
-                }
-                else if (elec.getElectronicType() == "Monitor") {
+                
+                 if (elec.getElectronicType() == "Monitor") {
                     console.log("Item is a monitor");
                     var monitor: Monitor = <Monitor> elec;
                     monitor.setSize(data.size);
