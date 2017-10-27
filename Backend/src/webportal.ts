@@ -8,6 +8,7 @@ import * as corser from "corser";
 var cors = require('cors');
 import * as passport from "passport";
 import * as passportJWT from "passport-jwt";
+import * as bcrypt from "bcrypt";
 import errorHandler = require("errorhandler");
 import methodOverride = require("method-override");
 import { Electronic } from "./Models/electronic";
@@ -103,15 +104,17 @@ export class WebPortal {
       console.log(user);
       console.log(user.password);
       console.log(req.body.password);
-      //add hasing.
-      if(user.password.replace(/ /g,'') == req.body.password.replace(/ /g,'')) {
-        // from now on we'll identify the user by the id and the id is the only personalized value that goes into our token
-        var payload = {id: user.id};
-        var token = jwt.sign(payload, 'tasmanianDevil');
-        res.json({message: "ok", data: token});
-      } else {
-        res.status(401).json({message:"passwords did not match"});
-      }
+      
+      bcrypt.compare(req.body.password.replace(/ /g,''), user.password.replace(/ /g, '')).then(function(auth) {
+        if (auth) {
+          var payload = {id: user.id};
+          var token = jwt.sign(payload, 'tasmanianDevil');
+          res.json({message: "ok", data: token});
+        } else {
+          res.status(401).json({message: "Invalid login credentials."});
+        }
+      });
+
     })
   });
 
