@@ -133,11 +133,21 @@ export const getProducts = () => {
                 endPoint += `page=${getState().product.page}&numOfItems=${getState().product.productsPerPage}`;
 
                 return callApi(endPoint, 'get', undefined, `Bearer ${getState().authentication.token}`).then(
-                    res => dispatch(getProductsSuccess(res.data)),
+                    res => {
+                        dispatch(setMaxPage(res.totalProducts));
+                        dispatch(getProductsSuccess(res.products));
+                    },
                     error => dispatch(getProductsFailure(error))
                 );
             }
         }
+    };
+}
+
+export const setMaxPage = (numProducts) => {
+    return {
+        type: actions.SET_MAX_PRODUCT_PAGE,
+        numProducts: numProducts
     };
 }
 
