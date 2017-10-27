@@ -117,11 +117,12 @@ export class Catalog {
 	/********************************************************
 	* Function to retrieve a list of products based on type
 	 ********************************************************/
-	public getProductPage(page:number, type:string): Electronic[] {
+	public getProductPage(page:number, type:string, numOfItems:number = 25): Electronic[] {
         var desired: Electronic[] = [];
         console.log("desired eletronic type:" + type);
         if(type == null){
             desired = this.electronics;
+            console.log(desired);
         }
         else{
             for (var i = 0; i < this.electronics.length; i++)
@@ -130,10 +131,15 @@ export class Catalog {
                     desired.push(this.electronics[i]);
             }
         }
-        //100 items per page
-        var startProduct = (page-1) * 100;
-        return desired.slice(startProduct,startProduct+100); //includes the first num, not the second. If not in bounds, should return empty array. To be dealt with in frontend
+        if(page != null)
+        {
+            var startProduct = (page-1) * numOfItems;
+            return desired.slice(startProduct,startProduct+numOfItems); //includes the first num, not the second. If not in bounds, should return empty array. To be dealt with in frontend    
+        }
+        return desired;
     }
+
+    
     public getAllInventories( electronicId:string): Inventory[] {
         var desired: Inventory[] = [];
         for(let i=0;i<this.inventories.length;i++){

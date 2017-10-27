@@ -62,6 +62,10 @@ export class WebPortal {
 
     //add api
     this.api();
+
+    console.log(this.catalog.getProductPage(1,null,10));
+    console.log("Please work.");
+    console.log(this.catalog.getProductPage(null,"Laptop"));
   }
   
   /**
@@ -125,12 +129,12 @@ export class WebPortal {
 
 	router.get("/api/products/",passport.authenticate('jwt', { session: false }), function (req, res) {
       console.log(req);
-      let electronics = routingCatalog.getProductPage(1,req.query.type);
+      let electronics = routingCatalog.getProductPage(req.query.page,req.query.type,req.query.numOfItems);
       res.send({data: electronics});
 	});
 	router.post("/api/products/",passport.authenticate('jwt', { session: false }),function (req, res) {
 		res.send({data:routingCatalog.addProduct(req.body)});
-	});
+	});;
 	
 	router.get("/api/products/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
 		let electronic: Electronic;
