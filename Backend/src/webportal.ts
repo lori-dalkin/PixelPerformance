@@ -88,16 +88,16 @@ export class WebPortal {
     });
 
     router.post("/api/users/login", function (req, res) {
-      // console.log(req.body);
       let body = req.body as any;
-      // console.log(body);
       if(body.email && body.password){
         var email = body.email;
         var password = body.password;
       }
+      console.log({email: email, password: password});
 
       // If password is correct, create an authentication token for the user
       let user = routingUsers.getUserByEmail(email);
+      console.log(user);
       if (user) {
         bcrypt.compare(req.body.password.replace(/ /g, ''), user.password.replace(/ /g, '')).then(function(auth) {
           if (auth) {
@@ -123,7 +123,7 @@ export class WebPortal {
     });
 
     router.get("/api/products/", passport.authenticate('jwt', { session: false }), function (req, res) {
-        let electronics = routingCatalog.getProductPage(1,req.query.type);
+        let electronics = routingCatalog.getProductPage(req.query.page, req.query.type, req.query.numOfItems);
         res.send({data: electronics});
     });
     router.post("/api/products/", passport.authenticate('jwt', { session: false }), function (req, res) {
@@ -147,7 +147,6 @@ export class WebPortal {
     });
 
     router.get("/api/inventories/product/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
-      console.log(req.params.id);
       let inventories = routingCatalog.getAllInventories(req.params.id);
       res.send({data: inventories });
     });
@@ -220,10 +219,12 @@ export class WebPortal {
       let route = req.method.toLowerCase() + req.path;
 
       if (user && user.checkPrivilege(route)) {
-        console.log("allowed!");
+        console.log(user);
+        console.log("authorized to access [" + route + "]");
         next(null, user);
       } else {
-        console.log("check your privilege");
+        console.log(user);
+        console.log("unauthorized to access [" + route + "]");
         next(null, false);
       }
     });
