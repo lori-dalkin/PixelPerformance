@@ -6,7 +6,7 @@ const defaultDropDownsProduct = {
     modelNumber: '',
     brand: '',
     price: '',
-    electronicType: 'TelevisionSet',
+    electronicType: 'Monitor',
     processor: '',
     ram: '',
     hardDrive: '',
