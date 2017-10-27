@@ -119,10 +119,8 @@ export class Catalog {
 	 ********************************************************/
 	public getProductPage(page:number, type:string, numOfItems:number = 25): Electronic[] {
         var desired: Electronic[] = [];
-        console.log("desired eletronic type:" + type);
         if(type == null){
             desired = this.electronics;
-            console.log(desired);
         }
         else{
             for (var i = 0; i < this.electronics.length; i++)
