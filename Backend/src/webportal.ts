@@ -143,7 +143,9 @@ export class WebPortal {
     });
 
     router.post("/api/inventories/product/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
-        res.send({ data: routingCatalog.addInventory(req.params.id) });
+      routingCatalog.addInventory(req.params.id).then((success)=>{
+        res.send({ data:success});
+      })
     });
 
     router.get("/api/inventories/product/:id", passport.authenticate('jwt', { session: false }), function (req, res) {

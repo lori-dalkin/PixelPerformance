@@ -183,27 +183,22 @@ export class Catalog {
     }
 
 
-    public addInventory(electronidId: string): boolean {
+    public addInventory(electronidId: string): Promise<boolean> {
         console.log("adding to inventory: " + electronidId);
         let electronic: Electronic;
         for (var i = 0; i < this.electronics.length; i++) {
-            if (this.electronics[i].getModelNumber() == electronidId) {
+            if (this.electronics[i].getId() == electronidId) {
                 electronic = this.electronics[i];
                 console.log("inventory id belongs to a " + electronic.getElectronicType());
                 break;
             }
         }
+        if(electronic==null){
+            return Promise.resolve(false);
+        }
         let inventoryObj: Inventory = new Inventory(electronidId, electronic);
         this.inventories.push(inventoryObj);
-        let success = inventoryObj.save();
-        if (success) {
-            console.log("Inventory " + electronidId + " has been added");
-            return true;
-        }
-        else {
-            console.log("Could not add inventory for " + electronidId);
-            return false;
-        }
+        return inventoryObj.save();
     }
        
 
