@@ -9,11 +9,38 @@ import Dialog, {
   DialogTitle,
 } from 'material-ui/Dialog';
 import Slide from 'material-ui/transitions/Slide';
-import EditIcon from 'material-ui-icons/ModeEdit';
+import IconButton from 'material-ui/IconButton';
+import AddCircleOutline from 'material-ui-icons/AddCircleOutline';
+import RemoveCircleOutline from 'material-ui-icons/RemoveCircleOutline';
 
-import { showModifyProduct } from '../../actions';
+import { showModifyProduct, addToInventory, removeFromInventory } from '../../actions';
 
 class ProductViewDialog extends Component {
+
+  constructor(props){
+    super(props);
+    this.state = {
+      showInventory: false,
+      inventory: 1
+    }
+
+    this.toggleInventoryView = () => {
+      this.setState({ ...this.state, showInventory: !this.state.showInventory });
+    }
+
+    this.addInventory = () => {
+      this.setState({ ...this.state, inventory: this.state.inventory + 1 });
+      this.props.addToInventory(this.props.product.selectedProduct.id);
+    }
+
+    this.removeInventory = () => {
+      this.setState({ ...this.state, inventory: Math.max(this.state.inventory - 1, 0) });
+      if(this.state.inventory > 0){
+        this.props.removeFromInventory(this.props.product.selectedProduct.id);
+      }
+    }
+
+  }
 
 	render() {
 		return (
@@ -28,10 +55,25 @@ class ProductViewDialog extends Component {
               <strong>Price: </strong>{`$${this.props.product.selectedProduct.price} CDN`}<br/>
               <strong>Weight: </strong>{`${this.props.product.selectedProduct.weight} lbs`}<br/>
             </DialogContentText>
+            { this.state.showInventory &&
+              <span>
+                <hr/>
+                <DialogContentText>
+                  <strong>Current Inventory Count: </strong>{this.state.inventory}<br/>
+                  <IconButton  onClick={this.removeInventory}><RemoveCircleOutline/></IconButton>
+                  <IconButton  onClick={this.addInventory}><AddCircleOutline/></IconButton>
+                </DialogContentText>
+              </span>
+            }
           </DialogContent>
           <DialogActions>
-            <Button onClick={ () => this.props.onProductModify(this.props.product.selectedProduct) } color='default'> <EditIcon /> Modify</Button>
-            <Button onClick={this.props.handleRequestClose} color="primary">
+            <Button onClick={ () => this.toggleInventoryView() } color='primary'>
+              { this.state.showInventory ? "Hide Inventory" : "Show Inventory" }
+            </Button>
+            <Button onClick={ () => this.props.showModifyProduct(this.props.product.selectedProduct) } color='primary'>
+              Modify
+            </Button>
+            <Button onClick={this.props.handleRequestClose} color="default">
               Back
             </Button>
           </DialogActions>
@@ -45,12 +87,10 @@ const mapStateToProps = ({ product }) => ({
   product
 });
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onProductModify: (product) => {
-      dispatch(showModifyProduct(product));
-    }
-  }
+const mapDispatchToProps = {
+  showModifyProduct,
+  addToInventory,
+  removeFromInventory
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductViewDialog);
