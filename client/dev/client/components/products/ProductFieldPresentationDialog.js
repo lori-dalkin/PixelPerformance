@@ -89,7 +89,7 @@ class ProductFieldPresentationDialog extends Component {
               </Grid>
               <Grid item xs={6}>
                 <Select style={{ marginTop: '16px', ...fullWidthStyle }} name="electronicType" 
-                        value={this.state.electronicType} onChange={(event) => this.syncStateToInputValue("electronicType", event)}>
+                        value={this.state.electronicType} onChange={(event) => this.syncStateToInputValue("electronicType", event)} disabled={this.props.disableSelect}>
                   <MenuItem value="Monitor">Monitor</MenuItem>
                   <MenuItem value="Desktop">Desktop</MenuItem>
                   <MenuItem value="Laptop">Laptop</MenuItem>

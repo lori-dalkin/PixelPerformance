@@ -290,14 +290,6 @@ export const modifyProduct = (body) => {
             if (shouldModifyProduct(getState())) {
                 dispatch(modifyProductRequest());
 
-                body = {
-                    ...body,
-                    electronictype: body.electronicType,
-                    displaysize: body.displaySize,
-                    harddrive: body.hardDrive,
-                    touchscreen: body.touchScreen
-                };
-
                 return callApi(`api/products/${getState().product.dropDownsProduct.id}`, 'put', body, `Bearer ${getState().authentication.token}`).then(
                     res => {
                         dispatch(modifyProductSuccess(res));
