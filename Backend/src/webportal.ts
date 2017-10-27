@@ -123,8 +123,8 @@ export class WebPortal {
     });
 
     router.get("/api/products/", passport.authenticate('jwt', { session: false }), function (req, res) {
-        let electronics = routingCatalog.getProductPage(req.query.page, req.query.type, req.query.numOfItems);
-        res.send({data: electronics});
+      let electronics = routingCatalog.getProductPage(parseInt(req.query.page), req.query.type, parseInt(req.query.numOfItems));
+      res.send(electronics);
     });
     router.post("/api/products/", passport.authenticate('jwt', { session: false }), function (req, res) {
       res.send({data:routingCatalog.addProduct(req.body)});

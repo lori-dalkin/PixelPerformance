@@ -117,7 +117,7 @@ export class Catalog {
 	/********************************************************
 	* Function to retrieve a list of products based on type
 	 ********************************************************/
-	public getProductPage(page:number, type:string, numOfItems:number = 25): Electronic[] {
+	public getProductPage(page:number, type:string, numOfItems:number = 25) {
         var desired: Electronic[] = [];
         if(type == null){
             desired = this.electronics;
@@ -129,18 +129,21 @@ export class Catalog {
                     desired.push(this.electronics[i]);
             }
         }
+        let totalProducts= desired.length;
         if(page != null)
         {
             var startProduct = (page-1) * numOfItems;
-            return desired.slice(startProduct,startProduct+numOfItems); //includes the first num, not the second. If not in bounds, should return empty array. To be dealt with in frontend    
+            desired = desired.slice(startProduct,startProduct+numOfItems); //includes the first num, not the second. If not in bounds, should return empty array. To be dealt with in frontend    
         }
-        return desired;
+        return new responseData(desired,totalProducts);
     }
-
     
     public getAllInventories( electronicId:string): Inventory[] {
         var desired: Inventory[] = [];
         for(let i=0;i<this.inventories.length;i++){
+            if(this.inventories[i].getinventoryType() == null){
+                continue;
+            }
             if(electronicId == this.inventories[i].getinventoryType().getId()){
                 desired.push(this.inventories[i]);
             }
@@ -298,3 +301,13 @@ export class Catalog {
     }
 }
 
+class responseData{
+    public products:Electronic[];
+    public totalProducts: number;
+    constructor(products:Electronic[], totalProducts: number){
+        console.log(this.products);
+        console.log(this.totalProducts);
+        this.products=products;
+        this.totalProducts=totalProducts;
+    }
+}
