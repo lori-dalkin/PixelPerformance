@@ -6,7 +6,7 @@ const defaultDropDownsProduct = {
     modelNumber: '',
     brand: '',
     price: '',
-    electronicType: 'TelevisionSet',
+    electronicType: 'Monitor',
     processor: '',
     ram: '',
     hardDrive: '',
@@ -40,7 +40,10 @@ const initialState = {
         error: false
     },
     dropDownsProduct: defaultDropDownsProduct,
-    selectedProduct: {}
+    selectedProduct: {},
+    page: 1,
+    maxPage: undefined,
+    productsPerPage: 10
 };
 
 export default function (state = initialState, action) {
@@ -187,6 +190,30 @@ export default function (state = initialState, action) {
                     error: true
                 }
             }
+            break;
+        case actions.INCREMENT_PRODUCT_PAGE:
+            return {
+                ...state,
+                page: state.page + 1
+            }
+            break;
+        case actions.DECREMENT_PRODUCT_PAGE:
+            return {
+                ...state,
+                page: state.page - 1
+            }
+            break;
+        case actions.SET_PRODUCT_PAGE:
+            return {
+                ...state,
+                page: action.pageNumber
+            }
+            break;
+        case actions.SET_MAX_PRODUCT_PAGE:
+            return {
+                ...state,
+                maxPage: Math.ceil(action.numProducts / state.productsPerPage)
+            };
             break;
         default:
             return state;

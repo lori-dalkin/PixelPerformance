@@ -1,15 +1,13 @@
 import { connect } from 'react-redux';
 import ProductList from './ProductList';
 
-import { showProductView, showDeleteProduct } from '../../actions/index';
-
-const getFilteredProducts = (products, filter) => {
-    return products;
-}
+import { showProductView, showDeleteProduct, showNextProductPage, showPreviousProductPage } from '../../actions';
 
 const mapStateToProps = state => {
     return {
-        products: getFilteredProducts(state.product.products, state.product.productFilter)
+        products: state.product.products,
+        showPrevious: state.product.page > 1,
+        showNext: state.product.maxPage == undefined || state.product.page < state.product.maxPage
     };
 }
 
@@ -20,6 +18,12 @@ const mapDispatchToProps = dispatch => {
         },
         onProductDelete: (product) => {
             dispatch(showDeleteProduct(product));
+        },
+        nextPage: () => {
+            dispatch(showNextProductPage());
+        },
+        previousPage: () => {
+            dispatch(showPreviousProductPage());
         }
     };
 }

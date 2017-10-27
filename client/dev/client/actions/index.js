@@ -109,26 +109,81 @@ function shouldGetProducts(state) {
     }
 }
 
-export const getProducts = (filter) => {
+export const getProducts = () => {
     return function (dispatch, getState) {
         if (getState().authentication && getState().authentication.token) {
             if (shouldGetProducts(getState())) {
                 dispatch(getProductsRequest());
                 
-                let endPoint = 'api/products/';
+                let queryStarted = false;
 
-                if (filter) {
-                    endPoint = `api/products/${filter}`
+                let endPoint = 'api/products';
+
+                if (getState().product.productFilter) {
+                    endPoint = `api/products?type=${getState().product.productFilter}`
+                    queryStarted = true;
                 }
 
+                // Add paging and number of items
+                if (queryStarted) {
+                    endPoint += '&';
+                } else {
+                    endPoint += '?';
+                }
+                endPoint += `page=${getState().product.page}&numOfItems=${getState().product.productsPerPage}`;
+
                 return callApi(endPoint, 'get', undefined, `Bearer ${getState().authentication.token}`).then(
-                    res => dispatch(getProductsSuccess(res.data)),
+                    res => {
+                        dispatch(setMaxPage(res.totalProducts));
+                        dispatch(getProductsSuccess(res.products));
+                    },
                     error => dispatch(getProductsFailure(error))
                 );
             }
         }
     };
 }
+
+export const setMaxPage = (numProducts) => {
+    return {
+        type: actions.SET_MAX_PRODUCT_PAGE,
+        numProducts: numProducts
+    };
+}
+
+export const setPage = (number) => {
+    return {
+        type: actions.SET_PRODUCT_PAGE,
+        pageNumber: number
+    };
+}
+
+export const incrementPage = () => {
+    return {
+        type: actions.INCREMENT_PRODUCT_PAGE
+    };
+}
+
+export const showNextProductPage = () => {
+    return function (dispatch) {
+        dispatch(incrementPage());
+        dispatch(getProducts());
+    }
+}
+
+export const decrementPage = () => {
+    return {
+        type: actions.DECREMENT_PRODUCT_PAGE
+    };
+}
+
+export const showPreviousProductPage = () => {
+    return function (dispatch) {
+        dispatch(decrementPage());
+        dispatch(getProducts());
+    }
+}
+
 export const showSnackbar = () => {
     return { type: actions.SHOW_SNACKBAR };
 }
@@ -243,15 +298,7 @@ export const modifyProduct = (body) => {
             if (shouldModifyProduct(getState())) {
                 dispatch(modifyProductRequest());
 
-                body = {
-                    ...body,
-                    electronictype: body.electronicType,
-                    displaysize: body.displaySize,
-                    harddrive: body.hardDrive,
-                    touchscreen: body.touchScreen
-                };
-
-                return callApi(`modify/api/products/${getState().product.dropDownsProduct.id}`, 'post', body, `Bearer ${getState().authentication.token}`).then(
+                return callApi(`api/products/${getState().product.dropDownsProduct.id}`, 'put', body, `Bearer ${getState().authentication.token}`).then(
                     res => {
                         dispatch(modifyProductSuccess(res));
                         dispatch(modifyProductSuccessSnackbar());
