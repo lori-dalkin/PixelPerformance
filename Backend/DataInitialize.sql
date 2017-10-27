@@ -26,12 +26,6 @@ INSERT INTO laptops(weight, modelNumber, brand, price, processor, ram, cpus, har
 INSERT INTO laptops(weight, modelNumber, brand, price, processor, ram, cpus, hardDrive, os, displaySize, battery, camera, touchscreen) VALUES (56,'AN515-51-56U0','Acer',999.00,'Intel Core i5',8,4,256,'Windows',15.6,11.2,True,False);
 INSERT INTO laptops(weight, modelNumber, brand, price, processor, ram, cpus, hardDrive, os, displaySize, battery, camera, touchscreen) VALUES (77,'i3542-5000BK','Dell',369.50,'Intel Core i3',4,2,500,'Windows',15.6,9.6,True,True);
 
-DELETE FROM televisionsets;
-INSERT INTO televisionsets(weight, modelNumber, brand, price, dimensions,type) VALUES(41 ,'OLED55B6P','LG',4719.18,'48.40x29.90x8.90', 'OLED');
-INSERT INTO televisionsets(weight, modelNumber, brand, price, dimensions,type) VALUES(55 ,'OLED65C7P','LG',7601.43,'57.20x34.40x8.50', 'OLED');
-INSERT INTO televisionsets(weight, modelNumber, brand, price, dimensions,type) VALUES(19 ,'43UJ6300','LG',1339.41,'38.50x24.20x7.40', 'LED');
-INSERT INTO televisionsets(weight, modelNumber, brand, price, dimensions,type) VALUES(19 ,'UN40MU6300FXZA','Samsung',900,'36.10x23.50x11.30', 'UHD');
-INSERT INTO televisionsets(weight, modelNumber, brand, price, dimensions,type) VALUES(31 ,'M50-D1','Vizio',1302.46,'44.40x27.98x8.70', 'LED');
 
 DELETE FROM monitors;
 INSERT INTO monitors(weight, modelNumber, brand, price, size) VALUES(13 ,'OLEDLG21X','LG', 432.00, 21);
@@ -53,8 +47,6 @@ INSERT INTO clients(fname, lname, email, password, address, phone) VALUES('John'
 DELETE FROM inventories;
 INSERT INTO inventories("electronicID") SELECT id FROM monitors;
 INSERT INTO inventories("electronicID") SELECT id FROM monitors;
-INSERT INTO inventories("electronicID") SELECT id FROM televisionsets;
-INSERT INTO inventories("electronicID") SELECT id FROM televisionsets;
 INSERT INTO inventories("electronicID") SELECT id FROM tablets;
 INSERT INTO inventories("electronicID") SELECT id FROM tablets;
 INSERT INTO inventories("electronicID") SELECT id FROM laptops;
