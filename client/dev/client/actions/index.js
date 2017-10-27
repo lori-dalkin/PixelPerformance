@@ -263,3 +263,27 @@ export const modifyProduct = (body) => {
         }
     };
 }
+
+export const addToInventory = (productId) => {
+
+  return (dispatch, getState) => {
+    if (getState().authentication && getState().authentication.token) {
+        return callApi(`api/inventories/product/${productId}`, 'post', undefined, `Bearer ${getState().authentication.token}`).then(
+            res => console.log("added to inventory"),
+            error => console.log("failed to add to inventory")
+        );
+    }
+  }
+}
+
+export const removeFromInventory = (productId) => {
+
+  return (dispatch, getState) => {
+    if (getState().authentication && getState().authentication.token) {
+        return callApi(`api/inventories/product/${productId}`, 'delete', undefined, `Bearer ${getState().authentication.token}`).then(
+            res => console.log("removed from inventory"),
+            error => console.log("failed to remove from inventory")
+        );
+    }
+  }
+}

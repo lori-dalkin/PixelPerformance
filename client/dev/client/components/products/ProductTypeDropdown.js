@@ -33,7 +33,6 @@ class ProductTypeDropdown extends Component {
             <div>
                     <Select name="filterType" value={this.state.filterType} onChange={(event) => this.handleChange("filterType", event)}>
                         <MenuItem value="none">Select Filter</MenuItem>
-                        <MenuItem value="TelevisionSet">TelevisionSet</MenuItem>
                         <MenuItem value="Monitor">Monitor</MenuItem>
                         <MenuItem value="Desktop">Desktop</MenuItem>
                         <MenuItem value="Laptop">Laptop</MenuItem>
