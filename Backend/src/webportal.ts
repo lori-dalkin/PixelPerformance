@@ -13,10 +13,12 @@ import errorHandler = require("errorhandler");
 import methodOverride = require("method-override");
 import { Electronic } from "./Models/electronic";
 import { Monitor } from "./Models/monitor";
+import { User } from "./Models/user";
 import { Admin } from "./Models/admin";
 import { Catalog } from "./catalog";
 import { Client } from "./Models/client";
-import { UserManagement } from "./usermanagement" 
+import { UserManagement } from "./usermanagement";
+import { SystemMonitor } from "./Models/systemmonitor"; 
 var swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerDocument = YAML.load('./src/swagger.yaml');
@@ -72,105 +74,102 @@ export class WebPortal {
    * @method api
    */
   public api() {
-	let router: express.Router;
-	router = express.Router();
-	// some dummy data
-	let monitor = new Monitor('1', 1, "modelNumber", "brand", 1, 1);
-	let monitors = new Array(monitor, monitor, monitor);
-	let token = jwt.sign({ foo: 'bar' }, 'shhhhh');
-	//home page
-  let routingCatalog = this.catalog;
-  let routingUsers = this.usermanagement;
+    let router: express.Router;
+    router = express.Router();
+    // some dummy data
+    let monitor = new Monitor('1', 1, "modelNumber", "brand", 1, 1);
+    let monitors = new Array(monitor, monitor, monitor);
+    let token = jwt.sign({ foo: 'bar' }, 'shhhhh');
+    //home page
+    let routingCatalog = this.catalog;
+    let routingUsers = this.usermanagement;
 
-  router.get('/', function (req, res) {
-		res.send('20 dollars is 20 dollars backend home page')
+    router.get('/', function (req, res) {
+      res.send('20 dollars is 20 dollars backend home page')
+    });
 
-  });
-
-	router.post("/api/users/login", function (req, res) {
-    console.log(req.body);
-    let body = req.body as any;
-    console.log(body);
-    if(body.email && body.password){
-      var email = body.email;
-      var password = body.password;
-    }
-    // usually this would be a database call:
-    Admin.findByEmail(email).then(function(data:Admin){
-      let user:Admin = data;
-      if( ! user ){
-        res.status(401).json({message:"no such user found"});
+    router.post("/api/users/login", function (req, res) {
+      let body = req.body as any;
+      if(body.email && body.password){
+        var email = body.email;
+        var password = body.password;
       }
-      console.log(user);
-      console.log(user.password);
-      console.log(req.body.password);
       
-      bcrypt.compare(req.body.password.replace(/ /g,''), user.password.replace(/ /g, '')).then(function(auth) {
-        if (auth) {
-          var payload = {id: user.id};
-          var token = jwt.sign(payload, 'tasmanianDevil');
-          res.json({message: "ok", data: token});
-        } else {
-          res.status(401).json({message: "Invalid login credentials."});
-        }
+      // If password is correct, create an authentication token for the user
+      let user = routingUsers.getUserByEmail(email);
+      console.log(user);
+      if (user) {
+        bcrypt.compare(req.body.password.replace(/ /g, ''), user.password.replace(/ /g, '')).then(function(auth) {
+          if (auth) {
+            var payload = {id: user.id};
+            var token = jwt.sign(payload, 'tasmanianDevil');
+            res.json({message: "ok", data: token});
+            let logCall : SystemMonitor;
+            logCall.logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() + " has logged in", token);
+          } else {
+            res.status(401).json({message: "Invalid login credentials."});
+          }
+        })
+      } else {
+        res.status(401).json({message: "no such user found"});
+      }
+
+    });
+
+    router.post("/api/users/logout", function (req, res) {
+      res.send({data: true});
+    });
+
+    router.post("/api/users/", function (req, res) {
+      res.send({data: routingUsers.addClient(req.body)});
+    });
+
+    router.get("/api/products/", passport.authenticate('jwt', { session: false }), function (req, res) {
+      let electronics = routingCatalog.getProductPage(parseInt(req.query.page), req.query.type, parseInt(req.query.numOfItems));
+      res.send(electronics);
+    });
+    router.post("/api/products/", passport.authenticate('jwt', { session: false }), function (req, res) {
+      res.send({data:routingCatalog.addProduct(req.body)});
+    });
+    
+    router.get("/api/products/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+      let electronic: Electronic;
+      electronic = routingCatalog.getProduct(req.params.id);
+      res.send({data: electronic});
+    });
+    
+    router.delete("/api/products/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+      routingCatalog.deleteProduct(req.params.id).then((success)=>{
+        res.send({data: success});
+      });
+    });
+
+    router.post("/api/inventories/product/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+      routingCatalog.addInventory(req.params.id).then((success)=>{
+        res.send({ data:success});
+      })
+    });
+
+    router.get("/api/inventories/product/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+      let inventories = routingCatalog.getAllInventories(req.params.id);
+      res.send({data: inventories });
+    });
+    
+    router.delete("/api/inventories/product/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+      routingCatalog.deleteInventory(req.params.id).then((success)=>{
+        res.send({data: success});
+      });
+    });
+
+    router.put("/api/products/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+      routingCatalog.modifyProduct(req.params.id, req.body).then((success) => {
+          res.send({data:success});
       });
 
-    })
-  });
-
-	router.post("/api/users/logout", function (req, res) {
-		res.send({data: true});
-	});
-
-	router.post("/api/users/", function (req, res) {
-	    res.send({data: routingUsers.addClient(req.body)});
     });
 
-	router.get("/api/products/",passport.authenticate('jwt', { session: false }), function (req, res) {
-      console.log(req);
-      let electronics = routingCatalog.getProductPage(req.query.page,req.query.type,req.query.numOfItems);
-      res.send({data: electronics});
-	});
-	router.post("/api/products/",passport.authenticate('jwt', { session: false }),function (req, res) {
-		res.send({data:routingCatalog.addProduct(req.body)});
-	});;
-	
-	router.get("/api/products/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
-		let electronic: Electronic;
-		electronic = routingCatalog.getProduct(req.params.id);
-		res.send({data: electronic});
-  });
-  
-  router.delete("/api/products/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
-		routingCatalog.deleteProduct(req.params.id).then((success)=>{
-      res.send({data: success});
-    });
-  });
-
-  router.post("/api/inventories/product/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
-      res.send({ data: routingCatalog.addInventory(req.params.id) });
-  });
-
-  router.get("/api/inventories/product/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
-		let inventories = routingCatalog.getAllInventories( req.params.id);
-		res.send({data: inventories });
-  });
-  
-  router.delete("/api/inventories/product/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
-    routingCatalog.deleteInventory(req.params.id).then((success)=>{
-      res.send({data: success});
-    });
-  });
-
-  router.put("/api/products/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
-    routingCatalog.modifyProduct(req.params.id, req.body).then((success) => {
-        res.send({data:success});
-    });
-
-  });
-
-	//use router middleware
-	this.app.use(router);
+    //use router middleware
+    this.app.use(router);
   }
 
   /**
@@ -213,26 +212,30 @@ export class WebPortal {
     //error handling
     this.app.use(errorHandler());
 
+    let routingUsers = this.usermanagement;
+
     let ExtractJwt = passportJWT.ExtractJwt;
     let JwtStrategy = passportJWT.Strategy;
-    var jwtOptions = {jwtFromRequest:ExtractJwt.fromAuthHeaderAsBearerToken(),secretOrKey :'tasmanianDevil' }
+    var jwtOptions = { jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), secretOrKey:'tasmanianDevil', passReqToCallback: true }
     
-    var strategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
-      console.log('payload received', jwt_payload);
-      // usually this would be a database call:
-      Admin.find(jwt_payload.id).then(function(user:Admin){
+    var strategy = new JwtStrategy(jwtOptions, function(req, jwt_payload, next) {
+      let user = routingUsers.getUserById(jwt_payload.id);
+      let route = req.method.toLowerCase() + req.path;
+
+      if (user && user.checkPrivilege(route)) {
         console.log(user);
-        if (user !=null) {
-          next(null, user);
-        } else {
-          next(null, false);
-        }
-      });
+        console.log("authorized to access [" + route + "]");
+        next(null, user);
+      } else {
+        console.log(user);
+        console.log("unauthorized to access [" + route + "]");
+        next(null, false);
+      }
     });
     
     passport.use(strategy);
     
-	
+  
 }
 
   /**

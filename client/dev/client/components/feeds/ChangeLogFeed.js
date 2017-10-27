@@ -19,6 +19,18 @@ function ChangeLogFeed (props) {
         <Typography type="title">New features this iteration</Typography>
         <Typography type="body2">
           <ul>
+            <li>Implemented ability to register new clients</li>
+            <li>Implemented new paging feature for products</li>
+            <li>Implemented adding and removing inventory stock</li>
+            <li>Removed television sets from types of products</li>
+          </ul>
+        </Typography>
+        <Typography type="title">Old features</Typography>
+        <Typography type="body2">
+          <ul>
+            <li>Implemented ability to modify products</li>
+            <li>Implemented ability to delete products</li>
+            <li>Implemented ability to filter products</li>
             <li>Implemented new administrator secured login</li>
             <li>Implemented table of available products with filters</li>
             <li>Implemented add new product modal for administrator only</li>

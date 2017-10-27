@@ -288,11 +288,11 @@ class ProductFieldPresentationDialog extends Component {
             })()}
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.props.handleRequestClose} color="primary">
-              Cancel
-            </Button>
             <Button onClick={() => this.props.action(this.state)} color="primary">
               {this.props.actionButtonLabel}
+            </Button>
+            <Button onClick={this.props.handleRequestClose} color="default">
+              Cancel
             </Button>
             {this.props.loading && <CircularProgress color="accent" style={{ width: '30px'}} />}
           </DialogActions>

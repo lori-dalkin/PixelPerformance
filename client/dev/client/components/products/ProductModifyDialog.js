@@ -7,8 +7,8 @@ const mapStateToProps = ({product}) => ({
   product,
   loading: product.modifyProduct.modifyingProduct,
   title: 'Modify Product',
-  actionButtonLabel: 'Modify',
-  disableSelect: true
+  disableSelect: true,
+  actionButtonLabel: 'Save Changes'
 });
 
 const mapDispatchToProps = {
