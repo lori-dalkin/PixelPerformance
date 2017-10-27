@@ -8,6 +8,7 @@ import * as corser from "corser";
 var cors = require('cors');
 import * as passport from "passport";
 import * as passportJWT from "passport-jwt";
+import * as bcrypt from "bcrypt";
 import errorHandler = require("errorhandler");
 import methodOverride = require("method-override");
 import { Electronic } from "./Models/electronic";
@@ -15,9 +16,11 @@ import { Monitor } from "./Models/monitor";
 import { Admin } from "./Models/admin";
 import { Catalog } from "./catalog";
 import { Client } from "./Models/client";
-import { UserManagement } from "./usermanagement" ;
-import { SystemMonitor } from "./Models/systemmonitor";
-import { LogItem } from "./Models/logitem";
+import { UserManagement } from "./usermanagement";
+import { SystemMonitor } from "./Models/systemmonitor"; 
+var swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load('./src/swagger.yaml');
 /**
  * The web portal.
  *
@@ -28,7 +31,6 @@ export class WebPortal {
   public app: express.Application;
   protected catalog: Catalog;
   protected usermanagement: UserManagement;
-  protected systemmonitor: SystemMonitor;
 
   /**
    * Bootstrap the application.
@@ -53,7 +55,6 @@ export class WebPortal {
     this.app = express();
     this.catalog = new Catalog();
     this.usermanagement = new UserManagement();
-    this.systemmonitor = new SystemMonitor();
 
     //configure application
     this.config();
@@ -104,17 +105,19 @@ export class WebPortal {
       console.log(user);
       console.log(user.password);
       console.log(req.body.password);
-      //add hasing.
-      if(user.password.replace(/ /g,'') == req.body.password.replace(/ /g,'')) {
-        // from now on we'll identify the user by the id and the id is the only personalized value that goes into our token
-        var payload = {id: user.id};
-        var token = jwt.sign(payload, 'tasmanianDevil');
-        res.json({message: "ok", data: token});
-        let logCall: SystemMonitor;
-        logCall.logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() +  " logged in.", token);
-      } else {
-        res.status(401).json({message:"passwords did not match"});
-      }
+      
+      bcrypt.compare(req.body.password.replace(/ /g,''), user.password.replace(/ /g, '')).then(function(auth) {
+        if (auth) {
+          var payload = {id: user.id};
+          var token = jwt.sign(payload, 'tasmanianDevil');
+          res.json({message: "ok", data: token});
+          let logCall : SystemMonitor;
+          logCall.logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() + " has logged in", token);
+        } else {
+          res.status(401).json({message: "Invalid login credentials."});
+        }
+      });
+
     })
   });
 
@@ -128,12 +131,12 @@ export class WebPortal {
 
 	router.get("/api/products/",passport.authenticate('jwt', { session: false }), function (req, res) {
       console.log(req);
-      let electronics = routingCatalog.getProductPage(1,req.query.type);
+      let electronics = routingCatalog.getProductPage(req.query.page,req.query.type,req.query.numOfItems);
       res.send({data: electronics});
 	});
 	router.post("/api/products/",passport.authenticate('jwt', { session: false }),function (req, res) {
 		res.send({data:routingCatalog.addProduct(req.body)});
-	});
+	});;
 	
 	router.get("/api/products/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
 		let electronic: Electronic;
@@ -147,8 +150,8 @@ export class WebPortal {
     });
   });
 
-  router.post("/api/inventories/:electronicId", passport.authenticate('jwt', { session: false }), function (req, res) {
-      res.send({ data: routingCatalog.addInventory(req.params.electronicId) });
+  router.post("/api/inventories/product/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+      res.send({ data: routingCatalog.addInventory(req.params.id) });
   });
 
   router.get("/api/inventories/product/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
@@ -156,13 +159,13 @@ export class WebPortal {
 		res.send({data: inventories });
   });
   
-  router.delete("/api/inventories/product/:electronicId",passport.authenticate('jwt', { session: false }),function (req, res) {
-    routingCatalog.deleteInventory(req.params.electronicId).then((success)=>{
+  router.delete("/api/inventories/product/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
+    routingCatalog.deleteInventory(req.params.id).then((success)=>{
       res.send({data: success});
     });
   });
 
-  router.post("/modify/api/products/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
+  router.put("/api/products/:id",passport.authenticate('jwt', { session: false }),function (req, res) {
     routingCatalog.modifyProduct(req.params.id, req.body).then((success) => {
         res.send({data:success});
     });
@@ -200,9 +203,8 @@ export class WebPortal {
     //use override middlware
     this.app.use(methodOverride());
 
- 
+    this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     // ## CORS middleware
-    //this.app.use(corser.create());
     var corsOptions = { allowedHeaders: ['Content-Type', 'Authorization']}; 
     this.app.use(cors(corsOptions));
     //catch 404 and forward to error handler
