@@ -90,7 +90,6 @@ class ProductFieldPresentationDialog extends Component {
               <Grid item xs={6}>
                 <Select style={{ marginTop: '16px', ...fullWidthStyle }} name="electronicType" 
                         value={this.state.electronicType} onChange={(event) => this.syncStateToInputValue("electronicType", event)}>
-                  <MenuItem value="TelevisionSet">TelevisionSet</MenuItem>
                   <MenuItem value="Monitor">Monitor</MenuItem>
                   <MenuItem value="Desktop">Desktop</MenuItem>
                   <MenuItem value="Laptop">Laptop</MenuItem>
@@ -100,31 +99,6 @@ class ProductFieldPresentationDialog extends Component {
             </Grid>
             {(() => {
               switch (this.state.electronicType) {
-                case "TelevisionSet":
-                  return (
-                    <Grid container spacing={24} justify='center'>
-                      <Grid item xs={6}>
-                        <TextField
-                          style={fullWidthStyle}
-                          id="dimensions"
-                          name="dimensions"
-                          label="Dimensions"
-                          onChange={(event) => this.syncStateToInputValue("dimensions", event)}
-                          value={this.state.dimensions}
-                        />
-                      </Grid>
-                      <Grid item xs={6}>
-                        <TextField
-                          style={fullWidthStyle}
-                          id="type"
-                          name="type"
-                          label="Type"
-                          onChange={(event) => this.syncStateToInputValue("type", event)}
-                          value={this.state.type}
-                        />
-                      </Grid>
-                    </Grid>
-                  );
                 case "Desktop":
                 case "Laptop":
                 case "Tablet":

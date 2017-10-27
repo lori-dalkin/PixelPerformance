@@ -298,7 +298,7 @@ export const modifyProduct = (body) => {
                     touchscreen: body.touchScreen
                 };
 
-                return callApi(`modify/api/products/${getState().product.dropDownsProduct.id}`, 'post', body, `Bearer ${getState().authentication.token}`).then(
+                return callApi(`api/products/${getState().product.dropDownsProduct.id}`, 'put', body, `Bearer ${getState().authentication.token}`).then(
                     res => {
                         dispatch(modifyProductSuccess(res));
                         dispatch(modifyProductSuccessSnackbar());
