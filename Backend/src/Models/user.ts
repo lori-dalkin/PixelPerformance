@@ -1,3 +1,5 @@
+import * as bcrypt from "bcrypt";
+
 enum Routes
 {
 	getRoot = "get/",
@@ -9,7 +11,7 @@ enum Routes
 	getInventory = "get/api/inventories/product/",
 	postInventory = "post/api/inventories/",
 	deleteInventory = "delete/api/inventories/product/",
-	modifyProducts = "post/modify/api/products/"
+	modifyProducts = "put/api/products/"
 }
 export abstract class User {
 	public id: string;
@@ -23,7 +25,7 @@ export abstract class User {
 		this.fname = fname;
 		this.lname = lname;
 		this.email = email;
-		this.password = password;
+		this.password = (password.trim().length == 60 && password.split("$").length == 4) ? password : bcrypt.hashSync(password, 10);
 	}
 
 	public setId(id:string): void{

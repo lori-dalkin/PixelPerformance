@@ -1,4 +1,3 @@
-import * as bcrypt from "bcrypt";
 import { dbconnection } from "./dbconnection";
 import { User } from "./user";
 
@@ -70,9 +69,8 @@ export class Client extends User {
     * Method to persist Client objects in the database *
      ******************************************************/
     public async save(): Promise<boolean> {
-        let hashedPassword = await bcrypt.hash(this.getPassword(), 10);
         let queryValues = ["'"+this.getId()+"'","'"+this.getFName()+"'","'"+this.getLName()+"'","'"+this.getEmail()+"'",
-                           "'"+hashedPassword+"'","'"+this.getAddress()+"'", "'"+this.getPhone()+"'"];
+                           "'"+this.getPassword()+"'","'"+this.getAddress()+"'", "'"+this.getPhone()+"'"];
         return db.none("INSERT INTO clients VALUES (" + queryValues.join(',') + ")")
             .then(function() {
                 console.log("New Client was added to the database.");
@@ -87,16 +85,21 @@ export class Client extends User {
 
     public checkPrivilege(route: string): boolean
     {
-        switch(route)
+        route = route + "/";  // append slash in case one is missing; no problem if there are two trailing slashes
+        let unauthorizedRoutes: string[] = [
+                User.Routes.postProduct,
+                User.Routes.deleteProduct,
+                User.Routes.postInventory,
+                User.Routes.deleteInventory,
+                User.Routes.modifyProducts
+            ];
+
+        for(let routeKey in User.Routes)
         {
-            case User.Routes.postProduct:
-            case User.Routes.deleteProduct:
-            case User.Routes.postInventory:
-            case User.Routes.deleteInventory:
-            case User.Routes.modifyProducts:
-                return false;
+            if(route.indexOf(User.Routes[routeKey]) !== -1)  // if the starts of strings match e.g. 'post/api/products/abcd' and 'post/api/products/'
+                return (unauthorizedRoutes.indexOf(User.Routes[routeKey]) == -1);  // no privilege if route is an unauthorized route
         }
-        return true;
+        return true;  // if route is not specified as unauthorized, allow it
     }
 
 }
