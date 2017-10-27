@@ -239,7 +239,7 @@ export class Catalog {
                 elec.setWeight(data.weight);
                 elec.setBrand(data.brand);
                 elec.setPrice(data.price);
-                elec.setModelNumber(data.modelnumber);
+                elec.setModelNumber(data.modelNumber);
 
                 
                  if (elec.getElectronicType() == "Monitor") {
