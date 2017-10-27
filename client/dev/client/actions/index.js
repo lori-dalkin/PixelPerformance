@@ -132,8 +132,6 @@ export const getProducts = () => {
                 }
                 endPoint += `page=${getState().product.page}&numOfItems=${getState().product.productsPerPage}`;
 
-                console.log(endPoint);
-
                 return callApi(endPoint, 'get', undefined, `Bearer ${getState().authentication.token}`).then(
                     res => dispatch(getProductsSuccess(res.data)),
                     error => dispatch(getProductsFailure(error))
