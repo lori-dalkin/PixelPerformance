@@ -67,18 +67,7 @@ CREATE TABLE laptops(
 	PRIMARY KEY(id)
 );
 
-DROP TABLE IF EXISTS televisionsets;
-CREATE TABLE televisionsets(
 
-	id UUID DEFAULT uuid_generate_v1(),
-	weight dec(4, 2),
-	modelNumber varchar(20) UNIQUE,
-	brand varchar(30),
-	price dec(6, 2),
-	dimensions varchar(20),
-	type varchar(20),
-	PRIMARY KEY(id)
-);
 
 DROP TABLE IF EXISTS admins;
 CREATE TABLE admins(
