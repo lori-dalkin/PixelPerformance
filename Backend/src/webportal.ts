@@ -17,7 +17,8 @@ import { User } from "./Models/user";
 import { Admin } from "./Models/admin";
 import { Catalog } from "./catalog";
 import { Client } from "./Models/client";
-import { UserManagement } from "./usermanagement" 
+import { UserManagement } from "./usermanagement";
+import { SystemMonitor } from "./Models/systemmonitor"; 
 var swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerDocument = YAML.load('./src/swagger.yaml');
@@ -93,8 +94,7 @@ export class WebPortal {
         var email = body.email;
         var password = body.password;
       }
-      console.log({email: email, password: password});
-
+      
       // If password is correct, create an authentication token for the user
       let user = routingUsers.getUserByEmail(email);
       console.log(user);
@@ -104,6 +104,8 @@ export class WebPortal {
             var payload = {id: user.id};
             var token = jwt.sign(payload, 'tasmanianDevil');
             res.json({message: "ok", data: token});
+            let logCall : SystemMonitor;
+            logCall.logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() + " has logged in", token);
           } else {
             res.status(401).json({message: "Invalid login credentials."});
           }
