@@ -62,10 +62,13 @@ export class WebPortal {
 
     //add api
     this.api();
+    var cat =this.catalog
+    setTimeout(function() { 
+      console.log(cat.getProductPage(1,null,10));
+      console.log("Please work.");
+      console.log(cat.getProductPage(null,"Laptop"));
+     }, 5000);
 
-    console.log(this.catalog.getProductPage(1,null,10));
-    console.log("Please work.");
-    console.log(this.catalog.getProductPage(null,"Laptop"));
   }
   
   /**
