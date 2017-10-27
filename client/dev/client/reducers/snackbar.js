@@ -13,11 +13,14 @@ export default function (state = initialState, action) {
       case actions.REJECT_LOGIN:
       	return { ...state, open: true, message: "Invalid credentials, try again." };
       	break;
+      case actions.ACCEPT_REGISTRATION:
+        return { ...state, open: true, message: "Successfully created account." };
+        break;
       case actions.ADD_PRODUCT_SUCCESS_SNACKBAR:
-        return { ...state, open: true, message: "Successfully added product." }
+        return { ...state, open: true, message: "Successfully added product." };
         break;
       case actions.MODIFY_PRODUCT_SUCCESS_SNACKBAR:
-        return { ...state, open: true, message: "Successfully modified product." }
+        return { ...state, open: true, message: "Successfully modified product." };
         break;
     }
     return state;

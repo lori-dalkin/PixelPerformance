@@ -42,6 +42,38 @@ export const deleteToken = () => {
     return { type: actions.DELETE_TOKEN };
 }
 
+export const attemptRegistration = (credentials) => {
+    return (dispatch) => {
+        return callApi('api/users', 'post', {
+            fname: credentials.fname,
+            lname: credentials.lname,
+            email: credentials.email,
+            password: credentials.password,
+            address: credentials.address,
+            phone: credentials.phone,
+        }).then(
+            res => dispatch(receiveAttemptRegistration(res)),
+            error => dispatch(receiveAttemptRegistration({ data: undefined }))
+        );
+    }
+}
+
+export const receiveAttemptRegistration = (result) => {
+    if (result.data !== undefined) {
+        return {
+            type: actions.ACCEPT_REGISTRATION,
+        };
+    } else {
+        return {
+            type: actions.REJECT_REGISTRATION
+        };
+    }
+}
+
+export const showRegistration = () => { return { type: actions.SHOW_REGISTRATION }; }
+
+export const hideRegistration = () => { return { type: actions.HIDE_REGISTRATION }; }
+
 export const setProductFilter = (filter) => {
     return {
         type: actions.SET_PRODUCTS_FILTER,

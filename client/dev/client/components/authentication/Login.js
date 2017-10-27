@@ -9,7 +9,9 @@ import TextField from 'material-ui/TextField';
 import Typography from 'material-ui/Typography';
 import { CircularProgress } from 'material-ui/Progress';
 
-import { attemptLogin, hideSnackbar } from '../../actions/index';
+import Registration from '../registration/Registration';
+
+import { attemptLogin, hideSnackbar, showRegistration, hideRegistration } from '../../actions/index';
 
 import ChangeLogFeed from '../feeds/ChangeLogFeed';
 
@@ -89,6 +91,10 @@ class Login extends Component {
           </Grid>
           <ChangeLogFeed />
         </Grid>
+        <Registration open={this.props.registration.openRegistration} handleRequestClose={this.props.hideRegistration} />
+        <Button style={{ position: 'fixed', bottom: '2rem', right: '2rem' }} raised color="accent" onClick={() => this.props.showRegistration()}>
+          Create an Account
+        </Button>
         <Snackbar
           anchorOrigin={{
             vertical: 'bottom',
@@ -107,14 +113,17 @@ class Login extends Component {
   }
 }
 
-const mapStateToProps = ({ authentication, snackbar }) => ({
+const mapStateToProps = ({ authentication, snackbar, registration }) => ({
   authentication,
-  snackbar
+  snackbar,
+  registration
 });
 
 const mapDispatchToProps = {
   attemptLogin,
-  hideSnackbar
+  hideSnackbar,
+  showRegistration,
+  hideRegistration
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
