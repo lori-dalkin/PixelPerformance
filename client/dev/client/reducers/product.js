@@ -40,7 +40,9 @@ const initialState = {
         error: false
     },
     dropDownsProduct: defaultDropDownsProduct,
-    selectedProduct: {}
+    selectedProduct: {},
+    page: 1,
+    productsPerPage: 10
 };
 
 export default function (state = initialState, action) {
@@ -186,6 +188,24 @@ export default function (state = initialState, action) {
                     modifyingProduct: false,
                     error: true
                 }
+            }
+            break;
+        case actions.INCREMENT_PRODUCT_PAGE:
+            return {
+                ...state,
+                page: state.page + 1
+            }
+            break;
+        case actions.DECREMENT_PRODUCT_PAGE:
+            return {
+                ...state,
+                page: state.page - 1
+            }
+            break;
+        case actions.SET_PRODUCT_PAGE:
+            return {
+                ...state,
+                page: action.pageNumber
             }
             break;
         default:

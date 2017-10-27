@@ -83,7 +83,7 @@ const mapStateToProps = ({authentication, product, snackbar}) => ({
 
 const mapDispatchToProps = dispatch => {
 	return {
-		onLoad: (filter = "") => dispatch(actions.getProducts(filter)),
+		onLoad: () => dispatch(actions.getProducts()),
 		showAddProduct: () => dispatch(actions.showAddProduct()),
 		hideAddProduct: () => dispatch(actions.hideAddProduct()),
 		hideProductView: () => dispatch(actions.hideProductView()),

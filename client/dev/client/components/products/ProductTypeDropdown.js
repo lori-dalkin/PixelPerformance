@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { MenuItem } from 'material-ui/Menu';
 import Select from 'material-ui/Select';
 
-import { setProductFilter, getProducts } from '../../actions'
+import { setProductFilter, getProducts, setPage } from '../../actions'
 
 class ProductTypeDropdown extends Component {
 
@@ -21,10 +21,11 @@ class ProductTypeDropdown extends Component {
         this.setState({[field]: event.target.value},()=>{
             let filter = "";
             if(this.state.filterType !== "none"){
-                filter = `?type=${this.state.filterType}`;
+                filter = `${this.state.filterType}`;
             }
+            this.props.setPage(1);
             this.props.setProductFilter(filter);
-            this.props.getProducts(filter);
+            this.props.getProducts();
         });
     };
 
@@ -55,6 +56,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         getProducts: (filter) => {
             dispatch(getProducts(filter));
+        },
+        setPage: (number) => {
+            dispatch(setPage(number));
         }
     }
 };
