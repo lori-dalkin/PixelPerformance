@@ -1,0 +1,224 @@
+---
+  swagger: "2.0"
+  info: 
+    version: "1.0.0"
+    title: "Swagger"
+    description: "An api for the backend of this project"
+  basePath: "/api"
+  schemes: 
+    - "http"
+  consumes: 
+    - "application/json"
+  produces: 
+    - "application/json"
+  paths:
+    /users/login:
+      post: 
+        description: "Logs in user"
+        produces: 
+          - "application/json"
+        parameters:
+        - name: email  
+          description: User's email
+          in: body
+          required: true
+          schema:
+            type: "string"
+        - name: password  
+          description: User's password
+          in: body
+          required: true
+          schema:
+            type: "string"
+    /users:
+      post:
+        description: "Adds a user"
+        produces: 
+          - "application/json"
+        parameters:
+        - name: User  
+          description: User properties
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+    /products: 
+      get: 
+        description: "Returns all electronics from the system that the user has access to"
+        produces: 
+          - "application/json"
+        responses: 
+          "200":
+            description: "A list of electronics."
+            schema: 
+              type: "array"
+              items: 
+                $ref: "#/definitions/Electronic"
+      post: 
+        description: "Creates an electronics"
+        produces: 
+          - "application/json"
+        parameters:
+        - name: Eletronic  
+          description: Eletectronic properties
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/Electronic"
+        responses: 
+          "200":
+            description: "An electronics with specified ID"
+            schema:
+              $ref: "#/definitions/Electronic"
+    /products/{id}:
+      get: 
+        description: "Returns an electronics from the system that the user has access to with specified ID"
+        produces: 
+          - "application/json"
+        parameters:
+          - in: path
+            name: id
+            schema:
+              type: string
+            required: true
+            description: String ID of the product to get
+        responses: 
+          "200":
+            description: "An electronics with specified ID"
+            schema:
+              $ref: "#/definitions/Electronic"
+      delete:
+        description: "Deletes a product with correspdong id"
+        produces: 
+          - "application/json"
+        responses:
+          "200":
+            description: "If delete is succesuful"
+            schema:
+              type: "boolean"
+      put: 
+        description: "Updates an electronic"
+        produces: 
+          - "application/json"
+        parameters:
+        - name: Eletronic  
+          description: Eletectronic properties
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/Electronic"
+        responses: 
+          "200":
+            description: "An electronics with specified ID"
+            schema:
+              $ref: "#/definitions/Electronic"
+    /inventories/product/{id}:
+      get: 
+        description: "Returns all inventory for a product  with specified ID"
+        produces: 
+          - "application/json"
+        parameters:
+          - in: path
+            name: id
+            schema:
+              type: string
+            required: true
+            description: String ID of the product 
+        responses: 
+          "200":
+            description: "All inventory for electronic with specified ID"
+            schema: 
+              type: "array"
+              items: 
+                $ref: "#/definitions/Inventory"
+      post:
+        description: "Adds an inventory for a product  with specified ID"
+        produces: 
+          - "application/json"
+        parameters:
+          - in: path
+            name: id
+            schema:
+              type: string
+            required: true
+            description: String ID of the product
+      delete:
+        description: "Deletes an inventory for a product  with specified ID"
+        produces: 
+          - "application/json"
+        parameters:
+          - in: path
+            name: id
+            schema:
+              type: string
+            required: true
+            description: String ID of the product 
+
+  definitions:
+    Electronic:
+      type: "object"
+      required: 
+        - "id"
+        - "weight"
+        - "modelNumber"
+        - "brand"
+        - "price"
+        - "electronicType"
+      properties:
+        id:
+          type: "string"
+        weight:
+          type: "integer"
+        modelNumber:
+          type: "string"
+        brand:
+          type: "string"
+        price:
+          type: "number" 
+        electronicType:
+          type: "string"
+        size:
+          type: "number"
+        dimensions: 
+          type: "string"
+        displaySize:
+          type: "string"
+        battery:
+          type: "integer"
+        camera:
+          type: "boolean"
+        touchScreen:
+          type: "boolean"
+    User:
+      type: "object"
+      required: 
+        - "id"
+        - "fname"
+        - "lname"
+        - "email"
+        - "password"
+      properties:
+        id:
+          type: "string"
+        fname:
+          type: "string"
+        lname:
+          type: "string"
+        email:
+          type: "string"
+        password:
+          type: "string" 
+        address:
+          type: "string"
+        phone:
+          type: "string"
+    Inventory:
+      type: "object"
+      required:
+        - "serialNumber"
+        - "inventoryType"
+      properties:
+        serialNumber:
+          type: "string"
+        inventoryType:
+          $ref: "#/definitions/Electronic"
