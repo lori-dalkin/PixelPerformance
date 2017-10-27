@@ -9,7 +9,7 @@ enum Routes
 	getInventory = "get/api/inventories/product/",
 	postInventory = "post/api/inventories/",
 	deleteInventory = "delete/api/inventories/product/",
-	modifyProducts = "post/modify/api/products/"
+	modifyProducts = "put/api/products/"
 }
 export abstract class User {
 	public id: string;

@@ -87,16 +87,21 @@ export class Client extends User {
 
     public checkPrivilege(route: string): boolean
     {
-        switch(route)
+        route = route + "/";  // append slash in case one is missing; no problem if there are two trailing slashes
+        let unauthorizedRoutes: string[] = [
+                User.Routes.postProduct,
+                User.Routes.deleteProduct,
+                User.Routes.postInventory,
+                User.Routes.deleteInventory,
+                User.Routes.modifyProducts
+            ];
+
+        for(let routeKey in User.Routes)
         {
-            case User.Routes.postProduct:
-            case User.Routes.deleteProduct:
-            case User.Routes.postInventory:
-            case User.Routes.deleteInventory:
-            case User.Routes.modifyProducts:
-                return false;
+            if(route.indexOf(User.Routes[routeKey]) !== -1)  // if the starts of strings match e.g. 'post/api/products/abcd' and 'post/api/products/'
+                return (unauthorizedRoutes.indexOf(User.Routes[routeKey]) == -1);  // no privilege if route is an unauthorized route
         }
-        return true;
+        return true;  // if route is not specified as unauthorized, allow it
     }
 
 }
