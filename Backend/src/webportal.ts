@@ -111,7 +111,7 @@ export class WebPortal {
         var token = jwt.sign(payload, 'tasmanianDevil');
         res.json({message: "ok", data: token});
         let logCall: SystemMonitor;
-        logCall.addActivity(user.id, new Date(), "User: " + user + " logged in.", token);
+        logCall.logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() +  " logged in.", token);
       } else {
         res.status(401).json({message:"passwords did not match"});
       }

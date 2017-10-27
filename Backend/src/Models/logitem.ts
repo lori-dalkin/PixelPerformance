@@ -16,4 +16,20 @@ export class LogItem {
     public getTimeStamp(): Date {return this.timeStamp;}
     public getDescription(): String {return this.description;}
     public getToken(): String {return this.token;}
+
+    public setUserId(userId : String): void {
+        this.userId = userId;
+    }
+
+    public setTimeStamp(timeStamp : Date): void {
+        this.timeStamp = timeStamp;
+    }
+
+    public setDescription(description : String): void {
+        this.description = description;
+    }
+
+    public setToken(token : String): void {
+        this.token = token;
+    }
 } 
