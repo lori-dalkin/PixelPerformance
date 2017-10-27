@@ -196,7 +196,7 @@ export class Catalog {
         if(electronic==null){
             return Promise.resolve(false);
         }
-        let inventoryObj: Inventory = new Inventory(electronidId, electronic);
+        let inventoryObj: Inventory = new Inventory(uuid.v1(), electronic);
         this.inventories.push(inventoryObj);
         return inventoryObj.save();
     }
