@@ -172,10 +172,10 @@ class Registration extends Component {
                     </form>
             </DialogContent>
             <DialogActions>
-                <Button raised color="accent" onClick={this.validate}>
+                <Button color="primary" onClick={this.validate}>
                     Register
                 </Button>
-                <Button color="primary" onClick={this.props.handleRequestClose}>
+                <Button color="default" onClick={this.props.handleRequestClose}>
                     Back
                 </Button>
             </DialogActions>
