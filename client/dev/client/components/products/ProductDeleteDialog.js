@@ -10,7 +10,7 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import Slide from 'material-ui/transitions/Slide';
 
-import { deleteProduct } from '../../actions';
+import { deleteProduct } from '../../actions/adminProductActions';
 
 class ProductDeleteDialog extends Component {
 

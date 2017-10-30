@@ -7,6 +7,7 @@ import ProductTypeDropdown from './ProductTypeDropdown';
 import ProductModifyDialog from './ProductModifyDialog';
 import ProductDeleteDialog from './ProductDeleteDialog';
 import * as actions from '../../actions';
+import { getProducts } from '../../actions/productView';
 
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
@@ -83,7 +84,7 @@ const mapStateToProps = ({authentication, product, snackbar}) => ({
 
 const mapDispatchToProps = dispatch => {
 	return {
-		onLoad: () => dispatch(actions.getProducts()),
+		onLoad: () => dispatch(getProducts()),
 		showAddProduct: () => dispatch(actions.showAddProduct()),
 		hideAddProduct: () => dispatch(actions.hideAddProduct()),
 		hideProductView: () => dispatch(actions.hideProductView()),

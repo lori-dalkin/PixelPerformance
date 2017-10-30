@@ -11,7 +11,8 @@ import { CircularProgress } from 'material-ui/Progress';
 
 import Registration from '../registration/Registration';
 
-import { attemptLogin, hideSnackbar, showRegistration, hideRegistration } from '../../actions/index';
+import { attemptLogin } from '../../actions/authentication';
+import { hideSnackbar, showRegistration, hideRegistration } from '../../actions/index';
 
 import ChangeLogFeed from '../feeds/ChangeLogFeed';
 

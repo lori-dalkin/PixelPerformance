@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { MenuItem } from 'material-ui/Menu';
 import Select from 'material-ui/Select';
 
-import { setProductFilter, getProducts, setPage } from '../../actions'
+import { setProductFilter, getProducts, setPage } from '../../actions/productView'
 
 class ProductTypeDropdown extends Component {
 

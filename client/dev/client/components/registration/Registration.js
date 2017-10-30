@@ -4,7 +4,6 @@ import {connect} from 'react-redux';
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
-import { CircularProgress } from 'material-ui/Progress';
 
 import Dialog, {
     DialogActions,
@@ -13,7 +12,8 @@ import Dialog, {
     DialogTitle,
 } from 'material-ui/Dialog';
 
-import { attemptRegistration, hideSnackbar } from '../../actions/index';
+import { attemptRegistration } from '../../actions/registration';
+import { hideSnackbar } from '../../actions/index';
 
 const formStyle = {
     display: 'flex',

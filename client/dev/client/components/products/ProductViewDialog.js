@@ -13,7 +13,8 @@ import IconButton from 'material-ui/IconButton';
 import AddCircleOutline from 'material-ui-icons/AddCircleOutline';
 import RemoveCircleOutline from 'material-ui-icons/RemoveCircleOutline';
 
-import { showModifyProduct, addToInventory, removeFromInventory } from '../../actions';
+import { addToInventory, removeFromInventory } from '../../actions/adminProductActions';
+import { showModifyProduct } from '../../actions';
 
 class ProductViewDialog extends Component {
 

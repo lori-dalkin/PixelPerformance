@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import ProductFieldPresentationDialog from './ProductFieldPresentationDialog';
 
-import { addProduct as action } from '../../actions';
+import { addProduct as action } from '../../actions/adminProductActions';
 
 const mapStateToProps = ({product}) => ({
   product,

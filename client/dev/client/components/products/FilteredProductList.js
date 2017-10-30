@@ -1,7 +1,8 @@
 import { connect } from 'react-redux';
 import ProductList from './ProductList';
 
-import { showProductView, showDeleteProduct, showNextProductPage, showPreviousProductPage } from '../../actions';
+import { showNextProductPage, showPreviousProductPage } from '../../actions/productView';
+import { showProductView, showDeleteProduct } from '../../actions';
 
 const mapStateToProps = state => {
     return {
