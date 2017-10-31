@@ -55,7 +55,7 @@ export class WebPortal {
     //create expressjs application
     this.app = express();
     this.catalog = new Catalog();
-    this.usermanagement = new UserManagement();
+    this.usermanagement = UserManagement.getInstance();
 
     //configure application
     this.config();
