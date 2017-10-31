@@ -8,15 +8,25 @@ var db = new dbconnection().getDBConnector();
 
 export class UserManagement {
 
+    private static _instance: UserManagement;
 	users: User[];
 
-	constructor(){
+	private constructor(){
 		this.users = [];
 		//Load all entities from the database
 		this.loadClient();
 		this.loadAdmin();
-
 	}
+
+
+    /**************************************************************************************
+     * Getter method that returns the UserManagement instance; allows it to be a Singleton
+     **************************************************************************************/
+    public static getInstance() {
+        if(!this._instance)
+            this._instance = new this();
+        return this._instance;
+    }
 
 	/*********************************************************
 	* Load functions for all persisted users in the database
