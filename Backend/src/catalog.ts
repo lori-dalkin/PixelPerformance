@@ -6,16 +6,19 @@ import {Desktop} from "./Models/desktop";
 import {Tablet} from "./Models/tablet";
 import {Laptop} from "./Models/laptop";
 import {Inventory } from "./Models/inventory";
+import {ElectronicFactory} from "./ElectronicFactory";
 
 var db = new dbconnection().getDBConnector();
 export class Catalog {
 
     inventories: Inventory[];
 	electronics: Electronic[];
+	electronicFactory: ElectronicFactory;
 
 	constructor(){
 		this.electronics = [];
         this.inventories = [];
+        this.electronicFactory = new ElectronicFactory();
         //Load all entities from the database
         let dataPromises = new Array<Promise<void>>();
 		dataPromises.push(this.loadMonitors());
@@ -155,28 +158,7 @@ export class Catalog {
 	* Function to add a new product
 	 ********************************************************/
 	public addProduct(data): boolean {
-        let electronic: Electronic;
-        switch(data.electronicType)
-        {
-         
-            case "Monitor":
-                electronic = new Monitor(uuid.v1(), parseInt(data.weight), data.modelNumber, data.brand,parseFloat(data.price), parseInt(data.size));
-                break;
-            case "Desktop":
-                electronic = new Desktop(uuid.v1(), parseInt(data.weight), data.modelNumber, data.brand, parseFloat(data.price), data.processor, parseInt(data.ram), parseInt(data.cpus), parseInt(data.hardDrive), data.os, data.dimensions);
-				console.log(electronic);
-				break;
-            case "Laptop":
-                electronic = new Laptop(uuid.v1(), parseInt(data.weight), data.modelNumber, data.brand, parseFloat(data.price), data.processor, parseInt(data.ram),  parseInt(data.cpus),
-				parseInt(data.hardDrive), data.os, parseFloat(data.displaySize), parseInt(data.battery), data.camera == 'true', data.touchscreen =='true');
-                break;
-            case "Tablet":
-                electronic = new Tablet(uuid.v1(), parseInt(data.weight), data.modelNumber, data.brand,parseFloat(data.price), data.processor, parseInt(data.ram),
-				parseInt(data.cpus), parseInt(data.hardDrive), data.os, parseFloat(data.displaySize), data.dimensions, parseInt(data.battery), data.camera=='true');
-                break;
-            default:
-                return false;
-        }
+        let electronic: Electronic = this.electronicFactory.create(data);
         electronic.save();
         this.electronics.push(electronic);
 		return true;
