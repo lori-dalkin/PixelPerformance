@@ -1,5 +1,5 @@
 import { Catalog } from "./catalog";
-import { Cart } from "./cart";
+import { Cart } from "./Models/cart";
 
 export class PurchaseManagement {
 
