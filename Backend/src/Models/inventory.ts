@@ -1,17 +1,22 @@
 import { dbconnection } from "./dbconnection";
 import { Electronic} from "./electronic";
+import { Cart } from "./cart";
 
-var db =   new dbconnection().getDBConnector();
+var db = new dbconnection().getDBConnector();
 
 export class Inventory {
 
-    private static electronics :Electronic[] = new Array<Electronic>();
+    private static electronics: Electronic[] = new Array<Electronic>();
     private serialNumber: string;
 	private inventoryType: Electronic;
+    private lockedUntil: Date;
+    private cart: Cart;
 
-    constructor( serialNumber: string, inventoryType: Electronic) {
+    constructor(serialNumber: string, inventoryType: Electronic) {
         this.serialNumber = serialNumber;
         this.inventoryType = inventoryType;
+        this.lockedUntil = null;
+        this.cart = null;
     }
 
     public setserialNumber(serialNumber:string): void{this.serialNumber = serialNumber;}
@@ -19,6 +24,12 @@ export class Inventory {
 
     public setinventoryType(inventoryType:Electronic): void{this.inventoryType = inventoryType;}
     public getinventoryType():Electronic{return this.inventoryType;}
+
+    public setLockedUntil(lockedUntil:Date){this.lockedUntil = lockedUntil};
+    public getLockedUntil():Date{return this.lockedUntil};
+
+    public setCart(cart:Cart){this.cart = cart};
+    public getCart():Cart{return this.cart};
 
     public static setElectronics(eletronics:Electronic[]):void{
         Inventory.electronics = eletronics;
