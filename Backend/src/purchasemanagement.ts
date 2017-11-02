@@ -9,7 +9,7 @@ export class PurchaseManagement {
 	purchaseRecords: Cart[];
 
 	private constructor() {
-		this.catalog = new Catalog();
+		this.catalog = Catalog.getInstance();
 		this.activeCarts = [];
 		this.purchaseRecords = [];
 	}

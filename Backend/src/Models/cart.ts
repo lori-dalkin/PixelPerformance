@@ -1,4 +1,4 @@
-import { Inventory } from "./Models/inventory";
+import { Inventory } from "./inventory";
 export class Cart {
     //This class will have an array of inventory objects, an id, and a userId.
     private id:number;

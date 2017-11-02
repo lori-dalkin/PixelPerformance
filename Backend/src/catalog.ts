@@ -9,11 +9,11 @@ import {Inventory } from "./Models/inventory";
 
 var db = new dbconnection().getDBConnector();
 export class Catalog {
-
+    private static _instance:Catalog = null;
     inventories: Inventory[];
 	electronics: Electronic[];
 
-	constructor(){
+	private constructor(){
 		this.electronics = [];
         this.inventories = [];
         //Load all entities from the database
@@ -28,8 +28,16 @@ export class Catalog {
             this.loadInventory();
         });
         
-	}
-
+    }
+    /*********************************************************
+	* Method to return Singleton Catalog instance            *
+	 *********************************************************/
+    public static getInstance() {
+        if(!this._instance) {
+            this._instance = new this();
+            return this._instance;
+        }
+    }
 	/*********************************************************
 	* Load functions for all persisted data in the database
 	 *********************************************************/
