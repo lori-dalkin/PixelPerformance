@@ -14,6 +14,7 @@ import methodOverride = require("method-override");
 import { Electronic } from "./Models/electronic";
 import { Monitor } from "./Models/monitor";
 import { User } from "./Models/user";
+import { Cart} from "./Models/cart";
 import { Admin } from "./Models/admin";
 import { Catalog } from "./catalog";
 import { Client } from "./Models/client";
@@ -54,7 +55,7 @@ export class WebPortal {
   constructor() {
     //create expressjs application
     this.app = express();
-    this.catalog = new Catalog();
+    this.catalog = Catalog.getInstance();
     this.usermanagement = UserManagement.getInstance();
 
     //configure application
