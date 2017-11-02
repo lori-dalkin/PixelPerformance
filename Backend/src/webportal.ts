@@ -15,7 +15,6 @@ import { Electronic } from "./Models/electronic";
 import { Monitor } from "./Models/monitor";
 import { User } from "./Models/user";
 import { Cart} from "./Models/cart";
-import {Inventory} from "./Models/inventory";
 import { Admin } from "./Models/admin";
 import { Catalog } from "./catalog";
 import { Client } from "./Models/client";
