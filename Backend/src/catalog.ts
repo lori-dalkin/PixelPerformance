@@ -35,8 +35,8 @@ export class Catalog {
     public static getInstance() {
         if(!this._instance) {
             this._instance = new this();
-            return this._instance;
         }
+        return this._instance;
     }
 	/*********************************************************
 	* Load functions for all persisted data in the database
