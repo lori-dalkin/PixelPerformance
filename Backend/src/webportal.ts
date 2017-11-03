@@ -20,6 +20,7 @@ import { Catalog } from "./catalog";
 import { Client } from "./Models/client";
 import { UserManagement } from "./usermanagement";
 import { SystemMonitor } from "./Models/systemmonitor"; 
+import { PurchaseManagement } from "./purchasemanagement";
 var swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerDocument = YAML.load('./src/swagger.yaml');
@@ -33,6 +34,7 @@ export class WebPortal {
   public app: express.Application;
   protected catalog: Catalog;
   protected usermanagement: UserManagement;
+  protected purchasemanagement: PurchaseManagement;
 
   /**
    * Bootstrap the application.
@@ -57,6 +59,7 @@ export class WebPortal {
     this.app = express();
     this.catalog = Catalog.getInstance();
     this.usermanagement = UserManagement.getInstance();
+    this.purchasemanagement = PurchaseManagement.getInstance();
 
     //configure application
     this.config();
@@ -84,6 +87,7 @@ export class WebPortal {
     //home page
     let routingCatalog = this.catalog;
     let routingUsers = this.usermanagement;
+    let routingPurchases = this.purchasemanagement;
 
     router.get('/', function (req, res) {
       res.send('20 dollars is 20 dollars backend home page')
@@ -166,7 +170,11 @@ export class WebPortal {
       routingCatalog.modifyProduct(req.params.id, req.body).then((success) => {
           res.send({data:success});
       });
+    });
 
+    router.delete("/api/cart", passport.authenticate("jwt", { session: false}), function (req, res) {
+      routingPurchases.cancelTransaction(req.user);
+      res.send({data:true});
     });
 
     //use router middleware

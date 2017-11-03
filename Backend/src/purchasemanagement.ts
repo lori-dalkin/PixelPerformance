@@ -23,6 +23,17 @@ export class PurchaseManagement {
 	// startTransaction(userId: string): void
 
 	// cancelTransaction(userId: String): void
+	public cancelTransaction(userId: String): void{
+		for (let i = 0; i < this.activeCarts.length; i++){
+			if (String(this.activeCarts[i].getUserId()) == userId){
+				for (let a = 0; this.activeCarts[i].getInventory().length; a++){
+					let tempCart = this.activeCarts[i].getInventory();
+					tempCart[a].setLockedUntil(null);
+				}
+				this.activeCarts.splice(i,1);
+			}
+		}
+	}
 
 	// viewCart(userId: string): Inventory []
 
