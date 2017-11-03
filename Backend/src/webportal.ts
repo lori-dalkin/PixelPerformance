@@ -19,7 +19,8 @@ import { Admin } from "./Models/admin";
 import { Catalog } from "./catalog";
 import { Client } from "./Models/client";
 import { UserManagement } from "./usermanagement";
-import { SystemMonitor } from "./Models/systemmonitor"; 
+import { SystemMonitor } from "./Models/systemmonitor";
+import {PurchaseManagement} from "./purchasemanagement";
 var swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerDocument = YAML.load('./src/swagger.yaml');
@@ -33,6 +34,8 @@ export class WebPortal {
   public app: express.Application;
   protected catalog: Catalog;
   protected usermanagement: UserManagement;
+
+  protected purchaseManagement: PurchaseManagement;
 
   /**
    * Bootstrap the application.
@@ -57,6 +60,7 @@ export class WebPortal {
     this.app = express();
     this.catalog = Catalog.getInstance();
     this.usermanagement = UserManagement.getInstance();
+    this.purchaseManagement = PurchaseManagement.getInstance();
 
     //configure application
     this.config();
