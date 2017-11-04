@@ -41,7 +41,7 @@ INSERT INTO monitors(weight, modelNumber, brand, price, size) VALUES(18 ,'DELLX2
 DELETE FROM admins;
 INSERT INTO admins(fname, lname, email, password) VALUES('Super','Admin','superadmin@pp.com','$2a$10$w1bjyHs8Zlph7mithtJgE.AeOE9chj19/.YbUzO0wmvOQDVNWd5GC');
 
-DELETE FROM clients;
+DELETE FROM clients CASCADE ;
 INSERT INTO clients(fname, lname, email, password, address, phone) VALUES('John','Smith','jsmith@gmail.com','$2a$10$d.tFEsZRoRz/PVjKO/GjTuUOZGQYG0lRd1Xmu0Ex3m2pqe5p7fa5m','Canada','555-5555');
 
 DELETE FROM inventories;
@@ -53,3 +53,5 @@ INSERT INTO inventories("electronicID") SELECT id FROM laptops;
 INSERT INTO inventories("electronicID") SELECT id FROM laptops;
 INSERT INTO inventories("electronicID") SELECT id FROM desktops;
 INSERT INTO inventories("electronicID") SELECT id FROM desktops;
+
+INSERT INTO cart(client_id) SELECT id FROM clients;
