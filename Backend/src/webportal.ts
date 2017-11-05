@@ -174,10 +174,9 @@ export class WebPortal {
 
     });
 
-
     router.delete("/api/carts/inventory/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
       try{
-        PurchaseManagement.getInstance().removeFromCart(req.user.id,req.params.id)
+        PurchaseManagement.getInstance().removeFromCart(req.user.id,req.params.id);
         res.send({data: true});
       }
       catch(e){
@@ -185,7 +184,19 @@ export class WebPortal {
       }
 
     });
-    //use router middleware
+
+
+    router.delete("api/records/inventory/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+      try{
+          PurchaseManagement.getInstance().returnInventory(req.user.id,req.params.id);
+          res.send({data: true});
+      }
+      catch(e){
+        res.send({data: false, error: e});
+      }
+      });
+
+      //use router middleware
     this.app.use(router);
   }
 

@@ -284,6 +284,11 @@ export class Catalog {
         return Promise.resolve(false);
 
     }
+
+    public returnInventory(returned: Inventory): void {
+        let allInventories = this.inventories;
+        allInventories.push(returned);
+    }
 }
 
 class responseData{

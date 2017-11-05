@@ -47,6 +47,67 @@ export class PurchaseManagement {
 	// viewPurchases(userId: string): Inventory []
 
 	// returnInventory(userId: string, serialNumber: string): bool
+    @beforeMethod(function(meta){
+        assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
+        assert(validator.isUUID(meta.args[1]), "serialNumber needs to be a uuid");
+        // The client must be logged in.
+        // The client must have previous purchases recorded in the system.
+
+    })
+    @afterMethod(function(meta) {
+        assert(meta.result != null);
+        // The return is recorded to the client’s account.
+        //     The returned items are put back into the system.
+        //     The returned items are available for purchase in the system.
+
+    })
+    public returnInventory(userId: string, serialNumber: string): boolean{
+		let allPurchases = this.purchaseRecords;
+		let availableInventory = this.catalog;
+        let soldInventories: { [key: string]: Inventory[]} = {};
+        let returningInv: Inventory;
+        let modifiedCartId: string;
+        let returnSuccess: boolean = true;
+
+        //for each purchase record belonging to this user,
+		//collect all inventories that were sold
+		for(let i=0; i< allPurchases.length; i++){
+			if (allPurchases[i].getUserId() == userId){
+                soldInventories[allPurchases[i].getId()] = allPurchases[i].getInventory();
+			}
+		}
+
+		//Find the inventory to return
+		for(let cartId in soldInventories){
+			for (let i=0; i< soldInventories[cartId].length; i++){
+				if (soldInventories[cartId][i].getserialNumber() == serialNumber){
+					returningInv = soldInventories[cartId][i];
+					modifiedCartId = cartId;
+				}
+			}
+		}
+
+		//set the cart and lockedUntil variables to null
+		returningInv.setCart(null);
+		returningInv.setLockedUntil(null);
+
+		//Modify the cart to remove the inventory from its records
+		for (let i=0; i<allPurchases.length; i++){
+			if (allPurchases[i].getId() == modifiedCartId){
+				returnSuccess = await allPurchases[i].removeInventoryRecord(serialNumber);
+			}
+		}
+
+		if(returnSuccess) {
+            availableInventory.returnInventory(returningInv);
+            return returnSuccess;
+        }
+		else{
+			console.log("Error processing return: could not remove purchase record for inventory with serial number: " + serialNumber)
+			return false;
+		}
+
+    }
 
 	// checkout(userId: string): void
 	@beforeMethod(function(meta){
