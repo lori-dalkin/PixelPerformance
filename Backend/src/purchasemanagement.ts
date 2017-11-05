@@ -1,6 +1,12 @@
 import { Catalog } from "./catalog";
 import { Cart } from "./Models/cart";
 import {Inventory} from "./Models/inventory";
+import { Inventory } from "./Models/inventory";
+import { beforeMethod } from 'kaop-ts'
+import { afterMethod } from 'kaop-ts'
+import  validator = require('validator');
+import assert = require('assert');
+
 
 export class PurchaseManagement {
 
@@ -45,6 +51,30 @@ export class PurchaseManagement {
 	// returnInventory(userId: string, serialNumber: string): bool
 
 	// checkout(userId: string): void
+	@beforeMethod(function(meta){
+		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
+		assert(validator.isUUID(meta.args[1]), "serialNumber needs to be a uuid");
+	})
+	@afterMethod(function(meta) {
+		assert(meta.result != null);
+	})
+	public removeFromCart(userId: string, serialNumber: string):Inventory{
+		let cart:Cart;
+		for(let cart of this.activeCarts){
+			if(cart.getUserId() == userId){
+				let inventory= cart.getInventory()
+				for( let i=0;i<inventory.length;i++){
+					if(inventory[i].getserialNumber() == serialNumber){
+						inventory[i].setCart(null);
+						inventory[i].setLockedUntil(null);
+						return inventory.splice(i, 1)[0];
+
+					}
+				}
+			}
+		}
+		return null;
+	}
 
 	// removeFromCart(userId: string, serialNumber: string): bool
 }

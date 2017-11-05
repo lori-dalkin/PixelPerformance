@@ -19,8 +19,8 @@ import { Admin } from "./Models/admin";
 import { Catalog } from "./catalog";
 import { Client } from "./Models/client";
 import { UserManagement } from "./usermanagement";
+import { PurchaseManagement } from "./purchasemanagement";
 import { SystemMonitor } from "./Models/systemmonitor";
-import {PurchaseManagement} from "./purchasemanagement";
 var swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerDocument = YAML.load('./src/swagger.yaml');
@@ -70,6 +70,7 @@ export class WebPortal {
 
     //add api
     this.api();
+
   }
   
   /**
@@ -173,6 +174,17 @@ export class WebPortal {
 
     });
 
+
+    router.delete("/api/carts/inventory/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+      try{
+        PurchaseManagement.getInstance().removeFromCart(req.user.id,req.params.id)
+        res.send({data: true});
+      }
+      catch(e){
+        res.send({data: false, error: e});
+      }
+
+    });
     //use router middleware
     this.app.use(router);
   }
