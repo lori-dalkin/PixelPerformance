@@ -37,6 +37,8 @@ export class WebPortal {
   protected usermanagement: UserManagement;
   protected purchasemanagement: PurchaseManagement;
 
+  protected purchaseManagement: PurchaseManagement;
+
   /**
    * Bootstrap the application.
    *
@@ -171,9 +173,10 @@ export class WebPortal {
       routingCatalog.modifyProduct(req.params.id, req.body).then((success) => {
           res.send({data:success});
       });
+
     });
 
-    
+
     router.delete("/api/carts/inventory/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
       try{
         PurchaseManagement.getInstance().removeFromCart(req.user.id,req.params.id)
