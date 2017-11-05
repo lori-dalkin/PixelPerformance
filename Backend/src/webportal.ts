@@ -20,7 +20,8 @@ import { Catalog } from "./catalog";
 import { Client } from "./Models/client";
 import { UserManagement } from "./usermanagement";
 import { PurchaseManagement } from "./purchasemanagement";
-import { SystemMonitor } from "./Models/systemmonitor";
+import { SystemMonitor } from "./Models/systemmonitor"; 
+import * as uuid from "uuid";
 var swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerDocument = YAML.load('./src/swagger.yaml');
@@ -34,6 +35,7 @@ export class WebPortal {
   public app: express.Application;
   protected catalog: Catalog;
   protected usermanagement: UserManagement;
+  protected purchasemanagement: PurchaseManagement;
 
   protected purchaseManagement: PurchaseManagement;
 
@@ -60,7 +62,7 @@ export class WebPortal {
     this.app = express();
     this.catalog = Catalog.getInstance();
     this.usermanagement = UserManagement.getInstance();
-    this.purchaseManagement = PurchaseManagement.getInstance();
+    this.purchasemanagement = PurchaseManagement.getInstance();
 
     //configure application
     this.config();
@@ -183,8 +185,30 @@ export class WebPortal {
       catch(e){
         res.send({data: false, error: e});
       }
-
     });
+
+    router.get("/api/carts/inventory/", passport.authenticate('jwt', { session: false }), function (req, res) {
+      try{
+        let inventories = PurchaseManagement.getInstance().viewCart(req.user.id)
+        res.send({data: inventories});
+      }
+      catch(e){
+        res.send({data: null, error: e});
+      }
+    });
+    
+    router.get("/api/carts/", passport.authenticate('jwt', { session: false }), function (req, res) {
+      try{
+        let cart  = PurchaseManagement.getInstance().getCart(req.user.id)
+        res.send({data: cart});
+      }
+      catch(e){
+        res.send({data: null, error: e});
+      }
+    });
+
+
+
     //use router middleware
     this.app.use(router);
   }

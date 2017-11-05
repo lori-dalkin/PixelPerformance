@@ -4,6 +4,7 @@ import {Inventory} from "./Models/inventory";
 import {afterMethod, beforeInstance, beforeMethod} from 'kaop-ts'
 import  validator = require('validator');
 import assert = require('assert');
+import * as uuid from "uuid";
 
 
 export class PurchaseManagement {
@@ -38,17 +39,40 @@ export class PurchaseManagement {
 
 	// cancelTransaction(userId: String): void
 
-	// viewCart(userId: string): Inventory []
+	@beforeMethod(function(meta){
+		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
+	})
+	@afterMethod(function(meta) { 
+		assert(meta.result != null, "Inventory within cart not found."); 
+	})
+	public viewCart(userId: string): Inventory []{
+		return this.getCart(userId).getInventory()
+	}
 
 	// addToCart(userId: string, serialNumber: string): bool
 
-	// getCart(userId: string): Cart
+	@beforeMethod(function(meta){
+		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
+	})
+	@afterMethod(function(meta) { 
+		assert(meta.result != null, "There is no active cart for this user."); 
+	})
+	public getCart(userId: string): Cart
+	{
+		for(var i=0;i<this.activeCarts.length; i++)
+		{
+			if(this.activeCarts[i].getUserId() == userId)
+				return this.activeCarts[i];
+		}
+	}
+
 
 	// viewPurchases(userId: string): Inventory []
 
 	// returnInventory(userId: string, serialNumber: string): bool
 
 	// checkout(userId: string): void
+
 	@beforeMethod(function(meta){
 		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
 		assert(validator.isUUID(meta.args[1]), "serialNumber needs to be a uuid");
