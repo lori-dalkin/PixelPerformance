@@ -1,9 +1,7 @@
 import { Catalog } from "./catalog";
 import { Cart } from "./Models/cart";
 import {Inventory} from "./Models/inventory";
-import { Inventory } from "./Models/inventory";
-import { beforeMethod } from 'kaop-ts'
-import { afterMethod } from 'kaop-ts'
+import {afterMethod, beforeInstance, beforeMethod} from 'kaop-ts'
 import  validator = require('validator');
 import assert = require('assert');
 
