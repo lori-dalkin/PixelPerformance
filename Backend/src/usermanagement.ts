@@ -3,6 +3,10 @@ import { User } from "./Models/user"
 import { Client } from "./Models/client"
 import { Admin } from "./Models/admin"
 import { dbconnection } from "./Models/dbconnection"
+import {afterMethod, beforeMethod} from 'kaop-ts'
+import  validator = require('validator');
+import assert = require('assert');
+
 
 var db = new dbconnection().getDBConnector();
 
@@ -62,6 +66,13 @@ export class UserManagement {
     /****************************************************
      * Function to retrieve a single user by email
     ****************************************************/
+    // checkout(userId: string): void
+    @beforeMethod(function(meta){
+        assert(validator.isEmail(meta.args[0]), "Input parameter is not an Email");
+    })
+    @afterMethod(function(meta) {
+        assert(meta.result != null);
+    })
     public getUserByEmail(email:string): User {
         for(var i = 0; i<this.users.length; i++)
         {

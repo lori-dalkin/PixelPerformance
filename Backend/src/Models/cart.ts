@@ -1,5 +1,9 @@
 import { Inventory } from "./inventory";
 import {dbconnection} from "./dbconnection";
+import {afterMethod, beforeMethod} from 'kaop-ts'
+import  validator = require('validator');
+import assert = require('assert');
+
 
 var db = new dbconnection().getDBConnector();
 export class Cart {
@@ -41,6 +45,9 @@ export class Cart {
     /********************************************************
      * Function to load all carts with previous purchases
      *********************************************************/
+    @afterMethod(function(meta) {
+        assert(meta.result != null);
+    })
     public static async findAllRecords(): Promise<Cart[]>{
         let savedInventories: { [key: string]: Inventory[]} = {};
         let savedCarts: Cart[] = [];

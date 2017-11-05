@@ -1,7 +1,7 @@
 import { Catalog } from "./catalog";
 import { Cart } from "./Models/cart";
 import {Inventory} from "./Models/inventory";
-import {afterMethod, beforeInstance, beforeMethod} from 'kaop-ts'
+import {afterMethod, beforeMethod} from 'kaop-ts'
 import  validator = require('validator');
 import assert = require('assert');
 
@@ -47,19 +47,44 @@ export class PurchaseManagement {
 	// viewPurchases(userId: string): Inventory []
 
 	// returnInventory(userId: string, serialNumber: string): bool
-    @beforeMethod(function(meta){
-        assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
+
+    @beforeMethod(function(meta) {
+		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
         assert(validator.isUUID(meta.args[1]), "serialNumber needs to be a uuid");
-        // The client must be logged in.
+
+        let previousPurchasers: string[] = [];
+        for (let i=0; i< meta.scope.purchaseRecords.length; i++){
+          	previousPurchasers.push(meta.scope.purchaseRecords[i].getUserId());
+		}
+
+		// Client must be logged in --> this is checked by the passport module
         // The client must have previous purchases recorded in the system.
+		assert(previousPurchasers.indexOf(meta.args[0]) >= 0, "User has no previous purchases");
 
-    })
+
+	})
     @afterMethod(function(meta) {
-        assert(meta.result != null);
-        // The return is recorded to the client’s account.
-        //     The returned items are put back into the system.
-        //     The returned items are available for purchase in the system.
+		let allSerials: string[];
+		let previouslyPurchased: Inventory[] = [];
+		let previouslyPurchasedSerials: string[];
 
+		for (let i=0; i< meta.scope.catalog.inventories.length; i++){
+			allSerials.push(meta.scope.catalog.inventories[i].getserialNumber());
+		}
+
+		for (let i=0; i< meta.scope.purchaseRecords.length; i++){
+			previouslyPurchased.concat(meta.scope.purchaseRecords[i].getInventory());
+		}
+
+		for (let i=0; i< previouslyPurchased.length; i++){
+			previouslyPurchasedSerials.push(previouslyPurchased[i].getserialNumber());
+		}
+
+
+        // The return is recorded to the client’s account.
+		assert(previouslyPurchasedSerials.indexOf(meta.args[1]) < 0, "The return was not recorded to the user's account");
+        //The returned items are put back into the system.
+		assert(allSerials.indexOf(meta.args[1]) >= 0, "The item was not successfully returned to the catalog.");
     })
     public returnInventory(userId: string, serialNumber: string): boolean{
 		let allPurchases = this.purchaseRecords;
@@ -91,12 +116,12 @@ export class PurchaseManagement {
 		returningInv.setCart(null);
 		returningInv.setLockedUntil(null);
 
-		//Modify the cart to remove the inventory from its records
-		for (let i=0; i<allPurchases.length; i++){
-			if (allPurchases[i].getId() == modifiedCartId){
-				returnSuccess = await allPurchases[i].removeInventoryRecord(serialNumber);
-			}
-		}
+		// //Modify the cart to remove the inventory from its records
+		// for (let i=0; i<allPurchases.length; i++){
+		// 	if (allPurchases[i].getId() == modifiedCartId){
+		// 		returnSuccess = await allPurchases[i].removeInventoryRecord(serialNumber);
+		// 	}
+		// }
 
 		if(returnSuccess) {
             availableInventory.returnInventory(returningInv);

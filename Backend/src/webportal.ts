@@ -194,7 +194,7 @@ export class WebPortal {
       catch(e){
         res.send({data: false, error: e});
       }
-      });
+    });
 
       //use router middleware
     this.app.use(router);
