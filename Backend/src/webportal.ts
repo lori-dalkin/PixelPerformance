@@ -20,7 +20,7 @@ import { Catalog } from "./catalog";
 import { Client } from "./Models/client";
 import { UserManagement } from "./usermanagement";
 import { PurchaseManagement } from "./purchasemanagement";
-import { SystemMonitor } from "./Models/systemmonitor"; 
+import { SystemMonitor } from "./Models/systemmonitor";
 var swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerDocument = YAML.load('./src/swagger.yaml');
@@ -34,6 +34,8 @@ export class WebPortal {
   public app: express.Application;
   protected catalog: Catalog;
   protected usermanagement: UserManagement;
+
+  protected purchaseManagement: PurchaseManagement;
 
   /**
    * Bootstrap the application.
@@ -58,6 +60,7 @@ export class WebPortal {
     this.app = express();
     this.catalog = Catalog.getInstance();
     this.usermanagement = UserManagement.getInstance();
+    this.purchaseManagement = PurchaseManagement.getInstance();
 
     //configure application
     this.config();
@@ -168,9 +171,10 @@ export class WebPortal {
       routingCatalog.modifyProduct(req.params.id, req.body).then((success) => {
           res.send({data:success});
       });
+
     });
 
-    
+
     router.delete("/api/carts/inventory/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
       try{
         PurchaseManagement.getInstance().removeFromCart(req.user.id,req.params.id)
