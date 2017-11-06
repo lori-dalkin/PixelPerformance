@@ -49,7 +49,45 @@ export class PurchaseManagement {
 		return this.getCart(userId).getInventory()
 	}
 
-	// addToCart(userId: string, serialNumber: string): bool
+	@beforeMethod(function(meta){
+		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
+		assert(validator.isUUID(meta.args[1]), "serialNumber needs to be a uuid");
+	})
+	@afterMethod(function(meta) { 
+		assert(PurchaseManagement.getInstance().checkItemAddedToCart(meta.args[0],meta.args[1]), "Item was not added to cart" )
+	})
+	public addToCart(userId: string, serialNumber: string): Boolean
+	{
+		let cart = this.getCart(userId);
+		let inventoryObj:Inventory;
+		for(let i = 0;i<this.catalog.inventories.length;i++)
+		{
+			if(this.catalog.inventories[i].getserialNumber() == serialNumber)
+			{
+				inventoryObj = this.catalog.inventories[i];
+				break;
+			}
+		}
+		if(inventoryObj.isLocked())
+			return false; //obj is locked so it can't be added to cart
+		else
+		{
+			//obj is available to be taken
+			//add obj to cart
+			cart.getInventory().push(inventoryObj);
+			//set obj lock time
+			var futureDate = new Date(new Date().getTime() + 10*60000);
+			inventoryObj.setLockedUntil(futureDate);
+			
+			//if obj was previously in another cart, remove it
+			let prevCart = inventoryObj.getCart();
+			if(prevCart != null)
+				this.removeFromCart(prevCart.getUserId(),inventoryObj.getserialNumber());
+			//set inventory's cart to this cart
+			inventoryObj.setCart(cart);
+			return true;
+		}
+	}
 
 	@beforeMethod(function(meta){
 		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
@@ -65,7 +103,6 @@ export class PurchaseManagement {
 				return this.activeCarts[i];
 		}
 	}
-
 
 	// viewPurchases(userId: string): Inventory []
 
@@ -99,4 +136,18 @@ export class PurchaseManagement {
 	}
 
 	// removeFromCart(userId: string, serialNumber: string): bool
+
+	//Methods for Contract Programming
+	private checkItemAddedToCart(userId:string, serialNumber:string):Boolean{
+		for(let cart of this.activeCarts){
+			if(cart.getUserId() == userId){
+				for(let inventory of cart.getInventory()){
+					if(inventory.getserialNumber() == serialNumber){
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
 }
