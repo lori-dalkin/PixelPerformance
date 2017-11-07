@@ -36,7 +36,11 @@ export class PurchaseManagement {
 
 
 	// startTransaction(userId: string): void
-
+    public startTransaction(userId: string): void {
+        var uuid1 = uuid.v1();
+        let newCart = new Cart(uuid1, userId);
+        this.activeCarts.push(newCart);
+    }
 	// cancelTransaction(userId: String): void
 
 	@beforeMethod(function(meta){
