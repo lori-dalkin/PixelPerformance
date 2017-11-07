@@ -1,3 +1,5 @@
+import {ModelModifyStrategy} from "../Strategies/modelmodifystrategy";
+
 export abstract class Electronic {
     protected id: string;
 	protected weight: number ;
@@ -5,6 +7,7 @@ export abstract class Electronic {
     protected brand: string;
     protected price: number;
     protected electronicType: string;
+    private modifyStrategy: ModelModifyStrategy;
 
     constructor(id: string, weight: number, modelNumber: string, brand: string, price: number, electronicType: string) {
 
@@ -22,6 +25,7 @@ export abstract class Electronic {
     public getBrand(): string { return this.brand;}
     public getPrice(): number { return this.price;}
     public getElectronicType(): string { return this.electronicType; }
+    public getModifyStrategy(): ModelModifyStrategy { return this.modifyStrategy; }
 
     public setId(id: string): void { this.id = id; }
     public setWeight(weight: number): void { this.weight = weight; }
@@ -29,12 +33,10 @@ export abstract class Electronic {
     public setBrand(brand: string): void { this.brand = brand; }
     public setPrice(price: number): void { this.price = price; }
     public setElectronicType(elecType: string): void { this.electronicType = elecType; }
+    public setModifyStrategy(modStrat: ModelModifyStrategy) { this.modifyStrategy = modStrat; }
 
-    abstract async save();
-    //abstract async save(): Promise<boolean>;
-
-    //abstract async modify(): Promise<boolean>;
-    
+    abstract async save(): Promise<boolean>;
+    abstract async modify(): Promise<boolean>;
     abstract async delete(): Promise<boolean>;
 
 }

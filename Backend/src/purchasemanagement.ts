@@ -49,7 +49,44 @@ export class PurchaseManagement {
 		return this.getCart(userId).getInventory()
 	}
 
-	// addToCart(userId: string, serialNumber: string): bool
+	@beforeMethod(function(meta){
+		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
+		assert(validator.isUUID(meta.args[1]), "serialNumber needs to be a uuid");
+		assert(PurchaseManagement.getInstance().findInventoryBySerialNumber(meta.args[1]) != null,"serialNumber does not correspond to any item within Inventory");
+		assert(!(PurchaseManagement.getInstance().checkItemIsLocked(meta.args[1])), "Item is unavaible");
+		assert(PurchaseManagement.getInstance().getCart(meta.args[0]).getInventory().length < 7,"Your cart is already full. (7 Max)")
+	})
+	@afterMethod(function(meta) { 
+		assert(PurchaseManagement.getInstance().checkItemAddedToCart(meta.args[0],meta.args[1]), "Item was not added to cart" )
+	})
+	public addItemToCart(userId: string, serialNumber: string): Boolean
+	{
+		let cart = this.getCart(userId);
+		let inventoryObj:Inventory;
+		console.log(this.catalog.inventories);
+		for(let i = 0;i<this.catalog.inventories.length;i++)
+		{
+			if(this.catalog.inventories[i].getserialNumber() == serialNumber)
+			{
+				inventoryObj = this.catalog.inventories[i];
+				break;
+			}
+		}
+		//obj is available to be taken since beforeMethod was successful
+		//add obj to cart
+		cart.getInventory().push(inventoryObj);
+		//set obj lock time
+		var futureDate = new Date(new Date().getTime() + 10*60000);
+		inventoryObj.setLockedUntil(futureDate);
+		
+		//if obj was previously in another cart, remove it
+		let prevCart = inventoryObj.getCart();
+		if(prevCart != null)
+			this.removeFromCart(prevCart.getUserId(),inventoryObj.getserialNumber());
+		//set inventory's cart to this cart
+		inventoryObj.setCart(cart);
+		return true;
+	}
 
 	@beforeMethod(function(meta){
 		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
@@ -65,9 +102,6 @@ export class PurchaseManagement {
 				return this.activeCarts[i];
 		}
 	}
-
-
-
 	// viewPurchases(userId: string): Inventory []
 
 	// returnInventory(userId: string, serialNumber: string): bool
@@ -120,6 +154,37 @@ export class PurchaseManagement {
 			}
 		}
 		return null;
+	}
+
+	// removeFromCart(userId: string, serialNumber: string): bool
+
+	//Methods for Contract Programming
+	private checkItemAddedToCart(userId:string, serialNumber:string):Boolean{
+		for(let cart of this.activeCarts){
+			if(cart.getUserId() == userId){
+				for(let inventory of cart.getInventory()){
+					if(inventory.getserialNumber() == serialNumber){
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	private checkItemIsLocked(givenItem:Inventory):Boolean{
+		return givenItem.isLocked(); //return true if item in UNAVAILABLE
+	}
+	private findInventoryBySerialNumber(serialNumber):Inventory{
+		let inventoryObj:Inventory;
+		for(let i = 0;i<this.catalog.inventories.length;i++)
+		{
+			if(this.catalog.inventories[i].getserialNumber() == serialNumber)
+			{
+				inventoryObj = this.catalog.inventories[i];
+				break;
+			}
+		}
+		return inventoryObj;
 	}
 
 	public findCart( userId:string){
