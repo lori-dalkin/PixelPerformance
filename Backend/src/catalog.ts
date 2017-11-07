@@ -7,6 +7,9 @@ import {Tablet} from "./Models/tablet";
 import {Laptop} from "./Models/laptop";
 import {Inventory } from "./Models/inventory";
 import {ElectronicFactory} from "./ElectronicFactory";
+import {afterMethod, beforeInstance, beforeMethod} from 'kaop-ts'
+import  validator = require('validator');
+import assert = require('assert');
 
 var db = new dbconnection().getDBConnector();
 export class Catalog {
@@ -149,6 +152,13 @@ export class Catalog {
         return new responseData(desired,totalProducts);
     }
     
+    // @beforeMethod(function(meta){
+	// 	assert(validator.isEmpty(meta.args[0]), "electronic type cannot be empty");
+    // })
+    // @afterMethod(function(meta)
+    // {
+    //     assert(meta.result != null, "No inventory of that type.");
+    // })
     public getAllInventories( electronicId:string): Inventory[] {
         var desired: Inventory[] = [];
         for(let i=0;i<this.inventories.length;i++){
@@ -165,6 +175,12 @@ export class Catalog {
     /********************************************************
 	* Function to add a new product
 	 ********************************************************/
+    // @beforeMethod(function(meta){
+	// 	assert(validator.isEmpty(meta.args[0].electronicType), "electronic type cannot be empty");
+	// })
+	// @afterMethod(function(meta) {
+	// 	assert(meta.result != true, "Product wasn't successfully added.");
+	// })
 	public addProduct(data): boolean {
         let electronic: Electronic = this.electronicFactory.create(data);
         electronic.save();
@@ -172,7 +188,12 @@ export class Catalog {
 		return true;
     }
 
-
+    // @beforeMethod(function(meta){
+	// 	assert(validator.isEmpty(meta.args[0]), "electronic ID cannot be empty");
+	// })
+	// @afterMethod(function(meta) {
+	// 	assert(meta.result != Promise.resolve(false), "Object wasn't sucessfully added");
+	// })
     public addInventory(electronidId: string): Promise<boolean> {
         console.log("adding to inventory: " + electronidId);
         let electronic: Electronic;
