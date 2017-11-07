@@ -203,8 +203,8 @@ export class Catalog {
             }
         }
         assert(meta.result != Promise.resolve(false), "Inventory not added");
-        //compare latest inventory with electronic sent as argument
         assert(Catalog.getInstance().inventories.length != 0, "Inventory empty");
+         //compare latest inventory with electronic sent as argument
         assert(Catalog.getInstance().inventories[Catalog.getInstance().inventories.length - 1].getinventoryType() == electronic, "Inventory not in inventory array");
 	})
     public addInventory(electronidId: string): Promise<boolean> {
