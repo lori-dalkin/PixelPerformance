@@ -305,7 +305,25 @@ export class Catalog {
         return Promise.resolve(false);
 
     }
+    public checkoutInventory(inventoryId:string) : Inventory{
+        for(let i=0;i<this.inventories.length;i++){
+            if( inventoryId==this.inventories[i].getserialNumber()){
+                return this.inventories.splice(i,1)[0];
+            }
+        }
+        return null;
+    }
+    public getInventory(inventoryId:string){
+        for( let inventory of this.inventories){
+            if(inventory.getserialNumber() == inventoryId){
+                return inventory;
+            }
+        }
+        return null;
+    }
 }
+
+
 
 class responseData{
     public products:Electronic[];
