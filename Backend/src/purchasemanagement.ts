@@ -68,7 +68,17 @@ export class PurchaseManagement {
 
 
 	// viewPurchases(userId: string): Inventory []
+    public viewPurchases(userId: String): Inventory[] {
+        let purchase_history: Inventory[] = new Array<Inventory>();
+        if (this.purchaseRecords.length == 0) return null;
+        else {
+            for (let i = 0; i < this.purchaseRecords.length; i++) {
+                let temp_inventoryArray = this.purchaseRecords[i].getInventory();
+                purchase_history[i] = temp_inventoryArray;
 
+            }
+        }
+    }
 	// returnInventory(userId: string, serialNumber: string): bool
 
 	// checkout(userId: string): void
@@ -100,13 +110,5 @@ export class PurchaseManagement {
 
 	// removeFromCart(userId: string, serialNumber: string): bool
 
-    public viewPurchases(userId: String): Inventory[] {
-        let purchase_history: Inventory[] = [];
-        if (this.purchaseRecords.length == 0) return null;
-        else {
-            for (let i = 0; i < this.purchaseRecords.length; i++) {
-                this.purchaseRecords[i].getInventory()
-            }
-        }
-    }
+  
 }
