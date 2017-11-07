@@ -1,10 +1,10 @@
 import { Catalog } from "./catalog";
 import { Cart } from "./Models/cart";
-import { Inventory } from "./Models/inventory";
-import { beforeMethod } from 'kaop-ts'
-import { afterMethod } from 'kaop-ts'
+import {Inventory} from "./Models/inventory";
+import {afterMethod, beforeInstance, beforeMethod} from 'kaop-ts'
 import  validator = require('validator');
 import assert = require('assert');
+import * as uuid from "uuid";
 
 
 export class PurchaseManagement {
@@ -18,6 +18,14 @@ export class PurchaseManagement {
 		this.catalog = Catalog.getInstance();
 		this.activeCarts = [];
 		this.purchaseRecords = [];
+		let dataPromises = new Array<Promise<Cart[]>>();
+
+		dataPromises.push(Cart.findAllRecords());
+		dataPromises[0].then((data) => {
+			for (let i = 0; i<data.length; i++){
+				this.purchaseRecords.push(data[i]);
+			}
+		});
 	}
 
 	public static getInstance() {
@@ -26,18 +34,44 @@ export class PurchaseManagement {
 		return this._instance;
 	}
 
+
 	// startTransaction(userId: string): void
 
 	// cancelTransaction(userId: String): void
 
-	// viewCart(userId: string): Inventory []
+	@beforeMethod(function(meta){
+		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
+	})
+	@afterMethod(function(meta) { 
+		assert(meta.result != null, "Inventory within cart not found."); 
+	})
+	public viewCart(userId: string): Inventory []{
+		return this.getCart(userId).getInventory()
+	}
 
 	// addToCart(userId: string, serialNumber: string): bool
+
+	@beforeMethod(function(meta){
+		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
+	})
+	@afterMethod(function(meta) { 
+		assert(meta.result != null, "There is no active cart for this user."); 
+	})
+	public getCart(userId: string): Cart
+	{
+		for(var i=0;i<this.activeCarts.length; i++)
+		{
+			if(this.activeCarts[i].getUserId() == userId)
+				return this.activeCarts[i];
+		}
+	}
+
 
 
 	// viewPurchases(userId: string): Inventory []
 
 	// returnInventory(userId: string, serialNumber: string): bool
+
 
 	@beforeMethod(function(meta){
 		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
@@ -65,11 +99,13 @@ export class PurchaseManagement {
 		
 	}
 
+
 	@beforeMethod(function(meta){
 		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
 		assert(validator.isUUID(meta.args[1]), "serialNumber needs to be a uuid");
 		assert( PurchaseManagement.getInstance().findCart(meta.args[0])!= null, "no cart was found for associated user")
 	})
+
 	@afterMethod(function(meta) { 
 		assert(meta.result != null,"matching inventory could not be found"); 
 	})
@@ -112,4 +148,5 @@ export class PurchaseManagement {
 		}
 		return false;
 	}
+
 }
