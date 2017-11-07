@@ -75,7 +75,7 @@ export class PurchaseManagement {
 
 	@beforeMethod(function(meta){
 		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
-		assert( PurchaseManagement.getInstance().findCart(meta.args[0]) != null);
+		assert( PurchaseManagement.getInstance().findCart(meta.args[0]) != null, "no cart is assiated with the user");
 		assert( meta.scope.getCart(meta.args[0]).getInventory().length>0, "an empty cart cannot be checkedout" )
 	})
 	@afterMethod(function(meta) { 
