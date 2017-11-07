@@ -2,11 +2,16 @@ import * as uuid from "uuid";
 import { Electronic } from "./Models/electronic"
 import { Monitor } from "./Models/monitor"
 import { dbconnection } from "./Models/dbconnection"
-import {Desktop} from "./Models/desktop";
-import {Tablet} from "./Models/tablet";
-import {Laptop} from "./Models/laptop";
-import {Inventory } from "./Models/inventory";
-import {ElectronicFactory} from "./ElectronicFactory";
+import { Desktop } from "./Models/desktop";
+import { Tablet } from "./Models/tablet";
+import { Laptop } from "./Models/laptop";
+import { Inventory  } from "./Models/inventory";
+import { ElectronicFactory } from "./ElectronicFactory";
+
+// Dependencies for contracts
+import { afterMethod, beforeInstance, beforeMethod } from 'kaop-ts';
+import validator = require('validator');
+import assert = require('assert');
 
 var db = new dbconnection().getDBConnector();
 export class Catalog {
@@ -114,9 +119,15 @@ export class Catalog {
     }
 
     /****************************************************
-    * Function to retrieve a single product via it's id
+    * Function to retrieve a single product via its id
      ****************************************************/
-	public getProduct(productId:string): Electronic {
+    @beforeMethod(function(meta){
+        assert(validator.isUUID(meta.args[0]), "productId needs to be a uuid");
+    })
+    @afterMethod(function(meta) { 
+        assert(meta.result != null, "Product within electronics not found."); 
+    })
+    public getProduct(productId: string): Electronic {
 		let elecIterator = this.electronics;
 		for(var iter = 0; iter < this.electronics.length; iter++){
 			if(productId == elecIterator[iter].getId())
@@ -128,7 +139,7 @@ export class Catalog {
 	/********************************************************
 	* Function to retrieve a list of products based on type
 	 ********************************************************/
-	public getProductPage(page:number, type:string, numOfItems:number = 25) {
+    public getProductPage(page:number, type:string, numOfItems:number = 25) {
         var desired: Electronic[] = [];
         if(type == null){
             desired = this.electronics;
