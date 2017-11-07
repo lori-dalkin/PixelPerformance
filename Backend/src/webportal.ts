@@ -199,6 +199,9 @@ export class WebPortal {
       }
       catch(e){
         res.send({data: false, error: e});
+      }
+    });
+
 
     router.get("/api/carts/inventory/", passport.authenticate('jwt', { session: false }), function (req, res) {
       try{
