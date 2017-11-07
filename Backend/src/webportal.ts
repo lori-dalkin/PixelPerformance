@@ -284,7 +284,13 @@ export class WebPortal {
     var jwtOptions = { jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), secretOrKey:'tasmanianDevil', passReqToCallback: true }
     
     var strategy = new JwtStrategy(jwtOptions, function(req, jwt_payload, next) {
-      let user = routingUsers.getUserById(jwt_payload.id);
+      let user; 
+      try{
+        user = routingUsers.getUserById(jwt_payload.id);
+      }catch(e){
+        console.log(e);
+        user = null;
+      }
       let route = req.method.toLowerCase() + req.path;
 
       if (user && user.checkPrivilege(route)) {

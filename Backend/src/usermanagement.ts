@@ -3,6 +3,9 @@ import { User } from "./Models/user"
 import { Client } from "./Models/client"
 import { Admin } from "./Models/admin"
 import { dbconnection } from "./Models/dbconnection"
+import {afterMethod, beforeInstance, beforeMethod} from 'kaop-ts'
+import  validator = require('validator');
+import assert = require('assert');
 
 var db = new dbconnection().getDBConnector();
 
@@ -50,6 +53,12 @@ export class UserManagement {
     /****************************************************
     * Function to retrieve a single user by id
      ****************************************************/
+    @beforeMethod(function(meta){
+		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
+	})
+	@afterMethod(function(meta) { 
+        assert(meta.result!= null);
+    })
 	public getUserById(userId:string): User {
         for(var i = 0; i<this.users.length; i++)
         {
