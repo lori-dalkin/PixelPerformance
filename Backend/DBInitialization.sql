@@ -94,24 +94,26 @@ CREATE TABLE clients(
 	PRIMARY KEY(id)
 );
 
-DROP TABLE IF EXISTS cart CASCADE;
-CREATE TABLE cart(
-	id UUID DEFAULT uuid_generate_v1(),
-	client_id UUID REFERENCES clients(id),
-	PRIMARY KEY(id)
-);
-
-DROP TABLE IF EXISTS bought_inventory CASCADE;
-CREATE TABLE bought_inventory(
-	"serialNumber" UUID DEFAULT uuid_generate_v1(),
-	"electronicID" UUID,
-	cart_id UUID REFERENCES cart(id),
-	PRIMARY KEY("serialNumber")
-);
-
-DROP TABLE IF EXISTS inventories;
+DROP TABLE IF EXISTS inventories CASCADE;
 CREATE TABLE inventories(
 	"serialNumber" UUID DEFAULT uuid_generate_v1(),
 	"electronicID" UUID,
 	PRIMARY KEY("serialNumber")
 );
+
+DROP TABLE IF EXISTS cart CASCADE;
+CREATE TABLE cart(
+	id UUID DEFAULT uuid_generate_v1(),
+	client_id UUID REFERENCES clients(id) ON DELETE CASCADE ,
+	PRIMARY KEY(id)
+);
+
+DROP TABLE IF EXISTS bought_inventory CASCADE;
+CREATE TABLE bought_inventory(
+	"serialNumber" UUID REFERENCES inventories("serialNumber") ON DELETE CASCADE ,
+	"electronicID" UUID,
+	cart_id UUID REFERENCES cart(id) ON DELETE CASCADE,
+	PRIMARY KEY("serialNumber")
+);
+
+
