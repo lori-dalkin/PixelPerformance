@@ -152,13 +152,13 @@ export class Catalog {
         return new responseData(desired,totalProducts);
     }
     
-    // @beforeMethod(function(meta){
-	// 	assert(validator.isEmpty(meta.args[0]), "electronic type cannot be empty");
-    // })
-    // @afterMethod(function(meta)
-    // {
-    //     assert(meta.result != null, "No inventory of that type.");
-    // })
+    @beforeMethod(function(meta){
+		assert(validator.isEmpty(meta.args[0]), "electronic type cannot be empty");
+    })
+    @afterMethod(function(meta)
+    {
+        assert(meta.result != null, "No inventory of that type.");
+    })
     public getAllInventories( electronicId:string): Inventory[] {
         var desired: Inventory[] = [];
         for(let i=0;i<this.inventories.length;i++){
@@ -175,12 +175,15 @@ export class Catalog {
     /********************************************************
 	* Function to add a new product
 	 ********************************************************/
-    // @beforeMethod(function(meta){
-	// 	assert(validator.isEmpty(meta.args[0].electronicType), "electronic type cannot be empty");
-	// })
-	// @afterMethod(function(meta) {
-	// 	assert(meta.result != true, "Product wasn't successfully added.");
-	// })
+    @beforeMethod(function(meta){
+		assert(meta.args[0] != null,  "Data cannot be null");
+	})
+	@afterMethod(function(meta) {
+        console.log(meta.result);
+        //compare most recent object with object sent to function
+        assert(meta.args[0].modelNumber != Catalog.getInstance().electronics[Catalog.getInstance().electronics.length - 1], "Product wasn't found." )
+		assert(meta.result == true, "Product wasn't added.");
+	})
 	public addProduct(data): boolean {
         let electronic: Electronic = this.electronicFactory.create(data);
         electronic.save();
@@ -188,16 +191,27 @@ export class Catalog {
 		return true;
     }
 
-    // @beforeMethod(function(meta){
-	// 	assert(validator.isEmpty(meta.args[0]), "electronic ID cannot be empty");
-	// })
-	// @afterMethod(function(meta) {
-	// 	assert(meta.result != Promise.resolve(false), "Object wasn't sucessfully added");
-	// })
+    @beforeMethod(function(meta){
+		assert(meta.args[0] != null, "electronic ID cannot be null");
+	})
+	@afterMethod(function(meta) {
+        let electronic: Electronic;
+        for (var i = 0; i < Catalog.getInstance().electronics.length; i++) {
+            if (Catalog.getInstance().electronics[i].getId() == meta.args[0]) {
+                electronic = Catalog.getInstance().electronics[i];
+                break;
+            }
+        }
+        assert(meta.result != Promise.resolve(false), "Inventory not added");
+        //compare latest inventory with electronic sent as argument
+        assert(Catalog.getInstance().inventories.length != 0, "Inventory empty");
+        assert(Catalog.getInstance().inventories[Catalog.getInstance().inventories.length - 1].getinventoryType() == electronic, "Inventory not in inventory array");
+	})
     public addInventory(electronidId: string): Promise<boolean> {
         console.log("adding to inventory: " + electronidId);
         let electronic: Electronic;
         for (var i = 0; i < this.electronics.length; i++) {
+            console.log(this.electronics[i].getId());
             if (this.electronics[i].getId() == electronidId) {
                 electronic = this.electronics[i];
                 console.log("inventory id belongs to a " + electronic.getElectronicType());

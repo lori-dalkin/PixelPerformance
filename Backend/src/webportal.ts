@@ -90,6 +90,8 @@ export class WebPortal {
     let token = jwt.sign({ foo: 'bar' }, 'shhhhh');
     //home page
     let routingCatalog = this.catalog;
+    routingCatalog.addProduct(new Monitor('2', 1, "modelNumber", "brand", 1, 1));
+    routingCatalog.addInventory("48821dae-c367-11e7-b023-60f81dc973e6");
     let routingUsers = this.usermanagement;
 
     router.get('/', function (req, res) {
@@ -141,7 +143,13 @@ export class WebPortal {
       res.send(electronics);
     });
     router.post("/api/products/", passport.authenticate('jwt', { session: false }), function (req, res) {
-      res.send({data:routingCatalog.addProduct(req.body)});
+      try {
+        routingCatalog.addProduct(req.body)
+        res.send({data:true});
+      }
+      catch (e) {
+        res.send({data: false, error: e});
+      }
     });
     
     router.get("/api/products/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
@@ -157,9 +165,13 @@ export class WebPortal {
     });
 
     router.post("/api/inventories/product/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
-      routingCatalog.addInventory(req.params.id).then((success)=>{
-        res.send({ data:success});
-      })
+      try {
+        routingCatalog.addInventory(req.params.id)
+        res.send({ data:true});
+      }
+      catch (e) {
+        res.send({data: false, error: e});
+      }
     });
 
     router.get("/api/inventories/product/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
