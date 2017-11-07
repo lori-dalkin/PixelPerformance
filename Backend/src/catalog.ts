@@ -222,57 +222,8 @@ export class Catalog {
             if (this.electronics[index].getId() == electronicID) {
                 let elec: Electronic = this.electronics[index];
 
-                console.log(elec);
-                //set general electronic fields
-                elec.setWeight(data.weight);
-                elec.setBrand(data.brand);
-                elec.setPrice(data.price);
-                elec.setModelNumber(data.modelNumber);
-
-                
-                 if (elec.getElectronicType() == "Monitor") {
-                    console.log("Item is a monitor");
-                    var monitor: Monitor = <Monitor> elec;
-                    monitor.setSize(data.size);
-                    modSuccess = await monitor.modify();
-                }
-                else if (elec.getElectronicType() == "Desktop") {
-                    console.log("Item is a desktop");
-                    var desktop: Desktop = <Desktop> elec;
-                    desktop.setProcessor(data.processor);
-                    desktop.setRam(parseInt(data.ram));
-                    desktop.setCpu(parseInt(data.cpus));
-                    desktop.setHardDrive(data.hardDrive);
-                    desktop.setOs(data.os);
-                    desktop.setDimensions(data.dimensions);
-                    modSuccess = await desktop.modify();
-                }
-                else if (elec.getElectronicType() == "Laptop") {
-                    console.log("Item is a laptop");
-                    let laptop: Laptop = <Laptop> elec;
-                    laptop.setProcessor(data.processor);
-                    laptop.setRam(parseInt(data.ram));
-                    laptop.setCpu(parseInt(data.cpus));
-                    laptop.setHardDrive(parseInt(data.hardDrive));
-                    laptop.setOs(data.os);
-                    laptop.setDisplaySize(parseInt(data.displaySize));
-                    laptop.setBattery(parseInt(data.battery));
-                    laptop.setCamera(data.camera == 'true');
-                    laptop.setTouchscreen(data.touchscreen == 'true');
-                    modSuccess = await laptop.modify();
-                }
-                else if (elec.getElectronicType() == "Tablet") {
-                    console.log("Item is a tablet");
-                    var tablet: Tablet = <Tablet> elec;
-                    tablet.setDimensions(data.dimensions);
-                    tablet.setBattery(parseInt(data.battery));
-                    tablet.setDisplaySize(parseInt(data.displaySize));
-                    tablet.setCamera(data.camera == 'true');
-                    modSuccess = await tablet.modify();
-                }
-                else {
-                    modSuccess = false;
-                }
+                elec = elec.getModifyStrategy().modifyElectronic(elec, data);
+                modSuccess = await elec.modify();
 
                 if (modSuccess)
                     console.log("Modification completed successfully");
@@ -289,7 +240,25 @@ export class Catalog {
         let allInventories = this.inventories;
         allInventories.push(returned);
     }
+    public checkoutInventory(inventoryId:string) : Inventory{
+        for(let i=0;i<this.inventories.length;i++){
+            if( inventoryId==this.inventories[i].getserialNumber()){
+                return this.inventories.splice(i,1)[0];
+            }
+        }
+        return null;
+    }
+    public getInventory(inventoryId:string){
+        for( let inventory of this.inventories){
+            if(inventory.getserialNumber() == inventoryId){
+                return inventory;
+            }
+        }
+        return null;
+    }
 }
+
+
 
 class responseData{
     public products:Electronic[];
