@@ -80,7 +80,7 @@ export class Cart {
     public async removeInventoryRecord(id: String): Promise<boolean> {
         for (let i = 0; i < this.getInventory().length; i ++){
             if (this.getInventory[i].serialNumber == id){
-                this.getInventory[i].split(i, 1);
+                this.getInventory().splice(i, 1);
                 break;
             }
         }
