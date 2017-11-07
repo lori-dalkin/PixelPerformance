@@ -116,7 +116,7 @@ export class WebPortal {
             }else{
               res.json({message: "Admin", data: token});
             }
-            this.systemmonitor.logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() + " has logged in", token);
+            SystemMonitor.getInstance().logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() + " has logged in", token);
           } else {
             res.status(401).json({message: "Invalid login credentials."});
           }
