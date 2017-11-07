@@ -1,6 +1,9 @@
 import { ATTEMPT_LOGIN, ACCEPT_LOGIN, SET_TOKEN, DELETE_TOKEN, REJECT_LOGIN } from '../actions/action-types';
 
-const initialState = { loading: false };
+const initialState = {
+    loading: false,
+    isClient: true
+};
 
 export default function (state = initialState, action) {
     switch (action.type) {

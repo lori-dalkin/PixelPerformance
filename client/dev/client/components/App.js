@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Button from 'material-ui/Button';
 import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar'; 
+import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import { HashRouter as Router, Route, Link } from 'react-router-dom';
 import { withStyles, MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
@@ -14,6 +14,8 @@ require('../../scss/style.scss');
 import { setToken, deleteToken } from '../actions/index';
 import Login from './authentication/Login';
 import ProductPage from './products/ProductPage';
+import ClientProductPage from './products/ClientProductPage';
+import ClientProductTypeNav from './products/ClientProductTypeNav';
 
 const styles = theme => ({
 	root: {
@@ -51,6 +53,9 @@ class App extends Component {
 			 authentication.token === undefined){
 			window.location.hash = "#/";
 		}
+        else if(window.location.hash === "#/" && authentication.isClient && authentication !== undefined && authentication.token !== undefined ){
+            window.location.hash = "#/clientProducts";
+        }
 		else if(window.location.hash === "#/" && authentication !== undefined && authentication.token !== undefined ){
 			window.location.hash = "#/products";
 		}
@@ -67,6 +72,10 @@ class App extends Component {
 					    	<Typography style={{ flex: '1' }} type="title" color="inherit">
 					        Pixel Performance
 					      </Typography>
+                            { this.props.authentication.isClient &&
+							<ClientProductTypeNav />
+                            }
+
 					      {	this.props.authentication.token !== undefined && 
 					      	<Button color="contrast" onClick={this.props.deleteToken}>Logout</Button> 
 					      }
@@ -74,6 +83,7 @@ class App extends Component {
 				    </AppBar>
 				    <Route exact path="/" component={Login} />
 				    <Route path="/products" component={ProductPage} />
+					<Route path="/clientProducts" component={ClientProductPage} />
 				  </div>
 			  </MuiThemeProvider>
 		  </Router>
