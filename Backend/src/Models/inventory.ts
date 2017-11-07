@@ -1,6 +1,7 @@
 import { dbconnection } from "./dbconnection";
 import { Electronic} from "./electronic";
 import { Cart } from "./cart";
+import {isUndefined} from "util";
 
 var db = new dbconnection().getDBConnector();
 
@@ -59,7 +60,7 @@ export class Inventory {
 
     public static find(serialNumber:string): Promise<Inventory>
     {
-       return db.one('SELECT * FROM clients WHERE serialNumber =' + serialNumber + ';')
+       return db.one('SELECT * FROM inventories WHERE serialNumber =' + serialNumber + ';')
             .then(function (row) {
                 return new Inventory(row.serialNumber, null);
             }).catch(function (err) {
@@ -80,7 +81,27 @@ export class Inventory {
                 console.log("Error in getting all inventory:" + err);
                 return null;
             });
-    } 
+    }
+
+    /****************************************************************
+     * Method to return all bought Inventories saved in the database
+     *****************************************************************/
+    public static async findAllPurchased(): Promise<{[key: string]: Inventory[]}>{
+        return db.many('SELECT * FROM bought_inventory;')
+            .then(function(rows) {
+                let inventories: { [key: string]: Inventory[]} = {};
+                for(let i=0; i < rows.length; i++) {
+                    if (inventories[rows[i].cart_id] == null){
+                        inventories[rows[i].cart_id] = new Array<Inventory>();
+                    }
+                    inventories[rows[i].cart_id].push(new Inventory(rows[i].serialNumber, Inventory.getProduct(rows[i].electronicID)));
+                }
+                return inventories;
+            }).catch(function (err) {
+                console.log("There was an error retrieving all bought inventory: " + err);
+                return null;
+            });
+    }
 
     public static getProduct(productId:string): Electronic {
 		let elecIterator = Inventory.getElectronics();
