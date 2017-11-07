@@ -109,7 +109,11 @@ export class WebPortal {
           if (auth) {
             var payload = {id: user.id};
             var token = jwt.sign(payload, 'tasmanianDevil');
-            res.json({message: "ok", data: token});
+            if(user instanceof Client){
+              res.json({message: "Client" , data: token});
+            }else{
+              res.json({message: "Admin", data: token});
+            }
             let logCall : SystemMonitor;
             logCall.logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() + " has logged in", token);
           } else {
@@ -185,6 +189,18 @@ export class WebPortal {
       }
     });
 
+
+    router.post("/api/carts/checkout", passport.authenticate('jwt', { session: false }), function (req, res) {
+      try{
+        PurchaseManagement.getInstance().checkout(req.user.id)
+        res.send({data: true});
+      }
+      catch(e){
+        res.send({data: false, error: e});
+      }
+    });
+
+
     router.get("/api/carts/inventory/", passport.authenticate('jwt', { session: false }), function (req, res) {
       try{
         let inventories = PurchaseManagement.getInstance().viewCart(req.user.id)
@@ -192,6 +208,7 @@ export class WebPortal {
       }
       catch(e){
         res.send({data: null, error: e});
+
       }
     });
     
