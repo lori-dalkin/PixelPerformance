@@ -159,7 +159,7 @@
         produces:
           - "application/json"
         parameters:
-        - name: Authorization
+          - name: Authorization
             in: header
             description: API key
             required: false
@@ -189,14 +189,13 @@
             required: false
             type: string
             format: string
-            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
-            
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"      
     /carts/inventory:
       get:
         description: "Returns the inventory of a specified user's cart"
         produces:
           - "application/json"
-        parameter:
+        parameters:
           - name: Authorization
             in: header
             description: API key
