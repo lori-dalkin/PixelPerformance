@@ -99,4 +99,14 @@ export class PurchaseManagement {
 	}
 
 	// removeFromCart(userId: string, serialNumber: string): bool
+
+    public viewPurchases(userId: String): Inventory[] {
+        let purchase_history: Inventory[] = [];
+        if (this.purchaseRecords.length == 0) return null;
+        else {
+            for (let i = 0; i < this.purchaseRecords.length; i++) {
+                this.purchaseRecords[i].getInventory()
+            }
+        }
+    }
 }
