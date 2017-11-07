@@ -153,11 +153,11 @@ export class Catalog {
     }
     
     @beforeMethod(function(meta){
-		assert(validator.isEmpty(meta.args[0]), "electronic type cannot be empty");
+		assert(!validator.isEmpty(meta.args[0]), "Electronic id can't be empty");
     })
     @afterMethod(function(meta)
     {
-        assert(meta.result != null, "No inventory of that type.");
+        assert(meta.result.length > 0, "No inventory found.");
     })
     public getAllInventories( electronicId:string): Inventory[] {
         var desired: Inventory[] = [];
@@ -176,10 +176,9 @@ export class Catalog {
 	* Function to add a new product
 	 ********************************************************/
     @beforeMethod(function(meta){
-		assert(meta.args[0] != null,  "Data cannot be null");
+		assert(meta.args[0] != null,  "Product data cannot be null");
 	})
 	@afterMethod(function(meta) {
-        console.log(meta.result);
         //compare most recent object with object sent to function
         assert(meta.args[0].modelNumber != Catalog.getInstance().electronics[Catalog.getInstance().electronics.length - 1], "Product wasn't found." )
 		assert(meta.result == true, "Product wasn't added.");
@@ -197,7 +196,6 @@ export class Catalog {
         found = false;
         for (var i = 0; i < Catalog.getInstance().electronics.length; i++) {
             if (Catalog.getInstance().electronics[i].getId() == meta.args[0]) {
-                electronic = Catalog.getInstance().electronics[i];
                 found = true;
             }
         }
@@ -214,7 +212,7 @@ export class Catalog {
         }
         assert(Catalog.getInstance().inventories.length != 0, "Inventory empty");
          //compare latest inventory type with electronic sent as argument
-        assert(Catalog.getInstance().inventories[Catalog.getInstance().inventories.length - 1].getinventoryType() == electronic, "Inventory not added inventory array");
+        assert(Catalog.getInstance().inventories[Catalog.getInstance().inventories.length - 1].getinventoryType().getId() == electronic.getId(), "Inventory not added inventory array");
 	})
     public addInventory(electronidId: string): Promise<boolean> {
         console.log("adding to inventory: " + electronidId);
