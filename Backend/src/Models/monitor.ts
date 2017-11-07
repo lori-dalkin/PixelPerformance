@@ -1,5 +1,6 @@
 import { Electronic } from "./electronic"
 import { dbconnection } from "./dbconnection"
+import {MonitorModifyStrategy} from "../Strategies/monitormodifystrategy";
 
 var db = new dbconnection().getDBConnector();
 
@@ -10,6 +11,7 @@ export class Monitor extends Electronic {
     constructor(id: string, weight: number, modelNumber: string, brand: string, price: number, size: number) {
 		super(id, weight, modelNumber, brand, price,"Monitor");
 		this.size = size;
+		this.setModifyStrategy(new MonitorModifyStrategy());
     }
 
     public getSize(): number {
