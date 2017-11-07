@@ -72,26 +72,5 @@ export class Cart {
             return null;
         });
     }
-    public async saveCart(): Promise<Boolean> {
-        let storeOrNot = new Promise<Boolean>;
-          storeOrNot =  db.none("INSERT INTO cart VALUES ('" + this.userId + ')')
-                                .then(function () {
-                                          console.log("UserCart added to db");
-                                             return true;
-                                 }).catch(function (err) {
-                                            console.log("Error adding UserCart to the db: " + err);
-                                             return false;
-                                     });
-   
-          for (let i = 0; i < this.inventory.length; i++) {
-              storeOrNOt = db.none("INSERT INTO bought_inventory VALUES ('" + this.inventory[i].getserialNumber + ",'" + this.inventory[i].getElectronics().getId() +  ')')
-                              .then(function () {
-                                     console.log("UserCart added to db");
-                                     return true;
-                            }).catch(function (err) {
-                                     console.log("Error adding UserCart to the db: " + err);
-                                     return false;
-                             });
-        }
-    }
+    
 }   
