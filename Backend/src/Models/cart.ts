@@ -72,4 +72,25 @@ export class Cart {
             return null;
         });
     }
+
+    /********************************************************
+     * Method to delete cart item and database item
+     *********************************************************/
+
+    public async removeInventoryRecord(id: String): Promise<boolean> {
+        for (let i = 0; i < this.getInventory().length; i ++){
+            if (this.getInventory[i].serialNumber == id){
+                this.getInventory[i].split(i, 1);
+                break;
+            }
+        }
+
+        return db.none("DELETE FROM inventories WHERE \"serialNumber\" ='"+ id + "';")
+        .then(function () {
+            return true;
+        }).catch(function (err) {
+            console.log("No matching object found for delete:"+ err);
+            return false;
+        });
+    }
 }
