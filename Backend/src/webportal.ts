@@ -91,7 +91,7 @@ export class WebPortal {
     //home page
     let routingCatalog = this.catalog;
     routingCatalog.addProduct(new Monitor('2', 1, "modelNumber", "brand", 1, 1));
-    routingCatalog.addInventory("48821dae-c367-11e7-b023-60f81dc973e6");
+    routingCatalog.addInventory(this.catalog.electronics[0].getId());
     let routingUsers = this.usermanagement;
 
     router.get('/', function (req, res) {

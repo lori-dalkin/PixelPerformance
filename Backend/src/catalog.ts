@@ -192,7 +192,17 @@ export class Catalog {
     }
 
     @beforeMethod(function(meta){
-		assert(meta.args[0] != null, "electronic ID cannot be null");
+        let electronic: Electronic;
+        let found: boolean;
+        found = false;
+        for (var i = 0; i < Catalog.getInstance().electronics.length; i++) {
+            if (Catalog.getInstance().electronics[i].getId() == meta.args[0]) {
+                electronic = Catalog.getInstance().electronics[i];
+                found = true;
+            }
+        }
+        assert(meta.args[0] != null, "electronic ID cannot be null");
+        assert(found, "Product not in Catalog");
 	})
 	@afterMethod(function(meta) {
         let electronic: Electronic;
@@ -202,16 +212,14 @@ export class Catalog {
                 break;
             }
         }
-        assert(meta.result != Promise.resolve(false), "Inventory not added");
         assert(Catalog.getInstance().inventories.length != 0, "Inventory empty");
-         //compare latest inventory with electronic sent as argument
-        assert(Catalog.getInstance().inventories[Catalog.getInstance().inventories.length - 1].getinventoryType() == electronic, "Inventory not in inventory array");
+         //compare latest inventory type with electronic sent as argument
+        assert(Catalog.getInstance().inventories[Catalog.getInstance().inventories.length - 1].getinventoryType() == electronic, "Inventory not added inventory array");
 	})
     public addInventory(electronidId: string): Promise<boolean> {
         console.log("adding to inventory: " + electronidId);
         let electronic: Electronic;
         for (var i = 0; i < this.electronics.length; i++) {
-            console.log(this.electronics[i].getId());
             if (this.electronics[i].getId() == electronidId) {
                 electronic = this.electronics[i];
                 console.log("inventory id belongs to a " + electronic.getElectronicType());
