@@ -211,6 +211,13 @@
               type: string
             required: true
             description: String ID of the product 
+          - name: Authorization
+            in: header
+            description: API key
+            required: false
+            type: string
+            format: string
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
 
     /carts:
       get:
