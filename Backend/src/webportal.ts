@@ -19,7 +19,9 @@ import { Admin } from "./Models/admin";
 import { Catalog } from "./catalog";
 import { Client } from "./Models/client";
 import { UserManagement } from "./usermanagement";
+import { PurchaseManagement } from "./purchasemanagement";
 import { SystemMonitor } from "./Models/systemmonitor"; 
+import * as uuid from "uuid";
 var swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerDocument = YAML.load('./src/swagger.yaml');
@@ -33,6 +35,9 @@ export class WebPortal {
   public app: express.Application;
   protected catalog: Catalog;
   protected usermanagement: UserManagement;
+  protected purchasemanagement: PurchaseManagement;
+
+  protected purchaseManagement: PurchaseManagement;
 
   /**
    * Bootstrap the application.
@@ -57,6 +62,7 @@ export class WebPortal {
     this.app = express();
     this.catalog = Catalog.getInstance();
     this.usermanagement = UserManagement.getInstance();
+    this.purchasemanagement = PurchaseManagement.getInstance();
 
     //configure application
     this.config();
@@ -66,6 +72,7 @@ export class WebPortal {
 
     //add api
     this.api();
+
   }
   
   /**
@@ -104,7 +111,11 @@ export class WebPortal {
           if (auth) {
             var payload = {id: user.id};
             var token = jwt.sign(payload, 'tasmanianDevil');
-            res.json({message: "ok", data: token});
+            if(user instanceof Client){
+              res.json({message: "Client" , data: token});
+            }else{
+              res.json({message: "Admin", data: token});
+            }
             let logCall : SystemMonitor;
             logCall.logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() + " has logged in", token);
           } else {
@@ -168,6 +179,52 @@ export class WebPortal {
       });
 
     });
+
+
+    router.delete("/api/carts/inventory/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+      try{
+        PurchaseManagement.getInstance().removeFromCart(req.user.id,req.params.id)
+        res.send({data: true});
+      }
+      catch(e){
+        res.send({data: false, error: e});
+      }
+    });
+
+
+    router.post("/api/carts/checkout", passport.authenticate('jwt', { session: false }), function (req, res) {
+      try{
+        PurchaseManagement.getInstance().checkout(req.user.id)
+        res.send({data: true});
+      }
+      catch(e){
+        res.send({data: false, error: e});
+      }
+    });
+
+
+    router.get("/api/carts/inventory/", passport.authenticate('jwt', { session: false }), function (req, res) {
+      try{
+        let inventories = PurchaseManagement.getInstance().viewCart(req.user.id)
+        res.send({data: inventories});
+      }
+      catch(e){
+        res.send({data: null, error: e});
+
+      }
+    });
+    
+    router.get("/api/carts/", passport.authenticate('jwt', { session: false }), function (req, res) {
+      try{
+        let cart  = PurchaseManagement.getInstance().getCart(req.user.id)
+        res.send({data: cart});
+      }
+      catch(e){
+        res.send({data: null, error: e});
+      }
+    });
+
+
 
     //use router middleware
     this.app.use(router);
