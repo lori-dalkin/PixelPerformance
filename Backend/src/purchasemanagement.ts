@@ -68,7 +68,7 @@ export class PurchaseManagement {
 
     @beforeMethod(function (meta) {
         assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
-        assert(PurchaseManagement.getInstance().purchaseRecords != null, "there are no purchases associated to this account");
+        assert(PurchaseManagement.getInstance().findCart(meta.args[0]) != null, "there are no purchases associated to this account");
     })
     @afterMethod(function (meta) {
             assert(meta.result != null);
@@ -112,7 +112,14 @@ export class PurchaseManagement {
 		}
 		return null;
 	}
-
+    public findCart(userId: string) {
+        for (let cart of this.activeCarts) {
+            if (cart.getUserId() == userId) {
+                return cart;
+            }
+        }
+        return null
+    }
 	// removeFromCart(userId: string, serialNumber: string): bool
 
   

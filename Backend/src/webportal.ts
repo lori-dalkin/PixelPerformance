@@ -221,9 +221,9 @@ export class WebPortal {
     });
 
     router.get("/api/carts/inventory/", passport.authenticate('jwt', { session: false }), function (req, res) {
-      try{
-        let inventories = PurchaseManagement.getInstance().viewCart(req.user.id)
-        res.send({data: inventories});
+        try {
+            let inventories = PurchaseManagement.getInstance().viewPurchases(req.user.id);
+             res.send({data: inventories});
       }
       catch(e){
         res.send({data: null, error: e});
@@ -241,7 +241,16 @@ export class WebPortal {
       }
     });
 
+    router.get("/api/carts/inventory/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+        try {
+            let inventories = PurchaseManagement.getInstance().viewCart(req.user.id)
+            res.send({ data: inventories });
+        }
+        catch (e) {
+            res.send({ data: null, error: e });
 
+        }
+    });
 
     //use router middleware
     this.app.use(router);
