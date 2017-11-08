@@ -38,7 +38,7 @@ export class PurchaseManagement {
         assert(validator.isUUID(meta.args[0], "userID needs to be a uuid"));
     })
     @afterMethod(function (meta) {
-            assert(PurchaseManagement.getInstance().getCart(meta.args[0]),"Cart was not create")
+            assert(PurchaseManagement.getInstance().getCart(meta.args[0]) != null,"Cart was not create")
     })
 	// startTransaction(userId: string): void
     public startTransaction(userId: string): void {
