@@ -1,5 +1,12 @@
 import {ModelModifyStrategy} from "../Strategies/modelmodifystrategy";
 
+enum ElectronicTypes {
+    Desktop = "Desktop",
+    Laptop = "Laptop",
+    Monitor = "Monitor",
+    Tablet = "Tablet"
+}
+
 export abstract class Electronic {
     protected id: string;
 	protected weight: number ;
@@ -7,6 +14,7 @@ export abstract class Electronic {
     protected brand: string;
     protected price: number;
     protected electronicType: string;
+    static ElectronicTypes = ElectronicTypes;
     private modifyStrategy: ModelModifyStrategy;
 
     constructor(id: string, weight: number, modelNumber: string, brand: string, price: number, electronicType: string) {
