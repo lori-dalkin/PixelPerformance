@@ -276,6 +276,26 @@
               type: "array"
               items: 
                 $ref: "#/definitions/Inventory"
+    /records/inventory/{id}:
+         delete:
+            description: "Makes a return on a previously purchased inventory, adding it back to the system"
+            produces:
+              - "application/json"
+            parameters:
+              - in: path
+                name: id
+                schema:
+                  type: string
+                required: true
+                description: "Serial number of the inventory"
+              - name: Authorization
+                in: header
+                description: API key
+                required: false
+                type: string
+                format: string
+                default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
+
 
   definitions:
     Electronic:
