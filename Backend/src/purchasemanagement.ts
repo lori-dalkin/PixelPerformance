@@ -34,9 +34,18 @@ export class PurchaseManagement {
 		return this._instance;
 	}
 
-
+    @beforeMethod(function (meta) {
+        assert(validator.isUUID(meta.args[0], "userID needs to be a uuid"));
+    })
+    @afterMethod(function (meta) {
+            assert(PurchaseManagement.getInstance().getCart(meta.args[0]) != null,"Cart was not create")
+    })
 	// startTransaction(userId: string): void
-
+    public startTransaction(userId: string): void {
+        var uuid1 = uuid.v1();
+        let newCart = new Cart(uuid1, userId);
+        this.activeCarts.push(newCart);
+    }
 	// cancelTransaction(userId: String): void
 	@beforeMethod(function(meta){
 		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");

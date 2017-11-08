@@ -258,10 +258,16 @@ export class WebPortal {
   }
 
 
+    router.post("/api/carts/startTransaction/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+        try {
+            let transac = PurchaseManagement.getInstance().startTransaction(req.user.id)
+            res.send({ data: transac });
+
     router.post("/api/carts/saveCart/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
         try {
             let cart = PurchaseManagement.getInstance().getCart(req.user.id).saveCart();
             res.send({ data: cart });
+
         }
         catch (e) {
             res.send({ data: null, error: e });
@@ -290,6 +296,7 @@ export class WebPortal {
       res.send({data: null, error: e});
     }
   }
+
 
   @beforeMethod(RoutingAdvice.requireClient)
   public postCartInventoryById(req, res) {
