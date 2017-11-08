@@ -56,7 +56,7 @@ export class UserManagement {
     @beforeMethod(function(meta){
 		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
 	})
-	@afterMethod(function(meta) { 
+	@afterMethod(function(meta) {
         assert(meta.result!= null);
     })
 	public getUserById(userId:string): User {
@@ -71,6 +71,13 @@ export class UserManagement {
     /****************************************************
      * Function to retrieve a single user by email
     ****************************************************/
+    // checkout(userId: string): void
+    @beforeMethod(function(meta){
+        assert(validator.isEmail(meta.args[0]), "Input parameter is not an Email");
+    })
+    @afterMethod(function(meta) {
+        assert(meta.result != null);
+    })
     public getUserByEmail(email:string): User {
         for(var i = 0; i<this.users.length; i++)
         {

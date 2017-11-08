@@ -42,8 +42,8 @@ export class PurchaseManagement {
 	@beforeMethod(function(meta){
 		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
 	})
-	@afterMethod(function(meta) { 
-		assert(meta.result != null, "Inventory within cart not found."); 
+	@afterMethod(function(meta) {
+		assert(meta.result != null, "Inventory within cart not found.");
 	})
 	public viewCart(userId: string): Inventory []{
 		return this.getCart(userId).getInventory()
@@ -56,7 +56,7 @@ export class PurchaseManagement {
 		assert(!(PurchaseManagement.getInstance().checkItemIsLocked(meta.args[1])), "Item is unavaible");
 		assert(PurchaseManagement.getInstance().getCart(meta.args[0]).getInventory().length < 7,"Your cart is already full. (7 Max)")
 	})
-	@afterMethod(function(meta) { 
+	@afterMethod(function(meta) {
 		assert(PurchaseManagement.getInstance().checkItemAddedToCart(meta.args[0],meta.args[1]), "Item was not added to cart" )
 	})
 	public addItemToCart(userId: string, serialNumber: string): Boolean
@@ -78,7 +78,7 @@ export class PurchaseManagement {
 		//set obj lock time
 		var futureDate = new Date(new Date().getTime() + 10*60000);
 		inventoryObj.setLockedUntil(futureDate);
-		
+
 		//if obj was previously in another cart, remove it
 		let prevCart = inventoryObj.getCart();
 		if(prevCart != null)
@@ -91,8 +91,8 @@ export class PurchaseManagement {
 	@beforeMethod(function(meta){
 		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
 	})
-	@afterMethod(function(meta) { 
-		assert(meta.result != null, "There is no active cart for this user."); 
+	@afterMethod(function(meta) {
+		assert(meta.result != null, "There is no active cart for this user.");
 	})
 	public getCart(userId: string): Cart
 	{
@@ -106,13 +106,80 @@ export class PurchaseManagement {
 
 	// returnInventory(userId: string, serialNumber: string): bool
 
+    @beforeMethod(function(meta) {
+		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
+        assert(validator.isUUID(meta.args[1]), "serialNumber needs to be a uuid");
+
+		// Client must be logged in --> this is checked by the passport module
+        // The client must have previous purchases recorded in the system.
+		assert(meta.scope.findRecord(meta.args[0]) != null, "User has no previous purchases");
+
+
+	})
+    @afterMethod(function(meta) {
+		// The return is recorded to the client’s account.
+		assert(PurchaseManagement.getInstance().getAllUsersPurchasedSerials(meta.args[0]).indexOf(meta.args[1]) < 0, "The return was not recorded to the user's account");
+        //The returned items are put back into the system.
+		assert(PurchaseManagement.getInstance().findInventoryBySerialNumber(meta.args[1]) != null, "The item was not successfully returned to the catalog.");
+    })
+    public returnInventory(userId: string, serialNumber: string): boolean{
+		let allPurchases = this.purchaseRecords;
+		let availableInventory = this.catalog;
+        let soldInventories: { [key: string]: Inventory[]} = {};
+        let returningInv: Inventory;
+        let modifiedCartId: string;
+        let returnSuccess: boolean = true;
+
+        //for each purchase record belonging to this user,
+		//collect all inventories that were sold
+		for(let i=0; i< allPurchases.length; i++){
+			if (allPurchases[i].getUserId() == userId){
+                soldInventories[allPurchases[i].getId()] = allPurchases[i].getInventory();
+			}
+		}
+
+		//Find the inventory to return
+		for(let cartId in soldInventories){
+			for (let i=0; i< soldInventories[cartId].length; i++){
+				if (soldInventories[cartId][i].getserialNumber() == serialNumber){
+					returningInv = soldInventories[cartId][i];
+					modifiedCartId = cartId;
+				}
+			}
+		}
+
+		//set the cart and lockedUntil variables to null
+		returningInv.setCart(null);
+		returningInv.setLockedUntil(null);
+
+		//Modify the cart to remove the inventory from its records
+		console.log("Modifying db");
+		let removeInventoryPromise: Promise<boolean>;
+		for (let i=0; i<allPurchases.length; i++){
+			if (allPurchases[i].getId() == modifiedCartId){
+				allPurchases[i].removeInventoryRecord(serialNumber).then((data) => {
+                    if (data) {
+                        availableInventory.returnInventory(returningInv);
+                        return returnSuccess;
+                    }
+                    else {
+                        console.log("Error processing return: could not remove purchase record for inventory with serial number: " + serialNumber)
+                        return false;
+                    }
+				});
+			}
+		}
+		return false;
+    }
+
+	// checkout(userId: string): void
 
 	@beforeMethod(function(meta){
 		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
 		assert( PurchaseManagement.getInstance().findCart(meta.args[0]) != null, "no cart is assiated with the user");
 		assert( meta.scope.getCart(meta.args[0]).getInventory().length>0, "an empty cart cannot be checkedout" )
 	})
-	@afterMethod(function(meta) { 
+	@afterMethod(function(meta) {
 		var purchaseManagement = PurchaseManagement.getInstance();
 		assert( purchaseManagement.findCart(meta.args[0]) == null, "cart was not removed from active carts");
 		assert( purchaseManagement.findRecord(meta.args[0]) != null , "cart was not added to records");
@@ -130,7 +197,7 @@ export class PurchaseManagement {
 		for(let inventory of cart.getInventory()){
 			this.catalog.checkoutInventory(inventory.getserialNumber());
 		}
-		
+
 	}
 
 
@@ -140,8 +207,8 @@ export class PurchaseManagement {
 		assert( PurchaseManagement.getInstance().findCart(meta.args[0])!= null, "no cart was found for associated user")
 	})
 
-	@afterMethod(function(meta) { 
-		assert(meta.result != null,"matching inventory could not be found"); 
+	@afterMethod(function(meta) {
+		assert(meta.result != null,"matching inventory could not be found");
 	})
 	public removeFromCart(userId: string, serialNumber: string):Inventory{
 		let cart = this.findCart(userId);
@@ -150,7 +217,7 @@ export class PurchaseManagement {
 			if(inventory[i].getserialNumber() == serialNumber){
 				inventory[i].setCart(null);
 				inventory[i].setLockedUntil(null);
-				return inventory.splice(i, 1)[0];	
+				return inventory.splice(i, 1)[0];
 			}
 		}
 		return null;
@@ -204,7 +271,7 @@ export class PurchaseManagement {
 		}
 		return null
 	}
-	
+
 	public ifInventoriesExist( inventories: Inventory[]): boolean{
 		for( let inventory of inventories ){
 			if( Catalog.getInstance().getInventory(inventory.getserialNumber()) != null ){
@@ -212,6 +279,37 @@ export class PurchaseManagement {
 			}
 		}
 		return false;
+	}
+
+	public getUsersPurchasedInventories(userId: string){
+		let usersRecords: Cart[] = this.findAllRecordsForUser(userId);
+		let allPurchases: Inventory[] = [];
+
+		for(let i=0; i<usersRecords.length; i++){
+			allPurchases.concat(usersRecords[i].getInventory());
+		}
+		return allPurchases;
+	}
+
+	public findAllRecordsForUser(userId: string): Cart[]{
+		let allRecordsForUser: Cart[] = [];
+
+		for(let i=0; i<this.purchaseRecords.length; i++){
+			if (this.purchaseRecords[i].getUserId() == userId){
+				allRecordsForUser.push(this.purchaseRecords[i]);
+			}
+		}
+		return allRecordsForUser;
+	}
+
+	public getAllUsersPurchasedSerials(userId: string): string[]{
+		let allPurchases: Inventory[] = this.getUsersPurchasedInventories(userId);
+		let allSerials: string[] = [];
+
+		for(let i=0; i<allPurchases.length; i++){
+			allSerials.push(allPurchases[i].getserialNumber());
+		}
+		return allSerials;
 	}
 
 }

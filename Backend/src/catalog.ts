@@ -180,6 +180,13 @@ export class Catalog {
         return new responseData(desired,totalProducts);
     }
     
+    @beforeMethod(function(meta){
+		assert(!validator.isEmpty(meta.args[0]), "Electronic id can't be empty");
+    })
+    @afterMethod(function(meta)
+    {
+        assert(meta.result.length > 0, "No inventory found.");
+    })
     public getAllInventories( electronicId:string): Inventory[] {
         var desired: Inventory[] = [];
         for(let i=0;i<this.inventories.length;i++){
@@ -196,6 +203,14 @@ export class Catalog {
     /********************************************************
 	* Function to add a new product
 	 ********************************************************/
+    @beforeMethod(function(meta){
+		assert(meta.args[0] != null,  "Product data cannot be null");
+	})
+	@afterMethod(function(meta) {
+        //compare most recent object with object sent to function
+        assert(meta.args[0].modelNumber != Catalog.getInstance().electronics[Catalog.getInstance().electronics.length - 1], "Product wasn't found." )
+		assert(meta.result == true, "Product wasn't added.");
+	})
 	public addProduct(data): boolean {
         let electronic: Electronic = this.electronicFactory.create(data);
         electronic.save();
@@ -203,7 +218,30 @@ export class Catalog {
 		return true;
     }
 
-
+    @beforeMethod(function(meta){
+        let electronic: Electronic;
+        let found: boolean;
+        found = false;
+        for (var i = 0; i < Catalog.getInstance().electronics.length; i++) {
+            if (Catalog.getInstance().electronics[i].getId() == meta.args[0]) {
+                found = true;
+            }
+        }
+        assert(meta.args[0] != null, "electronic ID cannot be null");
+        assert(found, "Product not in Catalog");
+	})
+	@afterMethod(function(meta) {
+        let electronic: Electronic;
+        for (var i = 0; i < Catalog.getInstance().electronics.length; i++) {
+            if (Catalog.getInstance().electronics[i].getId() == meta.args[0]) {
+                electronic = Catalog.getInstance().electronics[i];
+                break;
+            }
+        }
+        assert(Catalog.getInstance().inventories.length != 0, "Inventory empty");
+         //compare latest inventory type with electronic sent as argument
+        assert(Catalog.getInstance().inventories[Catalog.getInstance().inventories.length - 1].getinventoryType().getId() == electronic.getId(), "Inventory not added inventory array");
+	})
     public addInventory(electronidId: string): Promise<boolean> {
         console.log("adding to inventory: " + electronidId);
         let electronic: Electronic;
@@ -247,6 +285,7 @@ export class Catalog {
     }
 
     public async modifyProduct(electronicID: string, data): Promise<boolean> {
+        console.log(data);
         let modSuccess: boolean = true;
         for(let index = 0; index < this.electronics.length; index++) {
             if (this.electronics[index].getId() == electronicID) {
@@ -254,7 +293,7 @@ export class Catalog {
 
                 elec = elec.getModifyStrategy().modifyElectronic(elec, data);
                 modSuccess = await elec.modify();
-                
+
                 if (modSuccess)
                     console.log("Modification completed successfully");
                 else console.log("Error: unable to modify object in the database");
@@ -264,6 +303,11 @@ export class Catalog {
         console.log("Object doesn't exist in the database");
         return Promise.resolve(false);
 
+    }
+
+    public returnInventory(returned: Inventory): void {
+        let allInventories = this.inventories;
+        allInventories.push(returned);
     }
     public checkoutInventory(inventoryId:string) : Inventory{
         for(let i=0;i<this.inventories.length;i++){
