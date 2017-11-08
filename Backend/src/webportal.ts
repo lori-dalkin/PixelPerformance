@@ -102,24 +102,24 @@ export class WebPortal {
 
     router.post("/api/users/", this.post_users);
 
-    router.get("/api/products/", /*passport.authenticate('jwt', { session: false }),*/ this.get_products);
-    router.post("/api/products/", /*passport.authenticate('jwt', { session: false }),*/ this.post_products);
+    router.get("/api/products/", this.get_products);
+    router.post("/api/products/", this.post_products);
     
-    router.get("/api/products/:id", /*passport.authenticate('jwt', { session: false }),*/ this.get_products_id);
-    router.delete("/api/products/:id", /*passport.authenticate('jwt', { session: false }),*/ this.delete_products_id);
-    router.put("/api/products/:id", /*passport.authenticate('jwt', { session: false }),*/ this.put_api_products_id);
+    router.get("/api/products/:id", this.get_products_id);
+    router.delete("/api/products/:id", this.delete_products_id);
+    router.put("/api/products/:id", this.put_api_products_id);
 
-    router.get("/api/inventories/product/:id", /*passport.authenticate('jwt', { session: false }),*/ this.get_inventories_id);
-    router.post("/api/inventories/product/:id", /*passport.authenticate('jwt', { session: false }),*/ this.post_inventories_id);
-    router.delete("/api/inventories/product/:id", /*passport.authenticate('jwt', { session: false }),*/ this.delete_inventories_id);
+    router.get("/api/inventories/product/:id", this.get_inventories_id);
+    router.post("/api/inventories/product/:id", this.post_inventories_id);
+    router.delete("/api/inventories/product/:id", this.delete_inventories_id);
 
-    router.get("/api/carts/", /*passport.authenticate('jwt', { session: false }),*/ this.get_carts);
-    router.get("/api/carts/inventory/", /*passport.authenticate('jwt', { session: false }),*/ this.get_carts_inventory);
-    router.post("/api/carts/inventory/:id", /*passport.authenticate('jwt', { session: false }),*/ this.post_carts_inventory_id);
-    router.delete("/api/carts/inventory/:id", /*passport.authenticate('jwt', { session: false }),*/ this.delete_carts_inventory_id);
-    router.post("/api/carts/checkout", /*passport.authenticate('jwt', { session: false }),*/ this.post_carts_checkout);
+    router.get("/api/carts/", this.get_carts);
+    router.get("/api/carts/inventory/", this.get_carts_inventory);
+    router.post("/api/carts/inventory/:id", this.post_carts_inventory_id);
+    router.delete("/api/carts/inventory/:id", this.delete_carts_inventory_id);
+    router.post("/api/carts/checkout", this.post_carts_checkout);
 
-    router.delete("/api/records/inventory/:id", /*passport.authenticate('jwt', { session: false }),*/ this.delete_records_inventory_id);
+    router.delete("/api/records/inventory/:id", this.delete_records_inventory_id);
 
     //use router middleware
     this.app.use(router);
@@ -334,37 +334,6 @@ export class WebPortal {
     
     //error handling
     this.app.use(errorHandler());
-
-    let routingUsers = this.usermanagement;
-
-    let ExtractJwt = passportJWT.ExtractJwt;
-    let JwtStrategy = passportJWT.Strategy;
-    var jwtOptions = { jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), secretOrKey:'tasmanianDevil', passReqToCallback: true }
-    
-    var strategy = new JwtStrategy(jwtOptions, function(req, jwt_payload, next) {
-      let user;
-      try{
-        user = routingUsers.getUserById(jwt_payload.id);
-      }catch(e){
-        console.log("error getting user:");
-        console.log(e);
-        user = null;
-      }
-      let route = req.method.toLowerCase() + req.path;
-
-      if (user && user.checkPrivilege(route)) {
-        console.log(user);
-        console.log("authorized to access [" + route + "]");
-        next(null, user);
-      } else {
-        console.log(user);
-        console.log("unauthorized to access [" + route + "]");
-        next(null, false);
-      }
-    });
-    
-    // passport.use(strategy);
-    
   
 }
 
