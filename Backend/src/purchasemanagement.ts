@@ -71,7 +71,7 @@ export class PurchaseManagement {
         assert(PurchaseManagement.getInstance().purchaseRecords != null, "there are no purchases associated to this account");
     })
     @afterMethod(function (meta) {
-            assert(meta.args != null);
+            assert(meta.result != null);
     })
 	// viewPurchases(userId: string): Inventory []
 
