@@ -110,6 +110,16 @@ export class Inventory {
 				return elecIterator[iter];
 		}
 		return null;
-	}
+    }
+    
+    //if lockedUntil is greater than the time now return true 
+    //indicating the item is locked
+
+    public isLocked(): Boolean
+    {
+        if(this.getLockedUntil == null)
+            return false; //item is available
+        return this.getLockedUntil() > new Date();
+    }
 
 }
