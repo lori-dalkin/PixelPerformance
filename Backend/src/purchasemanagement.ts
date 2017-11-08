@@ -73,11 +73,12 @@ export class PurchaseManagement {
         if (this.purchaseRecords.length == 0) return null;
         else {
             for (let i = 0; i < this.purchaseRecords.length; i++) {
-                let temp_inventoryArray = this.purchaseRecords[i].getInventory();
-                purchase_history[i] = temp_inventoryArray;
-
+                purchase_history.concat(this.purchaseRecords[i].getInventory());
             }
+
+            return purchase_history;
         }
+
     }
 	// returnInventory(userId: string, serialNumber: string): bool
 
