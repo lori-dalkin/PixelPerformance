@@ -1,5 +1,8 @@
 import { Inventory } from "./inventory";
-import {dbconnection} from "./dbconnection";
+import { dbconnection } from "./dbconnection";
+import { afterMethod, beforeInstance, beforeMethod } from 'kaop-ts'
+import validator = require('validator');
+import assert = require('assert');
 
 var db = new dbconnection().getDBConnector();
 export class Cart {
@@ -72,6 +75,11 @@ export class Cart {
             return null;
         });
     }
+
+    @BeforeMethod(function (meta) {
+        assert(Cart.getInstance().
+            
+       })
 
     public async saveCart(): Promise<Boolean> {
         let storeOrNot = new Boolean;
