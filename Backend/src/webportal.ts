@@ -191,8 +191,14 @@ export class WebPortal {
     });
 
     router.delete("/api/cart", passport.authenticate("jwt", { session: false }), function (req, res) {
-      routingPurchases.cancelTransaction(req.user);
-      res.send({data:true});
+      try{
+        routingPurchases.cancelTransaction(req.user);
+        res.send({data:true});
+      }
+      catch(e){
+        res.send({data: false, error: e});
+      }
+
     });
 
     router.delete("/api/carts/inventory/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
