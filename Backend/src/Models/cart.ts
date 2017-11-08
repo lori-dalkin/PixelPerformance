@@ -3,7 +3,7 @@ import {dbconnection} from "./dbconnection";
 
 var db = new dbconnection().getDBConnector();
 export class Cart {
-       //This class will have an array of inventory objects, an id, and a userId.
+    //This class will have an array of inventory objects, an id, and a userId.
     private id: string;
     private userId: string;
     private inventory: Inventory[] = new Array<Inventory>();
@@ -72,5 +72,31 @@ export class Cart {
             return null;
         });
     }
-    
-}   
+
+    @
+    public async saveCart(): Promise<Boolean> {
+        let storeOrNot = new Boolean;
+        storeOrNot = db.none("INSERT INTO cart VALUES ('" + this.id + ",'" + this.userId + ')')
+            .then(function () {
+                console.log("UserCart added to db");
+                return true;
+            }).catch(function (err) {
+                console.log("Error adding UserCart to the db: " + err);
+                return false;
+            });
+
+        for (let i = 0; i < this.inventory.length; i++) {
+            storeOrNot = db.none("INSERT INTO bought_inventory VALUES ('" + this.inventory[i].getserialNumber + ",'" + this.inventory[i].getinventoryType().getId() + ",'" + this.id + ')')
+                .then(function () {
+                    console.log("UserCart added to db");
+                    return true;
+                }).catch(function (err) {
+                    console.log("Error adding UserCart to the db: " + err);
+                    return false;
+                });
+        }
+
+        return storeOrNot;
+    }
+
+}
