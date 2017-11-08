@@ -96,11 +96,13 @@ export class Catalog {
      **************************************************************************************************/
     @beforeMethod(function(meta) {
         assert(validator.isUUID(meta.args[0]), "electronicID needs to be a uuid");
-        assert(Catalog.getInstance().getProduct(meta.args[0]) instanceof Electronic, "electronicID must refer to a valid Electronic");
+        assert(Catalog.getInstance().inventoryExists(meta.args[0]), "electronicID must refer to an Electronic for which inventory exists");
     })
     @afterMethod(function(meta) {
-        meta.result.then( (result) => {
-            assert(result != false, "Product within electronics not found.");
+        let canDelete = Catalog.getInstance().numMatchingInventories(meta.args[0]);
+        meta.result.then( () => {
+            let leftToDelete: number = Catalog.getInstance().numMatchingInventories(meta.args[0]);
+            assert(leftToDelete == canDelete - 1, "electronicID must be associated with deletable Inventory");
         });
     })
     public async deleteInventory(electronicID: string): Promise<boolean> {
@@ -132,6 +134,7 @@ export class Catalog {
      ****************************************************/
     @beforeMethod(function(meta){
         assert(validator.isUUID(meta.args[0]), "productId needs to be a uuid");
+        assert(Catalog.getInstance().productExists(meta.args[0]), "productId must refer to an existing Electronic");
     })
     @afterMethod(function(meta) { 
         assert(meta.result != null, "Product within electronics not found."); 
@@ -327,6 +330,34 @@ export class Catalog {
     }
 
     // Methods for contract programming
+    private inventoryExists(electronicID: string): Boolean {
+        for(let inventory of this.inventories) {
+            if(inventory.getinventoryType().getId() == electronicID) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private numMatchingInventories(electronicId: string): number {
+        let numMatching = 0;
+        for(let inventory of this.inventories) {
+            if(inventory.getinventoryType().getId() == electronicId) {
+                numMatching++;
+            }
+        }
+        return numMatching;
+    }
+
+    private productExists(productId: string): Boolean {
+        for(let product of this.electronics) {
+            if(product.getId() == productId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private validElectronicType(type: string):Boolean {
         if(type == null || type in Electronic.ElectronicTypes)
             return true;
