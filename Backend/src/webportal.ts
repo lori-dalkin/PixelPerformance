@@ -39,6 +39,7 @@ export class WebPortal {
   protected catalog: Catalog;
   protected usermanagement: UserManagement;
   protected purchasemanagement: PurchaseManagement;
+  protected systemmonitor: SystemMonitor;
 
   /**
    * Bootstrap the application.
@@ -64,6 +65,7 @@ export class WebPortal {
     this.catalog = Catalog.getInstance();
     this.usermanagement = UserManagement.getInstance();
     this.purchasemanagement = PurchaseManagement.getInstance();
+    this.systemmonitor = SystemMonitor.getInstance();
 
     //configure application
     this.config();
@@ -145,8 +147,7 @@ export class WebPortal {
           }else{
             res.json({message: "Admin", data: token});
           }
-          let logCall : SystemMonitor;
-          logCall.logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() + " has logged in", token);
+          SystemMonitor.getInstance().logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() + " has logged in", token);
         } else {
           res.status(401).json({message: "Invalid login credentials."});
         }
