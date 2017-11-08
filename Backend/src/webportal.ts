@@ -92,6 +92,7 @@ export class WebPortal {
     let routingCatalog = this.catalog;
     let routingUsers = this.usermanagement;
     let routingPurchases = this.purchasemanagement;
+    let routingSystem = this.systemmonitor;
 
     router.get('/', function (req, res) {
       res.send('20 dollars is 20 dollars backend home page')
@@ -117,7 +118,7 @@ export class WebPortal {
             }else{
               res.json({message: "Admin", data: token});
             }
-            SystemMonitor.getInstance().logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() + " has logged in", token);
+            routingSystem.logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() + " has logged in", token);
           } else {
             res.status(401).json({message: "Invalid login credentials."});
           }
