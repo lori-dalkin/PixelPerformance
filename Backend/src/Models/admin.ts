@@ -69,11 +69,6 @@ export class Admin extends User {
                 return false;
             });
     }
-
-    public checkPrivilege(route: string): boolean
-    {
-        return true;
-    }
     
     public getType(): string {
         return Admin.name;

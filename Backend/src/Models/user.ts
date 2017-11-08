@@ -1,21 +1,7 @@
 import * as bcrypt from "bcrypt";
 
-enum Routes
-{
-	getRoot = "get/",
-	postLogin = "post/api/users/login",
-	postLogout = "post/api/users/logout",
-	getProduct = "get/api/products/",
-	postProduct = "post/api/products/",
-	deleteProduct = "delete/api/products/",
-	getInventory = "get/api/inventories/product/",
-	postInventory = "post/api/inventories/",
-	deleteInventory = "delete/api/inventories/product/",
-	modifyProducts = "put/api/products/"
-}
 export abstract class User {
 	public id: string;
-	static Routes = Routes;
 	protected fname: string;
 	protected lname: string;
 	public email: string;
@@ -58,7 +44,6 @@ export abstract class User {
 	public getPassword():string{
 		return this.password;
 	}
-	abstract checkPrivilege(route : string) : boolean;
 
 	abstract getType(): string;
 }
