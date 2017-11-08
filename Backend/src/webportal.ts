@@ -207,7 +207,7 @@ export class WebPortal {
       }
     });
 
-     router.get("/api/purchase/viewPurchases/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+     router.get("/api/carts/viewPurchases/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
         try {
             PurchaseManagement.getInstance().viewPurchases(req.user.id)
             res.send({ data: true });
