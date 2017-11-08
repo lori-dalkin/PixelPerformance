@@ -110,39 +110,17 @@ export class PurchaseManagement {
 		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
         assert(validator.isUUID(meta.args[1]), "serialNumber needs to be a uuid");
 
-        let previousPurchasers: string[] = [];
-        for (let i=0; i< meta.scope.purchaseRecords.length; i++){
-          	previousPurchasers.push(meta.scope.purchaseRecords[i].getUserId());
-		}
-
 		// Client must be logged in --> this is checked by the passport module
         // The client must have previous purchases recorded in the system.
-		assert(previousPurchasers.indexOf(meta.args[0]) >= 0, "User has no previous purchases");
+		assert(meta.scope.findRecord(meta.args[0]) != null, "User has no previous purchases");
 
 
 	})
     @afterMethod(function(meta) {
-		let allSerials: string[];
-		let previouslyPurchased: Inventory[] = [];
-		let previouslyPurchasedSerials: string[];
-
-		for (let i=0; i< meta.scope.catalog.inventories.length; i++){
-			allSerials.push(meta.scope.catalog.inventories[i].getserialNumber());
-		}
-
-		for (let i=0; i< meta.scope.purchaseRecords.length; i++){
-			previouslyPurchased.concat(meta.scope.purchaseRecords[i].getInventory());
-		}
-
-		for (let i=0; i< previouslyPurchased.length; i++){
-			previouslyPurchasedSerials.push(previouslyPurchased[i].getserialNumber());
-		}
-
-
-        // The return is recorded to the client’s account.
-		assert(previouslyPurchasedSerials.indexOf(meta.args[1]) < 0, "The return was not recorded to the user's account");
+		// The return is recorded to the client’s account.
+		assert(PurchaseManagement.getInstance().getAllUsersPurchasedSerials(meta.args[0]).indexOf(meta.args[1]) < 0, "The return was not recorded to the user's account");
         //The returned items are put back into the system.
-		assert(allSerials.indexOf(meta.args[1]) >= 0, "The item was not successfully returned to the catalog.");
+		assert(PurchaseManagement.getInstance().findInventoryBySerialNumber(meta.args[1]) != null, "The item was not successfully returned to the catalog.");
     })
     public returnInventory(userId: string, serialNumber: string): boolean{
 		let allPurchases = this.purchaseRecords;
@@ -174,22 +152,24 @@ export class PurchaseManagement {
 		returningInv.setCart(null);
 		returningInv.setLockedUntil(null);
 
-		// //Modify the cart to remove the inventory from its records
-		// for (let i=0; i<allPurchases.length; i++){
-		// 	if (allPurchases[i].getId() == modifiedCartId){
-		// 		returnSuccess = await allPurchases[i].removeInventoryRecord(serialNumber);
-		// 	}
-		// }
-
-		if(returnSuccess) {
-            availableInventory.returnInventory(returningInv);
-            return returnSuccess;
-        }
-		else{
-			console.log("Error processing return: could not remove purchase record for inventory with serial number: " + serialNumber)
-			return false;
+		//Modify the cart to remove the inventory from its records
+		console.log("Modifying db");
+		let removeInventoryPromise: Promise<boolean>;
+		for (let i=0; i<allPurchases.length; i++){
+			if (allPurchases[i].getId() == modifiedCartId){
+				allPurchases[i].removeInventoryRecord(serialNumber).then((data) => {
+                    if (data) {
+                        availableInventory.returnInventory(returningInv);
+                        return returnSuccess;
+                    }
+                    else {
+                        console.log("Error processing return: could not remove purchase record for inventory with serial number: " + serialNumber)
+                        return false;
+                    }
+				});
+			}
 		}
-
+		return false;
     }
 
 	// checkout(userId: string): void
@@ -299,6 +279,37 @@ export class PurchaseManagement {
 			}
 		}
 		return false;
+	}
+
+	public getUsersPurchasedInventories(userId: string){
+		let usersRecords: Cart[] = this.findAllRecordsForUser(userId);
+		let allPurchases: Inventory[] = [];
+
+		for(let i=0; i<usersRecords.length; i++){
+			allPurchases.concat(usersRecords[i].getInventory());
+		}
+		return allPurchases;
+	}
+
+	public findAllRecordsForUser(userId: string): Cart[]{
+		let allRecordsForUser: Cart[] = [];
+
+		for(let i=0; i<this.purchaseRecords.length; i++){
+			if (this.purchaseRecords[i].getUserId() == userId){
+				allRecordsForUser.push(this.purchaseRecords[i]);
+			}
+		}
+		return allRecordsForUser;
+	}
+
+	public getAllUsersPurchasedSerials(userId: string): string[]{
+		let allPurchases: Inventory[] = this.getUsersPurchasedInventories(userId);
+		let allSerials: string[] = [];
+
+		for(let i=0; i<allPurchases.length; i++){
+			allSerials.push(allPurchases[i].getserialNumber());
+		}
+		return allSerials;
 	}
 
 }

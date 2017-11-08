@@ -178,7 +178,6 @@ export class WebPortal {
 
     });
 
-
     router.delete("/api/carts/inventory/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
       try{
         PurchaseManagement.getInstance().removeFromCart(req.user.id,req.params.id);
@@ -190,17 +189,15 @@ export class WebPortal {
 
     });
 
-
-    router.delete("api/records/inventory/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+    router.delete("/api/records/inventory/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
       try{
-          PurchaseManagement.getInstance().returnInventory(req.user.id,req.params.id);
+          let returnSuccess = PurchaseManagement.getInstance().returnInventory(req.user.id,req.params.id);
           res.send({data: true});
       }
       catch(e){
         res.send({data: false, error: e});
       }
     });
-
 
     router.post("/api/carts/checkout", passport.authenticate('jwt', { session: false }), function (req, res) {
       try{
@@ -211,7 +208,6 @@ export class WebPortal {
         res.send({data: false, error: e});
       }
     });
-
 
     router.get("/api/carts/inventory/", passport.authenticate('jwt', { session: false }), function (req, res) {
       try{
