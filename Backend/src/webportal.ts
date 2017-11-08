@@ -94,6 +94,8 @@ export class WebPortal {
     //home page
     let routingCatalog = this.catalog;
     let routingUsers = this.usermanagement;
+    let routingPurchases = this.purchasemanagement;
+    let routingSystem = this.systemmonitor;
 
     router.get('/', function (req, res) {
       res.send('20 dollars is 20 dollars backend home page')
@@ -117,6 +119,7 @@ export class WebPortal {
     router.get("/api/carts/", this.getCart);
     router.get("/api/carts/inventory/", this.getCartInventory);
     router.post("/api/carts/inventory/:id", this.postCartInventoryById);
+    router.delete("/api/cart", this.deleteCart);
     router.delete("/api/carts/inventory/:id", this.deleteCartInventoryById);
     router.post("/api/carts/checkout", this.postCartCheckout);
 
@@ -254,6 +257,17 @@ export class WebPortal {
     try{
       PurchaseManagement.getInstance().addItemToCart(req.user.id,req.params.id)
       res.send({data: true});
+    }
+    catch(e){
+      res.send({data: false, error: e});
+    }
+  }
+
+  @beforeMethod(RoutingAdvice.requireClient)
+  public deleteCart(req, res) {
+    try{
+      PurchaseManagement.getInstance().cancelTransaction(req.user);
+      res.send({data:true});
     }
     catch(e){
       res.send({data: false, error: e});
