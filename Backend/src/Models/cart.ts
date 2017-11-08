@@ -5,6 +5,7 @@ import  validator = require('validator');
 import assert = require('assert');
 
 
+
 var db = new dbconnection().getDBConnector();
 export class Cart {
     //This class will have an array of inventory objects, an id, and a userId.
@@ -81,7 +82,10 @@ export class Cart {
     }
 
 
-    
+
+    @afterMethod(function (meta) {
+        assert(meta.result != null);
+    })
     public async saveCart(): Promise<Boolean> {
         let storeOrNot = new Boolean;
         storeOrNot = db.none("INSERT INTO cart VALUES ('" + this.id + ",'" + this.userId + ')')
