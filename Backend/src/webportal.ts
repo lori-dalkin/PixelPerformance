@@ -190,7 +190,7 @@ export class WebPortal {
       });
     });
 
-    router.delete("/api/cart", passport.authenticate("jwt", { session: false }), function (req, res) {
+    router.delete("/api/carts", passport.authenticate("jwt", { session: false }), function (req, res) {
       try{
         routingPurchases.cancelTransaction(req.user);
         res.send({data:true});
