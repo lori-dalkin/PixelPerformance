@@ -250,8 +250,6 @@ export class WebPortal {
         res.send({data: false, error: e});
       }
     });
-
-
     //use router middleware
     this.app.use(router);
   }
