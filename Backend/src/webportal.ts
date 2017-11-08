@@ -139,7 +139,13 @@ export class WebPortal {
       res.send(electronics);
     });
     router.post("/api/products/", passport.authenticate('jwt', { session: false }), function (req, res) {
-      res.send({data:routingCatalog.addProduct(req.body)});
+      try {
+        routingCatalog.addProduct(req.body)
+        res.send({data:true});
+      }
+      catch (e) {
+        res.send({data: false, error: e});
+      }
     });
     
     router.get("/api/products/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
@@ -155,9 +161,13 @@ export class WebPortal {
     });
 
     router.post("/api/inventories/product/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
-      routingCatalog.addInventory(req.params.id).then((success)=>{
-        res.send({ data:success});
-      })
+      try {
+        routingCatalog.addInventory(req.params.id)
+        res.send({ data:true});
+      }
+      catch (e) {
+        res.send({data: false, error: e});
+      }
     });
 
     router.get("/api/inventories/product/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
