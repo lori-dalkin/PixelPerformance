@@ -42,10 +42,9 @@ export class PurchaseManagement {
 		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
 		assert( PurchaseManagement.getInstance().findCart(meta.args[0]) != null, "no cart is assiated with the user");
 	})
-	@afterMethod(function(meta) { 
+	@afterMethod(function(meta) {
 		var purchaseManagement = PurchaseManagement.getInstance();
 		assert( purchaseManagement.findCart(meta.args[0]) == null, "cart was not removed from active carts");
-		assert(purchaseManagement.ifInventoriesExist(purchaseManagement.findRecord(meta.args[0]).getInventory()), "inventories weren't removed from catalog")
 	})
 
 	public cancelTransaction(userId: String): void{
