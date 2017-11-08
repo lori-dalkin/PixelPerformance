@@ -100,21 +100,21 @@ export class WebPortal {
     router.post("/api/users/login", this.login);
     router.post("/api/users/logout", this.logout);
 
-    router.post("/api/users/", this.post_users);
+    router.post("/api/users/", this.postUser);
 
-    router.get("/api/products/", this.get_products);
-    router.post("/api/products/", this.post_products);
+    router.get("/api/products/", this.getProducts);
+    router.post("/api/products/", this.postProduct);
     
-    router.get("/api/products/:id", this.get_products_id);
-    router.delete("/api/products/:id", this.delete_products_id);
-    router.put("/api/products/:id", this.put_api_products_id);
+    router.get("/api/products/:id", this.getProductById);
+    router.delete("/api/products/:id", this.deleteProductById);
+    router.put("/api/products/:id", this.modifyProductById);
 
-    router.get("/api/inventories/product/:id", this.get_inventories_id);
-    router.post("/api/inventories/product/:id", this.post_inventories_id);
-    router.delete("/api/inventories/product/:id", this.delete_inventories_id);
+    router.get("/api/inventories/product/:id", this.getInventoriesById);
+    router.post("/api/inventories/product/:id", this.postInventoryById);
+    router.delete("/api/inventories/product/:id", this.deleteInventoryById);
 
-    router.get("/api/carts/", this.get_carts);
-    router.get("/api/carts/inventory/", this.get_carts_inventory);
+    router.get("/api/carts/", this.getCart);
+    router.get("/api/carts/inventory/", this.getCartInventory);
     router.post("/api/carts/inventory/:id", this.post_carts_inventory_id);
     router.delete("/api/carts/inventory/:id", this.delete_carts_inventory_id);
     router.post("/api/carts/checkout", this.post_carts_checkout);
@@ -161,18 +161,18 @@ export class WebPortal {
     res.send({data: true});
   }
 
-  public post_users(req, res) {
+  public postUser(req, res) {
     res.send({data: UserManagement.getInstance().addClient(req.body)});
   }
 
   @beforeMethod(RoutingAdvice.requireLoggedIn)
-  public get_products(req, res) {
+  public getProducts(req, res) {
     let electronics = Catalog.getInstance().getProductPage(parseInt(req.query.page), req.query.type, parseInt(req.query.numOfItems));
     res.send(electronics);
   }
 
   @beforeMethod(RoutingAdvice.requireAdmin)
-  public post_products(req, res) {
+  public postProduct(req, res) {
     try {
       Catalog.getInstance().addProduct(req.body)
       res.send({data:true});
@@ -183,21 +183,21 @@ export class WebPortal {
   }
 
   @beforeMethod(RoutingAdvice.requireLoggedIn)
-  public get_products_id(req, res) {
+  public getProductById(req, res) {
     let electronic: Electronic;
     electronic = Catalog.getInstance().getProduct(req.params.id);
     res.send({data: electronic});
   }
 
   @beforeMethod(RoutingAdvice.requireAdmin)
-  public delete_products_id(req, res) {
+  public deleteProductById(req, res) {
     Catalog.getInstance().deleteProduct(req.params.id).then((success)=>{
       res.send({data: success});
     });
   }
 
   @beforeMethod(RoutingAdvice.requireAdmin)
-  public put_api_products_id(req, res) {
+  public modifyProductById(req, res) {
     Catalog.getInstance().modifyProduct(req.params.id, req.body).then((success) => {
         res.send({data:success});
     });
@@ -205,13 +205,13 @@ export class WebPortal {
   }
 
   @beforeMethod(RoutingAdvice.requireLoggedIn)
-  public get_inventories_id(req, res) {
+  public getInventoriesById(req, res) {
     let inventories = Catalog.getInstance().getAllInventories(req.params.id);
     res.send({data: inventories });
   }
 
   @beforeMethod(RoutingAdvice.requireAdmin)
-  public post_inventories_id(req, res) {
+  public postInventoryById(req, res) {
     try {
       Catalog.getInstance().addInventory(req.params.id)
       res.send({ data:true});
@@ -222,7 +222,7 @@ export class WebPortal {
   }
 
   @beforeMethod(RoutingAdvice.requireAdmin)
-  public delete_inventories_id(req, res) {
+  public deleteInventoryById(req, res) {
     Catalog.getInstance().deleteInventory(req.params.id).then((success)=>{
       res.send({data: success});
     });
@@ -263,7 +263,7 @@ export class WebPortal {
   }
 
   @beforeMethod(RoutingAdvice.requireClient)
-  public get_carts_inventory(req, res) {
+  public getCartInventory(req, res) {
     try{
       let inventories = PurchaseManagement.getInstance().viewCart(req.user.id)
       res.send({data: inventories});
@@ -274,7 +274,7 @@ export class WebPortal {
   }
 
   @beforeMethod(RoutingAdvice.requireClient)
-  public get_carts(req, res) {
+  public getCart(req, res) {
     try{
       let cart  = PurchaseManagement.getInstance().getCart(req.user.id)
       res.send({data: cart});
