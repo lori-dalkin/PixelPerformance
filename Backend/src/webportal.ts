@@ -102,10 +102,9 @@ export class WebPortal {
         var email = body.email;
         var password = body.password;
       }
-      
+
       // If password is correct, create an authentication token for the user
       let user = routingUsers.getUserByEmail(email);
-      console.log(user);
       if (user) {
         bcrypt.compare(req.body.password.replace(/ /g, ''), user.password.replace(/ /g, '')).then(function(auth) {
           if (auth) {
@@ -207,7 +206,7 @@ export class WebPortal {
       }
     });
 
-    router.post("/api/carts/saveCart", passport.authenticate('jwt', { session: false }), function (req, res) {
+    router.post("/api/carts/saveCart/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
         try {
             let cart = PurchaseManagement.getInstance().getCart(req.user.id).saveCart();
             res.send({ data: cart });
