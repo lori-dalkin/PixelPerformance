@@ -257,6 +257,7 @@ export class Catalog {
     }
 
     public async modifyProduct(electronicID: string, data): Promise<boolean> {
+        console.log(data);
         let modSuccess: boolean = true;
         for(let index = 0; index < this.electronics.length; index++) {
             if (this.electronics[index].getId() == electronicID) {
@@ -264,7 +265,7 @@ export class Catalog {
 
                 elec = elec.getModifyStrategy().modifyElectronic(elec, data);
                 modSuccess = await elec.modify();
-                
+
                 if (modSuccess)
                     console.log("Modification completed successfully");
                 else console.log("Error: unable to modify object in the database");
@@ -274,6 +275,11 @@ export class Catalog {
         console.log("Object doesn't exist in the database");
         return Promise.resolve(false);
 
+    }
+
+    public returnInventory(returned: Inventory): void {
+        let allInventories = this.inventories;
+        allInventories.push(returned);
     }
     public checkoutInventory(inventoryId:string) : Inventory{
         for(let i=0;i<this.inventories.length;i++){

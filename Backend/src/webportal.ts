@@ -20,7 +20,7 @@ import { Catalog } from "./catalog";
 import { Client } from "./Models/client";
 import { UserManagement } from "./usermanagement";
 import { PurchaseManagement } from "./purchasemanagement";
-import { SystemMonitor } from "./Models/systemmonitor"; 
+import { SystemMonitor } from "./Models/systemmonitor";
 import * as uuid from "uuid";
 var swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
@@ -188,17 +188,26 @@ export class WebPortal {
 
     });
 
-
     router.delete("/api/carts/inventory/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
       try{
-        PurchaseManagement.getInstance().removeFromCart(req.user.id,req.params.id)
+        PurchaseManagement.getInstance().removeFromCart(req.user.id,req.params.id);
         res.send({data: true});
       }
       catch(e){
         res.send({data: false, error: e});
       }
+
     });
 
+    router.delete("/api/records/inventory/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+      try{
+          let returnSuccess = PurchaseManagement.getInstance().returnInventory(req.user.id,req.params.id);
+          res.send({data: true});
+      }
+      catch(e){
+        res.send({data: false, error: e});
+      }
+    });
 
     router.post("/api/carts/checkout", passport.authenticate('jwt', { session: false }), function (req, res) {
       try{
@@ -210,7 +219,6 @@ export class WebPortal {
       }
     });
 
-
     router.get("/api/carts/inventory/", passport.authenticate('jwt', { session: false }), function (req, res) {
       try{
         let inventories = PurchaseManagement.getInstance().viewCart(req.user.id)
@@ -221,7 +229,7 @@ export class WebPortal {
 
       }
     });
-    
+
     router.get("/api/carts/", passport.authenticate('jwt', { session: false }), function (req, res) {
       try{
         let cart  = PurchaseManagement.getInstance().getCart(req.user.id)
@@ -294,7 +302,7 @@ export class WebPortal {
     var jwtOptions = { jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), secretOrKey:'tasmanianDevil', passReqToCallback: true }
     
     var strategy = new JwtStrategy(jwtOptions, function(req, jwt_payload, next) {
-      let user; 
+      let user;
       try{
         user = routingUsers.getUserById(jwt_payload.id);
       }catch(e){
