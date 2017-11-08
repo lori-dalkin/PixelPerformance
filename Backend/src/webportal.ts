@@ -101,9 +101,36 @@ export class WebPortal {
       res.send('20 dollars is 20 dollars backend home page')
     });
 
+
+    router.post("/api/users/login", function (req, res) {
+      let body = req.body as any;
+      if(body.email && body.password){
+        var email = body.email;
+        var password = body.password;
+      }
+
+      // If password is correct, create an authentication token for the user
+      let user = routingUsers.getUserByEmail(email);
+      if (user) {
+        bcrypt.compare(req.body.password.replace(/ /g, ''), user.password.replace(/ /g, '')).then(function(auth) {
+          if (auth) {
+            var payload = {id: user.id};
+            var token = jwt.sign(payload, 'tasmanianDevil');
+            res.json({message: "ok", data: token});
+            let logCall : SystemMonitor;
+            logCall.logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() + " has logged in", token);
+          } else {
+            res.status(401).json({message: "Invalid login credentials."});
+          }
+        })
+      } else {
+        res.status(401).json({message: "no such user found"});
+      }
+
     router.post("/api/users/login", this.login);
     router.post("/api/users/logout", this.logout);
     router.post("/api/users/", this.postUser);
+
 
     router.get("/api/products/", this.getProducts);
     router.post("/api/products/", this.postProduct);
@@ -230,6 +257,17 @@ export class WebPortal {
     });
   }
 
+
+    router.post("/api/carts/saveCart/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+        try {
+            let cart = PurchaseManagement.getInstance().getCart(req.user.id).saveCart();
+            res.send({ data: cart });
+        }
+        catch (e) {
+            res.send({ data: null, error: e });
+        }
+    });
+
   @beforeMethod(RoutingAdvice.requireClient)
   public getCart(req, res) {
     try{
@@ -240,6 +278,7 @@ export class WebPortal {
       res.send({data: null, error: e});
     }
   }
+
 
   @beforeMethod(RoutingAdvice.requireClient)
   public getCartInventory(req, res) {
