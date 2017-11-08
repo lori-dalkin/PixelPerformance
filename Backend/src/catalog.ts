@@ -30,7 +30,7 @@ export class Catalog {
 		dataPromises.push(this.loadDesktops());
 		dataPromises.push(this.loadTablets());
         dataPromises.push(this.loadLaptops());
-        
+
         Promise.all(dataPromises).then( ()=>{
             Inventory.setElectronics(this.electronics);
             this.loadInventory();
@@ -91,9 +91,18 @@ export class Catalog {
     }
 
     /**************************************************************************************************
-     * Function to delete an instance of a product's inventory via it's id
+     * Function to delete an instance of a product's inventory via its id
      * Deletes the first instance of the product found in the inventory array regardless of it's serial number
      **************************************************************************************************/
+    @beforeMethod(function(meta) {
+        assert(validator.isUUID(meta.args[0]), "electronicID needs to be a uuid");
+        assert(Catalog.getInstance().getProduct(meta.args[0]) instanceof Electronic, "electronicID must refer to a valid Electronic");
+    })
+    @afterMethod(function(meta) {
+        meta.result.then( (result) => {
+            assert(result != false, "Product within electronics not found.");
+        });
+    })
     public async deleteInventory(electronicID: string): Promise<boolean> {
         console.log(this.inventories);
 
