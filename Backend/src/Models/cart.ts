@@ -75,7 +75,7 @@ export class Cart {
 
     public async saveCart(): Promise<Boolean> {
         let storeOrNot = new Boolean;
-        storeOrNot = db.none("INSERT INTO cart VALUES ('" + this.userId + ')')
+        storeOrNot = db.none("INSERT INTO cart VALUES ('" + this.id + ",'" + this.userId + ')')
             .then(function () {
                 console.log("UserCart added to db");
                 return true;
