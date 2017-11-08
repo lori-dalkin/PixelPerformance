@@ -2,13 +2,15 @@ import * as uuid from "uuid";
 import { Electronic } from "./Models/electronic"
 import { Monitor } from "./Models/monitor"
 import { dbconnection } from "./Models/dbconnection"
-import {Desktop} from "./Models/desktop";
-import {Tablet} from "./Models/tablet";
-import {Laptop} from "./Models/laptop";
-import {Inventory } from "./Models/inventory";
-import {ElectronicFactory} from "./ElectronicFactory";
-import {afterMethod, beforeInstance, beforeMethod} from 'kaop-ts'
-import  validator = require('validator');
+import { Desktop } from "./Models/desktop";
+import { Tablet } from "./Models/tablet";
+import { Laptop } from "./Models/laptop";
+import { Inventory  } from "./Models/inventory";
+import { ElectronicFactory } from "./ElectronicFactory";
+
+// Dependencies for contracts
+import { afterMethod, beforeInstance, beforeMethod } from 'kaop-ts';
+import validator = require('validator');
 import assert = require('assert');
 
 var db = new dbconnection().getDBConnector();
@@ -28,7 +30,7 @@ export class Catalog {
 		dataPromises.push(this.loadDesktops());
 		dataPromises.push(this.loadTablets());
         dataPromises.push(this.loadLaptops());
-        
+
         Promise.all(dataPromises).then( ()=>{
             Inventory.setElectronics(this.electronics);
             this.loadInventory();
@@ -89,9 +91,20 @@ export class Catalog {
     }
 
     /**************************************************************************************************
-     * Function to delete an instance of a product's inventory via it's id
+     * Function to delete an instance of a product's inventory via its id
      * Deletes the first instance of the product found in the inventory array regardless of it's serial number
      **************************************************************************************************/
+    @beforeMethod(function(meta) {
+        assert(validator.isUUID(meta.args[0]), "electronicID needs to be a uuid");
+        assert(Catalog.getInstance().inventoryExists(meta.args[0]), "electronicID must refer to an Electronic for which inventory exists");
+    })
+    @afterMethod(function(meta) {
+        let canDelete = Catalog.getInstance().numMatchingInventories(meta.args[0]);
+        meta.result.then( () => {
+            let leftToDelete: number = Catalog.getInstance().numMatchingInventories(meta.args[0]);
+            assert(leftToDelete == canDelete - 1, "electronicID must be associated with deletable Inventory");
+        });
+    })
     public async deleteInventory(electronicID: string): Promise<boolean> {
         console.log(this.inventories);
 
@@ -117,9 +130,16 @@ export class Catalog {
     }
 
     /****************************************************
-    * Function to retrieve a single product via it's id
+    * Function to retrieve a single product via its id
      ****************************************************/
-	public getProduct(productId:string): Electronic {
+    @beforeMethod(function(meta){
+        assert(validator.isUUID(meta.args[0]), "productId needs to be a uuid");
+        assert(Catalog.getInstance().productExists(meta.args[0]), "productId must refer to an existing Electronic");
+    })
+    @afterMethod(function(meta) { 
+        assert(meta.result != null, "Product within electronics not found."); 
+    })
+    public getProduct(productId: string): Electronic {
 		let elecIterator = this.electronics;
 		for(var iter = 0; iter < this.electronics.length; iter++){
 			if(productId == elecIterator[iter].getId())
@@ -131,7 +151,18 @@ export class Catalog {
 	/********************************************************
 	* Function to retrieve a list of products based on type
 	 ********************************************************/
-	public getProductPage(page:number, type:string, numOfItems:number = 25) {
+	@beforeMethod(function(meta) {
+        assert(meta.args[0] > 0, "page must be greater than 0");
+        assert(meta.args[2] > 0, "numOfItems must be greater than 0");
+        assert(meta.args[2] % 1 === 0, "numOfItems must be a whole number");
+        assert(Catalog.getInstance().validElectronicType(meta.args[1]), "type must be null or a valid subtype of Electronic");
+        assert(meta.args[0] < Catalog.getInstance().maxPageNum(meta.args[1], meta.args[2]),
+            "page exceeds maximum page number for the given arguments");
+    })
+    @afterMethod(function(meta) {
+        assert(meta.result instanceof responseData, "Unable to create valid responseData for getProductPage call");
+    })
+    public getProductPage(page:number, type:string, numOfItems:number = 25) {
         var desired: Electronic[] = [];
         if(type == null){
             desired = this.electronics;
@@ -296,6 +327,57 @@ export class Catalog {
             }
         }
         return null;
+    }
+
+    // Methods for contract programming
+    private inventoryExists(electronicID: string): Boolean {
+        for(let inventory of this.inventories) {
+            if(inventory.getinventoryType().getId() == electronicID) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private numMatchingInventories(electronicId: string): number {
+        let numMatching = 0;
+        for(let inventory of this.inventories) {
+            if(inventory.getinventoryType().getId() == electronicId) {
+                numMatching++;
+            }
+        }
+        return numMatching;
+    }
+
+    private productExists(productId: string): Boolean {
+        for(let product of this.electronics) {
+            if(product.getId() == productId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private validElectronicType(type: string):Boolean {
+        if(type == null || type in Electronic.ElectronicTypes)
+            return true;
+        else
+            return false;
+    }
+
+    private maxPageNum(type:string, numItems:number = 25):Number {
+        var numProducts: number = 0;
+        if(type == null) {
+            numProducts = this.electronics.length;
+        }
+        else {
+            for (var i = 0; i < this.electronics.length; i++) {
+                if(this.electronics[i].getElectronicType() == type)
+                    numProducts++;
+            }
+        }
+        let numPages = Math.ceil(numProducts / numItems) - 1;
+        return numPages;
     }
 }
 
