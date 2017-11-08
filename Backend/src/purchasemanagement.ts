@@ -78,7 +78,9 @@ export class PurchaseManagement {
     public viewPurchases(userId: String): Inventory[] {
         let purchase_history: Inventory[] = new Array<Inventory>();
         for (let i = 0; i < this.purchaseRecords.length; i++) {
-              purchase_history.concat(this.purchaseRecords[i].getInventory());
+            if (this.purchaseRecords[i].getUserId() == userId) {
+                purchase_history.concat(this.purchaseRecords[i].getInventory());
+            }
           }
          return purchase_history;
     }
