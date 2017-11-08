@@ -91,6 +91,8 @@ export class WebPortal {
     //home page
     let routingCatalog = this.catalog;
     let routingUsers = this.usermanagement;
+    let routingPurchases = this.purchasemanagement;
+    let routingSystem = this.systemmonitor;
 
     router.get('/', function (req, res) {
       res.send('20 dollars is 20 dollars backend home page')
@@ -116,7 +118,7 @@ export class WebPortal {
             }else{
               res.json({message: "Admin", data: token});
             }
-            SystemMonitor.getInstance().logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() + " has logged in", token);
+            routingSystem.logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() + " has logged in", token);
           } else {
             res.status(401).json({message: "Invalid login credentials."});
           }
@@ -186,6 +188,16 @@ export class WebPortal {
       routingCatalog.modifyProduct(req.params.id, req.body).then((success) => {
           res.send({data:success});
       });
+    });
+
+    router.delete("/api/cart", passport.authenticate("jwt", { session: false }), function (req, res) {
+      try{
+        routingPurchases.cancelTransaction(req.user);
+        res.send({data:true});
+      }
+      catch(e){
+        res.send({data: false, error: e});
+      }
 
     });
 
