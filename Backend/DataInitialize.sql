@@ -39,10 +39,10 @@ INSERT INTO monitors(weight, modelNumber, brand, price, size) VALUES(15 ,'DELLX2
 INSERT INTO monitors(weight, modelNumber, brand, price, size) VALUES(18 ,'DELLX27','Dell',4719.18, 27);
 
 DELETE FROM admins;
-INSERT INTO admins(fname, lname, email, password) VALUES('Super','Admin','superadmin@pp.com','$2a$10$w1bjyHs8Zlph7mithtJgE.AeOE9chj19/.YbUzO0wmvOQDVNWd5GC');
+INSERT INTO admins(fname, lname, email, password) VALUES('Super','Admin','superadmin@pp.com','$2a$10$w1bjyHs8Zlph7mithtJgE.AeOE9chj19/.YbUzO0wmvOQDVNWd5GC'); /*Password is bcrypt hashed string "!"*/
 
 DELETE FROM clients CASCADE ;
-INSERT INTO clients(fname, lname, email, password, address, phone) VALUES('John','Smith','jsmith@gmail.com','$2a$10$d.tFEsZRoRz/PVjKO/GjTuUOZGQYG0lRd1Xmu0Ex3m2pqe5p7fa5m','Canada','555-5555');
+INSERT INTO clients(fname, lname, email, password, address, phone) VALUES('John','Smith','jsmith@gmail.com','$2a$10$d.tFEsZRoRz/PVjKO/GjTuUOZGQYG0lRd1Xmu0Ex3m2pqe5p7fa5m','Canada','555-5555'); /*Password is bcrypt hashed string "10"*/
 
 DELETE FROM inventories;
 INSERT INTO inventories("electronicID") SELECT id FROM monitors;
