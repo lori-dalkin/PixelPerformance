@@ -60,4 +60,5 @@ export abstract class User {
 	}
 	abstract checkPrivilege(route : string) : boolean;
 
+	abstract getType(): string;
 }

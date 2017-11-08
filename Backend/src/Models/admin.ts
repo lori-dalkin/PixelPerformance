@@ -74,6 +74,9 @@ export class Admin extends User {
     {
         return true;
     }
-        
+    
+    public getType(): string {
+        return Admin.name;
+    }
 
 }

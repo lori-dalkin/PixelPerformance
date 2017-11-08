@@ -102,4 +102,8 @@ export class Client extends User {
         return true;  // if route is not specified as unauthorized, allow it
     }
 
+    public getType(): string {
+        return Client.name;
+    }
+
 }

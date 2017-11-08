@@ -22,9 +22,12 @@ import { UserManagement } from "./usermanagement";
 import { PurchaseManagement } from "./purchasemanagement";
 import { SystemMonitor } from "./Models/systemmonitor";
 import * as uuid from "uuid";
+import { AdvicePool, beforeMethod } from 'kaop-ts';
+import { RoutingAdvice } from "./routingadvice";
 var swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerDocument = YAML.load('./src/swagger.yaml');
+
 /**
  * The web portal.
  *
@@ -94,165 +97,202 @@ export class WebPortal {
       res.send('20 dollars is 20 dollars backend home page')
     });
 
-    router.post("/api/users/login", function (req, res) {
-      let body = req.body as any;
-      if(body.email && body.password){
-        var email = body.email;
-        var password = body.password;
-      }
-      
-      // If password is correct, create an authentication token for the user
-      let user = routingUsers.getUserByEmail(email);
-      console.log(user);
-      if (user) {
-        bcrypt.compare(req.body.password.replace(/ /g, ''), user.password.replace(/ /g, '')).then(function(auth) {
-          if (auth) {
-            var payload = {id: user.id};
-            var token = jwt.sign(payload, 'tasmanianDevil');
-            if(user instanceof Client){
-              res.json({message: "Client" , data: token});
-            }else{
-              res.json({message: "Admin", data: token});
-            }
-            let logCall : SystemMonitor;
-            logCall.logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() + " has logged in", token);
-          } else {
-            res.status(401).json({message: "Invalid login credentials."});
-          }
-        })
-      } else {
-        res.status(401).json({message: "no such user found"});
-      }
+    router.post("/api/users/login", this.login);
+    router.post("/api/users/logout", this.logout);
 
-    });
+    router.post("/api/users/", this.post_users);
 
-    router.post("/api/users/logout", function (req, res) {
-      res.send({data: true});
-    });
-
-    router.post("/api/users/", function (req, res) {
-      res.send({data: routingUsers.addClient(req.body)});
-    });
-
-    router.get("/api/products/", passport.authenticate('jwt', { session: false }), function (req, res) {
-      let electronics = routingCatalog.getProductPage(parseInt(req.query.page), req.query.type, parseInt(req.query.numOfItems));
-      res.send(electronics);
-    });
-    router.post("/api/products/", passport.authenticate('jwt', { session: false }), function (req, res) {
-      try {
-        routingCatalog.addProduct(req.body)
-        res.send({data:true});
-      }
-      catch (e) {
-        res.send({data: false, error: e});
-      }
-    });
+    router.get("/api/products/", /*passport.authenticate('jwt', { session: false }),*/ this.get_products);
+    router.post("/api/products/", /*passport.authenticate('jwt', { session: false }),*/ this.post_products);
     
-    router.get("/api/products/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
-      let electronic: Electronic;
-      electronic = routingCatalog.getProduct(req.params.id);
-      res.send({data: electronic});
-    });
-    
-    router.delete("/api/products/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
-      routingCatalog.deleteProduct(req.params.id).then((success)=>{
-        res.send({data: success});
-      });
-    });
+    router.get("/api/products/:id", /*passport.authenticate('jwt', { session: false }),*/ this.get_products_id);
+    router.delete("/api/products/:id", /*passport.authenticate('jwt', { session: false }),*/ this.delete_products_id);
+    router.put("/api/products/:id", /*passport.authenticate('jwt', { session: false }),*/ this.put_api_products_id);
 
-    router.post("/api/inventories/product/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
-      try {
-        routingCatalog.addInventory(req.params.id)
-        res.send({ data:true});
-      }
-      catch (e) {
-        res.send({data: false, error: e});
-      }
-    });
+    router.get("/api/inventories/product/:id", /*passport.authenticate('jwt', { session: false }),*/ this.get_inventories_id);
+    router.post("/api/inventories/product/:id", /*passport.authenticate('jwt', { session: false }),*/ this.post_inventories_id);
+    router.delete("/api/inventories/product/:id", /*passport.authenticate('jwt', { session: false }),*/ this.delete_inventories_id);
 
-    router.get("/api/inventories/product/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
-      let inventories = routingCatalog.getAllInventories(req.params.id);
-      res.send({data: inventories });
-    });
-    
-    router.delete("/api/inventories/product/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
-      routingCatalog.deleteInventory(req.params.id).then((success)=>{
-        res.send({data: success});
-      });
-    });
+    router.get("/api/carts/", /*passport.authenticate('jwt', { session: false }),*/ this.get_carts);
+    router.get("/api/carts/inventory/", /*passport.authenticate('jwt', { session: false }),*/ this.get_carts_inventory);
+    router.post("/api/carts/inventory/:id", /*passport.authenticate('jwt', { session: false }),*/ this.post_carts_inventory_id);
+    router.delete("/api/carts/inventory/:id", /*passport.authenticate('jwt', { session: false }),*/ this.delete_carts_inventory_id);
+    router.post("/api/carts/checkout", /*passport.authenticate('jwt', { session: false }),*/ this.post_carts_checkout);
 
-    router.put("/api/products/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
-      routingCatalog.modifyProduct(req.params.id, req.body).then((success) => {
-          res.send({data:success});
-      });
-
-    });
-
-    router.delete("/api/carts/inventory/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
-      try{
-        PurchaseManagement.getInstance().removeFromCart(req.user.id,req.params.id);
-        res.send({data: true});
-      }
-      catch(e){
-        res.send({data: false, error: e});
-      }
-
-    });
-
-    router.delete("/api/records/inventory/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
-      try{
-          let returnSuccess = PurchaseManagement.getInstance().returnInventory(req.user.id,req.params.id);
-          res.send({data: true});
-      }
-      catch(e){
-        res.send({data: false, error: e});
-      }
-    });
-
-    router.post("/api/carts/checkout", passport.authenticate('jwt', { session: false }), function (req, res) {
-      try{
-        PurchaseManagement.getInstance().checkout(req.user.id)
-        res.send({data: true});
-      }
-      catch(e){
-        res.send({data: false, error: e});
-      }
-    });
-
-    router.get("/api/carts/inventory/", passport.authenticate('jwt', { session: false }), function (req, res) {
-      try{
-        let inventories = PurchaseManagement.getInstance().viewCart(req.user.id)
-        res.send({data: inventories});
-      }
-      catch(e){
-        res.send({data: null, error: e});
-
-      }
-    });
-
-    router.get("/api/carts/", passport.authenticate('jwt', { session: false }), function (req, res) {
-      try{
-        let cart  = PurchaseManagement.getInstance().getCart(req.user.id)
-        res.send({data: cart});
-      }
-      catch(e){
-        res.send({data: null, error: e});
-      }
-    });
-
-    router.post("/api/carts/inventory/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
-      try{
-        PurchaseManagement.getInstance().addItemToCart(req.user.id,req.params.id)
-        res.send({data: true});
-      }
-      catch(e){
-        res.send({data: false, error: e});
-      }
-    });
-
+    router.delete("/api/records/inventory/:id", /*passport.authenticate('jwt', { session: false }),*/ this.delete_records_inventory_id);
 
     //use router middleware
     this.app.use(router);
+  }
+
+  public login(req, res) {
+    let routingUsers = UserManagement.getInstance();
+    let body = req.body as any;
+    if(body.email && body.password){
+      var email = body.email;
+      var password = body.password;
+    }
+    
+    // If password is correct, create an authentication token for the user
+    let user = routingUsers.getUserByEmail(email);
+    console.log(user);
+    if (user) {
+      bcrypt.compare(req.body.password.replace(/ /g, ''), user.password.replace(/ /g, '')).then(function(auth) {
+        if (auth) {
+          var payload = {id: user.id};
+          var token = jwt.sign(payload, 'tasmanianDevil');
+          if(user instanceof Client){
+            res.json({message: "Client" , data: token});
+          }else{
+            res.json({message: "Admin", data: token});
+          }
+          let logCall : SystemMonitor;
+          logCall.logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() + " has logged in", token);
+        } else {
+          res.status(401).json({message: "Invalid login credentials."});
+        }
+      })
+    } else {
+      res.status(401).json({message: "no such user found"});
+    }
+  }
+
+  public logout(req, res) {
+    res.send({data: true});
+  }
+
+  public post_users(req, res) {
+    res.send({data: UserManagement.getInstance().addClient(req.body)});
+  }
+
+  @beforeMethod(RoutingAdvice.requireLoggedIn)
+  public get_products(req, res) {
+    let electronics = Catalog.getInstance().getProductPage(parseInt(req.query.page), req.query.type, parseInt(req.query.numOfItems));
+    res.send(electronics);
+  }
+
+  @beforeMethod(RoutingAdvice.requireAdmin)
+  public post_products(req, res) {
+    try {
+      Catalog.getInstance().addProduct(req.body)
+      res.send({data:true});
+    }
+    catch (e) {
+      res.send({data: false, error: e});
+    }
+  }
+
+  @beforeMethod(RoutingAdvice.requireLoggedIn)
+  public get_products_id(req, res) {
+    let electronic: Electronic;
+    electronic = Catalog.getInstance().getProduct(req.params.id);
+    res.send({data: electronic});
+  }
+
+  @beforeMethod(RoutingAdvice.requireAdmin)
+  public delete_products_id(req, res) {
+    Catalog.getInstance().deleteProduct(req.params.id).then((success)=>{
+      res.send({data: success});
+    });
+  }
+
+  @beforeMethod(RoutingAdvice.requireAdmin)
+  public put_api_products_id(req, res) {
+    Catalog.getInstance().modifyProduct(req.params.id, req.body).then((success) => {
+        res.send({data:success});
+    });
+
+  }
+
+  @beforeMethod(RoutingAdvice.requireLoggedIn)
+  public get_inventories_id(req, res) {
+    let inventories = Catalog.getInstance().getAllInventories(req.params.id);
+    res.send({data: inventories });
+  }
+
+  @beforeMethod(RoutingAdvice.requireAdmin)
+  public post_inventories_id(req, res) {
+    try {
+      Catalog.getInstance().addInventory(req.params.id)
+      res.send({ data:true});
+    }
+    catch (e) {
+      res.send({data: false, error: e});
+    }
+  }
+
+  @beforeMethod(RoutingAdvice.requireAdmin)
+  public delete_inventories_id(req, res) {
+    Catalog.getInstance().deleteInventory(req.params.id).then((success)=>{
+      res.send({data: success});
+    });
+  }
+
+  @beforeMethod(RoutingAdvice.requireAdmin)
+  public delete_carts_inventory_id(req, res) {
+    console.log("deleting...");
+    try{
+      PurchaseManagement.getInstance().removeFromCart(req.user.id,req.params.id);
+      res.send({data: true});
+    }
+    catch(e){
+      res.send({data: false, error: e});
+    }
+  }
+
+  @beforeMethod(RoutingAdvice.requireAdmin)
+  public delete_records_inventory_id(req, res) {
+    try{
+        let returnSuccess = PurchaseManagement.getInstance().returnInventory(req.user.id,req.params.id);
+        res.send({data: true});
+    }
+    catch(e){
+      res.send({data: false, error: e});
+    }
+  }
+
+  @beforeMethod(RoutingAdvice.requireClient)
+  public post_carts_checkout(req, res) {
+    try{
+      PurchaseManagement.getInstance().checkout(req.user.id)
+      res.send({data: true});
+    }
+    catch(e){
+      res.send({data: false, error: e});
+    }
+  }
+
+  @beforeMethod(RoutingAdvice.requireClient)
+  public get_carts_inventory(req, res) {
+    try{
+      let inventories = PurchaseManagement.getInstance().viewCart(req.user.id)
+      res.send({data: inventories});
+    }
+    catch(e){
+      res.send({data: null, error: e});
+    }
+  }
+
+  @beforeMethod(RoutingAdvice.requireClient)
+  public get_carts(req, res) {
+    try{
+      let cart  = PurchaseManagement.getInstance().getCart(req.user.id)
+      res.send({data: cart});
+    }
+    catch(e){
+      res.send({data: null, error: e});
+    }
+  }
+
+  @beforeMethod(RoutingAdvice.requireClient)
+  public post_carts_inventory_id(req, res) {
+    try{
+      PurchaseManagement.getInstance().addItemToCart(req.user.id,req.params.id)
+      res.send({data: true});
+    }
+    catch(e){
+      res.send({data: false, error: e});
+    }
   }
 
   /**
@@ -306,6 +346,7 @@ export class WebPortal {
       try{
         user = routingUsers.getUserById(jwt_payload.id);
       }catch(e){
+        console.log("error getting user:");
         console.log(e);
         user = null;
       }
@@ -322,7 +363,7 @@ export class WebPortal {
       }
     });
     
-    passport.use(strategy);
+    // passport.use(strategy);
     
   
 }
