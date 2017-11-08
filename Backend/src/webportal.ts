@@ -283,7 +283,7 @@ export class WebPortal {
     }
   }
 
-  @beforeMethod(RoutingAdvice.requireAdmin)
+  @beforeMethod(RoutingAdvice.requireClient)
   public deleteRecordsInventoryById(req, res) {
     try{
         let returnSuccess = PurchaseManagement.getInstance().returnInventory(req.user.id,req.params.id);
