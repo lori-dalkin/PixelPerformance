@@ -224,7 +224,15 @@ export class WebPortal {
       }
     });
 
-
+    router.post("/api/carts/startTransaction/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+        try {
+            let transac = PurchaseManagement.getInstance().startTransaction(req.user.id)
+            res.send({ data: transac });
+        }
+        catch (e) {
+            res.send({ data: null, error: e });
+        }
+    });
 
     //use router middleware
     this.app.use(router);
