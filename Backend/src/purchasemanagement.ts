@@ -34,7 +34,14 @@ export class PurchaseManagement {
 		return this._instance;
 	}
 
+    @beforeMethod(function (meta) {
+        assert(validator.isUUID(meta.args, "userID needs to be a uuid"));
+    })
+    @afterMethod(function (meta) {
+            assert(PurchaseManagement.getInstance().)
 
+
+    })
 	// startTransaction(userId: string): void
     public startTransaction(userId: string): void {
         var uuid1 = uuid.v1();
