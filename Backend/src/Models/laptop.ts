@@ -1,6 +1,7 @@
 import { ComputerSystem } from "./computersystem";
 import { dbconnection } from "./dbconnection";
 import { Electronic } from "./electronic";
+import {LaptopModifyStrategy} from "../Strategies/laptopmodifystrategy";
 
 var db = new dbconnection().getDBConnector();
 
@@ -20,6 +21,7 @@ export class Laptop extends ComputerSystem {
 		this.battery = battery;
 		this.camera = camera;
 		this.touchscreen = touchscreen;
+		this.setModifyStrategy(new LaptopModifyStrategy());
 	}
  	/****************************************************************
      * Getters and Setters											*
@@ -37,7 +39,7 @@ export class Laptop extends ComputerSystem {
 	/**************************************************************
 	 * Method to persist an object of type Laptop to the database *
 	 **************************************************************/
-	save(): boolean {
+	public async save(): Promise<boolean> {
 		let queryParameters = ["'"+this.getId()+"'", this.getWeight(),"'"+ this.getModelNumber() +"'",
 								"'"+this.getBrand() +"'", this.getPrice(), "'"+this.processor +"'",
 							   this.ram, this.cpus, this.hardDrive,
