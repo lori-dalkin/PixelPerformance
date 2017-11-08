@@ -207,6 +207,16 @@ export class WebPortal {
       }
     });
 
+    router.post("/api/carts/saveCart", passport.authenticate('jwt', { session: false }), function (req, res) {
+        try {
+            let cart = PurchaseManagement.getInstance().getCart(req.user.id).saveCart();
+            res.send({ data: cart });
+        }
+        catch (e) {
+            res.send({ data: null, error: e });
+        }
+    });
+
 
 
     //use router middleware
