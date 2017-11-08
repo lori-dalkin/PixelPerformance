@@ -99,7 +99,6 @@ export class WebPortal {
 
     router.post("/api/users/login", this.login);
     router.post("/api/users/logout", this.logout);
-
     router.post("/api/users/", this.postUser);
 
     router.get("/api/products/", this.getProducts);
@@ -115,11 +114,11 @@ export class WebPortal {
 
     router.get("/api/carts/", this.getCart);
     router.get("/api/carts/inventory/", this.getCartInventory);
-    router.post("/api/carts/inventory/:id", this.post_carts_inventory_id);
-    router.delete("/api/carts/inventory/:id", this.delete_carts_inventory_id);
-    router.post("/api/carts/checkout", this.post_carts_checkout);
+    router.post("/api/carts/inventory/:id", this.postCartInventoryById);
+    router.delete("/api/carts/inventory/:id", this.deleteCartInventoryById);
+    router.post("/api/carts/checkout", this.postCartCheckout);
 
-    router.delete("/api/records/inventory/:id", this.delete_records_inventory_id);
+    router.delete("/api/records/inventory/:id", this.deleteRecordsInventoryById);
 
     //use router middleware
     this.app.use(router);
@@ -201,7 +200,6 @@ export class WebPortal {
     Catalog.getInstance().modifyProduct(req.params.id, req.body).then((success) => {
         res.send({data:success});
     });
-
   }
 
   @beforeMethod(RoutingAdvice.requireLoggedIn)
@@ -228,37 +226,14 @@ export class WebPortal {
     });
   }
 
-  @beforeMethod(RoutingAdvice.requireAdmin)
-  public delete_carts_inventory_id(req, res) {
-    console.log("deleting...");
-    try{
-      PurchaseManagement.getInstance().removeFromCart(req.user.id,req.params.id);
-      res.send({data: true});
-    }
-    catch(e){
-      res.send({data: false, error: e});
-    }
-  }
-
-  @beforeMethod(RoutingAdvice.requireAdmin)
-  public delete_records_inventory_id(req, res) {
-    try{
-        let returnSuccess = PurchaseManagement.getInstance().returnInventory(req.user.id,req.params.id);
-        res.send({data: true});
-    }
-    catch(e){
-      res.send({data: false, error: e});
-    }
-  }
-
   @beforeMethod(RoutingAdvice.requireClient)
-  public post_carts_checkout(req, res) {
+  public getCart(req, res) {
     try{
-      PurchaseManagement.getInstance().checkout(req.user.id)
-      res.send({data: true});
+      let cart  = PurchaseManagement.getInstance().getCart(req.user.id)
+      res.send({data: cart});
     }
     catch(e){
-      res.send({data: false, error: e});
+      res.send({data: null, error: e});
     }
   }
 
@@ -274,21 +249,44 @@ export class WebPortal {
   }
 
   @beforeMethod(RoutingAdvice.requireClient)
-  public getCart(req, res) {
+  public postCartInventoryById(req, res) {
     try{
-      let cart  = PurchaseManagement.getInstance().getCart(req.user.id)
-      res.send({data: cart});
+      PurchaseManagement.getInstance().addItemToCart(req.user.id,req.params.id)
+      res.send({data: true});
     }
     catch(e){
-      res.send({data: null, error: e});
+      res.send({data: false, error: e});
     }
   }
 
   @beforeMethod(RoutingAdvice.requireClient)
-  public post_carts_inventory_id(req, res) {
+  public deleteCartInventoryById(req, res) {
+    console.log("deleting...");
     try{
-      PurchaseManagement.getInstance().addItemToCart(req.user.id,req.params.id)
+      PurchaseManagement.getInstance().removeFromCart(req.user.id,req.params.id);
       res.send({data: true});
+    }
+    catch(e){
+      res.send({data: false, error: e});
+    }
+  }
+
+  @beforeMethod(RoutingAdvice.requireClient)
+  public postCartCheckout(req, res) {
+    try{
+      PurchaseManagement.getInstance().checkout(req.user.id)
+      res.send({data: true});
+    }
+    catch(e){
+      res.send({data: false, error: e});
+    }
+  }
+
+  @beforeMethod(RoutingAdvice.requireAdmin)
+  public deleteRecordsInventoryById(req, res) {
+    try{
+        let returnSuccess = PurchaseManagement.getInstance().returnInventory(req.user.id,req.params.id);
+        res.send({data: true});
     }
     catch(e){
       res.send({data: false, error: e});
