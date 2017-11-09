@@ -2,11 +2,16 @@ import * as uuid from "uuid";
 import { Electronic } from "./Models/electronic"
 import { Monitor } from "./Models/monitor"
 import { dbconnection } from "./Models/dbconnection"
-import {Desktop} from "./Models/desktop";
-import {Tablet} from "./Models/tablet";
-import {Laptop} from "./Models/laptop";
-import {Inventory } from "./Models/inventory";
-import {ElectronicFactory} from "./ElectronicFactory";
+import { Desktop } from "./Models/desktop";
+import { Tablet } from "./Models/tablet";
+import { Laptop } from "./Models/laptop";
+import { Inventory  } from "./Models/inventory";
+import { ElectronicFactory } from "./ElectronicFactory";
+
+// Dependencies for contracts
+import { afterMethod, beforeInstance, beforeMethod } from 'kaop-ts';
+import validator = require('validator');
+import assert = require('assert');
 
 var db = new dbconnection().getDBConnector();
 export class Catalog {
@@ -25,7 +30,7 @@ export class Catalog {
 		dataPromises.push(this.loadDesktops());
 		dataPromises.push(this.loadTablets());
         dataPromises.push(this.loadLaptops());
-        
+
         Promise.all(dataPromises).then( ()=>{
             Inventory.setElectronics(this.electronics);
             this.loadInventory();
@@ -86,9 +91,20 @@ export class Catalog {
     }
 
     /**************************************************************************************************
-     * Function to delete an instance of a product's inventory via it's id
+     * Function to delete an instance of a product's inventory via its id
      * Deletes the first instance of the product found in the inventory array regardless of it's serial number
      **************************************************************************************************/
+    @beforeMethod(function(meta) {
+        assert(validator.isUUID(meta.args[0]), "electronicID needs to be a uuid");
+        assert(Catalog.getInstance().inventoryExists(meta.args[0]), "electronicID must refer to an Electronic for which inventory exists");
+    })
+    @afterMethod(function(meta) {
+        let canDelete = Catalog.getInstance().numMatchingInventories(meta.args[0]);
+        meta.result.then( () => {
+            let leftToDelete: number = Catalog.getInstance().numMatchingInventories(meta.args[0]);
+            assert(leftToDelete == canDelete - 1, "electronicID must be associated with deletable Inventory");
+        });
+    })
     public async deleteInventory(electronicID: string): Promise<boolean> {
         console.log(this.inventories);
 
@@ -114,9 +130,16 @@ export class Catalog {
     }
 
     /****************************************************
-    * Function to retrieve a single product via it's id
+    * Function to retrieve a single product via its id
      ****************************************************/
-	public getProduct(productId:string): Electronic {
+    @beforeMethod(function(meta){
+        assert(validator.isUUID(meta.args[0]), "productId needs to be a uuid");
+        assert(Catalog.getInstance().productExists(meta.args[0]), "productId must refer to an existing Electronic");
+    })
+    @afterMethod(function(meta) { 
+        assert(meta.result != null, "Product within electronics not found."); 
+    })
+    public getProduct(productId: string): Electronic {
 		let elecIterator = this.electronics;
 		for(var iter = 0; iter < this.electronics.length; iter++){
 			if(productId == elecIterator[iter].getId())
@@ -128,7 +151,18 @@ export class Catalog {
 	/********************************************************
 	* Function to retrieve a list of products based on type
 	 ********************************************************/
-	public getProductPage(page:number, type:string, numOfItems:number = 25) {
+	@beforeMethod(function(meta) {
+        let catalog = Catalog.getInstance();
+        assert(meta.args[0] > 0, "page must be greater than 0");
+        assert(meta.args[2] > 0, "numOfItems must be greater than 0");
+        assert(meta.args[2] % 1 === 0, "numOfItems must be a whole number");
+        assert(catalog.validElectronicType(meta.args[1]), "type must be null or a valid subtype of Electronic");
+        assert(meta.args[0] <= catalog.maxPageNum(meta.args[1], meta.args[2]), "page exceeds maximum page number for the given arguments");
+    })
+    @afterMethod(function(meta) {
+        assert(meta.result instanceof responseData, "Unable to create valid responseData for getProductPage call");
+    })
+    public getProductPage(page:number, type:string, numOfItems:number = 25) {
         var desired: Electronic[] = [];
         if(type == null){
             desired = this.electronics;
@@ -149,6 +183,13 @@ export class Catalog {
         return new responseData(desired,totalProducts);
     }
     
+    @beforeMethod(function(meta){
+		assert(!validator.isEmpty(meta.args[0]), "Electronic id can't be empty");
+    })
+    @afterMethod(function(meta)
+    {
+        assert(meta.result.length > 0, "No inventory found.");
+    })
     public getAllInventories( electronicId:string): Inventory[] {
         var desired: Inventory[] = [];
         for(let i=0;i<this.inventories.length;i++){
@@ -165,6 +206,14 @@ export class Catalog {
     /********************************************************
 	* Function to add a new product
 	 ********************************************************/
+    @beforeMethod(function(meta){
+		assert(meta.args[0] != null,  "Product data cannot be null");
+	})
+	@afterMethod(function(meta) {
+        //compare most recent object with object sent to function
+        assert(meta.args[0].modelNumber != Catalog.getInstance().electronics[Catalog.getInstance().electronics.length - 1], "Product wasn't found." )
+		assert(meta.result == true, "Product wasn't added.");
+	})
 	public addProduct(data): boolean {
         let electronic: Electronic = this.electronicFactory.create(data);
         electronic.save();
@@ -172,7 +221,30 @@ export class Catalog {
 		return true;
     }
 
-
+    @beforeMethod(function(meta){
+        let electronic: Electronic;
+        let found: boolean;
+        found = false;
+        for (var i = 0; i < Catalog.getInstance().electronics.length; i++) {
+            if (Catalog.getInstance().electronics[i].getId() == meta.args[0]) {
+                found = true;
+            }
+        }
+        assert(meta.args[0] != null, "electronic ID cannot be null");
+        assert(found, "Product not in Catalog");
+	})
+	@afterMethod(function(meta) {
+        let electronic: Electronic;
+        for (var i = 0; i < Catalog.getInstance().electronics.length; i++) {
+            if (Catalog.getInstance().electronics[i].getId() == meta.args[0]) {
+                electronic = Catalog.getInstance().electronics[i];
+                break;
+            }
+        }
+        assert(Catalog.getInstance().inventories.length != 0, "Inventory empty");
+         //compare latest inventory type with electronic sent as argument
+        assert(Catalog.getInstance().inventories[Catalog.getInstance().inventories.length - 1].getinventoryType().getId() == electronic.getId(), "Inventory not added inventory array");
+	})
     public addInventory(electronidId: string): Promise<boolean> {
         console.log("adding to inventory: " + electronidId);
         let electronic: Electronic;
@@ -222,57 +294,8 @@ export class Catalog {
             if (this.electronics[index].getId() == electronicID) {
                 let elec: Electronic = this.electronics[index];
 
-                console.log(elec);
-                //set general electronic fields
-                elec.setWeight(data.weight);
-                elec.setBrand(data.brand);
-                elec.setPrice(data.price);
-                elec.setModelNumber(data.modelNumber);
-
-                
-                 if (elec.getElectronicType() == "Monitor") {
-                    console.log("Item is a monitor");
-                    var monitor: Monitor = <Monitor> elec;
-                    monitor.setSize(data.size);
-                    modSuccess = await monitor.modify();
-                }
-                else if (elec.getElectronicType() == "Desktop") {
-                    console.log("Item is a desktop");
-                    var desktop: Desktop = <Desktop> elec;
-                    desktop.setProcessor(data.processor);
-                    desktop.setRam(parseInt(data.ram));
-                    desktop.setCpu(parseInt(data.cpus));
-                    desktop.setHardDrive(data.hardDrive);
-                    desktop.setOs(data.os);
-                    desktop.setDimensions(data.dimensions);
-                    modSuccess = await desktop.modify();
-                }
-                else if (elec.getElectronicType() == "Laptop") {
-                    console.log("Item is a laptop");
-                    let laptop: Laptop = <Laptop> elec;
-                    laptop.setProcessor(data.processor);
-                    laptop.setRam(parseInt(data.ram));
-                    laptop.setCpu(parseInt(data.cpus));
-                    laptop.setHardDrive(parseInt(data.hardDrive));
-                    laptop.setOs(data.os);
-                    laptop.setDisplaySize(parseInt(data.displaySize));
-                    laptop.setBattery(parseInt(data.battery));
-                    laptop.setCamera(data.camera == 'true');
-                    laptop.setTouchscreen(data.touchscreen == 'true');
-                    modSuccess = await laptop.modify();
-                }
-                else if (elec.getElectronicType() == "Tablet") {
-                    console.log("Item is a tablet");
-                    var tablet: Tablet = <Tablet> elec;
-                    tablet.setDimensions(data.dimensions);
-                    tablet.setBattery(parseInt(data.battery));
-                    tablet.setDisplaySize(parseInt(data.displaySize));
-                    tablet.setCamera(data.camera == 'true');
-                    modSuccess = await tablet.modify();
-                }
-                else {
-                    modSuccess = false;
-                }
+                elec = elec.getModifyStrategy().modifyElectronic(elec, data);
+                modSuccess = await elec.modify();
 
                 if (modSuccess)
                     console.log("Modification completed successfully");
@@ -283,6 +306,11 @@ export class Catalog {
         console.log("Object doesn't exist in the database");
         return Promise.resolve(false);
 
+    }
+
+    public returnInventory(returned: Inventory): void {
+        let allInventories = this.inventories;
+        allInventories.push(returned);
     }
     public checkoutInventory(inventoryId:string) : Inventory{
         for(let i=0;i<this.inventories.length;i++){
@@ -299,6 +327,57 @@ export class Catalog {
             }
         }
         return null;
+    }
+
+    // Methods for contract programming
+    private inventoryExists(electronicID: string): Boolean {
+        for(let inventory of this.inventories) {
+            if(inventory.getinventoryType().getId() == electronicID) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private numMatchingInventories(electronicId: string): number {
+        let numMatching = 0;
+        for(let inventory of this.inventories) {
+            if(inventory.getinventoryType().getId() == electronicId) {
+                numMatching++;
+            }
+        }
+        return numMatching;
+    }
+
+    private productExists(productId: string): Boolean {
+        for(let product of this.electronics) {
+            if(product.getId() == productId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private validElectronicType(type: string):Boolean {
+        if(type == null || type in Electronic.ElectronicTypes)
+            return true;
+        else
+            return false;
+    }
+
+    private maxPageNum(type:string, numItems:number = 25):Number {
+        var numProducts: number = 0;
+        if(type == null) {
+            numProducts = this.electronics.length;
+        }
+        else {
+            for (var i = 0; i < this.electronics.length; i++) {
+                if(this.electronics[i].getElectronicType() == type)
+                    numProducts++;
+            }
+        }
+        let numPages = Math.ceil(numProducts / numItems);
+        return numPages;
     }
 }
 

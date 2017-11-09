@@ -1,6 +1,7 @@
 import { ComputerSystem } from "./computersystem";
 import { dbconnection } from "./dbconnection";
 import { Electronic } from "./electronic";
+import {DesktopModifyStrategy} from "../Strategies/desktopmodifystrategy";
 
 var db = new dbconnection().getDBConnector();
 
@@ -13,6 +14,7 @@ export class Desktop extends ComputerSystem {
         let electronicType = "Desktop";
         super(id, weight, modelNumber, brand, price, electronicType, processor, ram, cpus, hardDrive, os);
         this.dimensions = dimensions;
+        this.setModifyStrategy(new DesktopModifyStrategy());
     }
 
     /*************************

@@ -2,6 +2,7 @@ import {ComputerSystem} from "./computersystem";
 import {dbconnection} from "./dbconnection";
 import {Electronic} from "./electronic";
 import uuid = require("uuid");
+import {TabletModifyStrategy} from "../Strategies/tabletmodifystrategy";
 
 var db = new dbconnection().getDBConnector();
 
@@ -18,6 +19,7 @@ export class Tablet extends ComputerSystem{
                 	this.dimensions = dimensions;
                 	this.battery = battery;
                 	this.camera = camera;
+                	this.setModifyStrategy(new TabletModifyStrategy());
                 }
 
     /****************************************************************
@@ -36,7 +38,7 @@ export class Tablet extends ComputerSystem{
      /****************************************************************
     * Method to persist an object of type Tablet to the database
      ****************************************************************/
-    public save(): boolean {
+    public async save(): Promise<boolean> {
        return db.none("INSERT INTO tablets VALUES ('"+ this.getId() +"',"+ this.getWeight() +",'"+this.getModelNumber()+"','"+this.getBrand()+"',"+this.getPrice()+",'"+
            this.getProcessor()+"'," + this.getRam() + ","+this.getCpus()+","+this.getHardDrive()+",'"+this.getOs()+"',"+this.getDisplaySize()+",'"+
            this.getDimensions()+"',"+this.getBattery()+","+this.getCamera()+")")

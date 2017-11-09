@@ -36,15 +36,30 @@
         produces: 
           - "application/json"
         parameters:
-        - name: User  
-          description: User properties
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/User"
+          - name: User  
+            description: User properties
+            in: body
+            required: true
+            schema:
+              $ref: "#/definitions/User"
+          - name: Authorization
+            in: header
+            description: API key
+            required: false
+            type: string
+            format: string
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
     /products: 
-      get: 
+      get:
         description: "Returns all electronics from the system that the user has access to"
+        parameters:
+        - name: Authorization
+          in: header
+          description: API key
+          required: false
+          type: string
+          format: string
+          default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
         produces: 
           - "application/json"
         responses: 
@@ -65,6 +80,13 @@
           required: true
           schema:
             $ref: "#/definitions/Electronic"
+        - name: Authorization
+          in: header
+          description: API key
+          required: false
+          type: string
+          format: string
+          default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
         responses: 
           "200":
             description: "An electronics with specified ID"
@@ -82,6 +104,13 @@
               type: string
             required: true
             description: String ID of the product to get
+          - name: Authorization
+            in: header
+            description: API key
+            required: false
+            type: string
+            format: string
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
         responses: 
           "200":
             description: "An electronics with specified ID"
@@ -91,6 +120,14 @@
         description: "Deletes a product with correspdong id"
         produces: 
           - "application/json"
+        parameters:
+          - name: Authorization
+            in: header
+            description: API key
+            required: false
+            type: string
+            format: string
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
         responses:
           "200":
             description: "If delete is succesuful"
@@ -101,12 +138,19 @@
         produces: 
           - "application/json"
         parameters:
-        - name: Eletronic  
-          description: Eletectronic properties
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/Electronic"
+          - name: Eletronic  
+            description: Eletectronic properties
+            in: body
+            required: true
+            schema:
+              $ref: "#/definitions/Electronic"
+          - name: Authorization
+            in: header
+            description: API key
+            required: false
+            type: string
+            format: string
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
         responses: 
           "200":
             description: "An electronics with specified ID"
@@ -124,6 +168,13 @@
               type: string
             required: true
             description: String ID of the product 
+          - name: Authorization
+            in: header
+            description: API key
+            required: false
+            type: string
+            format: string
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
         responses: 
           "200":
             description: "All inventory for electronic with specified ID"
@@ -142,6 +193,13 @@
               type: string
             required: true
             description: String ID of the product
+          - name: Authorization
+            in: header
+            description: API key
+            required: false
+            type: string
+            format: string
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
       delete:
         description: "Deletes an inventory for a product  with specified ID"
         produces: 
@@ -153,6 +211,91 @@
               type: string
             required: true
             description: String ID of the product 
+          - name: Authorization
+            in: header
+            description: API key
+            required: false
+            type: string
+            format: string
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
+
+    /carts:
+      get:
+        description: "Return a cart for a user with a specified ID"
+        produces:
+          - "application/json"
+        parameters:
+          - name: Authorization
+            in: header
+            description: API key
+            required: false
+            type: string
+            format: string
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
+        responses:
+          "200":
+            description: "Cart of specified User" 
+            schema:
+              $ref: "#/definitions/Cart"
+    /carts/inventory/{id}:
+      post:
+        description: "Adds an inventory to a specified user's cart"
+        produces:
+          - "application/json"
+        parameters:
+          - in: path
+            name: id
+            schema: 
+              type: string
+            required: true
+            description: String ID of the inventory object
+          - name: Authorization
+            in: header
+            description: API key
+            required: false
+            type: string
+            format: string
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"      
+    /carts/inventory:
+      get:
+        description: "Returns the inventory of a specified user's cart"
+        produces:
+          - "application/json"
+        parameters:
+          - name: Authorization
+            in: header
+            description: API key
+            required: false
+            type: string
+            format: string
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
+        responses:
+          "200":
+            description: "Collection of Inventory objects within the user's cart"
+            schema: 
+              type: "array"
+              items: 
+                $ref: "#/definitions/Inventory"
+    /records/inventory/{id}:
+         delete:
+            description: "Makes a return on a previously purchased inventory, adding it back to the system"
+            produces:
+              - "application/json"
+            parameters:
+              - in: path
+                name: id
+                schema:
+                  type: string
+                required: true
+                description: "Serial number of the inventory"
+              - name: Authorization
+                in: header
+                description: API key
+                required: false
+                type: string
+                format: string
+                default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
+
 
   definitions:
     Electronic:
@@ -222,3 +365,14 @@
           type: "string"
         inventoryType:
           $ref: "#/definitions/Electronic"
+    Cart:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        userId:
+          type: "string"
+        inventory:
+          type: "array"
+          items: 
+            $ref: "#/definitions/Inventory"
