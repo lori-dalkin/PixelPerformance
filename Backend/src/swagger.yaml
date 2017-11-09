@@ -48,7 +48,7 @@
             required: false
             type: string
             format: string
-            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"
     /products: 
       get:
         description: "Returns all electronics from the system that the user has access to"
@@ -59,7 +59,7 @@
           required: false
           type: string
           format: string
-          default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
+          default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"
         produces: 
           - "application/json"
         responses: 
@@ -86,7 +86,7 @@
           required: false
           type: string
           format: string
-          default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
+          default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"
         responses: 
           "200":
             description: "An electronics with specified ID"
@@ -110,7 +110,7 @@
             required: false
             type: string
             format: string
-            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"
         responses: 
           "200":
             description: "An electronics with specified ID"
@@ -127,7 +127,7 @@
             required: false
             type: string
             format: string
-            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"
         responses:
           "200":
             description: "If delete is succesuful"
@@ -150,7 +150,7 @@
             required: false
             type: string
             format: string
-            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"
         responses: 
           "200":
             description: "An electronics with specified ID"
@@ -174,7 +174,7 @@
             required: false
             type: string
             format: string
-            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"
         responses: 
           "200":
             description: "All inventory for electronic with specified ID"
@@ -199,7 +199,7 @@
             required: false
             type: string
             format: string
-            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"
       delete:
         description: "Deletes an inventory for a product  with specified ID"
         produces: 
@@ -217,7 +217,7 @@
             required: false
             type: string
             format: string
-            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"
 
     /carts:
       get:
@@ -231,7 +231,7 @@
             required: false
             type: string
             format: string
-            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"
         responses:
           "200":
             description: "Cart of specified User" 
@@ -255,7 +255,7 @@
             required: false
             type: string
             format: string
-            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"      
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"      
     /carts/inventory:
       get:
         description: "Returns the inventory of a specified user's cart"
@@ -268,7 +268,7 @@
             required: false
             type: string
             format: string
-            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"
         responses:
           "200":
             description: "Collection of Inventory objects within the user's cart"
@@ -294,7 +294,7 @@
                 required: false
                 type: string
                 format: string
-                default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1M2I2MjBjLWJiMmMtMTFlNy1iY2FiLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUwOTExODcyOX0.5CBnN0b_W1cCvI4Q90LxkQBR5fFZFmumczNSI50U3tk"
+                default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"
 
 
   definitions:
