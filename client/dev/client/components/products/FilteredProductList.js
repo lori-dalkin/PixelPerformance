@@ -10,8 +10,7 @@ const mapStateToProps = state => {
         numPages: state.product.numPages,
         products: state.product.products,
         numItems: state.product.numProducts,
-        numItemsPerPage: state.product.productsPerPage,
-        pagination: true
+        numItemsPerPage: state.product.productsPerPage
     };
 }
 
