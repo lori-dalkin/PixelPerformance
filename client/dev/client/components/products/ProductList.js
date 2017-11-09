@@ -4,10 +4,9 @@ import ProductListItem from './ProductListItem';
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 
-import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
+import Table, { TableBody, TableCell, TableHead, TableFooter, TableRow, TablePagination } from 'material-ui/Table';
 
-const ProductList = ({products, onProductClick, onProductDelete, previousPage, nextPage, showPrevious, showNext, pagination }) => {
-  let productId = 1;
+const ProductList = ({ products, onProductClick, onProductDelete, currPage, numItems, numItemsPerPage, gotoPage, changeRowsPerPage }) => {
   return (
     <Grid container spacing={8} style={{ margin: '0px', marginTop: '5px' }}>
       <Grid item xs={12}>
@@ -20,34 +19,28 @@ const ProductList = ({products, onProductClick, onProductDelete, previousPage, n
             </TableRow>
           </TableHead>
           <TableBody>
-            {products.map(product => (
+            {products.map((product, index) => (
               <ProductListItem 
-                key={productId++}
+                key={index}
                 {...product}
                 onClick={ () => onProductClick(product) } 
                 onDelete={ () => onProductDelete(product) }
               />
             ))}
           </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                count={numItems}
+                rowsPerPage={numItemsPerPage}
+                page={currPage - 1}
+                onChangePage={gotoPage}
+                onChangeRowsPerPage={changeRowsPerPage}
+              />
+            </TableRow>
+          </TableFooter>
         </Table>
       </Grid>
-      { pagination && (
-        <Grid container>
-          <Grid item xs={3}></Grid>
-          <Grid item xs={3}>
-            { showPrevious && <Button onClick={() => previousPage()} color="primary">
-                                Previous page
-                              </Button>
-            }
-          </Grid>
-          <Grid item xs={3}>
-            { showNext && <Button onClick={() => nextPage()} color="primary">
-                            Next Page
-                          </Button>
-            }
-          </Grid>
-        </Grid>
-      )}
     </Grid>
   );
 }
@@ -61,12 +54,12 @@ ProductList.propTypes = {
         }).isRequired
     ).isRequired,
     onProductClick: PropTypes.func.isRequired,
-    pagination: PropTypes.bool.isRequired,
-    onProductDelete: PropTypes.func,
-    nextPage: PropTypes.func,
-    previousPage: PropTypes.func,
-    showPrevious: PropTypes.bool,
-    showNext: PropTypes.bool
+    onProductDelete: PropTypes.func.isRequired,
+    currPage: PropTypes.number.isRequired,
+    gotoPage: PropTypes.func.isRequired,
+    changeRowsPerPage: PropTypes.func.isRequired,
+    numItems: PropTypes.number.isRequired,
+    numItemsPerPage: PropTypes.number.isRequired
 };
 
 export default ProductList;
