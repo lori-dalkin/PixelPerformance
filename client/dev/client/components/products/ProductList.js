@@ -23,6 +23,7 @@ const ProductList = ({ userType, products, onProductClick, onProductDelete, onAd
               <ProductListItem 
                 key={index}
                 {...product}
+                userType={userType}
                 onClick={ () => onProductClick(product) } 
                 onDelete={ () => onProductDelete(product) }
                 onAdd={ () => onAddToCartClick(product)}

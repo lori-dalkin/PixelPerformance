@@ -11,7 +11,7 @@ import blue from 'material-ui/colors/blue';
 import pink from 'material-ui/colors/pink';
 require('../../scss/style.scss');
 
-import { setToken, deleteToken } from '../actions/index';
+import { setToken, deleteToken, setUserType, deleteUserType } from '../actions/index';
 import Login from './authentication/Login';
 import ProductPage from './products/ProductPage';
 
@@ -38,10 +38,16 @@ class App extends Component {
 	
 	componentWillMount(){
 		const token = getCookie("token");
+		const userType = getCookie("userType");
 		if(token !== undefined){
 			this.props.setToken(token);
 		} else {
 			this.props.deleteToken();
+		}
+		if(userType !== undefined){
+			this.props.setUserType(userType);
+		}else {
+            this.props.deleteUserType();
 		}
 	}
 
@@ -92,7 +98,9 @@ const mapStateToProps = ({ authentication }) => ({
 
 const mapDispatchToProps = {
 	setToken,
-	deleteToken
+	deleteToken,
+	setUserType,
+	deleteUserType
 };
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(App));
