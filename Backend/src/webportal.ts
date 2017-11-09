@@ -168,13 +168,21 @@ export class WebPortal {
   }
 
   public postUser(req, res) {
-    res.send({data: UserManagement.getInstance().addClient(req.body)});
+    try{
+      res.send({data: UserManagement.getInstance().addClient(req.body)});
+    }catch (e) {
+      res.send({data: false, error: e});
+    }
   }
 
   @beforeMethod(RoutingAdvice.requireLoggedIn)
   public getProducts(req, res) {
-    let electronics = Catalog.getInstance().getProductPage(parseInt(req.query.page), req.query.type, parseInt(req.query.numOfItems));
-    res.send(electronics);
+    try{
+      let electronics = Catalog.getInstance().getProductPage(parseInt(req.query.page), req.query.type, parseInt(req.query.numOfItems));
+      res.send(electronics);
+    }catch (e) {
+      res.send({data: false, error: e});
+    }
   }
 
   @beforeMethod(RoutingAdvice.requireAdmin)
@@ -190,29 +198,45 @@ export class WebPortal {
 
   @beforeMethod(RoutingAdvice.requireLoggedIn)
   public getProductById(req, res) {
-    let electronic: Electronic;
-    electronic = Catalog.getInstance().getProduct(req.params.id);
-    res.send({data: electronic});
+    try{
+      let electronic: Electronic;
+      electronic = Catalog.getInstance().getProduct(req.params.id);
+      res.send({data: electronic});
+    }catch (e) {
+      res.send({data: false, error: e});
+    }
   }
 
   @beforeMethod(RoutingAdvice.requireAdmin)
   public deleteProductById(req, res) {
-    Catalog.getInstance().deleteProduct(req.params.id).then((success)=>{
-      res.send({data: success});
-    });
+    try{
+      Catalog.getInstance().deleteProduct(req.params.id).then((success)=>{
+        res.send({data: success});
+      });
+    }catch (e) {
+      res.send({data: false, error: e});
+    }
   }
 
   @beforeMethod(RoutingAdvice.requireAdmin)
   public modifyProductById(req, res) {
-    Catalog.getInstance().modifyProduct(req.params.id, req.body).then((success) => {
+    try{
+      Catalog.getInstance().modifyProduct(req.params.id, req.body).then((success) => {
         res.send({data:success});
-    });
+      });
+    }catch (e) {
+      res.send({data: false, error: e});
+    }
   }
 
   @beforeMethod(RoutingAdvice.requireLoggedIn)
   public getInventoriesById(req, res) {
-    let inventories = Catalog.getInstance().getAllInventories(req.params.id);
-    res.send({data: inventories });
+    try{
+      let inventories = Catalog.getInstance().getAllInventories(req.params.id);
+      res.send( {count: inventories.length, inventories: inventories});
+    }catch (e) {
+      res.send({data: false, error: e});
+    }
   }
 
   @beforeMethod(RoutingAdvice.requireAdmin)
@@ -228,9 +252,13 @@ export class WebPortal {
 
   @beforeMethod(RoutingAdvice.requireAdmin)
   public deleteInventoryById(req, res) {
-    Catalog.getInstance().deleteInventory(req.params.id).then((success)=>{
+    try{
+      Catalog.getInstance().deleteInventory(req.params.id).then((success)=>{
       res.send({data: success});
     });
+    }catch (e) {
+      res.send({data: false, error: e});
+    }
   }
 
   @beforeMethod(RoutingAdvice.requireClient)
