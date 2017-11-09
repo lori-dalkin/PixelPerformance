@@ -29,13 +29,15 @@ const ProductList = ({ products, onProductClick, onProductDelete, currPage, numI
             ))}
           </TableBody>
           <TableFooter>
-            <TablePagination
-              count={numItems}
-              rowsPerPage={numItemsPerPage}
-              page={currPage - 1}
-              onChangePage={gotoPage}
-              onChangeRowsPerPage={changeRowsPerPage}
-            />
+            <TableRow>
+              <TablePagination
+                count={numItems}
+                rowsPerPage={numItemsPerPage}
+                page={currPage - 1}
+                onChangePage={gotoPage}
+                onChangeRowsPerPage={changeRowsPerPage}
+              />
+            </TableRow>
           </TableFooter>
         </Table>
       </Grid>
