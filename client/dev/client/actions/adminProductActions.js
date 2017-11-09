@@ -109,8 +109,8 @@ export const fetchInventory = (productId) => {
         dispatch(fetchInventoryRequest());
         if (getState().authentication && getState().authentication.token) {
             return callApi(`api/inventories/product/${productId}`, 'get', undefined, `Bearer ${getState().authentication.token}`).then(
-                res => dispatch(updateInventory(res)),
-                error => console.log("error fetching inventory")
+                res => dispatch(receiveInventoryCount(res)),
+                error => dispatch(receiveInventoryCount({ count: 0 }))
             );
         }
     }
