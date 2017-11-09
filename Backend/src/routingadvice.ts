@@ -2,8 +2,6 @@ import * as jwt from "jsonwebtoken";
 import { AdvicePool, beforeMethod } from 'kaop-ts';
 import { UserManagement } from "./usermanagement";
 import { User } from "./Models/user";
-import { Admin } from "./Models/admin";
-import { Client } from "./Models/client";
 
 export class RoutingAdvice extends AdvicePool {
 
@@ -64,8 +62,7 @@ export class RoutingAdvice extends AdvicePool {
         try {
           if(type == "User" || UserManagement.getInstance().getUserById(verifiedJwt.id).getType() == type) {
             self.next();
-          }
-          else {
+          } else {
             console.log(`invalid user id ${verifiedJwt.id}`);
             self.stop();
             self.next();
@@ -73,7 +70,6 @@ export class RoutingAdvice extends AdvicePool {
         }
         catch(e) {
           console.log(e);
-          console.log(`invalid user id ${verifiedJwt.id}`);
           self.stop();
           self.next();
           return;
