@@ -78,37 +78,6 @@ export class WebPortal {
 
     }
 
-  }
-
-  public logout(req, res) {
-    res.send({data: true});
-  }
-
-  public postUser(req, res) {
-    try{
-      res.send({data: UserManagement.getInstance().addClient(req.body)});
-    }catch (e) {
-      res.send({data: false, error: e});
-    }
-  }
-
-  @beforeMethod(RoutingAdvice.requireLoggedIn)
-  public getProducts(req, res) {
-    try{
-      let electronics = Catalog.getInstance().getProductPage(parseInt(req.query.page), req.query.type, parseInt(req.query.numOfItems));
-      res.send(electronics);
-    }catch (e) {
-      res.send({data: false, error: e});
-    }
-  }
-
-  @beforeMethod(RoutingAdvice.requireAdmin)
-  public postProduct(req, res) {
-    try {
-      Catalog.getInstance().addProduct(req.body)
-      res.send({data:true});
-
-
     /**
      * Create REST API routes
       *
@@ -195,8 +164,6 @@ export class WebPortal {
         }
     }
 
-  }
-
   @beforeMethod(RoutingAdvice.requireLoggedIn)
   public getProductById(req, res) {
     try{
@@ -245,6 +212,10 @@ export class WebPortal {
     try {
       Catalog.getInstance().addInventory(req.params.id)
       res.send({ data:true});
+    }catch (e) {
+      res.send({data: false, error: e});
+    }
+  }
 
 
     public logout(req, res) {
@@ -253,9 +224,13 @@ export class WebPortal {
     }
 
     public postUser(req, res) {
-        res.send({ data: UserManagement.getInstance().addClient(req.body) });
+      try{
+        res.send({data: UserManagement.getInstance().addClient(req.body)});
+      }catch (e) {
+        res.send({data: false, error: e});
+      }
 
-  }
+    }
 
   @beforeMethod(RoutingAdvice.requireAdmin)
   public deleteInventoryById(req, res) {
@@ -273,12 +248,21 @@ export class WebPortal {
     try{
       let cart  = PurchaseManagement.getInstance().getCart(req.user.id)
       res.send({data: cart});
+    }catch (e) {
+      res.send({data: false, error: e});
+    }
+  }
+      
 
 
     @beforeMethod(RoutingAdvice.requireLoggedIn)
     public getProducts(req, res) {
+      try{
         let electronics = Catalog.getInstance().getProductPage(parseInt(req.query.page), req.query.type, parseInt(req.query.numOfItems));
         res.send(electronics);
+      }catch (e) {
+        res.send({data: false, error: e});
+      }
     }
 
     @beforeMethod(RoutingAdvice.requireAdmin)
@@ -291,63 +275,6 @@ export class WebPortal {
             res.send({ data: false, error: e });
         }
     }
-
-    @beforeMethod(RoutingAdvice.requireLoggedIn)
-    public getProductById(req, res) {
-        let electronic: Electronic;
-        electronic = Catalog.getInstance().getProduct(req.params.id);
-        res.send({ data: electronic });
-    }
-
-    @beforeMethod(RoutingAdvice.requireAdmin)
-    public deleteProductById(req, res) {
-        Catalog.getInstance().deleteProduct(req.params.id).then((success) => {
-            res.send({ data: success });
-        });
-    }
-
-    @beforeMethod(RoutingAdvice.requireAdmin)
-    public modifyProductById(req, res) {
-        Catalog.getInstance().modifyProduct(req.params.id, req.body).then((success) => {
-            res.send({ data: success });
-        });
-    }
-
-    @beforeMethod(RoutingAdvice.requireLoggedIn)
-    public getInventoriesById(req, res) {
-        let inventories = Catalog.getInstance().getAllInventories(req.params.id);
-        res.send({ data: inventories });
-    }
-
-    @beforeMethod(RoutingAdvice.requireAdmin)
-    public postInventoryById(req, res) {
-        try {
-            Catalog.getInstance().addInventory(req.params.id)
-            res.send({ data: true });
-        }
-        catch (e) {
-            res.send({ data: false, error: e });
-        }
-    }
-
-    @beforeMethod(RoutingAdvice.requireAdmin)
-    public deleteInventoryById(req, res) {
-        Catalog.getInstance().deleteInventory(req.params.id).then((success) => {
-            res.send({ data: success });
-        });
-    }
-
-    @beforeMethod(RoutingAdvice.requireClient)
-    public getCart(req, res) {
-        try {
-            let cart = PurchaseManagement.getInstance().getCart(req.user.id)
-            res.send({ data: cart });
-        }
-        catch (e) {
-            res.send({ data: null, error: e });
-        }
-    }
-
 
     @beforeMethod(RoutingAdvice.requireClient)
     public getCartInventory(req, res) {
