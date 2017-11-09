@@ -46,12 +46,12 @@ const ProductList = ({ products, onProductClick, onProductDelete, currPage, numP
         </Table>
       </Grid>
       <Grid container justify='center'>
-        <Grid item xs={width}>
-          { showPrevious && <Button onClick={() => previousPage()} color="primary">
+        { showPrevious && <Grid item xs={width}>
+                            <Button onClick={() => previousPage()} color="primary" style={{ width: '100%' }}>
                               &lt;
                             </Button>
-          }
-        </Grid>
+                          </Grid>
+        }
         { pages.map(index => {
             let color = "accent";
 
@@ -61,19 +61,19 @@ const ProductList = ({ products, onProductClick, onProductDelete, currPage, numP
 
             return (
               <Grid key={index} item xs={width}>
-                  <Button onClick={() => gotoPage(index)} color={color}>
+                  <Button onClick={() => gotoPage(index)} color={color} style={{ width: '100%' }}>
                     { index }
                   </Button>
               </Grid>
             )
           })
         }
-        <Grid item xs={width}>
-          { showNext && <Button onClick={() => nextPage()} color="primary">
+        { showNext && <Grid item xs={width}>
+                        <Button onClick={() => nextPage()} color="primary" style={{ width: '100%' }}>
                           &gt;
                         </Button>
-          }
-        </Grid>
+                      </Grid>
+        }
       </Grid>
     </Grid>
   );
