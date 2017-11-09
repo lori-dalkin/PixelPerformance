@@ -1,4 +1,4 @@
-import * as actions from '../actions/action-types.js'
+import * as actions from '../actions/action-types.js';
 
 const defaultDropDownsProduct = {
     id: '',

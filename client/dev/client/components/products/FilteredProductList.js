@@ -8,7 +8,8 @@ const mapStateToProps = state => {
     return {
         products: state.product.products,
         showPrevious: state.product.page > 1,
-        showNext: state.product.maxPage == undefined || state.product.page < state.product.maxPage
+        showNext: state.product.maxPage == undefined || state.product.page < state.product.maxPage,
+        pagination: true
     };
 }
 

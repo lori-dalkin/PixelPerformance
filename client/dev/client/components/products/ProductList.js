@@ -6,7 +6,7 @@ import Button from 'material-ui/Button';
 
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 
-const ProductList = ({products, onProductClick, onProductDelete, previousPage, nextPage, showPrevious, showNext }) => {
+const ProductList = ({products, onProductClick, onProductDelete, previousPage, nextPage, showPrevious, showNext, pagination }) => {
   let productId = 1;
   return (
     <Grid container spacing={8} style={{ margin: '0px', marginTop: '5px' }}>
@@ -31,21 +31,23 @@ const ProductList = ({products, onProductClick, onProductDelete, previousPage, n
           </TableBody>
         </Table>
       </Grid>
-      <Grid container>
-        <Grid item xs={3}></Grid>
-        <Grid item xs={3}>
-          { showPrevious && <Button onClick={() => previousPage()} color="primary">
-                              Previous page
-                            </Button>
-          }
+      { pagination && (
+        <Grid container>
+          <Grid item xs={3}></Grid>
+          <Grid item xs={3}>
+            { showPrevious && <Button onClick={() => previousPage()} color="primary">
+                                Previous page
+                              </Button>
+            }
+          </Grid>
+          <Grid item xs={3}>
+            { showNext && <Button onClick={() => nextPage()} color="primary">
+                            Next Page
+                          </Button>
+            }
+          </Grid>
         </Grid>
-        <Grid item xs={3}>
-          { showNext && <Button onClick={() => nextPage()} color="primary">
-                          Next Page
-                        </Button>
-          }
-        </Grid>
-      </Grid>
+      )}
     </Grid>
   );
 }
@@ -59,11 +61,12 @@ ProductList.propTypes = {
         }).isRequired
     ).isRequired,
     onProductClick: PropTypes.func.isRequired,
-    onProductDelete: PropTypes.func.isRequired,
-    nextPage: PropTypes.func.isRequired,
-    previousPage: PropTypes.func.isRequired,
-    showPrevious: PropTypes.bool.isRequired,
-    showNext: PropTypes.bool.isRequired
+    pagination: PropTypes.bool.isRequired,
+    onProductDelete: PropTypes.func,
+    nextPage: PropTypes.func,
+    previousPage: PropTypes.func,
+    showPrevious: PropTypes.bool,
+    showNext: PropTypes.bool
 };
 
 export default ProductList;

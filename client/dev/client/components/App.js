@@ -14,6 +14,7 @@ require('../../scss/style.scss');
 import { setToken, deleteToken } from '../actions/index';
 import Login from './authentication/Login';
 import ProductPage from './products/ProductPage';
+import HistoryPage from './history/HistoryPage';
 
 const styles = theme => ({
 	root: {
@@ -74,6 +75,7 @@ class App extends Component {
 				    </AppBar>
 				    <Route exact path="/" component={Login} />
 				    <Route path="/products" component={ProductPage} />
+				    <Route path="/history" component={HistoryPage} />
 				  </div>
 			  </MuiThemeProvider>
 		  </Router>
