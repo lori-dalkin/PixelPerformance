@@ -27,6 +27,13 @@ export const getProductsFailure = (error) => {
     };
 }
 
+export const setNumProducts = (number) => {
+    return {
+        type: actions.SET_NUM_PRODUCTS,
+        numProducts: number
+    };
+}
+
 function shouldGetProducts(state) {
     const products = state.product.products;
 
@@ -62,7 +69,7 @@ export const getProducts = () => {
 
                 return callApi(endPoint, 'get', undefined, `Bearer ${getState().authentication.token}`).then(
                     res => {
-                        dispatch(setMaxPage(res.totalProducts));
+                        dispatch(setNumProducts(res.totalProducts));
                         dispatch(getProductsSuccess(res.products));
                     },
                     error => dispatch(getProductsFailure(error))
@@ -75,13 +82,6 @@ export const getProducts = () => {
 // -----------------------------------------------
 //               PAGINATION
 //------------------------------------------------
-export const setMaxPage = (numProducts) => {
-    return {
-        type: actions.SET_MAX_PRODUCT_PAGE,
-        numProducts: numProducts
-    };
-}
-
 export const setPage = (number) => {
     return {
         type: actions.SET_PRODUCT_PAGE,
@@ -89,20 +89,23 @@ export const setPage = (number) => {
     };
 }
 
-export const incrementPage = () => { return { type: actions.INCREMENT_PRODUCT_PAGE }; }
-
-export const decrementPage = () => { return { type: actions.DECREMENT_PRODUCT_PAGE }; }
-
-export const showNextProductPage = () => {
+export const showSpecificProductPage = (number) => {
     return function (dispatch) {
-        dispatch(incrementPage());
+        dispatch(setPage(number));
         dispatch(getProducts());
-    }
+    };
 }
 
-export const showPreviousProductPage = () => {
+export const setRowsAmount = (number) => {
+    return {
+        type: actions.SET_ROWS_PER_PAGE,
+        rowsPerPage: number
+    };
+}
+
+export const setRowsPerPage = (number) => {
     return function (dispatch) {
-        dispatch(decrementPage());
+        dispatch(setRowsAmount(number));
         dispatch(getProducts());
-    }
+    };
 }
