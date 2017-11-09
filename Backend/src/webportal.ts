@@ -324,6 +324,7 @@ export class WebPortal {
     }
   }
 
+
   @beforeMethod(RoutingAdvice.requireClient)
   public deleteRecordsInventoryById(req, res) {
     try{
