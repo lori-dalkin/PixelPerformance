@@ -156,7 +156,7 @@ export class WebPortal {
     router.delete("/api/carts/inventory/:id", this.deleteCartInventoryById);
     router.post("/api/carts/checkout", this.postCartCheckout);
       
-    router.get("/api/records/viewPurchase/:id", this.viewPurchases)
+    router.get("/api/records/:id", this.viewPurchases)
 
 
     router.get("/api/products/", passport.authenticate('jwt', { session: false }), function (req, res) {
