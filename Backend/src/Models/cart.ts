@@ -8,7 +8,7 @@ import assert = require('assert');
 
 var db = new dbconnection().getDBConnector();
 export class Cart {
-    //This class will have an array of inventory objects, an id, and a userId.
+       //This class will have an array of inventory objects, an id, and a userId.
     private id: string;
     private userId: string;
     private inventory: Inventory[] = new Array<Inventory>();
@@ -83,6 +83,7 @@ export class Cart {
 
 
 
+
     @afterMethod(function (meta) {
         assert(meta.result != null);
     })
@@ -112,6 +113,7 @@ export class Cart {
     }
 
 
+
     /********************************************************
      * Method to delete cart item and database item
      *********************************************************/
@@ -135,3 +137,4 @@ export class Cart {
     }
 
 }
+
