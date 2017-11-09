@@ -13,7 +13,7 @@ import IconButton from 'material-ui/IconButton';
 import AddCircleOutline from 'material-ui-icons/AddCircleOutline';
 import RemoveCircleOutline from 'material-ui-icons/RemoveCircleOutline';
 
-import { addToInventory, removeFromInventory } from '../../actions/adminProductActions';
+import { addToInventory, removeFromInventory, fetchInventory } from '../../actions/adminProductActions';
 import { showModifyProduct } from '../../actions';
 
 class ProductViewDialog extends Component {
@@ -22,10 +22,12 @@ class ProductViewDialog extends Component {
     super(props);
     this.state = {
       showInventory: false,
-      inventory: 1
+      inventory: 0
     }
 
     this.toggleInventoryView = () => {
+      if(!this.state.showInventory)
+        this.props.fetchInventory(this.props.product.selectedProduct.id);
       this.setState({ ...this.state, showInventory: !this.state.showInventory });
     }
 
@@ -40,7 +42,6 @@ class ProductViewDialog extends Component {
         this.props.removeFromInventory(this.props.product.selectedProduct.id);
       }
     }
-
   }
 
 	render() {
@@ -61,8 +62,18 @@ class ProductViewDialog extends Component {
                 <hr/>
                 <DialogContentText>
                   <strong>Current Inventory Count: </strong>{this.state.inventory}<br/>
-                  <IconButton  onClick={this.removeInventory}><RemoveCircleOutline/></IconButton>
-                  <IconButton  onClick={this.addInventory}><AddCircleOutline/></IconButton>
+                  { this.props.product.isFetchingInventory &&
+                    <div>
+                      <IconButton  onClick={this.removeInventory}><RemoveCircleOutline/></IconButton>
+                      <IconButton  onClick={this.addInventory}><AddCircleOutline/></IconButton>
+                    </div>
+                  }
+                  { !this.props.product.isFetchingInventory &&
+                    <div>
+                      <IconButton  disabled><RemoveCircleOutline/></IconButton>
+                      <IconButton  disabled><AddCircleOutline/></IconButton>
+                    </div>
+                  }
                 </DialogContentText>
               </span>
             }
@@ -91,7 +102,8 @@ const mapStateToProps = ({ product }) => ({
 const mapDispatchToProps = {
   showModifyProduct,
   addToInventory,
-  removeFromInventory
+  removeFromInventory,
+  fetchInventory
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductViewDialog);
