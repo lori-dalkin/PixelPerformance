@@ -103,103 +103,103 @@ export class WebPortal {
 
 
     router.post("/api/users/login", function (req, res) {
-      let body = req.body as any;
-      if(body.email && body.password){
-        var email = body.email;
-        var password = body.password;
-      }
-      
-      // If password is correct, create an authentication token for the user
-      let user = routingUsers.getUserByEmail(email);
-      console.log(user);
-      if (user) {
-        bcrypt.compare(req.body.password.replace(/ /g, ''), user.password.replace(/ /g, '')).then(function(auth) {
-          if (auth) {
-            var payload = {id: user.id};
-            var token = jwt.sign(payload, 'tasmanianDevil');
-            if(user instanceof Client){
-              res.json({message: "Client" , data: token});
-            }else{
-              res.json({message: "Admin", data: token});
+        let body = req.body as any;
+        if (body.email && body.password) {
+            var email = body.email;
+            var password = body.password;
+        }
+
+        // If password is correct, create an authentication token for the user
+        let user = routingUsers.getUserByEmail(email);
+        console.log(user);
+        if (user) {
+            bcrypt.compare(req.body.password.replace(/ /g, ''), user.password.replace(/ /g, '')).then(function (auth) {
+                if (auth) {
+                    var payload = { id: user.id };
+                    var token = jwt.sign(payload, 'tasmanianDevil');
+                    if (user instanceof Client) {
+                        res.json({ message: "Client", data: token });
+                    } else {
+                        res.json({ message: "Admin", data: token });
+                    }
+                    SystemMonitor.getInstance().logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() + " has logged in", token);
+                } else {
+                    res.status(401).json({ message: "Invalid login credentials." });
+                }
+            })
+        } else {
+            res.status(401).json({ message: "no such user found" });
+        }
+
+        router.post("/api/users/login", this.login);
+        router.post("/api/users/logout", this.logout);
+        router.post("/api/users/", this.postUser);
+
+
+        router.get("/api/products/", this.getProducts);
+        router.post("/api/products/", this.postProduct);
+
+        router.get("/api/products/:id", this.getProductById);
+        router.delete("/api/products/:id", this.deleteProductById);
+        router.put("/api/products/:id", this.modifyProductById);
+
+        router.get("/api/inventories/product/:id", this.getInventoriesById);
+        router.post("/api/inventories/product/:id", this.postInventoryById);
+        router.delete("/api/inventories/product/:id", this.deleteInventoryById);
+
+        router.get("/api/carts/", this.getCart);
+        router.get("/api/carts/inventory/", this.getCartInventory);
+        router.post("/api/carts/inventory/:id", this.postCartInventoryById);
+        router.post("/api/carts/startTransaction/:id", this.postCartsStartTransactionById);
+        router.post("/api/carts/saveCart/:id", this.postCartsSaveCartById);
+        router.delete("/api/cart", this.deleteCart);
+        router.delete("/api/carts/inventory/:id", this.deleteCartInventoryById);
+        router.post("/api/carts/checkout", this.postCartCheckout);
+
+        router.get("/api/records/:id", this.viewPurchases);
+
+
+        router.get("/api/products/", passport.authenticate('jwt', { session: false }), function (req, res) {
+            let electronics = routingCatalog.getProductPage(parseInt(req.query.page), req.query.type, parseInt(req.query.numOfItems));
+            res.send(electronics);
+        });
+        router.post("/api/products/", passport.authenticate('jwt', { session: false }), function (req, res) {
+            try {
+                routingCatalog.addProduct(req.body)
+                res.send({ data: true });
             }
-            SystemMonitor.getInstance().logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() + " has logged in", token);
-          } else {
-            res.status(401).json({message: "Invalid login credentials."});
-          }
-        })
-      } else {
-        res.status(401).json({message: "no such user found"});
-      }
+            catch (e) {
+                res.send({ data: false, error: e });
+            }
+        });
 
-    router.post("/api/users/login", this.login);
-    router.post("/api/users/logout", this.logout);
-    router.post("/api/users/", this.postUser);
+        router.get("/api/products/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+            let electronic: Electronic;
+            electronic = routingCatalog.getProduct(req.params.id);
+            res.send({ data: electronic });
+        });
 
+        router.delete("/api/products/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+            routingCatalog.deleteProduct(req.params.id).then((success) => {
+                res.send({ data: success });
+            });
+        });
 
-    router.get("/api/products/", this.getProducts);
-    router.post("/api/products/", this.postProduct);
-    
-    router.get("/api/products/:id", this.getProductById);
-    router.delete("/api/products/:id", this.deleteProductById);
-    router.put("/api/products/:id", this.modifyProductById);
+        router.post("/api/inventories/product/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+            try {
+                routingCatalog.addInventory(req.params.id)
+                res.send({ data: true });
+            }
+            catch (e) {
+                res.send({ data: false, error: e });
+            }
+        });
 
-    router.get("/api/inventories/product/:id", this.getInventoriesById);
-    router.post("/api/inventories/product/:id", this.postInventoryById);
-    router.delete("/api/inventories/product/:id", this.deleteInventoryById);
+        router.delete("/api/records/inventory/:id", this.deleteRecordsInventoryById);
 
-    router.get("/api/carts/", this.getCart);
-    router.get("/api/carts/inventory/", this.getCartInventory);
-    router.post("/api/carts/inventory/:id", this.postCartInventoryById);
-    router.post("/api/carts/startTransaction/:id", this.postCartsStartTransactionById);
-    router.post("/api/carts/saveCart/:id", this.postCartsSaveCartById);
-    router.delete("/api/cart", this.deleteCart);  
-    router.delete("/api/carts/inventory/:id", this.deleteCartInventoryById);
-    router.post("/api/carts/checkout", this.postCartCheckout);
-      
-    router.get("/api/records/:id", this.viewPurchases);
-
-
-    router.get("/api/products/", passport.authenticate('jwt', { session: false }), function (req, res) {
-      let electronics = routingCatalog.getProductPage(parseInt(req.query.page), req.query.type, parseInt(req.query.numOfItems));
-      res.send(electronics);
-    });
-    router.post("/api/products/", passport.authenticate('jwt', { session: false }), function (req, res) {
-      try {
-        routingCatalog.addProduct(req.body)
-        res.send({data:true});
-      }
-      catch (e) {
-        res.send({data: false, error: e});
-      }
-    });
-    
-    router.get("/api/products/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
-      let electronic: Electronic;
-      electronic = routingCatalog.getProduct(req.params.id);
-      res.send({data: electronic});
-    });
-    
-    router.delete("/api/products/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
-      routingCatalog.deleteProduct(req.params.id).then((success)=>{
-        res.send({data: success});
-      });
-    });
-
-    router.post("/api/inventories/product/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
-      try {
-        routingCatalog.addInventory(req.params.id)
-        res.send({ data:true});
-      }
-      catch (e) {
-        res.send({data: false, error: e});
-      }
-    });
-
-    router.delete("/api/records/inventory/:id", this.deleteRecordsInventoryById);
-
-    //use router middleware
-    this.app.use(router);
-  }
+        //use router middleware
+        this.app.use(router);
+    }
 
 
   public login(req, res) {
