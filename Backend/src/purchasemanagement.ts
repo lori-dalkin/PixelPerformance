@@ -131,8 +131,26 @@ export class PurchaseManagement {
 				return this.activeCarts[i];
 		}
 	}
+
+
+    @beforeMethod(function (meta) {
+        assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
+        assert(PurchaseManagement.getInstance().findCart(meta.args[0]) != null, "there are no purchases associated to this account");
+    })
+    @afterMethod(function (meta) {
+            assert(meta.result != null);
+    })
 	// viewPurchases(userId: string): Inventory []
 
+    public viewPurchases(userId: String): Inventory[] {
+        let purchase_history: Inventory[] = new Array<Inventory>();
+        for (let i = 0; i < this.purchaseRecords.length; i++) {
+            if (this.purchaseRecords[i].getUserId() == userId) {
+                purchase_history.concat(this.purchaseRecords[i].getInventory());
+            }
+          }
+         return purchase_history;
+    }
 	// returnInventory(userId: string, serialNumber: string): bool
 
     @beforeMethod(function(meta) {

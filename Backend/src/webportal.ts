@@ -101,6 +101,36 @@ export class WebPortal {
       res.send('20 dollars is 20 dollars backend home page')
     });
 
+
+    router.post("/api/users/login", function (req, res) {
+      let body = req.body as any;
+      if(body.email && body.password){
+        var email = body.email;
+        var password = body.password;
+      }
+      
+      // If password is correct, create an authentication token for the user
+      let user = routingUsers.getUserByEmail(email);
+      console.log(user);
+      if (user) {
+        bcrypt.compare(req.body.password.replace(/ /g, ''), user.password.replace(/ /g, '')).then(function(auth) {
+          if (auth) {
+            var payload = {id: user.id};
+            var token = jwt.sign(payload, 'tasmanianDevil');
+            if(user instanceof Client){
+              res.json({message: "Client" , data: token});
+            }else{
+              res.json({message: "Admin", data: token});
+            }
+            SystemMonitor.getInstance().logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() + " has logged in", token);
+          } else {
+            res.status(401).json({message: "Invalid login credentials."});
+          }
+        })
+      } else {
+        res.status(401).json({message: "no such user found"});
+      }
+
     router.post("/api/users/login", this.login);
     router.post("/api/users/logout", this.logout);
     router.post("/api/users/", this.postUser);
@@ -126,11 +156,49 @@ export class WebPortal {
     router.delete("/api/carts/inventory/:id", this.deleteCartInventoryById);
     router.post("/api/carts/checkout", this.postCartCheckout);
 
+
+    router.get("/api/products/", passport.authenticate('jwt', { session: false }), function (req, res) {
+      let electronics = routingCatalog.getProductPage(parseInt(req.query.page), req.query.type, parseInt(req.query.numOfItems));
+      res.send(electronics);
+    });
+    router.post("/api/products/", passport.authenticate('jwt', { session: false }), function (req, res) {
+      try {
+        routingCatalog.addProduct(req.body)
+        res.send({data:true});
+      }
+      catch (e) {
+        res.send({data: false, error: e});
+      }
+    });
+    
+    router.get("/api/products/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+      let electronic: Electronic;
+      electronic = routingCatalog.getProduct(req.params.id);
+      res.send({data: electronic});
+    });
+    
+    router.delete("/api/products/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+      routingCatalog.deleteProduct(req.params.id).then((success)=>{
+        res.send({data: success});
+      });
+    });
+
+    router.post("/api/inventories/product/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+      try {
+        routingCatalog.addInventory(req.params.id)
+        res.send({ data:true});
+      }
+      catch (e) {
+        res.send({data: false, error: e});
+      }
+    });
+=======
     router.delete("/api/records/inventory/:id", this.deleteRecordsInventoryById);
 
     //use router middleware
     this.app.use(router);
   }
+
 
   public login(req, res) {
     let routingUsers = UserManagement.getInstance();
@@ -177,6 +245,17 @@ export class WebPortal {
     res.send(electronics);
   }
 
+
+    router.delete("/api/carts/inventory/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+      try{
+        PurchaseManagement.getInstance().removeFromCart(req.user.id,req.params.id);
+        res.send({data: true});
+      }
+      catch(e){
+        res.send({data: false, error: e});
+      }
+
+
   @beforeMethod(RoutingAdvice.requireAdmin)
   public postProduct(req, res) {
     try {
@@ -199,8 +278,49 @@ export class WebPortal {
   public deleteProductById(req, res) {
     Catalog.getInstance().deleteProduct(req.params.id).then((success)=>{
       res.send({data: success});
+
     });
   }
+
+    router.delete("/api/records/inventory/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+      try{
+          let returnSuccess = PurchaseManagement.getInstance().returnInventory(req.user.id,req.params.id);
+          res.send({data: true});
+      }
+      catch(e){
+        res.send({data: false, error: e});
+      }
+    });
+
+    router.post("/api/carts/checkout", passport.authenticate('jwt', { session: false }), function (req, res) {
+      try{
+        PurchaseManagement.getInstance().checkout(req.user.id)
+        res.send({data: true});
+      }
+      catch(e){
+        res.send({data: false, error: e});
+      }
+    });
+
+    router.get("/api/carts/inventory/", passport.authenticate('jwt', { session: false }), function (req, res) {
+        try {
+            let inventories = PurchaseManagement.getInstance().viewPurchases(req.user.id);
+             res.send({data: inventories});
+      }
+      catch(e){
+        res.send({data: null, error: e});
+
+      }
+    });
+
+    router.get("/api/carts/", passport.authenticate('jwt', { session: false }), function (req, res) {
+      try{
+        let cart  = PurchaseManagement.getInstance().getCart(req.user.id)
+        res.send({data: cart});
+      }
+      catch(e){
+        res.send({data: null, error: e});
+      }
 
   @beforeMethod(RoutingAdvice.requireAdmin)
   public modifyProductById(req, res) {
@@ -230,8 +350,21 @@ export class WebPortal {
   public deleteInventoryById(req, res) {
     Catalog.getInstance().deleteInventory(req.params.id).then((success)=>{
       res.send({data: success});
+
     });
   }
+
+
+    router.get("/api/carts/inventory/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
+        try {
+            let inventories = PurchaseManagement.getInstance().viewCart(req.user.id)
+            res.send({ data: inventories });
+        }
+        catch (e) {
+            res.send({ data: null, error: e });
+
+        }
+    });
 
   @beforeMethod(RoutingAdvice.requireClient)
   public getCart(req, res) {
@@ -374,6 +507,38 @@ export class WebPortal {
     
     //error handling
     this.app.use(errorHandler());
+
+
+    let routingUsers = this.usermanagement;
+
+    let ExtractJwt = passportJWT.ExtractJwt;
+    let JwtStrategy = passportJWT.Strategy;
+    var jwtOptions = { jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), secretOrKey:'tasmanianDevil', passReqToCallback: true }
+    
+    var strategy = new JwtStrategy(jwtOptions, function(req, jwt_payload, next) {
+      let user;
+      try{
+        user = routingUsers.getUserById(jwt_payload.id);
+      }catch(e){
+        console.log(e);
+        user = null;
+      }
+      let route = req.method.toLowerCase() + req.path;
+
+      if (user && user.checkPrivilege(route)) {
+        console.log(user);
+        console.log("authorized to access [" + route + "]");
+        next(null, user);
+      } else {
+        console.log(user);
+        console.log("unauthorized to access [" + route + "]");
+        next(null, false);
+      }
+    });
+    
+    passport.use(strategy);
+    
+
   
 }
 
