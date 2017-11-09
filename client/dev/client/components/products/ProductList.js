@@ -6,8 +6,22 @@ import Button from 'material-ui/Button';
 
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 
-const ProductList = ({products, onProductClick, onProductDelete, previousPage, nextPage, showPrevious, showNext }) => {
-  let productId = 1;
+const ProductList = ({ products, onProductClick, onProductDelete, currPage, numPages, previousPage, gotoPage, nextPage, showPrevious, showNext }) => {
+  let numPagesShowing = Math.min(3, numPages);
+  let firstPage = 1;
+
+  if (numPages > 3) {
+    firstPage = Math.max(1, currPage - Math.floor(numPagesShowing / 2))
+  }
+
+  let pages = [];
+
+  for (var i = firstPage; i <= numPages && i < firstPage + numPagesShowing; i++) {
+    pages.push(i);
+  }
+
+  let width = Math.max(2, Math.floor(12 / (numPagesShowing + 2)));
+
   return (
     <Grid container spacing={8} style={{ margin: '0px', marginTop: '5px' }}>
       <Grid item xs={12}>
@@ -20,9 +34,9 @@ const ProductList = ({products, onProductClick, onProductDelete, previousPage, n
             </TableRow>
           </TableHead>
           <TableBody>
-            {products.map(product => (
+            {products.map((product, index) => (
               <ProductListItem 
-                key={productId++}
+                key={index}
                 {...product}
                 onClick={ () => onProductClick(product) } 
                 onDelete={ () => onProductDelete(product) }
@@ -31,17 +45,32 @@ const ProductList = ({products, onProductClick, onProductDelete, previousPage, n
           </TableBody>
         </Table>
       </Grid>
-      <Grid container>
-        <Grid item xs={3}></Grid>
-        <Grid item xs={3}>
+      <Grid container justify='center'>
+        <Grid item xs={width}>
           { showPrevious && <Button onClick={() => previousPage()} color="primary">
-                              Previous page
+                              &lt;
                             </Button>
           }
         </Grid>
-        <Grid item xs={3}>
+        { pages.map(index => {
+            let color = "accent";
+
+            if (index == currPage) {
+              color = "primary";
+            }
+
+            return (
+              <Grid key={index} item xs={width}>
+                  <Button onClick={() => gotoPage(index)} color={color}>
+                    { index }
+                  </Button>
+              </Grid>
+            )
+          })
+        }
+        <Grid item xs={width}>
           { showNext && <Button onClick={() => nextPage()} color="primary">
-                          Next Page
+                          &gt;
                         </Button>
           }
         </Grid>
@@ -60,8 +89,11 @@ ProductList.propTypes = {
     ).isRequired,
     onProductClick: PropTypes.func.isRequired,
     onProductDelete: PropTypes.func.isRequired,
+    currPage: PropTypes.number.isRequired,
+    numPages: PropTypes.number.isRequired,
     nextPage: PropTypes.func.isRequired,
     previousPage: PropTypes.func.isRequired,
+    gotoPage: PropTypes.func.isRequired,
     showPrevious: PropTypes.bool.isRequired,
     showNext: PropTypes.bool.isRequired
 };

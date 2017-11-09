@@ -42,6 +42,7 @@ const initialState = {
     dropDownsProduct: defaultDropDownsProduct,
     selectedProduct: {},
     page: 1,
+    numPages: 1,
     maxPage: undefined,
     productsPerPage: 10
 };
@@ -212,6 +213,7 @@ export default function (state = initialState, action) {
         case actions.SET_MAX_PRODUCT_PAGE:
             return {
                 ...state,
+                numPages: Math.ceil(action.numProducts / state.productsPerPage),
                 maxPage: Math.ceil(action.numProducts / state.productsPerPage)
             };
             break;

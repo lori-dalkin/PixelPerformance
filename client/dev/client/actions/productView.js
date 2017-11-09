@@ -106,3 +106,10 @@ export const showPreviousProductPage = () => {
         dispatch(getProducts());
     }
 }
+
+export const showSpecificProductPage = (number) => {
+    return function (dispatch) {
+        dispatch(setPage(number));
+        dispatch(getProducts());
+    }
+}
