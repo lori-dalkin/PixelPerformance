@@ -26,8 +26,6 @@ class ProductViewDialog extends Component {
     }
 
     this.toggleInventoryView = () => {
-      if(!this.state.showInventory)
-        this.props.fetchInventory(this.props.product.selectedProduct.id);
       this.setState({ ...this.state, showInventory: !this.state.showInventory });
     }
 
@@ -42,6 +40,10 @@ class ProductViewDialog extends Component {
         this.props.removeFromInventory(this.props.product.selectedProduct.id);
       }
     }
+  }
+
+  componentWillReceiveProps(nextProps){
+    this.setState({ ...this.state, inventory: nextProps.product.inventoryCount });
   }
 
 	render() {
@@ -62,17 +64,17 @@ class ProductViewDialog extends Component {
                 <hr/>
                 <DialogContentText>
                   <strong>Current Inventory Count: </strong>{this.state.inventory}<br/>
-                  { this.props.product.isFetchingInventory &&
-                    <div>
+                  { !this.props.product.isFetchingInventory &&
+                    <span>
                       <IconButton  onClick={this.removeInventory}><RemoveCircleOutline/></IconButton>
                       <IconButton  onClick={this.addInventory}><AddCircleOutline/></IconButton>
-                    </div>
+                    </span>
                   }
-                  { !this.props.product.isFetchingInventory &&
-                    <div>
+                  { this.props.product.isFetchingInventory &&
+                    <span>
                       <IconButton  disabled><RemoveCircleOutline/></IconButton>
                       <IconButton  disabled><AddCircleOutline/></IconButton>
-                    </div>
+                    </span>
                   }
                 </DialogContentText>
               </span>

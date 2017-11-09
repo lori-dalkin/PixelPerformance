@@ -119,6 +119,7 @@ export const fetchInventory = (productId) => {
 export const fetchInventoryRequest = () => { return { type: actions.GET_INVENTORY_COUNT}; }
 
 export const receiveInventoryCount = (inventory) => { 
+    console.log(inventory);
     var count = (inventory.count === undefined)?0:inventory.count;
     return { type: actions.RECEIVE_INVENTORY_COUNT, count }; 
 }
