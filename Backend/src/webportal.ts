@@ -192,7 +192,7 @@ export class WebPortal {
         res.send({data: false, error: e});
       }
     });
-=======
+
     router.delete("/api/records/inventory/:id", this.deleteRecordsInventoryById);
 
     //use router middleware
@@ -302,7 +302,7 @@ export class WebPortal {
       }
     });
 
-    router.get("/api/carts/inventory/", passport.authenticate('jwt', { session: false }), function (req, res) {
+    router.get("/api/records/inventory/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
         try {
             let inventories = PurchaseManagement.getInstance().viewPurchases(req.user.id);
              res.send({data: inventories});
