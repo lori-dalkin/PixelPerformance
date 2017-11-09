@@ -6,7 +6,7 @@ import Button from 'material-ui/Button';
 
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 
-const ProductList = ({products, onProductClick, onProductDelete, previousPage, nextPage, showPrevious, showNext }) => {
+const ProductList = ({userType, products, onProductClick, onProductDelete, onAddToCartClick, previousPage, nextPage, showPrevious, showNext }) => {
   let productId = 1;
   return (
     <Grid container spacing={8} style={{ margin: '0px', marginTop: '5px' }}>
@@ -26,6 +26,7 @@ const ProductList = ({products, onProductClick, onProductDelete, previousPage, n
                 {...product}
                 onClick={ () => onProductClick(product) } 
                 onDelete={ () => onProductDelete(product) }
+                onAdd={ () => onAddToCartClick(product)}
               />
             ))}
           </TableBody>
@@ -51,6 +52,7 @@ const ProductList = ({products, onProductClick, onProductDelete, previousPage, n
 }
 
 ProductList.propTypes = {
+    userType: PropTypes.string.isRequired,
     products: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.string.isRequired,
@@ -60,6 +62,7 @@ ProductList.propTypes = {
     ).isRequired,
     onProductClick: PropTypes.func.isRequired,
     onProductDelete: PropTypes.func.isRequired,
+    onAddToCartClick: PropTypes.func.isRequired,
     nextPage: PropTypes.func.isRequired,
     previousPage: PropTypes.func.isRequired,
     showPrevious: PropTypes.bool.isRequired,

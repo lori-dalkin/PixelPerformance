@@ -1,7 +1,8 @@
 import { ATTEMPT_LOGIN, ACCEPT_LOGIN, SET_TOKEN, DELETE_TOKEN, REJECT_LOGIN } from '../actions/action-types';
 
 const initialState = {
-    loading: false
+    loading: false,
+	userType: undefined
 };
 
 export default function (state = initialState, action) {

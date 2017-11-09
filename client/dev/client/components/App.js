@@ -14,8 +14,6 @@ require('../../scss/style.scss');
 import { setToken, deleteToken } from '../actions/index';
 import Login from './authentication/Login';
 import ProductPage from './products/ProductPage';
-import ClientProductPage from './products/ClientProductPage';
-import ClientProductTypeNav from './products/ClientProductTypeNav';
 
 const styles = theme => ({
 	root: {
@@ -53,10 +51,7 @@ class App extends Component {
 			 authentication.token === undefined){
 			window.location.hash = "#/";
 		}
-        else if(window.location.hash === "#/" && authentication.userType === "Client" && authentication !== undefined && authentication.token !== undefined ){
-            window.location.hash = "#/clientProducts";
-        }
-		else if(window.location.hash === "#/" && authentication.userType === "Admin" && authentication !== undefined && authentication.token !== undefined ){
+		else if(window.location.hash === "#/" && authentication !== undefined && authentication.token !== undefined ){
 			window.location.hash = "#/products";
 		}
 	}
@@ -72,10 +67,6 @@ class App extends Component {
 					    	<Typography style={{ flex: '1' }} type="title" color="inherit">
 					        Pixel Performance
 					      </Typography>
-                            { this.props.authentication.userType === "Client" &&
-							<ClientProductTypeNav />
-                            }
-
 					      {	this.props.authentication.token !== undefined && 
 					      	<Button color="contrast" onClick={this.props.deleteToken}>Logout</Button> 
 					      }
@@ -83,7 +74,6 @@ class App extends Component {
 				    </AppBar>
 				    <Route exact path="/" component={Login} />
 				    <Route path="/products" component={ProductPage} />
-					<Route path="/clientProducts" component={ClientProductPage} />
 				  </div>
 			  </MuiThemeProvider>
 		  </Router>
