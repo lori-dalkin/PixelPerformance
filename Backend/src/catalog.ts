@@ -152,12 +152,12 @@ export class Catalog {
 	* Function to retrieve a list of products based on type
 	 ********************************************************/
 	@beforeMethod(function(meta) {
+        let catalog = Catalog.getInstance();
         assert(meta.args[0] > 0, "page must be greater than 0");
         assert(meta.args[2] > 0, "numOfItems must be greater than 0");
         assert(meta.args[2] % 1 === 0, "numOfItems must be a whole number");
-        assert(Catalog.getInstance().validElectronicType(meta.args[1]), "type must be null or a valid subtype of Electronic");
-        assert(meta.args[0] < Catalog.getInstance().maxPageNum(meta.args[1], meta.args[2]),
-            "page exceeds maximum page number for the given arguments");
+        assert(catalog.validElectronicType(meta.args[1]), "type must be null or a valid subtype of Electronic");
+        assert(meta.args[0] <= catalog.maxPageNum(meta.args[1], meta.args[2]), "page exceeds maximum page number for the given arguments");
     })
     @afterMethod(function(meta) {
         assert(meta.result instanceof responseData, "Unable to create valid responseData for getProductPage call");
@@ -376,7 +376,7 @@ export class Catalog {
                     numProducts++;
             }
         }
-        let numPages = Math.ceil(numProducts / numItems) - 1;
+        let numPages = Math.ceil(numProducts / numItems);
         return numPages;
     }
 }
