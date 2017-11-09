@@ -4,24 +4,9 @@ import ProductListItem from './ProductListItem';
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 
-import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
+import Table, { TableBody, TableCell, TableHead, TableFooter, TableRow, TablePagination } from 'material-ui/Table';
 
-const ProductList = ({ products, onProductClick, onProductDelete, currPage, numPages, previousPage, gotoPage, nextPage, showPrevious, showNext }) => {
-  let numPagesShowing = Math.min(3, numPages);
-  let firstPage = 1;
-
-  if (numPages > 3) {
-    firstPage = Math.max(1, currPage - Math.floor(numPagesShowing / 2))
-  }
-
-  let pages = [];
-
-  for (var i = firstPage; i <= numPages && i < firstPage + numPagesShowing; i++) {
-    pages.push(i);
-  }
-
-  let width = Math.max(2, Math.floor(12 / (numPagesShowing + 2)));
-
+const ProductList = ({ products, onProductClick, onProductDelete, currPage, numItems, numItemsPerPage, gotoPage, changeRowsPerPage }) => {
   return (
     <Grid container spacing={8} style={{ margin: '0px', marginTop: '5px' }}>
       <Grid item xs={12}>
@@ -43,37 +28,16 @@ const ProductList = ({ products, onProductClick, onProductDelete, currPage, numP
               />
             ))}
           </TableBody>
+          <TableFooter>
+            <TablePagination
+              count={numItems}
+              rowsPerPage={numItemsPerPage}
+              page={currPage - 1}
+              onChangePage={gotoPage}
+              onChangeRowsPerPage={changeRowsPerPage}
+            />
+          </TableFooter>
         </Table>
-      </Grid>
-      <Grid container justify='center'>
-        { showPrevious && <Grid item xs={width}>
-                            <Button onClick={() => previousPage()} color="primary" style={{ width: '100%' }}>
-                              &lt;
-                            </Button>
-                          </Grid>
-        }
-        { pages.map(index => {
-            let color = "accent";
-
-            if (index == currPage) {
-              color = "primary";
-            }
-
-            return (
-              <Grid key={index} item xs={width}>
-                  <Button onClick={() => gotoPage(index)} color={color} style={{ width: '100%' }}>
-                    { index }
-                  </Button>
-              </Grid>
-            )
-          })
-        }
-        { showNext && <Grid item xs={width}>
-                        <Button onClick={() => nextPage()} color="primary" style={{ width: '100%' }}>
-                          &gt;
-                        </Button>
-                      </Grid>
-        }
       </Grid>
     </Grid>
   );
@@ -90,12 +54,10 @@ ProductList.propTypes = {
     onProductClick: PropTypes.func.isRequired,
     onProductDelete: PropTypes.func.isRequired,
     currPage: PropTypes.number.isRequired,
-    numPages: PropTypes.number.isRequired,
-    nextPage: PropTypes.func.isRequired,
-    previousPage: PropTypes.func.isRequired,
     gotoPage: PropTypes.func.isRequired,
-    showPrevious: PropTypes.bool.isRequired,
-    showNext: PropTypes.bool.isRequired
+    changeRowsPerPage: PropTypes.func.isRequired,
+    numItems: PropTypes.number.isRequired,
+    numItemsPerPage: PropTypes.number.isRequired
 };
 
 export default ProductList;

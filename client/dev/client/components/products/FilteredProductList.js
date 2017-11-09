@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import ProductList from './ProductList';
 
-import { showNextProductPage, showPreviousProductPage, showSpecificProductPage } from '../../actions/productView';
+import { showNextProductPage, showPreviousProductPage, showSpecificProductPage, setRowsPerPage } from '../../actions/productView';
 import { showProductView, showDeleteProduct } from '../../actions';
 
 const mapStateToProps = state => {
@@ -9,8 +9,8 @@ const mapStateToProps = state => {
         currPage: state.product.page,
         numPages: state.product.numPages,
         products: state.product.products,
-        showPrevious: state.product.page > 1,
-        showNext: state.product.maxPage == undefined || state.product.page < state.product.maxPage
+        numItems: state.product.numProducts,
+        numItemsPerPage: state.product.productsPerPage
     };
 }
 
@@ -22,14 +22,11 @@ const mapDispatchToProps = dispatch => {
         onProductDelete: (product) => {
             dispatch(showDeleteProduct(product));
         },
-        nextPage: () => {
-            dispatch(showNextProductPage());
+        gotoPage: (event, number) => {
+            dispatch(showSpecificProductPage(number + 1));
         },
-        previousPage: () => {
-            dispatch(showPreviousProductPage());
-        },
-        gotoPage: (number) => {
-            dispatch(showSpecificProductPage(number))
+        changeRowsPerPage: (event) => {
+            dispatch(setRowsPerPage(event.target.value));
         }
     };
 }
