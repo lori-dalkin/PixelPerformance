@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import ClientProductList from './ClientProductList';
 
 import { showNextProductPage, showPreviousProductPage } from '../../actions/productView';
+import { addToCart } from '../../actions/clientProductActions';
 import { showProductView } from '../../actions';
 
 const mapStateToProps = state => {
@@ -16,6 +17,9 @@ const mapDispatchToProps = dispatch => {
     return {
         onProductClick: (product) => {
             dispatch(showProductView(product));
+        },
+        onAddToCartClick: (product) => {
+            dispatch(addToCart(product))
         },
         nextPage: () => {
             dispatch(showNextProductPage());

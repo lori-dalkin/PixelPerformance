@@ -4,8 +4,6 @@ import ClientFilteredProductList from './ClientFilteredProductList';
 import ProductViewDialog from './ProductViewDialog';
 import * as actions from '../../actions';
 import { getProducts } from '../../actions/productView';
-import {Card, CardActions, CardHeader, CardMedia } from 'material-ui/Card';
-import Button from 'material-ui/Button';
 
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';

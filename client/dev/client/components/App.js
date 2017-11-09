@@ -53,10 +53,10 @@ class App extends Component {
 			 authentication.token === undefined){
 			window.location.hash = "#/";
 		}
-        else if(window.location.hash === "#/" && authentication.isClient && authentication !== undefined && authentication.token !== undefined ){
+        else if(window.location.hash === "#/" && authentication.userType === "Client" && authentication !== undefined && authentication.token !== undefined ){
             window.location.hash = "#/clientProducts";
         }
-		else if(window.location.hash === "#/" && authentication !== undefined && authentication.token !== undefined ){
+		else if(window.location.hash === "#/" && authentication.userType === "Admin" && authentication !== undefined && authentication.token !== undefined ){
 			window.location.hash = "#/products";
 		}
 	}
@@ -72,7 +72,7 @@ class App extends Component {
 					    	<Typography style={{ flex: '1' }} type="title" color="inherit">
 					        Pixel Performance
 					      </Typography>
-                            { this.props.authentication.isClient &&
+                            { this.props.authentication.userType === "Client" &&
 							<ClientProductTypeNav />
                             }
 
