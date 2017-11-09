@@ -81,25 +81,9 @@ export class Client extends User {
                 return false;
             });
     }
-    
 
-    public checkPrivilege(route: string): boolean
-    {
-        route = route + "/";  // append slash in case one is missing; no problem if there are two trailing slashes
-        let unauthorizedRoutes: string[] = [
-                User.Routes.postProduct,
-                User.Routes.deleteProduct,
-                User.Routes.postInventory,
-                User.Routes.deleteInventory,
-                User.Routes.modifyProducts
-            ];
-
-        for(let routeKey in User.Routes)
-        {
-            if(route.indexOf(User.Routes[routeKey]) !== -1)  // if the starts of strings match e.g. 'post/api/products/abcd' and 'post/api/products/'
-                return (unauthorizedRoutes.indexOf(User.Routes[routeKey]) == -1);  // no privilege if route is an unauthorized route
-        }
-        return true;  // if route is not specified as unauthorized, allow it
+    public getType(): string {
+        return Client.name;
     }
 
 }
