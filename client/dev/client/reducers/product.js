@@ -46,8 +46,8 @@ const initialState = {
     dropDownsProduct: defaultDropDownsProduct,
     selectedProduct: {},
     page: 1,
-    maxPage: undefined,
-    productsPerPage: 10
+    productsPerPage: 10,
+    numProducts: 0
 };
 
 export default function (state = initialState, action) {
@@ -193,30 +193,24 @@ export default function (state = initialState, action) {
                     modifyingProduct: false,
                     error: true
                 }
-            }
-            break;
-        case actions.INCREMENT_PRODUCT_PAGE:
-            return {
-                ...state,
-                page: state.page + 1
-            }
-            break;
-        case actions.DECREMENT_PRODUCT_PAGE:
-            return {
-                ...state,
-                page: state.page - 1
-            }
+            };
             break;
         case actions.SET_PRODUCT_PAGE:
             return {
                 ...state,
                 page: action.pageNumber
-            }
+            };
             break;
-        case actions.SET_MAX_PRODUCT_PAGE:
+        case actions.SET_ROWS_PER_PAGE:
             return {
                 ...state,
-                maxPage: Math.ceil(action.numProducts / state.productsPerPage)
+                productsPerPage: action.rowsPerPage
+            };
+            break;
+        case actions.SET_NUM_PRODUCTS:
+            return {
+                ...state,
+                numProducts: action.numProducts
             };
             break;
         case actions.ADD_TO_CART_REQUEST:

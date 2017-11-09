@@ -244,6 +244,7 @@ export class PurchaseManagement {
 		for(let inventory of cart.getInventory()){
 			this.catalog.checkoutInventory(inventory.getserialNumber());
 		}
+		cart.saveCart();
 
 	}
 

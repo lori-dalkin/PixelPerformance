@@ -1,16 +1,18 @@
 import { connect } from 'react-redux';
 import ProductList from './ProductList';
 
-import { showNextProductPage, showPreviousProductPage } from '../../actions/productView';
+import { showNextProductPage, showPreviousProductPage, showSpecificProductPage, setRowsPerPage, setPage } from '../../actions/productView';
 import { showProductView, showDeleteProduct } from '../../actions';
 import { addToCart } from '../../actions/clientProductActions';
 
 const mapStateToProps = state => {
     return {
         userType: state.authentication.userType,
+        currPage: state.product.page,
+        numPages: state.product.numPages,
         products: state.product.products,
-        showPrevious: state.product.page > 1,
-        showNext: state.product.maxPage == undefined || state.product.page < state.product.maxPage
+        numItems: state.product.numProducts,
+        numItemsPerPage: state.product.productsPerPage
     };
 }
 
@@ -25,11 +27,12 @@ const mapDispatchToProps = dispatch => {
         onAddToCartClick: (product) => {
             dispatch(addToCart(product))
         },
-        nextPage: () => {
-            dispatch(showNextProductPage());
+        gotoPage: (event, number) => {
+            dispatch(showSpecificProductPage(number + 1));
         },
-        previousPage: () => {
-            dispatch(showPreviousProductPage());
+        changeRowsPerPage: (event) => {
+            dispatch(setPage(1));
+            dispatch(setRowsPerPage(event.target.value));
         }
     };
 }
