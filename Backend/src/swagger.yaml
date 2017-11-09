@@ -276,45 +276,7 @@
               type: "array"
               items: 
                 $ref: "#/definitions/Inventory"
-	/carts/startTransaction/{id}
-	  post:
-        description: "Start a transaction with for a specific User"
-        produces:
-          - "application/json"
-        parameters:
-          - in: path
-            name: id
-            schema: 
-              type: string
-            required: true
-            description: String of user Id
-          - name: Authorization
-            in: header
-            description: API key
-            required: false
-            type: string
-            format: string
-            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"      
-   /carts/saveCart/{id}
-	  post:
-        description: "Save current cart for specific User"
-        produces:
-          - "application/json"
-        parameters:
-          - in: path
-            name: id
-            schema: 
-              type: string
-            required: true
-            description: String of user Id
-          - name: Authorization
-            in: header
-            description: API key
-            required: false
-            type: string
-            format: string
-            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"  				
-   /records/inventory/{id}:
+    /records/inventory/{id}:
          delete:
             description: "Makes a return on a previously purchased inventory, adding it back to the system"
             produces:
@@ -333,32 +295,8 @@
                 type: string
                 format: string
                 default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"
-	/records/{id}:
-		get:
-			description: "Return all the purchases made by a certain user"
-			produces:
-				-"application/json"
-			parameters:
-			  - in: path
-				name: id
-				schema:
-				  type: string
-				required: true
-				description: User ID of the purchases made 
-			  - name: Authorization
-				in: header
-				description: API key
-				required: false
-				type: string
-				format: string
-				default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"
-        responses: 
-          "200":
-            description: "All inventory for purchases made with specified user ID"
-            schema: 
-              type: "array"
-              items: 
-                $ref: "#/definitions/Inventory"
+
+
   definitions:
     Electronic:
       type: "object"
