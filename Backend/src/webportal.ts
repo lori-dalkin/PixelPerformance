@@ -152,9 +152,11 @@ export class WebPortal {
     router.post("/api/carts/inventory/:id", this.postCartInventoryById);
     router.post("/api/carts/startTransaction/:id", this.postCartsStartTransactionById);
     router.post("/api/carts/saveCart/:id", this.postCartsSaveCartById);
-    router.delete("/api/cart", this.deleteCart);
+    router.delete("/api/cart", this.deleteCart);  
     router.delete("/api/carts/inventory/:id", this.deleteCartInventoryById);
     router.post("/api/carts/checkout", this.postCartCheckout);
+      
+    router.get("/api/records/viewPurchase/:id", this.viewPurchases)
 
 
     router.get("/api/products/", passport.authenticate('jwt', { session: false }), function (req, res) {
@@ -302,16 +304,6 @@ export class WebPortal {
       }
     });
 
-    router.get("/api/records/inventory/:id", passport.authenticate('jwt', { session: false }), function (req, res) {
-        try {
-            let inventories = PurchaseManagement.getInstance().viewPurchases(req.user.id);
-             res.send({data: inventories});
-      }
-      catch(e){
-        res.send({data: null, error: e});
-
-      }
-    });
 
     router.get("/api/carts/", passport.authenticate('jwt', { session: false }), function (req, res) {
       try{
@@ -365,7 +357,7 @@ export class WebPortal {
 
         }
     });
-
+      
   @beforeMethod(RoutingAdvice.requireClient)
   public getCart(req, res) {
     try{
@@ -434,6 +426,7 @@ export class WebPortal {
     }
   }
 
+      
   @beforeMethod(RoutingAdvice.requireClient)
   public deleteCartInventoryById(req, res) {
     console.log("deleting...");
@@ -469,6 +462,15 @@ export class WebPortal {
     }
   }
 
+  @beforeMethod(RoutingAdvice.requireClient)
+  public viewPurchases(req,res){
+   try {
+            let inventories = PurchaseManagement.getInstance().viewPurchases(req.user.id);
+             res.send({data: inventories});
+      }
+      catch(e){
+        res.send({data: null, error: e});
+  }
   /**
    * Configure application
    *
