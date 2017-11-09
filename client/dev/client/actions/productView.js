@@ -69,7 +69,6 @@ export const getProducts = () => {
 
                 return callApi(endPoint, 'get', undefined, `Bearer ${getState().authentication.token}`).then(
                     res => {
-                        console.log(res);
                         dispatch(setNumProducts(res.totalProducts));
                         dispatch(getProductsSuccess(res.products));
                     },
