@@ -295,7 +295,24 @@
                 type: string
                 format: string
                 default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZjOTQwLWM1OGMtMTFlNy1hZDA0LTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI3MTk2MH0.-f3taUQ7xiQkl0bQKEd1bQbs0Mjfqgmp4IwdHnUeOu0"
-
+	/carts:
+		delete:
+			description: "Delete's a user's active cart and makes all items in the cart available"
+			produces:
+              - "application/json"
+			parameters:
+              - name: Authorization
+                in: header
+                description: API key
+                required: false
+                type: string
+                format: string
+                default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZjOTQwLWM1OGMtMTFlNy1hZDA0LTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI3MTk2MH0.-f3taUQ7xiQkl0bQKEd1bQbs0Mjfqgmp4IwdHnUeOu"
+            responses:
+                "200":
+                description: "If delete is succesuful"
+                schema:
+                    type: "boolean"
 
   definitions:
     Electronic:
