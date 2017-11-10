@@ -152,17 +152,17 @@ export class Catalog {
 	* Function to retrieve a list of products based on type
 	 ********************************************************/
 	@beforeMethod(function(meta) {
-        assert(meta.args[0] > 0, "page must be greater than 0");
-        assert(meta.args[2] > 0, "numOfItems must be greater than 0");
-        assert(meta.args[2] % 1 === 0, "numOfItems must be a whole number");
-        assert(Catalog.getInstance().validElectronicType(meta.args[1]), "type must be null or a valid subtype of Electronic");
-        assert(meta.args[0] < Catalog.getInstance().maxPageNum(meta.args[1], meta.args[2]),
-            "page exceeds maximum page number for the given arguments");
+        let catalog = Catalog.getInstance();
+        console.log(meta.args[0]);
+        assert(meta.args[0] > 0 || meta.args[0] == null || isNaN(meta.args[0]), "page must be greater than 0");
+        assert(meta.args[2] > 0 || meta.args[2] == null || isNaN(meta.args[2]), "numOfItems must be greater than 0");
+        assert(meta.args[2] % 1 === 0 || meta.args[2] == null ||isNaN( meta.args[2]), "numOfItems must be a whole number");
+        assert(catalog.validElectronicType(meta.args[1]) || meta.args[1] == null || isNaN(meta.args[1]), "type must be null or a valid subtype of Electronic");
     })
     @afterMethod(function(meta) {
-        assert(meta.result instanceof responseData, "Unable to create valid responseData for getProductPage call");
+        assert(meta.result != null, "Unable to create valid responseData for getProductPage call");
     })
-    public getProductPage(page:number, type:string, numOfItems:number = 25) {
+    public getProductPage(page:number=null, type:string=null, numOfItems:number = 25) {
         var desired: Electronic[] = [];
         if(type == null){
             desired = this.electronics;
@@ -376,7 +376,7 @@ export class Catalog {
                     numProducts++;
             }
         }
-        let numPages = Math.ceil(numProducts / numItems) - 1;
+        let numPages = Math.ceil(numProducts / numItems);
         return numPages;
     }
 }
