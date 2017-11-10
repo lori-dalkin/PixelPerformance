@@ -12,7 +12,6 @@ export const addToCart = (product) => {
                     res => {
                         dispatch(addToCartSuccess(res));
                         dispatch(addToCartSuccessSnackbar());
-                        dispatch(removeFromInventory(product.id));
                     },
                     error => dispatch(addToCartFailure())
                 );
