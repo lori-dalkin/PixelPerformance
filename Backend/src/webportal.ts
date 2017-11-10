@@ -127,7 +127,7 @@ export class WebPortal {
         router.delete("/api/carts/inventory/:id", this.deleteCartInventoryById);
         router.post("/api/carts/checkout", this.postCartCheckout);
 
-        router.get("/api/records/:id", this.viewPurchases);
+        router.get("/api/records/", this.viewPurchases);
         router.delete("/api/records/inventory/:id", this.deleteRecordsInventoryById);
 
         //use router middleware
