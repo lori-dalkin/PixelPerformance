@@ -144,7 +144,7 @@ export class PurchaseManagement {
         assert(PurchaseManagement.getInstance().findCart(meta.args[0]) != null, "there are no purchases associated to this account");
     })
     @afterMethod(function (meta) {
-            assert(meta.result != null);
+            assert(meta.result != null, "There was an error in retrieving your previous purchases");
     })
 	// viewPurchases(userId: string): Inventory []
 
