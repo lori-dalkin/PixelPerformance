@@ -24,6 +24,7 @@ export class RoutingAdvice extends AdvicePool {
     let headers = meta.args[0].headers;
     let res = meta.args[0].res;
     let token;
+    let req =meta.args[0];
 
     try {
       token = headers.authorization.split(" ")[1];
@@ -43,7 +44,10 @@ export class RoutingAdvice extends AdvicePool {
         self.next(); // deny access to decorated route
       } else {
         try {
-          if(type == "User" || UserManagement.getInstance().getUserById(verifiedJwt.id).getType() == type) {
+          let user =  UserManagement.getInstance().getUserById(verifiedJwt.id);
+          if(type == "User" || user.getType() == type) {
+            console.log("auth successful : " + user.getId());
+            req.user = user;
             self.next();
           } else {
             console.log(`Authorization Error: invalid user id ${verifiedJwt.id}`);
