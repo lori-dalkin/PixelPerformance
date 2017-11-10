@@ -231,12 +231,29 @@
             required: false
             type: string
             format: string
-            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZjOTQwLWM1OGMtMTFlNy1hZDA0LTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI3MTk2MH0.-f3taUQ7xiQkl0bQKEd1bQbs0Mjfqgmp4IwdHnUeOu0"
         responses:
           "200":
             description: "Cart of specified User" 
             schema:
               $ref: "#/definitions/Cart"
+      delete:
+        description: "Delete's a user's active cart and makes all items in the cart available"
+        produces:
+          - "application/json"
+        parameters:
+          - name: Authorization
+            in: header
+            description: API key
+            required: false
+            type: string
+            format: string
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZjOTQwLWM1OGMtMTFlNy1hZDA0LTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI3MTk2MH0.-f3taUQ7xiQkl0bQKEd1bQbs0Mjfqgmp4IwdHnUeOu"
+        responses:
+          "200":
+            description: "If delete is succesuful"
+            schema:
+            type: "boolean"
     /carts/inventory/{id}:
       post:
         description: "Adds an inventory to a specified user's cart"
@@ -255,7 +272,7 @@
             required: false
             type: string
             format: string
-            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"      
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZjOTQwLWM1OGMtMTFlNy1hZDA0LTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI3MTk2MH0.-f3taUQ7xiQkl0bQKEd1bQbs0Mjfqgmp4IwdHnUeOu0"      
     /carts/inventory:
       get:
         description: "Returns the inventory of a specified user's cart"
@@ -268,7 +285,7 @@
             required: false
             type: string
             format: string
-            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZjOTQwLWM1OGMtMTFlNy1hZDA0LTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI3MTk2MH0.-f3taUQ7xiQkl0bQKEd1bQbs0Mjfqgmp4IwdHnUeOu0"
         responses:
           "200":
             description: "Collection of Inventory objects within the user's cart"
@@ -294,26 +311,7 @@
                 required: false
                 type: string
                 format: string
-                default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"
-	/carts:
-		delete:
-			description: "Delete's a user's active cart and makes all items in the cart available"
-			produces:
-              - "application/json"
-			parameters:
-              - name: Authorization
-                in: header
-                description: API key
-                required: false
-                type: string
-                format: string
-                default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjdiMmM1Y2JlLWM0Y2UtMTFlNy05YmIxLTIyZDgxOTVjYmVmYyIsImlhdCI6MTUxMDE3OTY5N30.3bnZ7NzIHkxMBR6FI0SLAJ-snGOC_lUo-x_LdMewQJg"
-            responses:
-                "200":
-                description: "If delete is succesuful"
-                schema:
-                    type: "boolean"
-
+                default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZjOTQwLWM1OGMtMTFlNy1hZDA0LTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI3MTk2MH0.-f3taUQ7xiQkl0bQKEd1bQbs0Mjfqgmp4IwdHnUeOu0"
   definitions:
     Electronic:
       type: "object"
