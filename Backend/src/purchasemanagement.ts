@@ -82,17 +82,23 @@ export class PurchaseManagement {
 		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
 		assert(validator.isUUID(meta.args[1]), "serialNumber needs to be a uuid");
 		assert(PurchaseManagement.getInstance().findInventoryBySerialNumber(meta.args[1]) != null,"serialNumber does not correspond to any item within Inventory");
-		assert(!(PurchaseManagement.getInstance().checkItemIsLocked(meta.args[1])), "Item is unavaible");
-		assert(PurchaseManagement.getInstance().getCart(meta.args[0]).getInventory().length < 7,"Your cart is already full. (7 Max)")
+		//assert(!meta.args[1].isLocked(), "Item is unavaible");
+		//assert(PurchaseManagement.getInstance().getCart(meta.args[0]).getInventory().length < 7,"Your cart is already full. (7 Max)")
 	})
 	@afterMethod(function(meta) {
-		assert(PurchaseManagement.getInstance().checkItemAddedToCart(meta.args[0],meta.args[1]), "Item was not added to cart" )
+		//assert(PurchaseManagement.getInstance().checkItemAddedToCart(meta.args[0],meta.args[1]), "Item was not added to cart" )
 	})
 	public addItemToCart(userId: string, serialNumber: string): Boolean
 	{
+		let cart:Cart;
+		try{
 		let cart = this.getCart(userId);
+		}catch(e){
+			var uuid1 = uuid.v1();
+			cart = new Cart(uuid1, userId);
+			this.activeCarts.push(cart);
+		}
 		let inventoryObj:Inventory;
-		console.log(this.catalog.inventories);
 		for(let i = 0;i<this.catalog.inventories.length;i++)
 		{
 			if(this.catalog.inventories[i].getserialNumber() == serialNumber)
@@ -274,7 +280,7 @@ export class PurchaseManagement {
 	// removeFromCart(userId: string, serialNumber: string): bool
 
 	//Methods for Contract Programming
-	private checkItemAddedToCart(userId:string, serialNumber:string):Boolean{
+	public checkItemAddedToCart(userId:string, serialNumber:string):Boolean{
 		for(let cart of this.activeCarts){
 			if(cart.getUserId() == userId){
 				for(let inventory of cart.getInventory()){
@@ -286,10 +292,10 @@ export class PurchaseManagement {
 		}
 		return false;
 	}
-	private checkItemIsLocked(givenItem:Inventory):Boolean{
+	public checkItemIsLocked(givenItem:Inventory):Boolean{
 		return givenItem.isLocked(); //return true if item in UNAVAILABLE
 	}
-	private findInventoryBySerialNumber(serialNumber):Inventory{
+	public findInventoryBySerialNumber(serialNumber):Inventory{
 		let inventoryObj:Inventory;
 		for(let i = 0;i<this.catalog.inventories.length;i++)
 		{

@@ -231,7 +231,7 @@
             required: false
             type: string
             format: string
-            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZjOTQwLWM1OGMtMTFlNy1hZDA0LTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI3MTk2MH0.-f3taUQ7xiQkl0bQKEd1bQbs0Mjfqgmp4IwdHnUeOu0"
         responses:
           "200":
             description: "Cart of specified User" 
@@ -255,7 +255,7 @@
             required: false
             type: string
             format: string
-            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"      
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZjOTQwLWM1OGMtMTFlNy1hZDA0LTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI3MTk2MH0.-f3taUQ7xiQkl0bQKEd1bQbs0Mjfqgmp4IwdHnUeOu0"      
     /carts/inventory:
       get:
         description: "Returns the inventory of a specified user's cart"
@@ -268,7 +268,7 @@
             required: false
             type: string
             format: string
-            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZjOTQwLWM1OGMtMTFlNy1hZDA0LTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI3MTk2MH0.-f3taUQ7xiQkl0bQKEd1bQbs0Mjfqgmp4IwdHnUeOu0"
         responses:
           "200":
             description: "Collection of Inventory objects within the user's cart"
@@ -294,7 +294,7 @@
                 required: false
                 type: string
                 format: string
-                default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"
+                default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZjOTQwLWM1OGMtMTFlNy1hZDA0LTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI3MTk2MH0.-f3taUQ7xiQkl0bQKEd1bQbs0Mjfqgmp4IwdHnUeOu0"
 
 
   definitions:
