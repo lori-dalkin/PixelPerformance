@@ -7,24 +7,29 @@ export class RoutingAdvice extends AdvicePool {
 
  static requireLoggedIn(meta) {
     let self = this;
-    RoutingAdvice.verifyUserOfType(this, meta, "User");
+    RoutingAdvice.verifyUserOfType(this, meta, ["User"]);
   }
 
   static requireAdmin(meta) {
     let self = this;
-    RoutingAdvice.verifyUserOfType(this, meta, "Admin");
+    RoutingAdvice.verifyUserOfType(this, meta, ["Admin"]);
   }
 
   static requireClient(meta) {
     let self = this;
-    RoutingAdvice.verifyUserOfType(this, meta, "Client");
+    RoutingAdvice.verifyUserOfType(this, meta, ["Client"]);
   }
 
-  private static verifyUserOfType(self: any, meta: any, type: string): void {
+  static requireClientOrAdmin(meta) {
+    let self = this;
+    RoutingAdvice.verifyUserOfType(this, meta, ["Client", "User"]);
+  }
+
+  private static verifyUserOfType(self: any, meta: any, types: string[]): void {
     let headers = meta.args[0].headers;
     let res = meta.args[0].res;
     let token;
-    let req =meta.args[0];
+    let req = meta.args[0];
 
     try {
       token = headers.authorization.split(" ")[1];
@@ -44,8 +49,8 @@ export class RoutingAdvice extends AdvicePool {
         self.next(); // deny access to decorated route
       } else {
         try {
-          let user =  UserManagement.getInstance().getUserById(verifiedJwt.id);
-          if(type == "User" || user.getType() == type) {
+          let user = UserManagement.getInstance().getUserById(verifiedJwt.id);
+          if(types.indexOf("User") !== -1 || types.indexOf(user.getType()) !== -1) {
             console.log("auth successful : " + user.getId());
             req.user = user;
             self.next();
