@@ -199,7 +199,16 @@ export class WebPortal {
       res.send({data: false, error: e});
     }
   }
-
+    
+  router.delete("/api/carts", passport.authenticate("jwt", { session: false }), function (req, res) {
+      try{
+        routingPurchases.cancelTransaction(req.user);
+        res.send({data:true});
+      }
+      catch(e){
+        res.send({data: false, error: e});
+      }
+    
   @beforeMethod(RoutingAdvice.requireLoggedIn)
   public getInventoriesById(req, res) {
     try{
