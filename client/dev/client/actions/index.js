@@ -1,4 +1,5 @@
 import * as actions from './action-types';
+import { fetchInventory } from './adminProductActions';
 
 // -----------------------------------------------
 //                    TOKEN
@@ -35,10 +36,13 @@ export const hideSnackbar = () => { return { type: actions.HIDE_SNACKBAR }; }
 //             PRODUCT VIEW MODAL
 //------------------------------------------------
 export const showProductView = (product) => {
-    return { 
-		type: actions.SHOW_PRODUCT_VIEW_DIALOG,
-		product
-	};
+    return (dispatch, getState) => {
+        dispatch(fetchInventory(product.id));
+        dispatch({ 
+    		type: actions.SHOW_PRODUCT_VIEW_DIALOG,
+    		product
+    	});
+    }
 }
 
 export const hideProductView = () => { return { type: actions.HIDE_PRODUCT_VIEW_DIALOG }; }

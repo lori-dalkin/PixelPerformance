@@ -171,6 +171,7 @@ export class WebPortal {
       electronic = Catalog.getInstance().getProduct(req.params.id);
       res.send({data: electronic});
     }catch (e) {
+      console.log(e);
       res.send({data: false, error: e});
     }
   }
@@ -182,6 +183,7 @@ export class WebPortal {
         res.send({data: success});
       });
     }catch (e) {
+      console.log(e);
       res.send({data: false, error: e});
     }
   }
@@ -193,16 +195,18 @@ export class WebPortal {
         res.send({data:success});
       });
     }catch (e) {
+      console.log(e);
       res.send({data: false, error: e});
     }
   }
-
+    
   @beforeMethod(RoutingAdvice.requireLoggedIn)
   public getInventoriesById(req, res) {
     try{
       let inventories = Catalog.getInstance().getAllInventories(req.params.id);
       res.send( {count: inventories.length, inventories: inventories});
     }catch (e) {
+      console.log(e);
       res.send({data: false, error: e});
     }
   }
@@ -213,6 +217,7 @@ export class WebPortal {
       Catalog.getInstance().addInventory(req.params.id)
       res.send({ data:true});
     }catch (e) {
+      console.log(e);
       res.send({data: false, error: e});
     }
   }
@@ -227,6 +232,7 @@ export class WebPortal {
       try{
         res.send({data: UserManagement.getInstance().addClient(req.body)});
       }catch (e) {
+        console.log(e);
         res.send({data: false, error: e});
       }
 
@@ -239,6 +245,7 @@ export class WebPortal {
       res.send({data: success});
     });
     }catch (e) {
+      console.log(e);
       res.send({data: false, error: e});
     }
   }
@@ -249,6 +256,7 @@ export class WebPortal {
       let cart  = PurchaseManagement.getInstance().getCart(req.user.id)
       res.send({data: cart});
     }catch (e) {
+      console.log(e);
       res.send({data: false, error: e});
     }
   }
@@ -261,6 +269,7 @@ export class WebPortal {
         let electronics = Catalog.getInstance().getProductPage(parseInt(req.query.page), req.query.type, parseInt(req.query.numOfItems));
         res.send(electronics);
       }catch (e) {
+        console.log(e);
         res.send({data: false, error: e});
       }
     }
@@ -272,6 +281,7 @@ export class WebPortal {
             res.send({ data: true });
         }
         catch (e) {
+          console.log(e);
             res.send({ data: false, error: e });
         }
     }
@@ -283,6 +293,7 @@ export class WebPortal {
             res.send({ data: inventories });
         }
         catch (e) {
+          console.log(e);
             res.send({ data: null, error: e });
         }
     }
@@ -295,7 +306,8 @@ export class WebPortal {
             res.send({ data: true });
         }
         catch (e) {
-            res.send({ data: false, error: e });
+          console.log(e);
+          res.send({ data: false, error: e });
         }
     }
 
@@ -306,6 +318,7 @@ export class WebPortal {
             res.send({ data: transac });
         }
         catch (e) {
+          console.log(e);
             res.send({ data: null, error: e });
         }
     }
@@ -317,6 +330,7 @@ export class WebPortal {
             res.send({ data: cart });
         }
         catch (e) {
+          console.log(e);
             res.send({ data: null, error: e });
         }
     }
@@ -328,6 +342,7 @@ export class WebPortal {
             res.send({ data: true });
         }
         catch (e) {
+          console.log(e);
             res.send({ data: false, error: e });
         }
     }
@@ -340,6 +355,7 @@ export class WebPortal {
             res.send({ data: true });
         }
         catch (e) {
+          console.log(e);
             res.send({ data: false, error: e });
         }
     }
@@ -351,6 +367,7 @@ export class WebPortal {
             res.send({ data: true });
         }
         catch (e) {
+          console.log(e);
             res.send({ data: false, error: e });
         }
     }
@@ -362,6 +379,7 @@ export class WebPortal {
             res.send({ data: true });
         }
         catch (e) {
+          console.log(e);
             res.send({ data: false, error: e });
         }
     }
@@ -372,6 +390,7 @@ export class WebPortal {
             res.send({ data: true });
         }
         catch (e) {
+          console.log(e);
             res.send({ data: false, error: e });
         }
     }
