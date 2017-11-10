@@ -24,6 +24,7 @@ import { SystemMonitor } from "./Models/systemmonitor";
 import * as uuid from "uuid";
 import { AdvicePool, beforeMethod } from 'kaop-ts';
 import { RoutingAdvice } from "./routingadvice";
+import {Inventory} from "./Models/inventory";
 var swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerDocument = YAML.load('./src/swagger.yaml');
@@ -126,7 +127,7 @@ export class WebPortal {
         router.delete("/api/carts/inventory/:id", this.deleteCartInventoryById);
         router.post("/api/carts/checkout", this.postCartCheckout);
 
-        router.get("/api/records/:id", this.viewPurchases);
+        router.get("/api/records/", this.viewPurchases);
         router.delete("/api/records/inventory/:id", this.deleteRecordsInventoryById);
 
         //use router middleware
@@ -375,8 +376,9 @@ export class WebPortal {
     @beforeMethod(RoutingAdvice.requireClient)
     public viewPurchases(req, res) {
         try {
-            let returnSuccess = PurchaseManagement.getInstance().viewPurchases(req.user.id);
-            res.send({ data: true });
+            let purchases: Inventory[] = [];
+            purchases = PurchaseManagement.getInstance().viewPurchases(req.user.id);
+            res.send({ data: purchases });
         }
         catch (e) {
           console.log(e);
