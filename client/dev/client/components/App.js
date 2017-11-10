@@ -10,10 +10,12 @@ import { withStyles, MuiThemeProvider, createMuiTheme } from 'material-ui/styles
 import blue from 'material-ui/colors/blue';
 import pink from 'material-ui/colors/pink';
 require('../../scss/style.scss');
+import CartIcon from 'material-ui-icons/ShoppingCart';
 
 import { setToken, deleteToken } from '../actions/index';
 import Login from './authentication/Login';
 import ProductPage from './products/ProductPage';
+import CartView from './cart/CartView';
 
 const styles = theme => ({
 	root: {
@@ -67,13 +69,18 @@ class App extends Component {
 					    	<Typography style={{ flex: '1' }} type="title" color="inherit">
 					        Pixel Performance
 					      </Typography>
-					      {	this.props.authentication.token !== undefined && 
-					      	<Button color="contrast" onClick={this.props.deleteToken}>Logout</Button> 
+					      {	this.props.authentication.token !== undefined &&
+					      	<div> 
+					      		<Button color="contrast" onClick={ () => window.location.hash = "#/products" }> Browse Products</Button>
+					      		<Button color="contrast" onClick={ () => window.location.hash = "#/cart" }> View Cart</Button>
+					      		<Button color="contrast" onClick={this.props.deleteToken}>Logout</Button>
+					      	</div>
 					      }
 				      </Toolbar>
 				    </AppBar>
 				    <Route exact path="/" component={Login} />
 				    <Route path="/products" component={ProductPage} />
+				    <Route path="/cart" component={CartView} />
 				  </div>
 			  </MuiThemeProvider>
 		  </Router>
