@@ -1,6 +1,6 @@
 import * as actions from './action-types';
 import callApi from '../utils/apiCaller';
-import { removeFromInventory } from './adminProductActions';
+import { fetchInventory } from './adminProductActions';
 
 export const addToCart = (product) => {
     return (dispatch, getState) => {
@@ -12,6 +12,7 @@ export const addToCart = (product) => {
                     res => {
                         dispatch(addToCartSuccess(res));
                         dispatch(addToCartSuccessSnackbar());
+                        dispatch(fetchInventory(product));
                     },
                     error => dispatch(addToCartFailure())
                 );

@@ -84,19 +84,26 @@ class ProductViewDialog extends Component {
           </DialogContent>
           <DialogActions>
            {this.props.authentication.userType === "Client" ? null :
-               <Button onClick={ () => this.toggleInventoryView() } color='primary'>
+               <span>
+                 <Button onClick={ () => this.toggleInventoryView() } color='primary'>
                     { this.state.showInventory ? "Hide Inventory" : "Show Inventory" }
                   </Button>
-           }
-            {this.props.authentication.userType === "Client" ? null :
-                <Button onClick={ () => this.props.showModifyProduct(this.props.product.selectedProduct) } color='primary'>
-                Modify
+                 <Button onClick={ () => this.props.showModifyProduct(this.props.product.selectedProduct) } color='primary'>
+                  Modify
                 </Button>
-            }
+               </span>
+
+           }
               {this.props.authentication.userType === "Admin" ? null :
+                  (this.props.product.inventoryCount > 0 ?
                   <Button onClick={ () => this.props.addToCart(this.props.product.selectedProduct) } color='primary'>
+                      Add to Cart
+                  </Button>
+                          :
+                  <Button disabled color='primary'>
                     Add to Cart
                   </Button>
+                  )
               }
 
              <Button onClick={this.props.handleRequestClose} color="default">

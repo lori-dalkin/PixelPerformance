@@ -3,7 +3,6 @@ import ProductList from './ProductList';
 
 import { showNextProductPage, showPreviousProductPage, showSpecificProductPage, setRowsPerPage, setPage } from '../../actions/productView';
 import { showProductView, showDeleteProduct } from '../../actions';
-import { addToCart } from '../../actions/clientProductActions';
 
 const mapStateToProps = state => {
     return {
@@ -23,9 +22,6 @@ const mapDispatchToProps = dispatch => {
         },
         onProductDelete: (product) => {
             dispatch(showDeleteProduct(product));
-        },
-        onAddToCartClick: (product) => {
-            dispatch(addToCart(product))
         },
         gotoPage: (event, number) => {
             dispatch(showSpecificProductPage(number + 1));

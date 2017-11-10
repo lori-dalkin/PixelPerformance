@@ -17,9 +17,6 @@ const ProductListItem = ({ userType, onClick, onAdd, brand, price, onDelete }) =
         {userType === "Client" ? null :
             <Button onClick={onDelete} color='accent'> <DeleteIcon /> Delete</Button>
         }
-        {userType === "Admin" ? null :
-            <Button onClick={onAdd} color='primary'> <AddShoppingCartIcon /> Add to Cart</Button>
-        }
     </TableCell>
   </TableRow>
 )
@@ -28,7 +25,6 @@ ProductListItem.propTypes = {
   userType: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
-  onAdd: PropTypes.func.isRequired,
   brand: PropTypes.string.isRequired,
   price: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 };

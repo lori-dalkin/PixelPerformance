@@ -58,7 +58,6 @@ ProductList.propTypes = {
     ).isRequired,
     onProductClick: PropTypes.func.isRequired,
     onProductDelete: PropTypes.func.isRequired,
-    onAddToCartClick: PropTypes.func.isRequired,
     currPage: PropTypes.number.isRequired,
     gotoPage: PropTypes.func.isRequired,
     changeRowsPerPage: PropTypes.func.isRequired,
