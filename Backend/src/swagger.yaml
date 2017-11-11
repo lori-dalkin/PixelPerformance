@@ -70,7 +70,7 @@
               items: 
                 $ref: "#/definitions/Electronic"
       post: 
-        description: "Creates an electronics"
+        description: "Creates an electronic"
         produces: 
           - "application/json"
         parameters:
