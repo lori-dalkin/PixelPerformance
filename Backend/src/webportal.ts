@@ -123,7 +123,7 @@ export class WebPortal {
         router.post("/api/carts/inventory/:id", this.postCartInventoryById);
         router.post("/api/carts/startTransaction/:id", this.postCartsStartTransactionById);
         router.post("/api/carts/saveCart/:id", this.postCartsSaveCartById);
-        router.delete("/api/cart", this.deleteCart);
+        router.delete("/api/carts/:id", this.deleteCart);
         router.delete("/api/carts/inventory/:id", this.deleteCartInventoryById);
         router.post("/api/carts/checkout", this.postCartCheckout);
 
@@ -339,7 +339,7 @@ export class WebPortal {
     @beforeMethod(RoutingAdvice.requireClient)
     public deleteCart(req, res) {
         try {
-            PurchaseManagement.getInstance().cancelTransaction(req.user);
+            PurchaseManagement.getInstance().cancelTransaction(req.params.id);
             res.send({ data: true });
         }
         catch (e) {

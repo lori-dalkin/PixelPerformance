@@ -52,8 +52,7 @@ export class PurchaseManagement {
 		assert( PurchaseManagement.getInstance().findCart(meta.args[0]) != null, "no cart is assiated with the user");
 	})
 	@afterMethod(function(meta) {
-		var purchaseManagement = PurchaseManagement.getInstance();
-		assert( purchaseManagement.findCart(meta.args[0]) == null, "cart was not removed from active carts");
+		assert( PurchaseManagement.getInstance().findCart(meta.args[0]) == null, "cart was not removed from active carts");
 	})
 
 	public cancelTransaction(userId: String): void{
