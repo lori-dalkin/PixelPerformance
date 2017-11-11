@@ -4,19 +4,21 @@ import * as actions from '../../actions';
 
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
-import Button from 'material-ui/Button';
-import AddIcon from 'material-ui-icons/Add';
 import Typography from 'material-ui/Typography';
-import Snackbar from 'material-ui/Snackbar';
 import { LinearProgress } from 'material-ui/Progress';
+
+import CartList from './CartList';
+import Checkout from './Checkout';
+import { fetchCartItems } from '../../actions/cart';
 
 const productPaperStyle = {
 	padding: '2em'
 };
 
 class CartView extends React.Component {
-	constructor(props) {
-		super(props);
+
+	componentDidMount() {
+		this.props.fetchCartItems();
 	}
 
 	render() {
@@ -26,14 +28,25 @@ class CartView extends React.Component {
 					<Grid item xs={11} md={10} lg={6} >
 						<Paper style={productPaperStyle}>
 							<Grid container spacing={24} justify='center'>
-								<Grid item xs={9}>
+								<Grid item xs={12}>
 									<Typography type='display1' gutterBottom component='h3'>
 										Cart Items
 									</Typography>
 								</Grid>
 							</Grid>
-							{ this.props.cart.isFetching && <LinearProgress color="accent" style={{ width: '100%' }} /> }
-							{ !this.props.cart.isFetching  }
+							{ this.props.cart.inventory.length > 0 && !this.props.cart.isCheckedOut &&
+								<Typography type='subheading' gutterBottom>
+									Manage your cart items and checkout before your items are placed back into inventory.
+								</Typography>
+							}
+							{ this.props.cart.isCheckedOut &&
+								<Typography type='subheading' gutterBottom>
+									Cart Items successfully purchased. You will be able to view them in purchase history.
+								</Typography>
+							}
+							{ this.props.cart.isFetchingCart && <LinearProgress color="accent" style={{ width: '100%' }} /> }
+							{ !this.props.cart.isFetchingCart && <CartList items = {this.props.cart.inventory}/> }
+							{ this.props.cart.inventory.length > 0 && <Checkout/> }
 						</Paper>
 					</Grid>
 				</Grid>
@@ -42,12 +55,12 @@ class CartView extends React.Component {
 	}
 }
 
-const mapStateToProps = ({authentication, cart, snackbar}) => ({
-	authentication,
-	cart,
-	snackbar
+const mapStateToProps = ({cart}) => ({
+	cart
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { 
+	fetchCartItems
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(CartView);
