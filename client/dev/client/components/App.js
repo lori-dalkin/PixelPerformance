@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Button from 'material-ui/Button';
 import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar'; 
+import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import { HashRouter as Router, Route, Link } from 'react-router-dom';
 import { withStyles, MuiThemeProvider, createMuiTheme } from 'material-ui/styles';

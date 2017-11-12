@@ -16,7 +16,7 @@ export default function (state = initialState, action) {
       	return { ...state, token: action.token, userType: action.userType, loading: false };
       	break;
       case REJECT_LOGIN:
-      	return { ...state, token: undefined, loading: false };
+      	return { ...state, token: undefined, userType: undefined, loading: false };
       	break;
       case SET_TOKEN:
       	return { ...state, token: action.token, userType: action.userType };
@@ -27,7 +27,7 @@ export default function (state = initialState, action) {
       	break;
       case SET_USER_TYPE:
         return { ...state, userType: action.userType };
-        break
+        break;
       case DELETE_USER_TYPE:
         document.cookie ='userType=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         return { ...state, userType: undefined };

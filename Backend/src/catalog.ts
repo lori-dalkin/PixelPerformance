@@ -196,7 +196,7 @@ export class Catalog {
             if(this.inventories[i].getinventoryType() == null){
                 continue;
             }
-            if(electronicId == this.inventories[i].getinventoryType().getId()){
+            if(electronicId == this.inventories[i].getinventoryType().getId() && !this.inventories[i].isLocked()){
                 desired.push(this.inventories[i]);
             }
         }
@@ -320,6 +320,15 @@ export class Catalog {
         }
         return null;
     }
+    public getInventoryByElectronic(electronicId:string){
+        for(let inventory of this.inventories) {
+            if(inventory.getinventoryType().getId() == electronicId  && !inventory.isLocked()) {
+                return inventory;
+            }
+        }
+        return null;       
+    }
+
     public getInventory(inventoryId:string){
         for( let inventory of this.inventories){
             if(inventory.getserialNumber() == inventoryId){

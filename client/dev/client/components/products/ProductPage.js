@@ -55,9 +55,11 @@ class ProductPage extends React.Component {
 				<ProductViewDialog open={this.props.product.productViewOpen} handleRequestClose={this.props.hideProductView} actions={true} />
 				<ProductAddDialog open={this.props.product.addProduct.addProductOpen} handleRequestClose={this.props.hideAddProduct} />
 				<ProductModifyDialog open={this.props.product.modifyProduct.modifyProductOpen} handleRequestClose={this.props.hideModifyProduct} />
-				<Button style={{ position: 'fixed', bottom: '2rem', right: '2rem' }} fab color="accent" aria-label="add" onClick={ () => this.props.showAddProduct() }>
-	        		<AddIcon />
-	      		</Button>
+                {this.props.authentication.userType === "Client" ? null :
+					<Button style={{ position: 'fixed', bottom: '2rem', right: '2rem' }} fab color="accent" aria-label="add" onClick={ () => this.props.showAddProduct() }>
+						<AddIcon />
+					</Button>
+                }
 	      		<Snackbar
 		          anchorOrigin={{
 		            vertical: 'bottom',
