@@ -23,6 +23,7 @@ export const receiveAttemptLogin = (result) => {
         return {
             type: actions.ACCEPT_LOGIN,
             token: result.data,
+            userType: result.message
         };
     } else {
         return {

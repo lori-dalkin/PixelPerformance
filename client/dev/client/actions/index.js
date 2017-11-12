@@ -14,6 +14,18 @@ export const setToken = (token) => {
 export const deleteToken = () => { return { type: actions.DELETE_TOKEN }; }
 
 // -----------------------------------------------
+//                    USERTYPE
+//------------------------------------------------
+export const setUserType = (userType) => {
+    return {
+        type: actions.SET_USER_TYPE,
+        userType: userType
+    };
+}
+
+export const deleteUserType = () => { return { type: actions.DELETE_USER_TYPE }; }
+
+// -----------------------------------------------
 //                 SNACKBAR
 //------------------------------------------------
 export const showSnackbar = () => { return { type: actions.SHOW_SNACKBAR }; }
