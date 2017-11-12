@@ -6,10 +6,7 @@ export const fetchCartItems = () => {
   	if (getState().authentication && getState().authentication.token) {
   		dispatch({ type: actions.FETCH_CART_ITEMS });
       return callApi('api/carts', 'get', undefined, `Bearer ${getState().authentication.token}`).then(
-          res => dispatch(receiveCartItems((res.inventory !== undefined)?res.inventory:[
-          	{inventoryType: {brand: "Dell", price: "799", electronicType: "Monitor"}},
-          	{inventoryType: {brand: "Asus", price: "1799", electronicType: "Laptop"}},
-          	])),
+          res => dispatch(receiveCartItems((res.inventory !== undefined)?res.inventory:[])),
           error => dispatch(receiveCartItems([]))
       );
     }
