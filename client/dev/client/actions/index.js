@@ -23,7 +23,7 @@ export const setUserType = (userType) => {
     };
 }
 
-    export const deleteUserType = () => { return { type: actions.DELETE_USER_TYPE }; }
+export const deleteUserType = () => { return { type: actions.DELETE_USER_TYPE }; }
 
 // -----------------------------------------------
 //                 SNACKBAR

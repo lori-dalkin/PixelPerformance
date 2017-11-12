@@ -14,6 +14,7 @@ require('../../scss/style.scss');
 import { setToken, deleteToken, setUserType, deleteUserType } from '../actions/index';
 import Login from './authentication/Login';
 import ProductPage from './products/ProductPage';
+import ClientView from './clients/ClientView';
 
 const styles = theme => ({
 	root: {
@@ -47,14 +48,14 @@ class App extends Component {
 		if(userType !== undefined){
 			this.props.setUserType(userType);
 		}else {
-            this.props.deleteUserType();
+      this.props.deleteUserType();
 		}
 	}
 
 	componentWillReceiveProps(nextProps){
 		const authentication = nextProps.authentication;
 		if(authentication === undefined ||  
-			 authentication.token === undefined){
+			 authentication.token === undefined || window.location.hash === "#/products"){
 			window.location.hash = "#/";
 		}
 		else if(window.location.hash === "#/" && authentication !== undefined && authentication.token !== undefined ){
@@ -73,6 +74,11 @@ class App extends Component {
 					    	<Typography style={{ flex: '1' }} type="title" color="inherit">
 					        Pixel Performance
 					      </Typography>
+					      <Button color="contrast" onClick={ () => window.location.hash = "#/products" }> Browse Products</Button>
+								{
+					      	this.props.authentication.token !== undefined && this.props.authentication.userType === "Admin" &&
+					      	<Button color="contrast" onClick={() => window.location.hash = "#/clients"}>View Clients</Button> 
+					      }
 					      {	this.props.authentication.token !== undefined && 
 					      	<Button color="contrast" onClick={this.props.deleteToken}>Logout</Button> 
 					      }
@@ -80,6 +86,7 @@ class App extends Component {
 				    </AppBar>
 				    <Route exact path="/" component={Login} />
 				    <Route path="/products" component={ProductPage} />
+				    <Route path="/clients" component={ClientView} />
 				  </div>
 			  </MuiThemeProvider>
 		  </Router>
