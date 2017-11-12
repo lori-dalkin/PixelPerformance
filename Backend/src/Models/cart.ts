@@ -90,27 +90,32 @@ export class Cart {
     public async saveCart(): Promise<Boolean> {
         let storeOrNot = new Boolean;
         var cart = this;
-        storeOrNot = db.none("INSERT INTO cart VALUES ('" + this.id + "','" + this.userId + "')")
+        let dataPromises = new Array<Promise<void>>();
+        dataPromises.push(db.none("INSERT INTO cart VALUES ('" + this.id + "','" + this.userId + "')")
             .then(function () {
                 console.log("UserCart added to db");
                 for (let i = 0; i < cart.inventory.length; i++) {
-                    console.log("INSERT INTO bought_inventory VALUES ('" + cart.inventory[i].getserialNumber() + "','" + cart.inventory[i].getinventoryType().getId() + "','" + cart.id + "')");
-                    storeOrNot = db.none("INSERT INTO bought_inventory VALUES ('" + cart.inventory[i].getserialNumber() + "','" + cart.inventory[i].getinventoryType().getId() + "','" + cart.id + "')")
+                    dataPromises.push(db.none("INSERT INTO bought_inventory VALUES ('" + cart.inventory[i].getserialNumber() + "','" + cart.inventory[i].getinventoryType().getId() + "','" + cart.id + "')")
                         .then(function () {
                             console.log("UserCart added to db");
                             return true;
                         }).catch(function (err) {
                             console.log("Error adding UserCart to the db: " + err);
                             return false;
-                        });
+                        }));
                 }
                 return true;
             }).catch(function (err) {
                 console.log("Error adding UserCart to the db: " + err);
                 return false;
-            });
+            }));
 
-        return storeOrNot;
+         return Promise.all(dataPromises).then( ()=> {
+            return true;
+            }).catch(function (err) {
+                console.log("Error saving cart: " + err);
+                return false;
+            });
     }
 
 
