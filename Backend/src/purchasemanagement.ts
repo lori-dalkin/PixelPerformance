@@ -95,7 +95,7 @@ export class PurchaseManagement {
 	{
 		let cart:Cart;
 		try{
-			let cart = this.getCart(userId);
+			cart = this.getCart(userId);
 		}catch(e){
 			var uuid1 = uuid.v1();
 			cart = new Cart(uuid1, userId);
