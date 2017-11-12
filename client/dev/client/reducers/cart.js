@@ -13,7 +13,7 @@ export default function (state = initialState, action) {
       	return { ...state, isFetchingCart: true, inventory: [] };
       	break;
     case actions.RECEIVE_CART_ITEMS:
-      	return { ...state, isFetchingCart: false, inventory: action.items };
+      	return { ...state, isFetchingCart: false, inventory: action.items, checkedOut: false };
       	break;
     case actions.CHECKOUT_CART:
         return { ...state, isCheckingOut: true };
