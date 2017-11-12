@@ -5,6 +5,7 @@ import product from './product';
 import snackbar from './snackbar';
 import registration from './registration';
 import history from './history';
+import client from './client';
 
 const reducers = combineReducers({
 	authentication,
@@ -12,6 +13,7 @@ const reducers = combineReducers({
 	snackbar,
 	registration,
 	history
+	client
 });
 
 export default reducers;

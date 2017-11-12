@@ -102,10 +102,29 @@ export const deleteProduct = (product) => {
 }
 
 // -----------------------------------------------
-//             MODIFY PRODUCT INVENTORY
+//             PRODUCT INVENTORY
 //------------------------------------------------
-export const addToInventory = (productId) => {
+export const fetchInventory = (productId) => {
+    return (dispatch, getState) => {
+        dispatch(fetchInventoryRequest());
+        if (getState().authentication && getState().authentication.token) {
+            return callApi(`api/inventories/product/${productId}`, 'get', undefined, `Bearer ${getState().authentication.token}`).then(
+                res => dispatch(receiveInventoryCount(res)),
+                error => dispatch(receiveInventoryCount({ count: 0 }))
+            );
+        }
+    }
+}
 
+export const fetchInventoryRequest = () => { return { type: actions.GET_INVENTORY_COUNT}; }
+
+export const receiveInventoryCount = (inventory) => { 
+    console.log(inventory);
+    var count = (inventory.count === undefined)?0:inventory.count;
+    return { type: actions.RECEIVE_INVENTORY_COUNT, count }; 
+}
+
+export const addToInventory = (productId) => {
     return (dispatch, getState) => {
         if (getState().authentication && getState().authentication.token) {
             return callApi(`api/inventories/product/${productId}`, 'post', undefined, `Bearer ${getState().authentication.token}`).then(
@@ -117,7 +136,6 @@ export const addToInventory = (productId) => {
 }
 
 export const removeFromInventory = (productId) => {
-
     return (dispatch, getState) => {
         if (getState().authentication && getState().authentication.token) {
             return callApi(`api/inventories/product/${productId}`, 'delete', undefined, `Bearer ${getState().authentication.token}`).then(

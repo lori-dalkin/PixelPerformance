@@ -24,6 +24,7 @@ import { SystemMonitor } from "./Models/systemmonitor";
 import * as uuid from "uuid";
 import { AdvicePool, beforeMethod } from 'kaop-ts';
 import { RoutingAdvice } from "./routingadvice";
+import {Inventory} from "./Models/inventory";
 var swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerDocument = YAML.load('./src/swagger.yaml');
@@ -104,6 +105,7 @@ export class WebPortal {
         router.post("/api/users/login", this.login);
         router.post("/api/users/logout", this.logout);
         router.post("/api/users/", this.postUser);
+        router.get("/api/users/", this.getAllClients);
 
 
         router.get("/api/products/", this.getProducts);
@@ -120,13 +122,11 @@ export class WebPortal {
         router.get("/api/carts/", this.getCart);
         router.get("/api/carts/inventory/", this.getCartInventory);
         router.post("/api/carts/inventory/:id", this.postCartInventoryById);
-        router.post("/api/carts/startTransaction/:id", this.postCartsStartTransactionById);
-        router.post("/api/carts/saveCart/:id", this.postCartsSaveCartById);
         router.delete("/api/cart", this.deleteCart);
         router.delete("/api/carts/inventory/:id", this.deleteCartInventoryById);
-        router.post("/api/carts/checkout", this.postCartCheckout);
+        router.post("/api/carts/", this.postCartCheckout);
 
-        router.get("/api/records/:id", this.viewPurchases);
+        router.get("/api/records/", this.viewPurchases);
         router.delete("/api/records/inventory/:id", this.deleteRecordsInventoryById);
 
         //use router middleware
@@ -150,6 +150,7 @@ export class WebPortal {
                     var payload = { id: user.id };
                     var token = jwt.sign(payload, 'tasmanianDevil');
                     if (user instanceof Client) {
+                        PurchaseManagement.getInstance().startTransaction(user.getId());
                         res.json({ message: "Client", data: token });
                     } else {
                         res.json({ message: "Admin", data: token });
@@ -164,18 +165,141 @@ export class WebPortal {
         }
     }
 
+  @beforeMethod(RoutingAdvice.requireLoggedIn)
+  public getProductById(req, res) {
+    try{
+      let electronic: Electronic;
+      electronic = Catalog.getInstance().getProduct(req.params.id);
+      res.send({data: electronic});
+    }catch (e) {
+      console.log(e);
+      res.send({data: false, error: e});
+    }
+  }
+
+  @beforeMethod(RoutingAdvice.requireAdmin)
+  public deleteProductById(req, res) {
+    try{
+      Catalog.getInstance().deleteProduct(req.params.id).then((success)=>{
+        res.send({data: success});
+      });
+    }catch (e) {
+      console.log(e);
+      res.send({data: false, error: e});
+    }
+  }
+
+  @beforeMethod(RoutingAdvice.requireAdmin)
+  public modifyProductById(req, res) {
+    try{
+      Catalog.getInstance().modifyProduct(req.params.id, req.body).then((success) => {
+        res.send({data:success});
+      });
+    }catch (e) {
+      console.log(e);
+      res.send({data: false, error: e});
+    }
+  }
+    
+  @beforeMethod(RoutingAdvice.requireLoggedIn)
+  public getInventoriesById(req, res) {
+    try{
+      let inventories = Catalog.getInstance().getAllInventories(req.params.id);
+      res.send( {count: inventories.length, inventories: inventories});
+    }catch (e) {
+      console.log(e);
+      res.send({data: false, error: e});
+    }
+  }
+
+  @beforeMethod(RoutingAdvice.requireAdmin)
+  public postInventoryById(req, res) {
+    try {
+      Catalog.getInstance().addInventory(req.params.id)
+      res.send({ data:true});
+    }catch (e) {
+      console.log(e);
+      res.send({data: false, error: e});
+    }
+  }
+
+
     public logout(req, res) {
         res.send({ data: true });
+
     }
 
     public postUser(req, res) {
-        res.send({ data: UserManagement.getInstance().addClient(req.body) });
+      try{
+        res.send({data: UserManagement.getInstance().addClient(req.body)});
+      }catch (e) {
+        console.log(e);
+        res.send({data: false, error: e});
+      }
+
     }
+
+  @beforeMethod(RoutingAdvice.requireAdmin)
+  public getAllClients(req, res){
+    try{
+      let clients: Client[] = UserManagement.getInstance().getAllClients();
+      let result = [];
+
+      // need to do this to filter out the password
+      clients.forEach((client) => {
+        result.push({ 
+          id: client.getId(),
+          fname: client.getFName(), 
+          lname: client.getLName(),
+          email: client.getEmail(),
+          address: client.getAddress(),
+          phone: client.getPhone()
+        })
+      });
+
+      res.send(result);
+
+    }catch(e){
+      console.log(e);
+      res.status = 500;
+      res.send([]);
+    }
+  }
+
+  @beforeMethod(RoutingAdvice.requireAdmin)
+  public deleteInventoryById(req, res) {
+    try{
+      Catalog.getInstance().deleteInventory(req.params.id).then((success)=>{
+      res.send({data: success});
+    });
+    }catch (e) {
+      console.log(e);
+      res.send({data: false, error: e});
+    }
+  }
+
+  @beforeMethod(RoutingAdvice.requireClient)
+  public getCart(req, res) {
+    try{
+      let cart  = PurchaseManagement.getInstance().getCart(req.user.id)
+      res.send({data: cart});
+    }catch (e) {
+      console.log(e);
+      res.send({data: false, error: e});
+    }
+  }
+      
+
 
     @beforeMethod(RoutingAdvice.requireLoggedIn)
     public getProducts(req, res) {
+      try{
         let electronics = Catalog.getInstance().getProductPage(parseInt(req.query.page), req.query.type, parseInt(req.query.numOfItems));
         res.send(electronics);
+      }catch (e) {
+        console.log(e);
+        res.send({data: false, error: e});
+      }
     }
 
     @beforeMethod(RoutingAdvice.requireAdmin)
@@ -185,66 +309,10 @@ export class WebPortal {
             res.send({ data: true });
         }
         catch (e) {
+          console.log(e);
             res.send({ data: false, error: e });
         }
     }
-
-    @beforeMethod(RoutingAdvice.requireLoggedIn)
-    public getProductById(req, res) {
-        let electronic: Electronic;
-        electronic = Catalog.getInstance().getProduct(req.params.id);
-        res.send({ data: electronic });
-    }
-
-    @beforeMethod(RoutingAdvice.requireAdmin)
-    public deleteProductById(req, res) {
-        Catalog.getInstance().deleteProduct(req.params.id).then((success) => {
-            res.send({ data: success });
-        });
-    }
-
-    @beforeMethod(RoutingAdvice.requireAdmin)
-    public modifyProductById(req, res) {
-        Catalog.getInstance().modifyProduct(req.params.id, req.body).then((success) => {
-            res.send({ data: success });
-        });
-    }
-
-    @beforeMethod(RoutingAdvice.requireLoggedIn)
-    public getInventoriesById(req, res) {
-        let inventories = Catalog.getInstance().getAllInventories(req.params.id);
-        res.send({ data: inventories });
-    }
-
-    @beforeMethod(RoutingAdvice.requireAdmin)
-    public postInventoryById(req, res) {
-        try {
-            Catalog.getInstance().addInventory(req.params.id)
-            res.send({ data: true });
-        }
-        catch (e) {
-            res.send({ data: false, error: e });
-        }
-    }
-
-    @beforeMethod(RoutingAdvice.requireAdmin)
-    public deleteInventoryById(req, res) {
-        Catalog.getInstance().deleteInventory(req.params.id).then((success) => {
-            res.send({ data: success });
-        });
-    }
-
-    @beforeMethod(RoutingAdvice.requireClient)
-    public getCart(req, res) {
-        try {
-            let cart = PurchaseManagement.getInstance().getCart(req.user.id)
-            res.send({ data: cart });
-        }
-        catch (e) {
-            res.send({ data: null, error: e });
-        }
-    }
-
 
     @beforeMethod(RoutingAdvice.requireClient)
     public getCartInventory(req, res) {
@@ -253,6 +321,7 @@ export class WebPortal {
             res.send({ data: inventories });
         }
         catch (e) {
+          console.log(e);
             res.send({ data: null, error: e });
         }
     }
@@ -265,31 +334,11 @@ export class WebPortal {
             res.send({ data: true });
         }
         catch (e) {
-            res.send({ data: false, error: e });
+          console.log(e);
+          res.send({ data: false, error: e });
         }
     }
 
-    @beforeMethod(RoutingAdvice.requireClient)
-    public postCartsStartTransactionById(req, res) {
-        try {
-            let transac = PurchaseManagement.getInstance().startTransaction(req.user.id)
-            res.send({ data: transac });
-        }
-        catch (e) {
-            res.send({ data: null, error: e });
-        }
-    }
-
-    @beforeMethod(RoutingAdvice.requireClient)
-    public postCartsSaveCartById(req, res) {
-        try {
-            let cart = PurchaseManagement.getInstance().getCart(req.user.id).saveCart();
-            res.send({ data: cart });
-        }
-        catch (e) {
-            res.send({ data: null, error: e });
-        }
-    }
 
     @beforeMethod(RoutingAdvice.requireClient)
     public deleteCart(req, res) {
@@ -298,6 +347,7 @@ export class WebPortal {
             res.send({ data: true });
         }
         catch (e) {
+          console.log(e);
             res.send({ data: false, error: e });
         }
     }
@@ -310,6 +360,7 @@ export class WebPortal {
             res.send({ data: true });
         }
         catch (e) {
+          console.log(e);
             res.send({ data: false, error: e });
         }
     }
@@ -321,6 +372,7 @@ export class WebPortal {
             res.send({ data: true });
         }
         catch (e) {
+          console.log(e);
             res.send({ data: false, error: e });
         }
     }
@@ -328,10 +380,12 @@ export class WebPortal {
     @beforeMethod(RoutingAdvice.requireClient)
     public viewPurchases(req, res) {
         try {
-            let returnSuccess = PurchaseManagement.getInstance().viewPurchases(req.user.id);
-            res.send({ data: true });
+            let purchases: Inventory[] = [];
+            purchases = PurchaseManagement.getInstance().viewPurchases(req.user.id);
+            res.send({ data: purchases });
         }
         catch (e) {
+          console.log(e);
             res.send({ data: false, error: e });
         }
     }
@@ -342,6 +396,7 @@ export class WebPortal {
             res.send({ data: true });
         }
         catch (e) {
+          console.log(e);
             res.send({ data: false, error: e });
         }
     }

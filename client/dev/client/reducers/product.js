@@ -22,8 +22,10 @@ const defaultDropDownsProduct = {
 };
 
 const initialState = {
+    isFetchingInventory: false,
     isFetching: false,
     filterSet: false,
+    inventoryCount: 0,
     error: "",
     productFilter: "",
     products: [],
@@ -209,6 +211,17 @@ export default function (state = initialState, action) {
                 numProducts: action.numProducts
             };
             break;
+        case actions.GET_INVENTORY_COUNT:
+            return {
+                ...state,
+                isFetchingInventory: true
+            }
+        case actions.RECEIVE_INVENTORY_COUNT:
+            return {
+                ...state,
+                isFetchingInventory: false,
+                inventoryCount: action.count
+            }
         default:
             return state;
     }
