@@ -120,14 +120,13 @@ export class WebPortal {
         router.delete("/api/inventories/product/:id", this.deleteInventoryById);
 
         router.get("/api/carts/", this.getCart);
+        router.post("/api/carts/", this.postCartCheckout);
+        router.delete("/api/cart", this.deleteCart);
+      
         router.get("/api/carts/inventory/", this.getCartInventory);
         router.post("/api/carts/inventory/:id", this.postCartInventoryById);
-        router.post("/api/carts/startTransaction/:id", this.postCartsStartTransactionById);
-        router.post("/api/carts/saveCart/:id", this.postCartsSaveCartById);
-        router.delete("/api/carts/", this.deleteCart);
         router.delete("/api/carts/inventory/:id", this.deleteCartInventoryById);
-        router.post("/api/carts/checkout", this.postCartCheckout);
-
+       
         router.get("/api/records/", this.viewPurchases);
         router.delete("/api/records/inventory/:id", this.deleteRecordsInventoryById);
 
@@ -152,6 +151,7 @@ export class WebPortal {
                     var payload = { id: user.id };
                     var token = jwt.sign(payload, 'tasmanianDevil');
                     if (user instanceof Client) {
+                        PurchaseManagement.getInstance().startTransaction(user.getId());
                         res.json({ message: "Client", data: token });
                     } else {
                         res.json({ message: "Admin", data: token });
@@ -340,29 +340,6 @@ export class WebPortal {
         }
     }
 
-    @beforeMethod(RoutingAdvice.requireClient)
-    public postCartsStartTransactionById(req, res) {
-        try {
-            let transac = PurchaseManagement.getInstance().startTransaction(req.params.id);
-            res.send({ data: transac });
-        }
-        catch (e) {
-          console.log(e);
-            res.send({ data: null, error: e });
-        }
-    }
-
-    @beforeMethod(RoutingAdvice.requireClient)
-    public postCartsSaveCartById(req, res) {
-        try {
-            let cart = PurchaseManagement.getInstance().getCart(req.user.id).saveCart();
-            res.send({ data: cart });
-        }
-        catch (e) {
-          console.log(e);
-            res.send({ data: null, error: e });
-        }
-    }
 
     @beforeMethod(RoutingAdvice.requireClient)
     public deleteCart(req, res) {

@@ -11,13 +11,13 @@ export class Inventory {
     private serialNumber: string;
 	private inventoryType: Electronic;
     private lockedUntil: Date;
-    private cart: Cart;
+    private cartid: string;
 
     constructor(serialNumber: string, inventoryType: Electronic) {
         this.serialNumber = serialNumber;
         this.inventoryType = inventoryType;
         this.lockedUntil = null;
-        this.cart = null;
+        this.cartid = null;
     }
 
     public setserialNumber(serialNumber:string): void{this.serialNumber = serialNumber;}
@@ -29,8 +29,8 @@ export class Inventory {
     public setLockedUntil(lockedUntil:Date){this.lockedUntil = lockedUntil};
     public getLockedUntil():Date{return this.lockedUntil};
 
-    public setCart(cart:Cart){this.cart = cart};
-    public getCart():Cart{return this.cart};
+    public setCartId(cartid:string){this.cartid = cartid};
+    public getCartId():string{return this.cartid};
 
     public static setElectronics(eletronics:Electronic[]):void{
         Inventory.electronics = eletronics;
