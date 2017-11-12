@@ -6,6 +6,7 @@ import { showProductView, showDeleteProduct } from '../../actions';
 
 const mapStateToProps = state => {
     return {
+        userType: state.authentication.userType,
         currPage: state.product.page,
         numPages: state.product.numPages,
         products: state.product.products,

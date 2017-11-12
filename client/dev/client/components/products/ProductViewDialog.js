@@ -15,6 +15,7 @@ import RemoveCircleOutline from 'material-ui-icons/RemoveCircleOutline';
 
 import { addToInventory, removeFromInventory, fetchInventory } from '../../actions/adminProductActions';
 import { showModifyProduct } from '../../actions';
+import { addToCart } from '../../actions/clientProductActions';
 
 class ProductViewDialog extends Component {
 
@@ -58,6 +59,7 @@ class ProductViewDialog extends Component {
               <strong>Type: </strong>{this.props.product.selectedProduct.electronicType}<br/>
               <strong>Price: </strong>{`$${this.props.product.selectedProduct.price} CDN`}<br/>
               <strong>Weight: </strong>{`${this.props.product.selectedProduct.weight} lbs`}<br/>
+              {this.props.authentication.userType === "Client"  && <span><strong>In Stock: </strong>{this.state.inventory}</span> }
             </DialogContentText>
             { this.state.showInventory &&
               <span>
@@ -81,30 +83,49 @@ class ProductViewDialog extends Component {
             }
           </DialogContent>
           <DialogActions>
-            <Button onClick={ () => this.toggleInventoryView() } color='primary'>
-              { this.state.showInventory ? "Hide Inventory" : "Show Inventory" }
-            </Button>
-            <Button onClick={ () => this.props.showModifyProduct(this.props.product.selectedProduct) } color='primary'>
-              Modify
-            </Button>
-            <Button onClick={this.props.handleRequestClose} color="default">
-              Back
-            </Button>
-          </DialogActions>
+           {this.props.authentication.userType === "Client" ? null :
+               <span>
+                 <Button onClick={ () => this.toggleInventoryView() } color='primary'>
+                    { this.state.showInventory ? "Hide Inventory" : "Show Inventory" }
+                  </Button>
+                 <Button onClick={ () => this.props.showModifyProduct(this.props.product.selectedProduct) } color='primary'>
+                  Modify
+                </Button>
+               </span>
+
+           }
+              {this.props.authentication.userType === "Admin" ? null :
+                  (this.props.product.inventoryCount > 0 ?
+                  <Button onClick={ () => this.props.addToCart(this.props.product.selectedProduct.id) } color='primary'>
+                      Add to Cart
+                  </Button>
+                          :
+                  <Button disabled color='primary'>
+                    Add to Cart
+                  </Button>
+                  )
+              }
+
+             <Button onClick={this.props.handleRequestClose} color="default">
+               Back
+             </Button>
+           </DialogActions>
         </Dialog>
 		  )
 	}
 
 };
 
-const mapStateToProps = ({ product }) => ({
-  product
+const mapStateToProps = ({ product, authentication }) => ({
+  product,
+    authentication
 });
 
 const mapDispatchToProps = {
   showModifyProduct,
   addToInventory,
   removeFromInventory,
+  addToCart,
   fetchInventory
 };
 

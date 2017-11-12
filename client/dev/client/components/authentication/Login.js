@@ -47,9 +47,13 @@ class Login extends Component {
 
   componentDidMount(){
     const authentication = this.props.authentication;
-    if(authentication !== undefined && authentication.token !== undefined ){
+    if(authentication !== undefined && authentication.isClient && authentication.token !== undefined ){
+          window.location.hash = "#/clientProducts";
+      }
+    else if(authentication !== undefined && authentication.token !== undefined ){
       window.location.hash = "#/products";
     }
+
   }
 
   render() {
