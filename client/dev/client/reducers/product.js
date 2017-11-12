@@ -36,6 +36,10 @@ const initialState = {
         addProductOpen: false,
         error: false
     },
+    addToCart: {
+        addingToCart: false,
+        error: false
+    },
     modifyProduct: {
         modifyingProduct: false,
         modifyProductOpen: false,
@@ -209,6 +213,36 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 numProducts: action.numProducts
+            };
+            break;
+        case actions.ADD_TO_CART_REQUEST:
+            return {
+                ...state,
+                addToCart: {
+                    ...state.addToCart,
+                    addingToCart: true,
+                    error: false
+                }
+            };
+            break;
+        case actions.ADD_TO_CART_SUCCESS:
+            return {
+                ...state,
+                addToCart: {
+                    ...state.addToCart,
+                    error: false,
+                    addingToCart: false
+                }
+            };
+            break;
+        case actions.ADD_TO_CART_FAILURE:
+            return {
+                ...state,
+                addToCart: {
+                    ...state.addToCart,
+                    error: true,
+                    addingToCart: false
+                }
             };
             break;
         case actions.GET_INVENTORY_COUNT:

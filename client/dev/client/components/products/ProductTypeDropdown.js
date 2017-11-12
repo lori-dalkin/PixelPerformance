@@ -32,7 +32,11 @@ class ProductTypeDropdown extends Component {
     render() {
         return (
             <div>
-                    <Select name="filterType" value={this.state.filterType} onChange={(event) => this.handleChange("filterType", event)}>
+                    <Select name="filterType"
+                            value={this.state.filterType}
+                            onChange={(event) => this.handleChange("filterType", event)}
+                            style={{paddingLeft: '20px'}}
+                    >
                         <MenuItem value="none">Select Filter</MenuItem>
                         <MenuItem value="Monitor">Monitor</MenuItem>
                         <MenuItem value="Desktop">Desktop</MenuItem>
