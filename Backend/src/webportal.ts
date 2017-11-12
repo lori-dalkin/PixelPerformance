@@ -185,6 +185,7 @@ export class WebPortal {
       });
     }catch (e) {
       console.log(e);
+      res.status = 500;
       res.send({data: false, error: e});
     }
   }
@@ -197,6 +198,7 @@ export class WebPortal {
       });
     }catch (e) {
       console.log(e);
+      res.status = 500;
       res.send({data: false, error: e});
     }
   }
@@ -208,6 +210,7 @@ export class WebPortal {
       res.send( {count: inventories.length, inventories: inventories});
     }catch (e) {
       console.log(e);
+      res.status = 500;
       res.send({data: false, error: e});
     }
   }
@@ -219,6 +222,7 @@ export class WebPortal {
       res.send({ data:true});
     }catch (e) {
       console.log(e);
+      res.status = 500;
       res.send({data: false, error: e});
     }
   }
@@ -234,6 +238,7 @@ export class WebPortal {
         res.send({data: UserManagement.getInstance().addClient(req.body)});
       }catch (e) {
         console.log(e);
+        res.status = 500;
         res.send({data: false, error: e});
       }
 
@@ -274,6 +279,7 @@ export class WebPortal {
     });
     }catch (e) {
       console.log(e);
+      res.status = 500;
       res.send({data: false, error: e});
     }
   }
@@ -285,6 +291,7 @@ export class WebPortal {
       res.send({data: cart});
     }catch (e) {
       console.log(e);
+      res.status = 500;
       res.send({data: false, error: e});
     }
   }
@@ -298,6 +305,7 @@ export class WebPortal {
         res.send(electronics);
       }catch (e) {
         console.log(e);
+        res.status = 500;
         res.send({data: false, error: e});
       }
     }
@@ -310,7 +318,8 @@ export class WebPortal {
         }
         catch (e) {
           console.log(e);
-            res.send({ data: false, error: e });
+          res.status = 500;
+          res.send({ data: false, error: e });
         }
     }
 
@@ -322,7 +331,8 @@ export class WebPortal {
         }
         catch (e) {
           console.log(e);
-            res.send({ data: null, error: e });
+          res.status = 500;
+          res.send({ data: null, error: e });
         }
     }
 
@@ -335,6 +345,7 @@ export class WebPortal {
         }
         catch (e) {
           console.log(e);
+          res.status = 500;
           res.send({ data: false, error: e });
         }
     }
@@ -348,7 +359,8 @@ export class WebPortal {
         }
         catch (e) {
           console.log(e);
-            res.send({ data: false, error: e });
+          res.status = 500;
+          res.send({ data: false, error: e });
         }
     }
 
@@ -361,7 +373,8 @@ export class WebPortal {
         }
         catch (e) {
           console.log(e);
-            res.send({ data: false, error: e });
+          res.status = 500;
+          res.send({ data: false, error: e });
         }
     }
 
@@ -373,7 +386,8 @@ export class WebPortal {
         }
         catch (e) {
           console.log(e);
-            res.send({ data: false, error: e });
+          res.status = 500;
+          res.send({ data: false, error: e });
         }
     }
 
@@ -386,7 +400,8 @@ export class WebPortal {
         }
         catch (e) {
           console.log(e);
-            res.send({ data: false, error: e });
+          res.status = 500;
+          res.send({ data: false, error: e });
         }
     }
     @beforeMethod(RoutingAdvice.requireClient)
@@ -397,7 +412,8 @@ export class WebPortal {
         }
         catch (e) {
           console.log(e);
-            res.send({ data: false, error: e });
+          res.status = 500;
+          res.send({ data: false, error: e });
         }
     }
 
