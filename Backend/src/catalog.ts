@@ -320,6 +320,15 @@ export class Catalog {
         }
         return null;
     }
+    public getInventoryByElectronic(electronicId:string){
+        for(let inventory of this.inventories) {
+            if(inventory.getinventoryType().getId() == electronicId  && !inventory.isLocked()) {
+                return inventory;
+            }
+        }
+        return null;       
+    }
+
     public getInventory(inventoryId:string){
         for( let inventory of this.inventories){
             if(inventory.getserialNumber() == inventoryId){
