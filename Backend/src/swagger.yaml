@@ -288,6 +288,20 @@
             description: "Cart of specified User" 
             schema:
               $ref: "#/definitions/Cart"
+      post:
+        tags:
+          - Cart Management
+        description: "Checks out a cart belonging to the user"
+        produces:
+          - "application/json"
+        parameters:
+          - name: Authorization
+            in: header
+            description: API key
+            required: false
+            type: string
+            format: string
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZjOTQwLWM1OGMtMTFlNy1hZDA0LTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI3MTk2MH0.-f3taUQ7xiQkl0bQKEd1bQbs0Mjfqgmp4IwdHnUeOu0"
       delete:
         tags:
           - Cart Management
@@ -439,6 +453,8 @@
         - "inventoryType"
       properties:
         serialNumber:
+          type: "string"
+        cartid:
           type: "string"
         inventoryType:
           $ref: "#/definitions/Electronic"
