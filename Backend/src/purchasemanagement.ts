@@ -35,7 +35,7 @@ export class PurchaseManagement {
 	}
 
     @beforeMethod(function (meta) {
-        assert(validator.isUUID(meta.args[0], "userID needs to be a uuid"));
+        assert(validator.isUUID(meta.args[0]), "userID needs to be a uuid");
     })
     @afterMethod(function (meta) {
             assert(PurchaseManagement.getInstance().getCart(meta.args[0]) != null,"Cart was not create")
@@ -144,7 +144,7 @@ export class PurchaseManagement {
         assert(PurchaseManagement.getInstance().findCart(meta.args[0]) != null, "there are no purchases associated to this account");
     })
     @afterMethod(function (meta) {
-            assert(meta.result != null);
+            assert(meta.result != null, "There was an error in retrieving your previous purchases");
     })
 	// viewPurchases(userId: string): Inventory []
 

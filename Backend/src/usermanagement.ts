@@ -97,4 +97,18 @@ export class UserManagement {
         this.users.push(client);
         return true;
     }
+
+    /***************************************
+    * Function to return all clients
+     ****************************************/
+    public getAllClients(): Client[] {
+        let clients: Client[] = [];
+        for(var i = 0; i<this.users.length; i++)
+        {
+            if(this.users[i] instanceof Client){
+                clients.push(this.users[i] as Client);
+            }
+        }
+        return clients
+    }
 }
