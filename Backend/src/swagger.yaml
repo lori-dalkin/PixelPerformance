@@ -366,6 +366,8 @@
                 $ref: "#/definitions/Inventory"
     /records/inventory/{id}:
       delete:
+        tags: 
+          - Records
         description: "Makes a return on a previously purchased inventory, adding it back to the system"
         produces:
           - "application/json"
@@ -388,6 +390,29 @@
             description: "Whether the return was successful"
             schema:
               type: "boolean"
+
+    /records/:
+      get:
+        tags: 
+          - Records
+        description: "Returns all purchased inventories of a given user"
+        produces: 
+          - "application/json"
+        parameters:
+          - name: Authorization
+            in: header
+            description: API key
+            required: false
+            type: string
+            format: string
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZjOTQwLWM1OGMtMTFlNy1hZDA0LTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI3MTk2MH0.-f3taUQ7xiQkl0bQKEd1bQbs0Mjfqgmp4IwdHnUeOu0"
+        responses:
+          "200":
+            description: "Array of bought inventories"
+            schema: 
+              type: "array"
+              items: 
+                $ref: "#/definitions/Inventory"
   definitions:
     Electronic:
       type: "object"

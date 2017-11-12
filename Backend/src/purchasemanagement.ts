@@ -55,8 +55,7 @@ export class PurchaseManagement {
 		assert( PurchaseManagement.getInstance().findCart(meta.args[0]) != null, "no cart is assiated with the user");
 	})
 	@afterMethod(function(meta) {
-		var purchaseManagement = PurchaseManagement.getInstance();
-		assert( purchaseManagement.findCart(meta.args[0]) == null, "cart was not removed from active carts");
+		assert( PurchaseManagement.getInstance().findCart(meta.args[0]) == null, "cart was not removed from active carts");
 	})
 
 	public cancelTransaction(userId: String): void{
@@ -149,10 +148,10 @@ export class PurchaseManagement {
     public viewPurchases(userId: String): Inventory[] {
         let purchase_history: Inventory[] = new Array<Inventory>();
         for (let i = 0; i < this.purchaseRecords.length; i++) {
-            if (this.purchaseRecords[i].getUserId() == userId) {
-                purchase_history.concat(this.purchaseRecords[i].getInventory());
+            if (this.purchaseRecords[i].getUserId() == userId && this.purchaseRecords[i].getInventory() != undefined) {
+				purchase_history = purchase_history.concat(this.purchaseRecords[i].getInventory());
             }
-          }
+		  }
          return purchase_history;
     }
 	// returnInventory(userId: string, serialNumber: string): bool

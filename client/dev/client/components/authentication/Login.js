@@ -63,7 +63,7 @@ class Login extends Component {
           <Grid item xs={10} md={5} lg={4}>
             <Paper style={panelPadding}>
               <Typography type="display1" component="h3">
-                Admin Login
+                User Login
               </Typography>
               <br />
               <form style={formStyle} noValidate autoComplete="off">

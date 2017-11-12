@@ -5,6 +5,7 @@ import product from './product';
 import snackbar from './snackbar';
 import registration from './registration';
 import history from './history';
+import cart from './cart';
 import client from './client';
 
 const reducers = combineReducers({
@@ -13,6 +14,7 @@ const reducers = combineReducers({
 	snackbar,
 	registration,
 	history,
+	cart,
 	client
 });
 
