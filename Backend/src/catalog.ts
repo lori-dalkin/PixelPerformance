@@ -196,7 +196,7 @@ export class Catalog {
             if(this.inventories[i].getinventoryType() == null){
                 continue;
             }
-            if(electronicId == this.inventories[i].getinventoryType().getId()){
+            if(electronicId == this.inventories[i].getinventoryType().getId() && !this.inventories[i].isLocked()){
                 desired.push(this.inventories[i]);
             }
         }
