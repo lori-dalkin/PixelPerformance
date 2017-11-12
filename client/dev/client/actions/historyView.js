@@ -33,7 +33,7 @@ export const getHistoryOfProducts = () => {
         if (getState().authentication && getState().authentication.token) {
             if (shouldGetHistoryOfProducts(getState())) {
                 dispatch(getHistoryOfProductsRequest());
-                let endPoint = 'api/records/123';
+                let endPoint = 'api/records';
 
                 return callApi(endPoint, 'get', undefined, `Bearer ${getState().authentication.token}`).then(
                     res => dispatch(getHistoryOfProductsSuccess(res.products)),

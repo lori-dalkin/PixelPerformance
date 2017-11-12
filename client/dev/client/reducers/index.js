@@ -12,7 +12,7 @@ const reducers = combineReducers({
   	product,
 	snackbar,
 	registration,
-	history
+	history,
 	client
 });
 
