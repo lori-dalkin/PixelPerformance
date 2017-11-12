@@ -83,15 +83,15 @@ export class PurchaseManagement {
 
 	@beforeMethod(function(meta){
 		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
-		assert(validator.isUUID(meta.args[1]), "serialNumber needs to be a uuid");
-		assert(PurchaseManagement.getInstance().findInventoryBySerialNumber(meta.args[1]) != null,"serialNumber does not correspond to any item within Inventory");
+		assert(validator.isUUID(meta.args[1]), "electronic id needs to be a uuid");
+		assert(Catalog.getInstance().getInventoryByElectronic(meta.args[1]) != null,"electronic id  does not correspond to any item within Inventory");
 		//assert(!meta.args[1].isLocked(), "Item is unavaible");
 		//assert(PurchaseManagement.getInstance().findCart(meta.args[0]) == null || PurchaseManagement.getInstance().findCart(meta.args[0]).getInventory().length < 7,"Your cart is already full. (7 Max)")
 	})
 	@afterMethod(function(meta) {
 		//assert(PurchaseManagement.getInstance().checkItemAddedToCart(meta.args[0],meta.args[1]), "Item was not added to cart" )
 	})
-	public addItemToCart(userId: string, serialNumber: string): Boolean
+	public addItemToCart(userId: string, electronicId: string): Boolean
 	{
 		let cart:Cart;
 		try{
@@ -101,16 +101,9 @@ export class PurchaseManagement {
 			cart = new Cart(uuid1, userId);
 			this.activeCarts.push(cart);
 		}
-		
-		let inventoryObj:Inventory;
-		for(let i = 0;i<this.catalog.inventories.length;i++)
-		{
-			if(this.catalog.inventories[i].getserialNumber() == serialNumber)
-			{
-				inventoryObj = this.catalog.inventories[i];
-				break;
-			}
-		}
+
+		let inventoryObj:Inventory = this.catalog.getInventoryByElectronic(electronicId);
+
 		//obj is available to be taken since beforeMethod was successful
 		//add obj to cart
 		cart.getInventory().push(inventoryObj);
