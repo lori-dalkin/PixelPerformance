@@ -105,6 +105,7 @@ export class WebPortal {
         router.post("/api/users/login", this.login);
         router.post("/api/users/logout", this.logout);
         router.post("/api/users/", this.postUser);
+        router.get("/api/users/", this.getAllClients);
 
 
         router.get("/api/products/", this.getProducts);
@@ -238,6 +239,33 @@ export class WebPortal {
       }
 
     }
+
+  @beforeMethod(RoutingAdvice.requireAdmin)
+  public getAllClients(req, res){
+    try{
+      let clients: Client[] = UserManagement.getInstance().getAllClients();
+      let result = [];
+
+      // need to do this to filter out the password
+      clients.forEach((client) => {
+        result.push({ 
+          id: client.getId(),
+          fname: client.getFName(), 
+          lname: client.getLName(),
+          email: client.getEmail(),
+          address: client.getAddress(),
+          phone: client.getPhone()
+        })
+      });
+
+      res.send(result);
+
+    }catch(e){
+      console.log(e);
+      res.status = 500;
+      res.send([]);
+    }
+  }
 
   @beforeMethod(RoutingAdvice.requireAdmin)
   public deleteInventoryById(req, res) {
