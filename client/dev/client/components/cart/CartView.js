@@ -34,18 +34,18 @@ class CartView extends React.Component {
 									</Typography>
 								</Grid>
 							</Grid>
-							{ this.props.cart.inventory.length > 0 && !this.props.cart.isCheckedOut &&
+							{ this.props.cart.inventory.length > 0 && !this.props.cart.checkedOut &&
 								<Typography type='subheading' gutterBottom>
 									Manage your cart items and checkout before your items are placed back into inventory.
 								</Typography>
 							}
-							{ this.props.cart.isCheckedOut &&
+							{ this.props.cart.checkedOut &&
 								<Typography type='subheading' gutterBottom>
 									Cart Items successfully purchased. You will be able to view them in purchase history.
 								</Typography>
 							}
 							{ this.props.cart.isFetchingCart && <LinearProgress color="accent" style={{ width: '100%' }} /> }
-							{ !this.props.cart.isFetchingCart && <CartList items = {this.props.cart.inventory}/> }
+							{ !this.props.cart.isFetchingCart && !this.props.cart.checkedOut && <CartList items = {this.props.cart.inventory}/> }
 							{ this.props.cart.inventory.length > 0 && <Checkout/> }
 						</Paper>
 					</Grid>
