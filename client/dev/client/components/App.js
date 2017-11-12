@@ -81,11 +81,12 @@ class App extends Component {
 					      	this.props.authentication.token !== undefined && this.props.authentication.userType === "Admin" &&
 					      	<Button color="contrast" onClick={() => window.location.hash = "#/clients"}>View Clients</Button> 
 					      }
+					      {	this.props.authentication.token !== undefined && this.props.authentication.userType === "Client" &&
+                  <Button color="contrast" onClick={ () => window.location.hash = "#/cart" }> View Cart</Button>
+                  
+					      }
 					      {	this.props.authentication.token !== undefined &&
-                  <div>
-					      	  <Button color="contrast" onClick={ () => window.location.hash = "#/cart" }> View Cart</Button>
-                    <Button color="contrast" onClick={this.props.deleteToken}>Logout</Button> 
-                  </div>
+                  <Button color="contrast" onClick={this.props.deleteToken}>Logout</Button> 
 					      }
 				      </Toolbar>
 				    </AppBar>
