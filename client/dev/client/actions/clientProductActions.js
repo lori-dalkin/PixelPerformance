@@ -2,17 +2,17 @@ import * as actions from './action-types';
 import callApi from '../utils/apiCaller';
 import { fetchInventory } from './adminProductActions';
 
-export const addToCart = (product) => {
+export const addToCart = (productId) => {
     return (dispatch, getState) => {
         if (getState().authentication && getState().authentication.token) {
             if (shouldAddToCart(getState())) {
                 dispatch(addToCartRequest());
 
-                return callApi(`api/carts/inventory/${product.id}`, 'post', product, `Bearer ${getState().authentication.token}`).then(
+                return callApi(`api/carts/inventory/${productId}`, 'post', undefined, `Bearer ${getState().authentication.token}`).then(
                     res => {
                         dispatch(addToCartSuccess(res));
                         dispatch(addToCartSuccessSnackbar());
-                        dispatch(fetchInventory(product));
+                        dispatch(fetchInventory(productId));
                     },
                     error => dispatch(addToCartFailure())
                 );

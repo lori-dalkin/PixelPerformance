@@ -88,7 +88,7 @@ class ProductViewDialog extends Component {
                  <Button onClick={ () => this.toggleInventoryView() } color='primary'>
                     { this.state.showInventory ? "Hide Inventory" : "Show Inventory" }
                   </Button>
-                 <Button onClick={ () => this.props.showModifyProduct(this.props.product.selectedProduct) } color='primary'>
+                 <Button onClick={ () => this.props.showModifyProduct(this.props.product.selectedProduct.id) } color='primary'>
                   Modify
                 </Button>
                </span>
