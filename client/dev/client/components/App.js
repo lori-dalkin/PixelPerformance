@@ -12,10 +12,11 @@ import pink from 'material-ui/colors/pink';
 require('../../scss/style.scss');
 import CartIcon from 'material-ui-icons/ShoppingCart';
 
-import { setToken, deleteToken } from '../actions/index';
+import { setToken, deleteToken, setUserType, deleteUserType } from '../actions/index';
 import Login from './authentication/Login';
 import ProductPage from './products/ProductPage';
 import CartView from './cart/CartView';
+import ClientView from './clients/ClientView';
 
 const styles = theme => ({
 	root: {
@@ -40,17 +41,23 @@ class App extends Component {
 	
 	componentWillMount(){
 		const token = getCookie("token");
+		const userType = getCookie("userType");
 		if(token !== undefined){
 			this.props.setToken(token);
 		} else {
 			this.props.deleteToken();
+		}
+		if(userType !== undefined){
+			this.props.setUserType(userType);
+		}else {
+      this.props.deleteUserType();
 		}
 	}
 
 	componentWillReceiveProps(nextProps){
 		const authentication = nextProps.authentication;
 		if(authentication === undefined ||  
-			 authentication.token === undefined){
+			 authentication.token === undefined || window.location.hash === "#/products"){
 			window.location.hash = "#/";
 		}
 		else if(window.location.hash === "#/" && authentication !== undefined && authentication.token !== undefined ){
@@ -69,18 +76,23 @@ class App extends Component {
 					    	<Typography style={{ flex: '1' }} type="title" color="inherit">
 					        Pixel Performance
 					      </Typography>
+					      <Button color="contrast" onClick={ () => window.location.hash = "#/products" }> Browse Products</Button>
+								{
+					      	this.props.authentication.token !== undefined && this.props.authentication.userType === "Admin" &&
+					      	<Button color="contrast" onClick={() => window.location.hash = "#/clients"}>View Clients</Button> 
+					      }
 					      {	this.props.authentication.token !== undefined &&
-					      	<div> 
-					      		<Button color="contrast" onClick={ () => window.location.hash = "#/products" }> Browse Products</Button>
-					      		<Button color="contrast" onClick={ () => window.location.hash = "#/cart" }> View Cart</Button>
-					      		<Button color="contrast" onClick={this.props.deleteToken}>Logout</Button>
-					      	</div>
+                  <div>
+					      	  <Button color="contrast" onClick={ () => window.location.hash = "#/cart" }> View Cart</Button>
+                    <Button color="contrast" onClick={this.props.deleteToken}>Logout</Button> 
+                  </div>
 					      }
 				      </Toolbar>
 				    </AppBar>
 				    <Route exact path="/" component={Login} />
 				    <Route path="/products" component={ProductPage} />
 				    <Route path="/cart" component={CartView} />
+				    <Route path="/clients" component={ClientView} />
 				  </div>
 			  </MuiThemeProvider>
 		  </Router>
@@ -99,7 +111,9 @@ const mapStateToProps = ({ authentication }) => ({
 
 const mapDispatchToProps = {
 	setToken,
-	deleteToken
+	deleteToken,
+	setUserType,
+	deleteUserType
 };
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(App));
