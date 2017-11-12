@@ -366,7 +366,6 @@ export class WebPortal {
 
     @beforeMethod(RoutingAdvice.requireClient)
     public deleteCart(req, res) {
-        console.log(PurchaseManagement.getInstance());
         try {
             PurchaseManagement.getInstance().cancelTransaction(req.user.id);
             res.send({ data: true });
@@ -375,7 +374,6 @@ export class WebPortal {
           console.log(e);
             res.send({ data: false, error: e });
         }
-        console.log(PurchaseManagement.getInstance());
     }
 
     @beforeMethod(RoutingAdvice.requireClient)
