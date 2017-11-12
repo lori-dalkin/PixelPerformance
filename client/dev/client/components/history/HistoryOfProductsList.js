@@ -1,12 +1,13 @@
 import { connect } from 'react-redux';
 import ProductList from '../products/ProductList';
 
-import { showProductView } from '../../actions';
+import { showProductView, showRefundDialog } from '../../actions';
 
 const mapStateToProps = state => {
     return {
         products: state.history.products,
-        pagination: false
+        pagination: false,
+        deleteLabel: "Refund"
     };
 }
 
@@ -14,6 +15,9 @@ const mapDispatchToProps = dispatch => {
     return {
         onProductClick: (product) => {
             dispatch(showProductView(product));
+        },
+        onProductDelete: (product) => {
+            dispatch(showRefundDialog(product));
         }
     };
 }

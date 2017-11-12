@@ -68,3 +68,10 @@ export const hideModifyProduct = () => { return { type: actions.HIDE_MODIFY_PROD
 export const showRegistration = () => { return { type: actions.SHOW_REGISTRATION }; }
 
 export const hideRegistration = () => { return { type: actions.HIDE_REGISTRATION }; }
+
+// -----------------------------------------------
+//              REFUND MODAL
+//------------------------------------------------
+export const showRefundDialog = () => { return { type: actions.SHOW_REFUND_DIALOG }; }
+
+export const hideRefundDialog = () => { return { type: actions.HIDE_REFUND_DIALOG }; }

@@ -3,7 +3,9 @@ import * as actions from '../actions/action-types.js';
 const initialState = {
 	isFetching: false,
 	error: "",
-	products: []
+	products: [],
+	refundDialogOpen: false,
+	selectedItemForRefund: {}
 };
 
 export default function (state = initialState, action) {
@@ -23,8 +25,21 @@ export default function (state = initialState, action) {
 			break;
 		case actions.GET_HISTORY_OF_PRODUCTS_FAILURE:
 			return {
+				...state,
 				isFetching: false,
 				error: action.error
+			};
+			break;
+		case actions.SHOW_REFUND_DIALOG:
+			return {
+				...state,
+				refundDialogOpen: true
+			};
+			break;
+		case actions.HIDE_REFUND_DIALOG:
+			return {
+				...state,
+				refundDialogOpen: false
 			};
 			break;
 		default:

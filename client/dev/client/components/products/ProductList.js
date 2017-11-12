@@ -6,7 +6,7 @@ import Button from 'material-ui/Button';
 
 import Table, { TableBody, TableCell, TableHead, TableFooter, TableRow, TablePagination } from 'material-ui/Table';
 
-const ProductList = ({ products, onProductClick, onProductDelete, currPage, numItems, numItemsPerPage, gotoPage, changeRowsPerPage, pagination }) => {
+const ProductList = ({ products, onProductClick, onProductDelete, currPage, numItems, numItemsPerPage, gotoPage, changeRowsPerPage, pagination, deleteLabel }) => {
   return (
     <Grid container spacing={8} style={{ margin: '0px', marginTop: '5px' }}>
       <Grid item xs={12}>
@@ -19,14 +19,22 @@ const ProductList = ({ products, onProductClick, onProductDelete, currPage, numI
             </TableRow>
           </TableHead>
           <TableBody>
-            {products.map((product, index) => (
+            { products && products.map((product, index) => (
               <ProductListItem 
                 key={index}
                 {...product}
                 onClick={ () => onProductClick(product) } 
                 onDelete={ () => onProductDelete(product) }
+                deleteLabel={deleteLabel}
               />
             ))}
+            { !products && (
+              <TableRow>
+                <TableCell>
+                  No products found
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
           { pagination &&
             (<TableFooter>
@@ -48,15 +56,16 @@ const ProductList = ({ products, onProductClick, onProductDelete, currPage, numI
 }
 
 ProductList.propTypes = {
+    onProductClick: PropTypes.func.isRequired,
+    pagination: PropTypes.bool.isRequired,
+    deleteLabel: PropTypes.string.isRequired,
     products: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.string.isRequired,
             brand: PropTypes.string.isRequired,
             price: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
         }).isRequired
-    ).isRequired,
-    onProductClick: PropTypes.func.isRequired,
-    pagination: PropTypes.bool.isRequired,
+    ),
     onProductDelete: PropTypes.func,
     currPage: PropTypes.number,
     gotoPage: PropTypes.func,

@@ -52,7 +52,7 @@ class ProductPage extends React.Component {
 					</Grid>
 				</Grid>
 				<ProductDeleteDialog open={this.props.product.productDeleteOpen} handleRequestClose={this.props.hideProductDelete} />
-				<ProductViewDialog open={this.props.product.productViewOpen} handleRequestClose={this.props.hideProductView} />
+				<ProductViewDialog open={this.props.product.productViewOpen} handleRequestClose={this.props.hideProductView} actions={true} />
 				<ProductAddDialog open={this.props.product.addProduct.addProductOpen} handleRequestClose={this.props.hideAddProduct} />
 				<ProductModifyDialog open={this.props.product.modifyProduct.modifyProductOpen} handleRequestClose={this.props.hideModifyProduct} />
 				<Button style={{ position: 'fixed', bottom: '2rem', right: '2rem' }} fab color="accent" aria-label="add" onClick={ () => this.props.showAddProduct() }>

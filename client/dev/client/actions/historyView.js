@@ -4,6 +4,7 @@ import callApi from '../utils/apiCaller';
 export const getHistoryOfProductsRequest = () => { return { type: actions.GET_HISTORY_OF_PRODUCTS_REQUEST }; }
 
 export const getHistoryOfProductsSuccess = (products) => {
+    console.log(products);
     return {
         type: actions.GET_HISTORY_OF_PRODUCTS_SUCCESS,
         products: products
@@ -32,7 +33,7 @@ export const getHistoryOfProducts = () => {
         if (getState().authentication && getState().authentication.token) {
             if (shouldGetHistoryOfProducts(getState())) {
                 dispatch(getHistoryOfProductsRequest());
-                let endPoint = 'api/products?page=1&numOfItems=10';
+                let endPoint = 'api/records/123';
 
                 return callApi(endPoint, 'get', undefined, `Bearer ${getState().authentication.token}`).then(
                     res => dispatch(getHistoryOfProductsSuccess(res.products)),

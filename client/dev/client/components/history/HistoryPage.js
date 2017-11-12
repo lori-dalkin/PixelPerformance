@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import HistoryOfProductsList from './HistoryOfProductsList';
 import ProductViewDialog from '../products/ProductViewDialog';
+import HistoryRefundDialog from './HistoryRefundDialog';
 import * as actions from '../../actions';
 import { getHistoryOfProducts } from '../../actions/historyView';
 
@@ -44,7 +45,8 @@ class HistoryPage extends React.Component {
 						</Paper>
 					</Grid>
 				</Grid>
-				<ProductViewDialog open={this.props.product.productViewOpen} handleRequestClose={this.props.hideProductView} />
+				<ProductViewDialog open={this.props.product.productViewOpen} handleRequestClose={this.props.hideProductView} actions={false} />
+				<HistoryRefundDialog open={this.props.history.refundDialogOpen} handleRequestClose={this.props.hideRefundDialog} />
 	      		<Snackbar
 		          anchorOrigin={{
 		            vertical: 'bottom',
@@ -74,7 +76,8 @@ const mapDispatchToProps = dispatch => {
 	return {
 		onLoad: () => dispatch(getHistoryOfProducts()),
 		hideProductView: () => dispatch(actions.hideProductView()),
-		hideSnackbar: () => dispatch(actions.hideSnackbar())
+		hideSnackbar: () => dispatch(actions.hideSnackbar()),
+		hideRefundDialog: () => dispatch(actions.hideRefundDialog())
 	};
 };
 
