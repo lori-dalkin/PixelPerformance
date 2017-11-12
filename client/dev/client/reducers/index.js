@@ -4,6 +4,7 @@ import authentication from './authentication';
 import product from './product';
 import snackbar from './snackbar';
 import registration from './registration';
+import cart from './cart';
 import client from './client';
 
 const reducers = combineReducers({
@@ -11,6 +12,7 @@ const reducers = combineReducers({
   product,
 	snackbar,
 	registration,
+	cart,
 	client
 });
 

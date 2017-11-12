@@ -10,10 +10,12 @@ import { withStyles, MuiThemeProvider, createMuiTheme } from 'material-ui/styles
 import blue from 'material-ui/colors/blue';
 import pink from 'material-ui/colors/pink';
 require('../../scss/style.scss');
+import CartIcon from 'material-ui-icons/ShoppingCart';
 
 import { setToken, deleteToken, setUserType, deleteUserType } from '../actions/index';
 import Login from './authentication/Login';
 import ProductPage from './products/ProductPage';
+import CartView from './cart/CartView';
 import ClientView from './clients/ClientView';
 
 const styles = theme => ({
@@ -79,13 +81,18 @@ class App extends Component {
 					      	this.props.authentication.token !== undefined && this.props.authentication.userType === "Admin" &&
 					      	<Button color="contrast" onClick={() => window.location.hash = "#/clients"}>View Clients</Button> 
 					      }
-					      {	this.props.authentication.token !== undefined && 
-					      	<Button color="contrast" onClick={this.props.deleteToken}>Logout</Button> 
+					      {	this.props.authentication.token !== undefined && this.props.authentication.userType === "Client" &&
+                  <Button color="contrast" onClick={ () => window.location.hash = "#/cart" }> View Cart</Button>
+                  
+					      }
+					      {	this.props.authentication.token !== undefined &&
+                  <Button color="contrast" onClick={this.props.deleteToken}>Logout</Button> 
 					      }
 				      </Toolbar>
 				    </AppBar>
 				    <Route exact path="/" component={Login} />
 				    <Route path="/products" component={ProductPage} />
+				    <Route path="/cart" component={CartView} />
 				    <Route path="/clients" component={ClientView} />
 				  </div>
 			  </MuiThemeProvider>
