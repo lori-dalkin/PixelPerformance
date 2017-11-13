@@ -53,5 +53,3 @@ INSERT INTO inventories("electronicID") SELECT id FROM laptops;
 INSERT INTO inventories("electronicID") SELECT id FROM laptops;
 INSERT INTO inventories("electronicID") SELECT id FROM desktops;
 INSERT INTO inventories("electronicID") SELECT id FROM desktops;
-
-INSERT INTO cart(client_id) SELECT id FROM clients;

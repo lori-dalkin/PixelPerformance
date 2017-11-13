@@ -110,7 +110,7 @@ CREATE TABLE cart(
 
 DROP TABLE IF EXISTS bought_inventory CASCADE;
 CREATE TABLE bought_inventory(
-	"serialNumber" UUID REFERENCES inventories("serialNumber") ON DELETE CASCADE ,
+	"serialNumber" UUID,
 	"electronicID" UUID,
 	cart_id UUID REFERENCES cart(id) ON DELETE CASCADE,
 	PRIMARY KEY("serialNumber")

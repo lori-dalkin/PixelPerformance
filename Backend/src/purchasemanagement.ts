@@ -238,13 +238,14 @@ export class PurchaseManagement {
 		let cart:Cart =  this.findCart(userId);
 		for(let i=0; i< this.activeCarts.length;i++){
 			if(this.activeCarts[i].getUserId() == userId){
-				cart = this.activeCarts.splice(i, 1)[0]
+				cart = this.activeCarts.splice(i, 1)[0];
 				break;
 			}
 		}
 		this.purchaseRecords.push(cart);
 		for(let inventory of cart.getInventory()){
 			this.catalog.checkoutInventory(inventory.getserialNumber());
+			inventory.delete(); //deletes the bought inventory from the inventories table in DB
 		}
 		cart.saveCart();
 		this.startTransaction(userId);
