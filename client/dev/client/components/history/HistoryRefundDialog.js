@@ -10,6 +10,8 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import Slide from 'material-ui/transitions/Slide';
 
+import { refundProduct } from '../../actions/historyView';
+
 class HistoryRefundDialog extends Component {
 
 	render() {
@@ -24,7 +26,7 @@ class HistoryRefundDialog extends Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => { this.props.handleRequestClose()}} color="accent">
+            <Button onClick={() => { this.props.refundProduct(this.props.history.selectedItemForRefund); this.props.handleRequestClose()}} color="accent">
               Refund
             </Button>
             <Button onClick={this.props.handleRequestClose}>
@@ -42,6 +44,7 @@ const mapStateToProps = ({ history }) => ({
 });
 
 const mapDispatchToProps = {
+  refundProduct
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(HistoryRefundDialog);

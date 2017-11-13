@@ -5,6 +5,8 @@ import { showProductView, showRefundDialog } from '../../actions';
 
 const mapStateToProps = state => {
     return {
+        userType: state.authentication.userType,
+        pageType: "history",
         products: state.history.products,
         pagination: false,
         deleteLabel: "Refund"

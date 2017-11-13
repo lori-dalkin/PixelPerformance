@@ -33,6 +33,7 @@ export default function (state = initialState, action) {
 		case actions.SHOW_REFUND_DIALOG:
 			return {
 				...state,
+				selectedItemForRefund: action.product,
 				refundDialogOpen: true
 			};
 			break;

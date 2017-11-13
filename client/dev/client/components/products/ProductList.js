@@ -6,7 +6,7 @@ import Button from 'material-ui/Button';
 
 import Table, { TableBody, TableCell, TableHead, TableFooter, TableRow, TablePagination } from 'material-ui/Table';
 
-const ProductList = ({ userType, products, onProductClick, onProductDelete, onAddToCartClick, currPage, numItems, numItemsPerPage, gotoPage, changeRowsPerPage, pagination, deleteLabel }) => {
+const ProductList = ({ userType, products, onProductClick, onProductDelete, onAddToCartClick, currPage, numItems, numItemsPerPage, gotoPage, changeRowsPerPage, pagination, deleteLabel, pageType }) => {
   return (
     <Grid container spacing={8} style={{ margin: '0px', marginTop: '5px' }}>
       <Grid item xs={12}>
@@ -24,10 +24,11 @@ const ProductList = ({ userType, products, onProductClick, onProductDelete, onAd
                 key={index}
                 {...product}
                 userType={userType}
+                pageType={pageType}
                 onClick={ () => onProductClick(product) } 
                 onDelete={ () => onProductDelete(product) }
                 onAdd={ () => onAddToCartClick(product)}
-				deleteLabel={deleteLabel}
+				        deleteLabel={deleteLabel}
               />
             ))}
             { !products && (
@@ -74,7 +75,8 @@ ProductList.propTypes = {
     gotoPage: PropTypes.func,
     changeRowsPerPage: PropTypes.func,
     numItems: PropTypes.number,
-    numItemsPerPage: PropTypes.number
+    numItemsPerPage: PropTypes.number,
+    pageType: PropTypes.string
 };
 
 export default ProductList;

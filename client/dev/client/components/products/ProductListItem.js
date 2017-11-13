@@ -8,13 +8,13 @@ import AddShoppingCartIcon from 'material-ui-icons/AddShoppingCart';
 
 import { TableCell, TableRow } from 'material-ui/Table';
 
-const ProductListItem = ({ userType, onClick, onAdd, brand, price, onDelete, deleteLabel }) => (
+const ProductListItem = ({ userType, onClick, onAdd, brand, price, onDelete, deleteLabel, pageType }) => (
 	<TableRow>
     <TableCell>{brand}</TableCell>
     <TableCell numeric>{`$${price}`}</TableCell>
     <TableCell numeric>
     	<Button onClick={onClick} color='primary'> <DetailsIcon /> View Details</Button>
-        {userType === "Client" ? null :
+        {userType === "Client" && pageType != "history" ? null :
             <Button onClick={onDelete} color='accent'> <DeleteIcon /> { deleteLabel }</Button>
         }
     </TableCell>
@@ -27,7 +27,8 @@ ProductListItem.propTypes = {
   onDelete: PropTypes.func.isRequired,
   brand: PropTypes.string.isRequired,
   price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  deleteLabel: PropTypes.string.isRequired
+  deleteLabel: PropTypes.string.isRequired,
+  pageType: PropTypes.string
 };
 
 export default ProductListItem;
