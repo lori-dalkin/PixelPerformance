@@ -193,9 +193,8 @@ export class PurchaseManagement {
 		//Find the inventory to return
 		console.log("Finding the specific inventory to return");
 		for(let cartId in soldInventories){
-			if (isUndefined(soldInventories[cartId])){
+			if (cartId == null){
 				console.log("Cart " + cartId + " has no inventories.");
-				continue;
 			}
 			else {
                 for (let i = 0; i < soldInventories[cartId].length; i++) {
@@ -213,12 +212,15 @@ export class PurchaseManagement {
 
 		//Modify the cart to remove the inventory from its records
 		console.log("Modifying db");
-		let removeInventoryPromise: Promise<boolean>;
 		for (let i=0; i<allPurchases.length; i++){
 			if (allPurchases[i].getId() == modifiedCartId){
 				allPurchases[i].removeInventoryRecord(serialNumber).then((data) => {
                     if (data) {
                         availableInventory.returnInventory(returningInv);
+
+                        if (allPurchases[i].getInventory().length == 0){
+                        	allPurchases[i].delete();
+						}
                         return returnSuccess;
                     }
                     else {

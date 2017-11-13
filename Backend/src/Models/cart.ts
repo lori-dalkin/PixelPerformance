@@ -125,10 +125,11 @@ export class Cart {
      *********************************************************/
 
     public async removeInventoryRecord(id: String): Promise<boolean> {
+        let inv: Inventory[] = this.inventory;
         console.log(id);
         for (let i = 0; i < this.getInventory().length; i ++){
             if (this.getInventory()[i].getserialNumber() == id){
-                this.setInventory(this.getInventory().splice(i, 1));
+                inv.splice(i, 1);
                 break;
             }
         }
@@ -142,5 +143,18 @@ export class Cart {
         });
     }
 
+    /********************************************************
+        * Method to remove the current object from the database
+    ********************************************************/
+    public async delete(): Promise<boolean> {
+        return db.none("DELETE FROM cart WHERE id ='"+ this.getId() + "';")
+            .then(function () {
+                console.log("Cart object [id: " + this.getId() + "] was deleted.");
+                return true;
+            }).catch(function (err) {
+                console.log("No matching object found for delete: " + err);
+                return false;
+            });
+    }
 }
 
