@@ -7,6 +7,8 @@ import Button from 'material-ui/Button';
 import Table, { TableBody, TableCell, TableHead, TableFooter, TableRow, TablePagination } from 'material-ui/Table';
 
 const ProductList = ({ userType, products, onProductClick, onProductDelete, onAddToCartClick, currPage, numItems, numItemsPerPage, gotoPage, changeRowsPerPage, pagination, deleteLabel, pageType }) => {
+  console.log(products.length == 0);
+
   return (
     <Grid container spacing={8} style={{ margin: '0px', marginTop: '5px' }}>
       <Grid item xs={12}>
@@ -19,7 +21,7 @@ const ProductList = ({ userType, products, onProductClick, onProductDelete, onAd
             </TableRow>
           </TableHead>
           <TableBody>
-            { products && products.map((product, index) => (
+            { products.length > 0 && products.map((product, index) => (
               <ProductListItem 
                 key={index}
                 {...product}
@@ -31,7 +33,7 @@ const ProductList = ({ userType, products, onProductClick, onProductDelete, onAd
 				        deleteLabel={deleteLabel}
               />
             ))}
-            { !products && (
+            { products.length == 0 && (
               <TableRow>
                 <TableCell>
                   No products found
