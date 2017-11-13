@@ -334,7 +334,7 @@
             schema: 
               type: string
             required: true
-            description: String ID of the inventory object
+            description: Associated ElectronicId of the Inventory obj
           - name: Authorization
             in: header
             description: API key
