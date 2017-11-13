@@ -5,6 +5,7 @@ import {afterMethod, beforeInstance, beforeMethod} from 'kaop-ts'
 import  validator = require('validator');
 import assert = require('assert');
 import * as uuid from "uuid";
+import {isUndefined} from "util";
 
 
 export class PurchaseManagement {
@@ -182,6 +183,7 @@ export class PurchaseManagement {
 
         //for each purchase record belonging to this user,
 		//collect all inventories that were sold
+		console.log("Finding all user's past purchases");
 		for(let i=0; i< allPurchases.length; i++){
 			if (allPurchases[i].getUserId() == userId){
                 soldInventories[allPurchases[i].getId()] = allPurchases[i].getInventory();
@@ -189,13 +191,20 @@ export class PurchaseManagement {
 		}
 
 		//Find the inventory to return
+		console.log("Finding the specific inventory to return");
 		for(let cartId in soldInventories){
-			for (let i=0; i< soldInventories[cartId].length; i++){
-				if (soldInventories[cartId][i].getserialNumber() == serialNumber){
-					returningInv = soldInventories[cartId][i];
-					modifiedCartId = cartId;
-				}
+			if (isUndefined(soldInventories[cartId])){
+				console.log("Cart " + cartId + " has no inventories.");
+				continue;
 			}
+			else {
+                for (let i = 0; i < soldInventories[cartId].length; i++) {
+                    if (soldInventories[cartId][i].getserialNumber() == serialNumber) {
+                        returningInv = soldInventories[cartId][i];
+                        modifiedCartId = cartId;
+                    }
+                }
+            }
 		}
 
 		//set the cart and lockedUntil variables to null
