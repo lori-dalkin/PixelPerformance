@@ -160,13 +160,9 @@ export class PurchaseManagement {
     @beforeMethod(function(meta) {
 		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
         assert(validator.isUUID(meta.args[1]), "serialNumber needs to be a uuid");
-
-		// Client must be logged in --> this is checked by the passport module
         // The client must have previous purchases recorded in the system.
-		assert(meta.scope.findRecord(meta.args[0]) != null, "User has no previous purchases");
-
-
-	})
+        assert(PurchaseManagement.getInstance().findCart(meta.args[0]) != null, "there are no purchases associated to this account");
+	 })
     @afterMethod(function(meta) {
 		// The return is recorded to the client’s account.
 		assert(PurchaseManagement.getInstance().getAllUsersPurchasedSerials(meta.args[0]).indexOf(meta.args[1]) < 0, "The return was not recorded to the user's account");
@@ -215,19 +211,20 @@ export class PurchaseManagement {
 		for (let i=0; i<allPurchases.length; i++){
 			if (allPurchases[i].getId() == modifiedCartId){
 				allPurchases[i].removeInventoryRecord(serialNumber).then((data) => {
-                    if (data) {
-                        availableInventory.returnInventory(returningInv);
-
-                        if (allPurchases[i].getInventory().length == 0){
-                        	allPurchases[i].delete();
-						}
-                        return returnSuccess;
-                    }
-                    else {
-                        console.log("Error processing return: could not remove purchase record for inventory with serial number: " + serialNumber)
-                        return false;
-                    }
+					returnSuccess = data;
 				});
+                if (returnSuccess) {
+                    availableInventory.returnInventory(returningInv);
+
+                    if (allPurchases[i].getInventory().length == 0){
+                        allPurchases[i].delete();
+                    }
+                    return returnSuccess;
+                }
+                else {
+                    console.log("Error processing return: could not remove purchase record for inventory with serial number: " + serialNumber)
+                    return false;
+                }
 			}
 		}
 		return false;
