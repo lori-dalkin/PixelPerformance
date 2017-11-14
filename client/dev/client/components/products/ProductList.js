@@ -6,7 +6,9 @@ import Button from 'material-ui/Button';
 
 import Table, { TableBody, TableCell, TableHead, TableFooter, TableRow, TablePagination } from 'material-ui/Table';
 
-const ProductList = ({ userType, products, onProductClick, onProductDelete, onAddToCartClick, currPage, numItems, numItemsPerPage, gotoPage, changeRowsPerPage }) => {
+const ProductList = ({ userType, products, onProductClick, onProductDelete, onAddToCartClick, currPage, numItems, numItemsPerPage, gotoPage, changeRowsPerPage, pagination, deleteLabel, pageType }) => {
+  console.log(products.length == 0);
+
   return (
     <Grid container spacing={8} style={{ margin: '0px', marginTop: '5px' }}>
       <Grid item xs={12}>
@@ -19,28 +21,39 @@ const ProductList = ({ userType, products, onProductClick, onProductDelete, onAd
             </TableRow>
           </TableHead>
           <TableBody>
-            {products.map((product, index) => (
+            { products.length > 0 && products.map((product, index) => (
               <ProductListItem 
                 key={index}
                 {...product}
                 userType={userType}
+                pageType={pageType}
                 onClick={ () => onProductClick(product) } 
                 onDelete={ () => onProductDelete(product) }
                 onAdd={ () => onAddToCartClick(product)}
+				        deleteLabel={deleteLabel}
               />
             ))}
+            { products.length == 0 && (
+              <TableRow>
+                <TableCell>
+                  No products found
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                count={numItems}
-                rowsPerPage={numItemsPerPage}
-                page={currPage - 1}
-                onChangePage={gotoPage}
-                onChangeRowsPerPage={changeRowsPerPage}
-              />
-            </TableRow>
-          </TableFooter>
+          { pagination &&
+            (<TableFooter>
+              <TableRow>
+                <TablePagination
+                  count={numItems}
+                  rowsPerPage={numItemsPerPage}
+                  page={currPage - 1}
+                  onChangePage={gotoPage}
+                  onChangeRowsPerPage={changeRowsPerPage}
+                />
+              </TableRow>
+            </TableFooter>)
+          }
         </Table>
       </Grid>
     </Grid>
@@ -48,6 +61,9 @@ const ProductList = ({ userType, products, onProductClick, onProductDelete, onAd
 }
 
 ProductList.propTypes = {
+    onProductClick: PropTypes.func.isRequired,
+    pagination: PropTypes.bool.isRequired,
+    deleteLabel: PropTypes.string.isRequired,
     userType: PropTypes.string.isRequired,
     products: PropTypes.arrayOf(
         PropTypes.shape({
@@ -55,14 +71,14 @@ ProductList.propTypes = {
             brand: PropTypes.string.isRequired,
             price: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
         }).isRequired
-    ).isRequired,
-    onProductClick: PropTypes.func.isRequired,
-    onProductDelete: PropTypes.func.isRequired,
-    currPage: PropTypes.number.isRequired,
-    gotoPage: PropTypes.func.isRequired,
-    changeRowsPerPage: PropTypes.func.isRequired,
-    numItems: PropTypes.number.isRequired,
-    numItemsPerPage: PropTypes.number.isRequired
+    ),
+    onProductDelete: PropTypes.func,
+    currPage: PropTypes.number,
+    gotoPage: PropTypes.func,
+    changeRowsPerPage: PropTypes.func,
+    numItems: PropTypes.number,
+    numItemsPerPage: PropTypes.number,
+    pageType: PropTypes.string
 };
 
 export default ProductList;

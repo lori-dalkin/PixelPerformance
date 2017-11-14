@@ -83,7 +83,7 @@ class ProductViewDialog extends Component {
             }
           </DialogContent>
           <DialogActions>
-           {this.props.authentication.userType === "Client" ? null :
+           {this.props.authentication.userType === "Client" || !this.props.actions ? null :
                <span>
                  <Button onClick={ () => this.toggleInventoryView() } color='primary'>
                     { this.state.showInventory ? "Hide Inventory" : "Show Inventory" }
@@ -94,7 +94,7 @@ class ProductViewDialog extends Component {
                </span>
 
            }
-              {this.props.authentication.userType === "Admin" ? null :
+              {this.props.authentication.userType === "Admin" || !this.props.actions ? null :
                   (this.props.product.inventoryCount > 0 ?
                   <Button onClick={ () => this.props.addToCart(this.props.product.selectedProduct.id) } color='primary'>
                       Add to Cart
@@ -117,7 +117,7 @@ class ProductViewDialog extends Component {
 };
 
 const mapStateToProps = ({ product, authentication }) => ({
-  product,
+  	product,
     authentication
 });
 

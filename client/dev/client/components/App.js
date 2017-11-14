@@ -15,6 +15,7 @@ import CartIcon from 'material-ui-icons/ShoppingCart';
 import { setToken, deleteToken, setUserType, deleteUserType } from '../actions/index';
 import Login from './authentication/Login';
 import ProductPage from './products/ProductPage';
+import HistoryPage from './history/HistoryPage';
 import CartView from './cart/CartView';
 import ClientView from './clients/ClientView';
 
@@ -73,25 +74,27 @@ class App extends Component {
 				  <div className={classes.root}>
 				    <AppBar position="static">
 					    <Toolbar>
-					    	<Typography style={{ flex: '1' }} type="title" color="inherit">
-					        Pixel Performance
-					      </Typography>
-					      <Button color="contrast" onClick={ () => window.location.hash = "#/products" }> Browse Products</Button>
-								{
-					      	this.props.authentication.token !== undefined && this.props.authentication.userType === "Admin" &&
-					      	<Button color="contrast" onClick={() => window.location.hash = "#/clients"}>View Clients</Button> 
-					      }
-					      {	this.props.authentication.token !== undefined && this.props.authentication.userType === "Client" &&
-                  <Button color="contrast" onClick={ () => window.location.hash = "#/cart" }> View Cart</Button>
-                  
-					      }
-					      {	this.props.authentication.token !== undefined &&
-                  <Button color="contrast" onClick={this.props.deleteToken}>Logout</Button> 
-					      }
-				      </Toolbar>
+						<Typography style={{ flex: '1' }} type="title" color="inherit">
+							Pixel Performance
+						</Typography>
+						<Button color="contrast" onClick={ () => window.location.hash = "#/products" }> Browse Products</Button>
+						{ this.props.authentication.token !== undefined && this.props.authentication.userType === "Admin" &&
+							<Button color="contrast" onClick={() => window.location.hash = "#/clients"}>View Clients</Button> 
+						}
+						{ this.props.authentication.token !== undefined && this.props.authentication.userType === "Client" &&
+							<Button color="contrast" onClick={ () => window.location.hash = "#/cart" }> View Cart</Button>
+						}
+						{ this.props.authentication.token !== undefined && this.props.authentication.userType === "Client" &&
+							<Button color="contrast" onClick={ () => window.location.hash = "#/history" }> Purchase History</Button>
+						}
+						{ this.props.authentication.token !== undefined &&
+							<Button color="contrast" onClick={this.props.deleteToken}>Logout</Button> 
+						}
+						</Toolbar>
 				    </AppBar>
 				    <Route exact path="/" component={Login} />
 				    <Route path="/products" component={ProductPage} />
+				    <Route path="/history" component={HistoryPage} />
 				    <Route path="/cart" component={CartView} />
 				    <Route path="/clients" component={ClientView} />
 				  </div>
