@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Button from 'material-ui/Button';
 import DeleteIcon from 'material-ui-icons/DeleteForever';
 import DetailsIcon from 'material-ui-icons/InfoOutline';
+import AssignmentReturnIcon from 'material-ui-icons/AssignmentReturn';
 import AddShoppingCartIcon from 'material-ui-icons/AddShoppingCart';
 
 import { TableCell, TableRow } from 'material-ui/Table';
@@ -15,7 +16,14 @@ const ProductListItem = ({ userType, onClick, onAdd, brand, price, onDelete, del
     <TableCell numeric>
     	<Button onClick={onClick} color='primary'> <DetailsIcon /> View Details</Button>
         {userType === "Client" && pageType != "history" ? null :
-            <Button onClick={onDelete} color='accent'> <DeleteIcon /> { deleteLabel }</Button>
+            <Button onClick={onDelete} color='accent'> 
+              { pageType == "history" ? (
+                  <AssignmentReturnIcon />
+                ) : (
+                  <DeleteIcon /> 
+              )}
+              { deleteLabel }
+            </Button>
         }
     </TableCell>
   </TableRow>
