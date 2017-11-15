@@ -25,6 +25,7 @@ import * as uuid from "uuid";
 import { AdvicePool, beforeMethod } from 'kaop-ts';
 import { RoutingAdvice } from "./routingadvice";
 import {Inventory} from "./Models/inventory";
+import {UnitOfWork} from "./unitofwork";
 var swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerDocument = YAML.load('./src/swagger.yaml');
@@ -182,7 +183,8 @@ export class WebPortal {
   public deleteProductById(req, res) {
     try{
       Catalog.getInstance().deleteProduct(req.params.id).then((success)=>{
-        res.send({data: success});
+          UnitOfWork.getInstance().commit();
+          res.send({data: success});
       });
     }catch (e) {
       console.log(e);
@@ -195,7 +197,8 @@ export class WebPortal {
   public modifyProductById(req, res) {
     try{
       Catalog.getInstance().modifyProduct(req.params.id, req.body).then((success) => {
-        res.send({data:success});
+          UnitOfWork.getInstance().commit();
+          res.send({data:success});
       });
     }catch (e) {
       console.log(e);
@@ -219,7 +222,8 @@ export class WebPortal {
   @beforeMethod(RoutingAdvice.requireAdmin)
   public postInventoryById(req, res) {
     try {
-      Catalog.getInstance().addInventory(req.params.id)
+      Catalog.getInstance().addInventory(req.params.id);
+      UnitOfWork.getInstance().commit();
       res.send({ data:true});
     }catch (e) {
       console.log(e);
@@ -276,7 +280,8 @@ export class WebPortal {
   public deleteInventoryById(req, res) {
     try{
       Catalog.getInstance().deleteInventory(req.params.id).then((success)=>{
-      res.send({data: success});
+          UnitOfWork.getInstance().commit();
+          res.send({data: success});
     });
     }catch (e) {
       console.log(e);
@@ -315,6 +320,7 @@ export class WebPortal {
     public postProduct(req, res) {
         try {
             Catalog.getInstance().addProduct(req.body)
+            UnitOfWork.getInstance().commit();
             res.send({ data: true });
         }
         catch (e) {
