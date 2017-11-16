@@ -34,7 +34,7 @@ class ProductPage extends React.Component {
 		return (
 			<div style={{ marginTop: '30px', marginBottom:'30px' }}> 
 				<Grid container spacing={0} justify='center'>
-					<Grid item xs={11} md={10} lg={6} >
+					<Grid item xs={12} md={10} lg={8} >
 						<Paper style={productPaperStyle}>
 							<Grid container spacing={24} justify='center'>
 								<Grid item xs={9}>

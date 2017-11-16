@@ -53,13 +53,43 @@ class ProductViewDialog extends Component {
           <DialogTitle>{`Item ${this.props.product.selectedProduct.brand} ${this.props.product.selectedProduct.electronicType}`}</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              <strong>ID: </strong>{this.props.product.selectedProduct.id}<br/>
               <strong>Brand: </strong>{this.props.product.selectedProduct.brand}<br/>
-              <strong>Size: </strong>{this.props.product.selectedProduct.size}<br/>
               <strong>Type: </strong>{this.props.product.selectedProduct.electronicType}<br/>
               <strong>Price: </strong>{`$${this.props.product.selectedProduct.price} CDN`}<br/>
               <strong>Weight: </strong>{`${this.props.product.selectedProduct.weight} lbs`}<br/>
-              {this.props.authentication.userType === "Client"  && <span><strong>In Stock: </strong>{this.state.inventory}</span> }
+              { this.props.product.selectedProduct.size !== undefined &&
+                <span><strong>Size: </strong>{this.props.product.selectedProduct.size}<br/></span>
+              }
+              { this.props.product.selectedProduct.processor !== undefined &&
+                <span><strong>Processor: </strong>{`${this.props.product.selectedProduct.processor} Ghz`}<br/></span>
+              }
+              { this.props.product.selectedProduct.cpus !== undefined &&
+                <span><strong>CPUs: </strong>{`${this.props.product.selectedProduct.cpus} cores`}<br/></span>
+              }
+              { this.props.product.selectedProduct.ram !== undefined &&
+                <span><strong>RAM: </strong>{this.props.product.selectedProduct.ram} GB<br/></span>
+              }
+              { this.props.product.selectedProduct.hardDrive !== undefined &&
+                <span><strong>Hard Drive: </strong>{this.props.product.selectedProduct.hardDrive} GB<br/></span>
+              }
+              { this.props.product.selectedProduct.dimensions !== undefined &&
+                <span><strong>Dimensions: </strong>{this.props.product.selectedProduct.dimensions}<br/></span>
+              }
+              { this.props.product.selectedProduct.os !== undefined &&
+                <span><strong>OS: </strong>{this.props.product.selectedProduct.os}<br/></span>
+              }
+              { this.props.product.selectedProduct.battery !== undefined &&
+                <span><strong>Battery: </strong>{this.props.product.selectedProduct.battery}<br/></span>
+              }
+              { this.props.product.selectedProduct.touchscreen !== undefined &&
+                <span><strong>Touchscreen: </strong>{this.props.product.selectedProduct.touchscreen ? "Yes": "No"}<br/></span>
+              }
+              { this.props.product.selectedProduct.displaySize !== undefined &&
+                <span><strong>Display Size: </strong>{this.props.product.selectedProduct.displaySize}<br/></span>
+              }
+              {this.props.authentication.userType === "Client"  && <span><strong>In Stock: </strong>{this.state.inventory}<br/></span> }
+              <strong>Model Number: </strong>{this.props.product.selectedProduct.modelNumber}<br/>
+              <strong>Identifier: </strong>{this.props.product.selectedProduct.id}<br/>
             </DialogContentText>
             { this.state.showInventory &&
               <span>

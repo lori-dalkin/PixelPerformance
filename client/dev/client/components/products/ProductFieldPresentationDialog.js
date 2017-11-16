@@ -139,7 +139,7 @@ class ProductFieldPresentationDialog extends Component {
                           style={fullWidthStyle}
                           id="cpu"
                           name="cpu"
-                          label="CPU"
+                          label="CPUs"
                           onChange={(event) => this.syncStateToInputValue("cpu", event)}
                           value={this.state.cpu}
                         />
