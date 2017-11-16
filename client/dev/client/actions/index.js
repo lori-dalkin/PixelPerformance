@@ -11,7 +11,19 @@ export const setToken = (token) => {
     };
 }
 
-export const deleteToken = () => { return { type: actions.DELETE_TOKEN }; }
+export const deleteToken = () => {
+    return (dispatch) => {
+        dispatch(resetFilters());
+        dispatch({
+            type: actions.DELETE_TOKEN
+        });
+    }
+}
+
+// -----------------------------------------------
+//                    FILTERS
+//------------------------------------------------
+export const resetFilters = () => { return { type: actions.RESET_FILTERS }; }
 
 // -----------------------------------------------
 //                    USERTYPE

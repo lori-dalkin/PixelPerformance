@@ -71,3 +71,5 @@ export const RECEIVE_CLIENTS = "RECEIVE_CLIENTS";
 
 export const SET_USER_TYPE = "SET_USER_TYPE";
 export const DELETE_USER_TYPE = "DELETE_USER_TYPE";
+
+export const RESET_FILTERS = "RESET_FILTERS";

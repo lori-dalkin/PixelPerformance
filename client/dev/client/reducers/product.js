@@ -264,6 +264,11 @@ export default function (state = initialState, action) {
                 isFetchingInventory: false,
                 inventoryCount: action.count
             }
+        case actions.RESET_FILTERS:
+            return {
+                ...state,
+                filters: defaultFilters,
+            }
         default:
             return state;
     }

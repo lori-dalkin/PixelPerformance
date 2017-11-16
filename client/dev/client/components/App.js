@@ -51,7 +51,7 @@ class App extends Component {
 		if(userType !== undefined){
 			this.props.setUserType(userType);
 		}else {
-      this.props.deleteUserType();
+      		this.props.deleteUserType();
 		}
 	}
 
@@ -88,7 +88,7 @@ class App extends Component {
 							<Button color="contrast" onClick={ () => window.location.hash = "#/history" }> Purchase History</Button>
 						}
 						{ this.props.authentication.token !== undefined &&
-							<Button color="contrast" onClick={this.props.deleteToken}>Logout</Button> 
+							<Button color="contrast" onClick={this.props.deleteToken}>Logout</Button>
 						}
 						</Toolbar>
 				    </AppBar>
