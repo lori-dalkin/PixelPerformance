@@ -37,12 +37,14 @@ class ProductPage extends React.Component {
 					<Grid item xs={11} md={10} lg={6} >
 						<Paper style={productPaperStyle}>
 							<Grid container spacing={24} justify='center'>
-								<Grid item xs={9}>
+								<Grid item xs={12}>
 									<Typography type='display1' gutterBottom component='h3'>
 										Product Listing
 									</Typography>
 								</Grid>
-								<Grid item xs={3}>
+							</Grid>
+							<Grid container spacing={24} justify='center'>
+								<Grid item xs={12}>
 									<ProductTypeDropdown />
 								</Grid>
 							</Grid>

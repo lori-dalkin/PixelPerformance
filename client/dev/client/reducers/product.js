@@ -20,6 +20,14 @@ const defaultDropDownsProduct = {
     touchScreen: '',
     size: ''
 };
+const defaultFilters = {
+    electronicType: '',
+    priceLow: '',
+    priceHigh: '',
+    maxSize: '',
+    maxWeight: '',
+    brand: ''
+};
 
 const initialState = {
     isFetchingInventory: false,
@@ -28,6 +36,7 @@ const initialState = {
     inventoryCount: 0,
     error: "",
     productFilter: "",
+    filters: defaultFilters,
     products: [],
     productViewOpen: false,
     productDeleteOpen: false,
@@ -57,7 +66,7 @@ export default function (state = initialState, action) {
         case actions.SET_PRODUCTS_FILTER:
             return {
                 ...state,
-                productFilter: action.productFilter,
+                filters: action.filters,
                 filterSet: true
             };
             break;

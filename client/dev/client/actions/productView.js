@@ -4,10 +4,10 @@ import callApi from '../utils/apiCaller';
 // -----------------------------------------------
 //               PRODUCT VIEW
 //------------------------------------------------
-export const setProductFilter = (filter) => {
+export const setProductFilter = (filters) => {
     return {
         type: actions.SET_PRODUCTS_FILTER,
-        productFilter: filter
+        filters: filters
     }
 }
 
@@ -54,8 +54,23 @@ export const getProducts = () => {
 
                 let endPoint = 'api/products';
 
-                if (getState().product.productFilter) {
-                    endPoint = `api/products?type=${getState().product.productFilter}`
+                if (getState().product.filters.electronicType) {
+                    endPoint = `api/products?type=${getState().product.filters.electronicType}`;
+                    if(getState().product.filters.brand){
+                        endPoint += `&brand=${getState().product.filters.brand}`;
+                    }
+                    if(getState().product.filters.priceLow){
+                        endPoint += `&priceLow=${getState().product.filters.priceLow}`;
+                    }
+                    if(getState().product.filters.priceHigh){
+                        endPoint += `&priceHigh=${getState().product.filters.priceHigh}`;
+                    }
+                    if(getState().product.filters.maxSize){
+                        endPoint += `&maxSize=${getState().product.filters.maxSize}`;
+                    }
+                    if(getState().product.filters.maxWeight){
+                        endPoint += `&maxWeight=${getState().product.filters.maxWeight}`;
+                    }
                     queryStarted = true;
                 }
 
