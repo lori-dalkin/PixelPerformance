@@ -7,13 +7,17 @@ import Avatar from 'material-ui/Avatar';
 
 class CartItem extends React.Component {
 	render() {
+		let displayDate = new Date(this.props.item.lockedUntil);
 		return (
 			<span>
-				<ListItem>
+				<ListItem button>
 	        <Avatar>
 	          <ShoppingBasket />
 	        </Avatar>
-	        <ListItemText primary={`${this.props.item.brand} ${this.props.item.electronicType}`} secondary={`$${this.props.item.price} CDN`} />
+	        <ListItemText 
+	        	primary={`${this.props.item.inventoryType.brand} ${this.props.item.inventoryType.electronicType}`}
+	        	secondary={`$${this.props.item.inventoryType.price} CDN - Reserved until ${displayDate.toLocaleTimeString()}`} 
+	        />
 	      </ListItem>
       </span>
 		);

@@ -13,7 +13,7 @@ const mapStateToProps = state => {
         numItems: state.product.numProducts,
         numItemsPerPage: state.product.productsPerPage,
         pagination: true,
-        deleteLabel: "Delete"
+        deleteLabel: "Delete Specification"
     };
 }
 
