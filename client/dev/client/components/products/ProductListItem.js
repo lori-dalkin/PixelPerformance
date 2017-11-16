@@ -35,7 +35,14 @@ class ProductListItem extends Component{
   };
   
   render() {
-    const {userType, onClick, onAdd, brand, price, onDelete, deleteLabel, pageType, electronicType, modelNumber } = this.props;
+    const {userType, onClick, onAdd, brand, price, onDelete, deleteLabel, pageType, electronicType, modelNumber, returnDate } = this.props;
+
+    let deleteColor = 'accent';
+
+    if (returnDate) {
+      
+    }
+
     return (
     	<TableRow>
         <TableCell>{modelNumber}</TableCell>
@@ -66,13 +73,15 @@ class ProductListItem extends Component{
               open={this.state.deleteToolTipOpen}
               placement="top"
             >
-              <IconButton onClick={onDelete} color='accent'> 
-                { pageType == "history" ? (
-                    <AssignmentReturnIcon />
-                  ) : (
-                    <DeleteIcon /> 
-                )}
-              </IconButton>
+              <div style={{ 'display': 'inline-block' }}>
+                <IconButton disabled={returnDate != null} onClick={onDelete} color='accent'> 
+                  { pageType == "history" ? (
+                      <AssignmentReturnIcon />
+                    ) : (
+                      <DeleteIcon /> 
+                  )}
+                </IconButton>
+              </div>
             </Tooltip>
           }
         </TableCell>
@@ -89,7 +98,8 @@ ProductListItem.propTypes = {
   brand: PropTypes.string.isRequired,
   price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   deleteLabel: PropTypes.string.isRequired,
-  pageType: PropTypes.string
+  pageType: PropTypes.string,
+  returnDate: PropTypes.string
 };
 
 export default ProductListItem;
