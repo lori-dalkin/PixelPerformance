@@ -253,7 +253,73 @@ export class Catalog {
 	* Function to add a new product
 	 ********************************************************/
     @beforeMethod(function(meta){
-		assert(meta.args[0] != null,  "Product data cannot be null");
+        assert(meta.args[0] != null,  "Product data cannot be null");
+        console.log(typeof meta.args[0].getWeight() == "number");
+        assert(validator.isUUID(meta.args[0].getId()), "ProductId needs to be a uuid");
+        assert(typeof meta.args[0].getWeight() == "number", "Weight needs to be a number");
+        assert(meta.args[0].getWeight() > 0, "Weight needs to be positive");
+        assert(typeof meta.args[0].getModelNumber() == "string", "Model Number needs to be a string");
+        assert(typeof meta.args[0].getBrand() == "string", "Brand needs to be a string");
+        assert(typeof meta.args[0].getPrice() == "number", "Price needs to be a number");
+        assert(meta.args[0].getPrice() > 0, "Price needs to be positive");
+        assert(!Catalog.getInstance().modelNumberExists(meta.args[0].getModelNumber()),"Model Number already exists");
+        let eType:string = meta.args[0].getElectronicType();
+        assert(typeof eType == "string", "Electronic Type needs to be a string");
+        switch(eType)
+        {
+            case "Monitor":
+                assert(typeof meta.args[0].getSize() == "number", "Size needs to be a number");
+                assert(meta.args[0].getSize() > 0, "Size needs to be positive");
+                break;
+            case "Desktop":
+                assert(typeof meta.args[0].getProcessor() == "string", "Processor needs to be a string");
+                assert(typeof meta.args[0].getRam() == "number", "Ram needs to be a number");
+                assert(meta.args[0].getRam() > 0, "Ram needs to be positive");
+                assert(typeof meta.args[0].getCpus() == "number", "Number of CPU's needs to be a number");
+                assert(meta.args[0].getCpus() > 0, "Number of CPU's needs to be positive");
+                assert(typeof meta.args[0].getHardDrive() == "number", "Hard Drive needs to be a number");
+                assert(meta.args[0].getHardDrive() > 0, "Hard Drive needs to be positive");
+                assert(typeof meta.args[0].getOs() == "string", "Operating System needs to be a string");
+                assert(typeof meta.args[0].getProcessor() == "string", "Processor needs to be a string");
+                break;
+            case "Laptop":
+                assert(typeof meta.args[0].getProcessor() == "string", "Processor needs to be a string");
+                assert(typeof meta.args[0].getRam() == "number", "Ram needs to be a number");
+                assert(meta.args[0].getRam() > 0, "Ram needs to be positive");
+                assert(typeof meta.args[0].getCpus() == "number", "Number of CPU's needs to be a number");
+                assert(meta.args[0].getCpus() > 0, "Number of CPU's needs to be positive");
+                assert(typeof meta.args[0].getHardDrive() == "number", "Hard Drive needs to be a number");
+                assert(meta.args[0].getHardDrive() > 0, "Hard Drive needs to be positive");
+                assert(typeof meta.args[0].getOs() == "string", "Operating System needs to be a string");
+                assert(typeof meta.args[0].getProcessor() == "string", "Processor needs to be a string");
+                assert(typeof meta.args[0].getDisplaySize() == "number", "Display Size needs to be a number");
+                assert(meta.args[0].getDisplaySize() > 0, "Display Size needs to be positive");
+                assert(typeof meta.args[0].getBattery() == "number", "Battery needs to be a number");
+                assert(meta.args[0].getBattery() > 0, "Battery needs to be positive");
+                assert(typeof meta.args[0].getCamera() == "boolean", "Camera needs to be a boolean");
+                assert(typeof meta.args[0].getTouchscreen() == "boolean", "Touchscreen needs to be a boolean");
+                break;
+            case "Tablet":
+                assert(typeof meta.args[0].getProcessor() == "string", "Processor needs to be a string");
+                assert(typeof meta.args[0].getRam() == "number", "Ram needs to be a number");
+                assert(meta.args[0].getRam() > 0, "Ram needs to be positive");
+                assert(typeof meta.args[0].getCpus() == "number", "Number of CPU's needs to be a number");
+                assert(meta.args[0].getCpus() > 0, "Number of CPU's needs to be positive");
+                assert(typeof meta.args[0].getHardDrive() == "number", "Hard Drive needs to be a number");
+                assert(meta.args[0].getHardDrive() > 0, "Hard Drive needs to be positive");
+                assert(typeof meta.args[0].getOs() == "string", "Operating System needs to be a string");
+                assert(typeof meta.args[0].getProcessor() == "string", "Processor needs to be a string");
+                assert(typeof meta.args[0].getDisplaySize() == "number", "Display Size needs to be a number");
+                assert(typeof meta.args[0].getDimensions() == "string", "Dimensions needs to be a string");
+                assert(meta.args[0].getDisplaySize() > 0, "Display Size needs to be positive");
+                assert(typeof meta.args[0].getBattery() == "number", "Battery needs to be a number");
+                assert(meta.args[0].getBattery() > 0, "Battery needs to be positive");
+                assert(typeof meta.args[0].getCamera() == "boolean", "Camera needs to be a boolean");
+                break;
+            default:
+                assert(false,"Electronic Type not valid");
+                break; 
+        }
 	})
 	@afterMethod(function(meta) {
         //compare most recent object with object sent to function
@@ -404,7 +470,14 @@ export class Catalog {
         }
         return numMatching;
     }
-
+    private modelNumberExists(modelNum: string): Boolean {
+        for(let product of this.electronics) {
+            if(product.getModelNumber() === modelNum) {
+                return true;
+            }
+        }
+        return false;
+    }
     private productExists(productId: string): Boolean {
         for(let product of this.electronics) {
             if(product.getId() == productId) {
@@ -435,6 +508,7 @@ export class Catalog {
         let numPages = Math.ceil(numProducts / numItems);
         return numPages;
     }
+    
 }
 
 
