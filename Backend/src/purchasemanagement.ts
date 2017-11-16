@@ -152,8 +152,9 @@ export class PurchaseManagement {
             if (this.purchaseRecords[i].getUserId() == userId && this.purchaseRecords[i].getInventory() != undefined) {
 				purchase_history = purchase_history.concat(this.purchaseRecords[i].getInventory());
             }
-		  }
-         return purchase_history;
+		}
+        
+        return purchase_history;
     }
 	// returnInventory(userId: string, serialNumber: string): bool
 
@@ -172,45 +173,52 @@ export class PurchaseManagement {
     public returnInventory(userId: string, serialNumber: string): boolean{
 		let allPurchases = this.purchaseRecords;
 		let availableInventory = this.catalog;
-        let soldInventories: { [key: string]: Inventory[]} = {};
         let returningInv: Inventory;
         let modifiedCartId: string;
         let returnSuccess: boolean = true;
+        let dateReturned: Date;
+        let currInv: Inventory[];
 
         //for each purchase record belonging to this user,
 		//collect all inventories that were sold
 		console.log("Finding all user's past purchases");
-		for(let i=0; i< allPurchases.length; i++){
+		for(let i = 0; i < allPurchases.length; i++){
 			if (allPurchases[i].getUserId() == userId){
-                soldInventories[allPurchases[i].getId()] = allPurchases[i].getInventory();
-			}
-		}
+                currInv = allPurchases[i].getInventory();
 
-		//Find the inventory to return
-		console.log("Finding the specific inventory to return");
-		for(let cartId in soldInventories){
-			if (cartId == null){
-				console.log("Cart " + cartId + " has no inventories.");
-			}
-			else {
-                for (let i = 0; i < soldInventories[cartId].length; i++) {
-                    if (soldInventories[cartId][i].getserialNumber() == serialNumber) {
-                        returningInv = soldInventories[cartId][i];
-                        modifiedCartId = cartId;
+                //Find the inventory to return
+                for (let invIndex = 0; invIndex < currInv.length; invIndex++) {
+                	if (currInv[invIndex].getserialNumber() == serialNumber) {
+                        returningInv = currInv[invIndex];
+                        modifiedCartId = allPurchases[i].getId();
+
+                        // The object has previously been returned
+                        if (currInv[invIndex].getReturnDate() != null) {
+                        	console.log("Inventory has already been returned");
+                        	return false;
+                        }
+
+                        break;
                     }
                 }
-            }
+
+                if (returningInv != null) {
+                	break;
+                }
+			}
 		}
 
 		//set the cart and lockedUntil variables to null
+		dateReturned = new Date();
 		returningInv.setCartId(null);
 		returningInv.setLockedUntil(null);
+		returningInv.setReturnDate(dateReturned);
 
 		//Modify the cart to remove the inventory from its records
 		console.log("Modifying db");
 		for (let i=0; i<allPurchases.length; i++){
 			if (allPurchases[i].getId() == modifiedCartId){
-				allPurchases[i].removeInventoryRecord(serialNumber).then((data) => {
+				allPurchases[i].returnInventoryRecord(serialNumber, dateReturned).then((data) => {
 					returnSuccess = data;
 				});
                 if (returnSuccess) {
