@@ -50,12 +50,16 @@ export const getProducts = () => {
             if (shouldGetProducts(getState())) {
                 dispatch(getProductsRequest());
 
-                let queryStarted = false;
-
                 let endPoint = 'api/products';
 
-                if (getState().product.filters.electronicType) {
-                    endPoint = `api/products?type=${getState().product.filters.electronicType}`;
+                // Add paging and number of items
+                endPoint += `?page=${getState().product.page}&numOfItems=${getState().product.productsPerPage}`;
+
+                // Add filter
+                if (getState().product.filterSet){
+                    if (getState().product.filters.electronicType) {
+                        endPoint += `&type=${getState().product.filters.electronicType}`;
+                    }
                     if(getState().product.filters.brand){
                         endPoint += `&brand=${getState().product.filters.brand}`;
                     }
@@ -71,16 +75,7 @@ export const getProducts = () => {
                     if(getState().product.filters.maxWeight){
                         endPoint += `&maxWeight=${getState().product.filters.maxWeight}`;
                     }
-                    queryStarted = true;
                 }
-
-                // Add paging and number of items
-                if (queryStarted) {
-                    endPoint += '&';
-                } else {
-                    endPoint += '?';
-                }
-                endPoint += `page=${getState().product.page}&numOfItems=${getState().product.productsPerPage}`;
 
                 return callApi(endPoint, 'get', undefined, `Bearer ${getState().authentication.token}`).then(
                     res => {

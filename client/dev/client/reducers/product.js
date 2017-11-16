@@ -81,7 +81,6 @@ export default function (state = initialState, action) {
                 ...state,
                 products: action.products,
                 isFetching: false,
-                filterSet: false
             };
             break;
         case actions.GET_PRODUCTS_FAILURE:

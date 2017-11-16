@@ -1,41 +1,77 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { MenuItem } from 'material-ui/Menu';
-import Select from 'material-ui/Select';
-import Grid from 'material-ui/Grid';
+import Menu, { MenuItem } from 'material-ui/Menu';
 import TextField from 'material-ui/TextField';
+import Button from 'material-ui/Button'
+import Grid from 'material-ui/Grid';
 
-import { setProductFilter, getProducts, setPage } from '../../actions/productView'
+import { setProductFilter, getProducts, setPage } from '../../actions/productView';
+
+const eTypes = [
+    'Monitor',
+    'Desktop',
+    'Laptop',
+    'Tablet'
+];
+
+const brands = [
+    "Acer",
+    "Apple",
+    "Asus",
+    "Dell",
+    "HP",
+    "Lenovo",
+    "LG",
+    "Samsung"
+];
 
 class ProductTypeDropdown extends Component {
 
     constructor(props) {
         super(props);
-
-        this.state = this.props.product.filters;
-
+        this.state = {
+            brand: this.props.product.filters.brand,
+            electronicType: this.props.product.filters.electronicType,
+            priceLow: this.props.product.filters.priceLow,
+            priceHigh: this.props.product.filters.priceHigh,
+            maxSize: this.props.product.filters.maxSize,
+            maxWeight: this.props.product.filters.maxWeight,
+            anchorEl: null,
+            open: false,
+        }
         this.syncStateToInputValue = this.syncStateToInputValue.bind(this);
 
     }
 
-    syncStateToInputValue = (field, event) => {
+    handleClick = (field, event) => {
+        if(field === "type"){
+            this.setState({ openType: true, anchorEl: event.currentTarget });
+        }else{
+            this.setState({ openBrand: true, anchorEl: event.currentTarget });
+        }
+
+    };
+
+    handleRequestClose = () => {
+        this.setState({ openType: false, openBrand: false });
+    };
+
+    syncStateToInputValue = (field, val) => {
         this.props.setPage(1);
         let filter;
-        this.setState({...this.state, [field]: event.target.value}, () => {
-            filter = this.state;
+        this.setState({...this.state, [field]: val}, () => {
+            filter = {
+                brand: this.state.brand,
+                electronicType: this.state.electronicType,
+                priceLow: this.state.priceLow,
+                priceHigh: this.state.priceHigh,
+                maxSize: this.state.maxSize,
+                maxWeight: this.state.maxWeight
+            };
             this.props.setProductFilter(filter);
             this.props.getProducts();
         });
-    };
-
-    getBrandList = () => {
-        const brandList = [];
-        this.props.product.products.map(product => {
-            if (brandList.indexOf(product.brand) === -1) {
-                brandList.push(product.brand)
-            }
-        });
-        return brandList;
+        this.handleRequestClose();
     };
 
     render() {
@@ -43,40 +79,63 @@ class ProductTypeDropdown extends Component {
             <div>
                 <Grid container spacing={24} justify='center'>
                     <Grid item xs={2}>
-                        <Select name="electronicType"
-                                value={this.state.electronicType}
+                        <div>
+                            <Button
+                                raised
+                                aria-owns={this.state.openType ? 'type-select' : null}
+                                aria-haspopup="true"
+                                onClick={(event) => this.handleClick('type', event)}
+                            >
+                                Type
+                            </Button>
+                            <Menu
+                                id="type-select"
+                                anchorEl={this.state.anchorEl}
+                                open={this.state.openType}
+                                onRequestClose={this.handleRequestClose}
                                 onChange={(event) => this.syncStateToInputValue("electronicType", event)}
-                                style={{paddingLeft: '20px'}}
-                        >
-                            <MenuItem value="none">Type</MenuItem>
-                            <MenuItem value="Monitor">Monitor</MenuItem>
-                            <MenuItem value="Desktop">Desktop</MenuItem>
-                            <MenuItem value="Laptop">Laptop</MenuItem>
-                            <MenuItem value="Tablet">Tablet</MenuItem>
-                        </Select>
+                            >
+                                <MenuItem onClick={(event) => this.syncStateToInputValue("electronicType", "")}>All</MenuItem>
+                                {eTypes.map((type) => (
+                                    <MenuItem onClick={(event) => this.syncStateToInputValue("electronicType", type)}>
+                                        {type}
+                                    </MenuItem>
+                                ))}
+                            </Menu>
+                        </div>
                     </Grid>
                     <Grid item xs={2}>
-                        <Select name="filterBrand"
-                                value={this.state.brand}
+                        <div>
+                            <Button
+                                raised
+                                aria-owns={this.state.openBrand ? 'brand-select' : null}
+                                aria-haspopup="true"
+                                onClick={(event) => this.handleClick('brand', event)}
+                            >
+                                Brand
+                            </Button>
+                            <Menu
+                                id="brand-select"
+                                anchorEl={this.state.anchorEl}
+                                open={this.state.openBrand}
+                                onRequestClose={this.handleRequestClose}
                                 onChange={(event) => this.syncStateToInputValue("brand", event)}
-                                style={{paddingLeft: '20px'}}
-                        >
-                            <MenuItem value="none">Brand</MenuItem>
-                            { this.props.product.products.length > 0 && this.getBrandList().map((brand) => (
-                                <MenuItem value={brand}
-                                          onClick={(event) => this.syncStateToInputValue("brand", brand)}>
-                                    {brand}
-                                </ MenuItem >
-                            ))
-                            }
-                        </Select>
+                            >
+                                <MenuItem onClick={(event) => this.syncStateToInputValue("brand", "")}>All</MenuItem>
+                                {brands.map((brand) => (
+                                    <MenuItem onClick={(event) => this.syncStateToInputValue("brand", brand)}>
+                                        {brand}
+                                    </MenuItem>
+                                ))}
+                            </Menu>
+                        </div>
                     </Grid>
                     <Grid item xs={2}>
                         <TextField
                             id="priceLow"
                             name="priceLow"
                             label="Min Price"
-                            onChange={(event) => this.syncStateToInputValue("priceLow", event)}
+                            onChange={(event) => this.syncStateToInputValue("priceLow", event.target.value)}
                             value={this.state.priceLow}
                         />
                     </Grid>
@@ -85,7 +144,7 @@ class ProductTypeDropdown extends Component {
                             id="priceHigh"
                             name="priceHigh"
                             label="Max Price"
-                            onChange={(event) => this.syncStateToInputValue("priceHigh", event)}
+                            onChange={(event) => this.syncStateToInputValue("priceHigh", event.target.value)}
                             value={this.state.priceHigh}
                         />
                     </Grid>
@@ -94,7 +153,7 @@ class ProductTypeDropdown extends Component {
                             id="maxWeight"
                             name="maxWeight"
                             label="Max Weight"
-                            onChange={(event) => this.syncStateToInputValue("maxWeight", event)}
+                            onChange={(event) => this.syncStateToInputValue("maxWeight", event.target.value)}
                             value={this.state.maxWeight}
                         />
                     </Grid>
@@ -103,7 +162,7 @@ class ProductTypeDropdown extends Component {
                             id="maxSize"
                             name="maxSize"
                             label="Max Size"
-                            onChange={(event) => this.syncStateToInputValue("maxSize", event)}
+                            onChange={(event) => this.syncStateToInputValue("maxSize", event.target.value)}
                             value={this.state.maxSize}
                         />
                     </Grid>
