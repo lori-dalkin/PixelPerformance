@@ -34,7 +34,6 @@ export class Catalog {
 		dataPromises.push(this.loadDesktops());
 		dataPromises.push(this.loadTablets());
         dataPromises.push(this.loadLaptops());
-
         Promise.all(dataPromises).then( ()=>{
             Inventory.setElectronics(this.electronics);
             this.loadInventory();
@@ -156,25 +155,78 @@ export class Catalog {
     @afterMethod(function(meta) {
         assert(meta.result != null, "Unable to create valid responseData for getProductPage call");
     })
-    public getProductPage(page:number=null, type:string=null, numOfItems:number = 25) {
-        var desired: Electronic[] = [];
-        if(type == null){
-            desired = this.electronics;
+    public getProductPage(page:number, type:string, numOfItems:number, 
+                            priceLow:number, priceHigh:number, brand:string,
+                            maxSize:number, maxWeight:number) {
+        //set defaults in case of undefined
+        priceLow = isNaN(priceLow) ? 0 : priceLow;
+        priceHigh = isNaN(priceHigh) ? 1000000 : priceHigh; //default arbitrarly high
+        maxWeight = isNaN(maxWeight) ? 100000 : maxWeight; //default arbitrarly high
+        maxSize = isNaN(maxSize) ? 100000 : maxSize; //default arbitrarly high
+        numOfItems = isNaN(numOfItems) ? 25 : numOfItems;
+        page = isNaN(page) ? null : page;
+        /*For testing. Remove after UI is integrated.
+        console.log("**** Product Filtering ****")
+        console.log("Price range:" +priceLow + " to " + priceHigh);
+        console.log("Brand:" +brand);
+        console.log("Max weight:" + maxWeight);
+        console.log("Type:" + type);
+        console.log("Size: " + maxSize);
+        console.log("#items: " +numOfItems);
+        console.log("Page:" + page);
+        console.log("***************************")
+        */
+        var desiredType: Electronic[] = [];
+        var desiredProducts: Electronic[] = [];
+        if(type == null || type == undefined){
+            desiredType = this.electronics;
         }
         else{
-            for (var i = 0; i < this.electronics.length; i++)
-            {
-                if(this.electronics[i].getElectronicType() == type)
-                    desired.push(this.electronics[i]);
+            for (var i = 0; i < this.electronics.length; i++) {
+                if(this.electronics[i].getElectronicType() == type){
+                    if(type == "Desktop")
+                        desiredType.push(this.electronics[i]);
+                    else {
+                        let eSize;
+                        switch(type){
+                            case "Monitor":
+                                eSize = (this.electronics[i] as Monitor).getSize();
+                                break;
+                            case "Laptop":
+                                eSize = (this.electronics[i] as Laptop).getDisplaySize();
+                                break;
+                            case "Tablet":
+                                eSize = (this.electronics[i] as Tablet).getDisplaySize();
+                                break;
+                            default:
+                                eSize = 1000000;
+                        }
+                        if(eSize < maxSize)
+                            desiredType.push(this.electronics[i]);
+                    }
+                }     
             }
         }
-        let totalProducts= desired.length;
+        //Now that you array filled with desired type, filter down from other params
+        for(let e of desiredType)
+        {
+            if(e.getPrice() > priceLow && e.getPrice() < priceHigh && e.getWeight() < maxWeight)
+            {
+                if(brand == undefined)
+                    desiredProducts.push(e);
+                else if(e.getBrand() == brand){
+                    desiredProducts.push(e);
+                }
+            }  
+        }
+
+        let totalProducts= desiredProducts.length;
         if(page != null)
         {
             var startProduct = (page-1) * numOfItems;
-            desired = desired.slice(startProduct,startProduct+numOfItems); //includes the first num, not the second. If not in bounds, should return empty array. To be dealt with in frontend    
+            desiredProducts = desiredProducts.slice(startProduct,startProduct+numOfItems); //includes the first num, not the second. If not in bounds, should return empty array. To be dealt with in frontend    
         }
-        return new responseData(desired,totalProducts);
+        return new responseData(desiredProducts,totalProducts);
     }
     
     @beforeMethod(function(meta){
