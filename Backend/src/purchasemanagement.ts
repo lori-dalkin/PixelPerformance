@@ -182,7 +182,7 @@ export class PurchaseManagement {
         //for each purchase record belonging to this user,
 		//collect all inventories that were sold
 		console.log("Finding all user's past purchases");
-		for(let i = 0; i < allPurchases.length; i++){
+		for(let i = allPurchases.length - 1; i >= 0; i--){
 			if (allPurchases[i].getUserId() == userId){
                 currInv = allPurchases[i].getInventory();
 
@@ -198,6 +198,9 @@ export class PurchaseManagement {
                         	return false;
                         }
 
+                        dateReturned = new Date();
+                        returningInv.setReturnDate(dateReturned);
+
                         break;
                     }
                 }
@@ -209,10 +212,9 @@ export class PurchaseManagement {
 		}
 
 		//set the cart and lockedUntil variables to null
-		dateReturned = new Date();
+		returningInv = new Inventory(returningInv.getserialNumber(), returningInv.getinventoryType());
 		returningInv.setCartId(null);
 		returningInv.setLockedUntil(null);
-		returningInv.setReturnDate(dateReturned);
 
 		//Modify the cart to remove the inventory from its records
 		console.log("Modifying db");
