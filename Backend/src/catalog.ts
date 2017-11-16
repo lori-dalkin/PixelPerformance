@@ -12,6 +12,7 @@ import { ElectronicFactory } from "./ElectronicFactory";
 import { afterMethod, beforeInstance, beforeMethod } from 'kaop-ts';
 import validator = require('validator');
 import assert = require('assert');
+import {UnitOfWork} from "./unitofwork";
 
 var db = new dbconnection().getDBConnector();
 export class Catalog {
@@ -19,11 +20,14 @@ export class Catalog {
     inventories: Inventory[];
 	electronics: Electronic[];
 	electronicFactory: ElectronicFactory;
+	unitOfWork: UnitOfWork;
 
 	private constructor(){
 		this.electronics = [];
         this.inventories = [];
         this.electronicFactory = new ElectronicFactory();
+        this.unitOfWork = UnitOfWork.getInstance();
+
         //Load all entities from the database
         let dataPromises = new Array<Promise<void>>();
 		dataPromises.push(this.loadMonitors());
@@ -106,23 +110,13 @@ export class Catalog {
         });
     })
     public async deleteInventory(electronicID: string): Promise<boolean> {
-        console.log(this.inventories);
-
         for (let iterator = 0; iterator < this.inventories.length; iterator++) {
-            console.log(this.inventories.length);
             if (this.inventories[iterator].getinventoryType().getId() == electronicID) {
-                console.log("Deletion was successful");
-                let success = await this.inventories[iterator].delete();
-                if (success){
-                    console.log("Inventory " + this.inventories[iterator].getserialNumber() + " has been deleted");
-                    this.inventories.splice(iterator, 1);
-                    return Promise.resolve(true);
-                }
-                else{
-                    console.log("Could not delete inventory for " + electronicID);
-                    return Promise.resolve(false);
-                }
-
+                console.log("Inventory " + this.inventories[iterator].getserialNumber() + " has been deleted");
+                let invtodelete = this.inventories[iterator];
+                this.inventories.splice(iterator, 1);
+                this.unitOfWork.registerDeleted(invtodelete);
+                return Promise.resolve(true);
             }
         }
         console.log("There was no inventory for item " + electronicID + " to delete");
@@ -216,11 +210,15 @@ export class Catalog {
 	})
 	public addProduct(data): boolean {
         let electronic: Electronic = this.electronicFactory.create(data);
-        electronic.save();
+        //electronic.save();
         this.electronics.push(electronic);
+        this.unitOfWork.registerNew(electronic);
 		return true;
     }
 
+    /*******************************************************
+    * Function to add a new physical product to the system
+     *******************************************************/
     @beforeMethod(function(meta){
         let electronic: Electronic;
         let found: boolean;
@@ -260,47 +258,43 @@ export class Catalog {
         }
         let inventoryObj: Inventory = new Inventory(uuid.v1(), electronic);
         this.inventories.push(inventoryObj);
-        return inventoryObj.save();
+        this.unitOfWork.registerNew(inventoryObj);
+        Promise.resolve(true);
     }
        
 
-
-    
     /********************************************************
 	* Function to delete an existing product
 	 ********************************************************/
     public async deleteProduct(productId:string): Promise<boolean> {
-        for(var i = 0; i < this.electronics.length; i++)
+        let elecs: Electronic[] = this.electronics;
+        for(var i = 0; i < elecs.length; i++)
         {
-            if(productId == this.electronics[i].getId())
+            if(productId == elecs[i].getId())
             {
-                let success = await this.electronics[i].delete();
-                if(success)
-                {
-                    this.electronics.splice(i,i);
-                    return Promise.resolve(true);
-                }
-                else
-                    return Promise.resolve(false);
+                let electodelete = elecs[i];
+                elecs.splice(i,1);
+                this.unitOfWork.registerDeleted(electodelete);
+                return Promise.resolve(true);
             }
         }
         return Promise.resolve(false); //Product to be deleted could not be found.
     }
 
+    /*******************************************************************
+    * Function to update data fields in existing product specifications
+     *******************************************************************/
     public async modifyProduct(electronicID: string, data): Promise<boolean> {
         console.log(data);
-        let modSuccess: boolean = true;
         for(let index = 0; index < this.electronics.length; index++) {
             if (this.electronics[index].getId() == electronicID) {
                 let elec: Electronic = this.electronics[index];
 
                 elec = elec.getModifyStrategy().modifyElectronic(elec, data);
-                modSuccess = await elec.modify();
+                this.unitOfWork.registerDirty(elec);
 
-                if (modSuccess)
-                    console.log("Modification completed successfully");
-                else console.log("Error: unable to modify object in the database");
-                return Promise.resolve(modSuccess);
+                console.log("Modification completed successfully");
+                return Promise.resolve(true);
             }
         }
         console.log("Object doesn't exist in the database");
@@ -341,6 +335,7 @@ export class Catalog {
     // Methods for contract programming
     private inventoryExists(electronicID: string): Boolean {
         for(let inventory of this.inventories) {
+            console.log(inventory);
             if(inventory.getinventoryType().getId() == electronicID) {
                 return true;
             }
