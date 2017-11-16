@@ -15,6 +15,8 @@ const ProductList = ({ userType, products, onProductClick, onProductDelete, onAd
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell>Model Number</TableCell>
+              <TableCell>Electronic Type</TableCell>
               <TableCell>Product Brand</TableCell>
               <TableCell numeric>Price</TableCell>
               <TableCell numeric>Actions</TableCell>

@@ -12,6 +12,7 @@ import { ElectronicFactory } from "./ElectronicFactory";
 import { afterMethod, beforeInstance, beforeMethod } from 'kaop-ts';
 import validator = require('validator');
 import assert = require('assert');
+import {UnitOfWork} from "./unitofwork";
 
 var db = new dbconnection().getDBConnector();
 export class Catalog {
@@ -19,18 +20,20 @@ export class Catalog {
     inventories: Inventory[];
 	electronics: Electronic[];
 	electronicFactory: ElectronicFactory;
+	unitOfWork: UnitOfWork;
 
 	private constructor(){
 		this.electronics = [];
         this.inventories = [];
         this.electronicFactory = new ElectronicFactory();
+        this.unitOfWork = UnitOfWork.getInstance();
+
         //Load all entities from the database
         let dataPromises = new Array<Promise<void>>();
 		dataPromises.push(this.loadMonitors());
 		dataPromises.push(this.loadDesktops());
 		dataPromises.push(this.loadTablets());
         dataPromises.push(this.loadLaptops());
-
         Promise.all(dataPromises).then( ()=>{
             Inventory.setElectronics(this.electronics);
             this.loadInventory();
@@ -106,23 +109,13 @@ export class Catalog {
         });
     })
     public async deleteInventory(electronicID: string): Promise<boolean> {
-        console.log(this.inventories);
-
         for (let iterator = 0; iterator < this.inventories.length; iterator++) {
-            console.log(this.inventories.length);
             if (this.inventories[iterator].getinventoryType().getId() == electronicID) {
-                console.log("Deletion was successful");
-                let success = await this.inventories[iterator].delete();
-                if (success){
-                    console.log("Inventory " + this.inventories[iterator].getserialNumber() + " has been deleted");
-                    this.inventories.splice(iterator, 1);
-                    return Promise.resolve(true);
-                }
-                else{
-                    console.log("Could not delete inventory for " + electronicID);
-                    return Promise.resolve(false);
-                }
-
+                console.log("Inventory " + this.inventories[iterator].getserialNumber() + " has been deleted");
+                let invtodelete = this.inventories[iterator];
+                this.inventories.splice(iterator, 1);
+                this.unitOfWork.registerDeleted(invtodelete);
+                return Promise.resolve(true);
             }
         }
         console.log("There was no inventory for item " + electronicID + " to delete");
@@ -162,25 +155,78 @@ export class Catalog {
     @afterMethod(function(meta) {
         assert(meta.result != null, "Unable to create valid responseData for getProductPage call");
     })
-    public getProductPage(page:number=null, type:string=null, numOfItems:number = 25) {
-        var desired: Electronic[] = [];
-        if(type == null){
-            desired = this.electronics;
+    public getProductPage(page:number, type:string, numOfItems:number, 
+                            priceLow:number, priceHigh:number, brand:string,
+                            maxSize:number, maxWeight:number) {
+        //set defaults in case of undefined
+        priceLow = isNaN(priceLow) ? 0 : priceLow;
+        priceHigh = isNaN(priceHigh) ? 1000000 : priceHigh; //default arbitrarly high
+        maxWeight = isNaN(maxWeight) ? 100000 : maxWeight; //default arbitrarly high
+        maxSize = isNaN(maxSize) ? 100000 : maxSize; //default arbitrarly high
+        numOfItems = isNaN(numOfItems) ? 25 : numOfItems;
+        page = isNaN(page) ? null : page;
+        /*For testing. Remove after UI is integrated.
+        console.log("**** Product Filtering ****")
+        console.log("Price range:" +priceLow + " to " + priceHigh);
+        console.log("Brand:" +brand);
+        console.log("Max weight:" + maxWeight);
+        console.log("Type:" + type);
+        console.log("Size: " + maxSize);
+        console.log("#items: " +numOfItems);
+        console.log("Page:" + page);
+        console.log("***************************")
+        */
+        var desiredType: Electronic[] = [];
+        var desiredProducts: Electronic[] = [];
+        if(type == null || type == undefined){
+            desiredType = this.electronics;
         }
         else{
-            for (var i = 0; i < this.electronics.length; i++)
-            {
-                if(this.electronics[i].getElectronicType() == type)
-                    desired.push(this.electronics[i]);
+            for (var i = 0; i < this.electronics.length; i++) {
+                if(this.electronics[i].getElectronicType() == type){
+                    if(type == "Desktop")
+                        desiredType.push(this.electronics[i]);
+                    else {
+                        let eSize;
+                        switch(type){
+                            case "Monitor":
+                                eSize = (this.electronics[i] as Monitor).getSize();
+                                break;
+                            case "Laptop":
+                                eSize = (this.electronics[i] as Laptop).getDisplaySize();
+                                break;
+                            case "Tablet":
+                                eSize = (this.electronics[i] as Tablet).getDisplaySize();
+                                break;
+                            default:
+                                eSize = 1000000;
+                        }
+                        if(eSize < maxSize)
+                            desiredType.push(this.electronics[i]);
+                    }
+                }     
             }
         }
-        let totalProducts= desired.length;
+        //Now that you array filled with desired type, filter down from other params
+        for(let e of desiredType)
+        {
+            if(e.getPrice() > priceLow && e.getPrice() < priceHigh && e.getWeight() < maxWeight)
+            {
+                if(brand == undefined)
+                    desiredProducts.push(e);
+                else if(e.getBrand() == brand){
+                    desiredProducts.push(e);
+                }
+            }  
+        }
+
+        let totalProducts= desiredProducts.length;
         if(page != null)
         {
             var startProduct = (page-1) * numOfItems;
-            desired = desired.slice(startProduct,startProduct+numOfItems); //includes the first num, not the second. If not in bounds, should return empty array. To be dealt with in frontend    
+            desiredProducts = desiredProducts.slice(startProduct,startProduct+numOfItems); //includes the first num, not the second. If not in bounds, should return empty array. To be dealt with in frontend    
         }
-        return new responseData(desired,totalProducts);
+        return new responseData(desiredProducts,totalProducts);
     }
     
     @beforeMethod(function(meta){
@@ -216,11 +262,15 @@ export class Catalog {
 	})
 	public addProduct(data): boolean {
         let electronic: Electronic = this.electronicFactory.create(data);
-        electronic.save();
+        //electronic.save();
         this.electronics.push(electronic);
+        this.unitOfWork.registerNew(electronic);
 		return true;
     }
 
+    /*******************************************************
+    * Function to add a new physical product to the system
+     *******************************************************/
     @beforeMethod(function(meta){
         let electronic: Electronic;
         let found: boolean;
@@ -260,47 +310,43 @@ export class Catalog {
         }
         let inventoryObj: Inventory = new Inventory(uuid.v1(), electronic);
         this.inventories.push(inventoryObj);
-        return inventoryObj.save();
+        this.unitOfWork.registerNew(inventoryObj);
+        Promise.resolve(true);
     }
        
 
-
-    
     /********************************************************
 	* Function to delete an existing product
 	 ********************************************************/
     public async deleteProduct(productId:string): Promise<boolean> {
-        for(var i = 0; i < this.electronics.length; i++)
+        let elecs: Electronic[] = this.electronics;
+        for(var i = 0; i < elecs.length; i++)
         {
-            if(productId == this.electronics[i].getId())
+            if(productId == elecs[i].getId())
             {
-                let success = await this.electronics[i].delete();
-                if(success)
-                {
-                    this.electronics.splice(i,i);
-                    return Promise.resolve(true);
-                }
-                else
-                    return Promise.resolve(false);
+                let electodelete = elecs[i];
+                elecs.splice(i,1);
+                this.unitOfWork.registerDeleted(electodelete);
+                return Promise.resolve(true);
             }
         }
         return Promise.resolve(false); //Product to be deleted could not be found.
     }
 
+    /*******************************************************************
+    * Function to update data fields in existing product specifications
+     *******************************************************************/
     public async modifyProduct(electronicID: string, data): Promise<boolean> {
         console.log(data);
-        let modSuccess: boolean = true;
         for(let index = 0; index < this.electronics.length; index++) {
             if (this.electronics[index].getId() == electronicID) {
                 let elec: Electronic = this.electronics[index];
 
                 elec = elec.getModifyStrategy().modifyElectronic(elec, data);
-                modSuccess = await elec.modify();
+                this.unitOfWork.registerDirty(elec);
 
-                if (modSuccess)
-                    console.log("Modification completed successfully");
-                else console.log("Error: unable to modify object in the database");
-                return Promise.resolve(modSuccess);
+                console.log("Modification completed successfully");
+                return Promise.resolve(true);
             }
         }
         console.log("Object doesn't exist in the database");
@@ -341,6 +387,7 @@ export class Catalog {
     // Methods for contract programming
     private inventoryExists(electronicID: string): Boolean {
         for(let inventory of this.inventories) {
+            console.log(inventory);
             if(inventory.getinventoryType().getId() == electronicID) {
                 return true;
             }

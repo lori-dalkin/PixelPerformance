@@ -15,7 +15,7 @@ class CartList extends React.Component {
 					<List>
 						{
 							this.props.items.map((item, index) => (
-		          	<CartItem key={index} item={item.inventoryType} last={index >= this.props.items.length - 1}/>
+		          	<CartItem key={index} item={item} last={index >= this.props.items.length - 1}/>
 		        	))
 						}
         	</List>
