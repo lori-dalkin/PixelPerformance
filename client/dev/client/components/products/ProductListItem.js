@@ -37,12 +37,6 @@ class ProductListItem extends Component{
   render() {
     const {userType, onClick, onAdd, brand, price, onDelete, deleteLabel, pageType, electronicType, modelNumber, returnDate } = this.props;
 
-    let deleteColor = 'accent';
-
-    if (returnDate) {
-      
-    }
-
     return (
     	<TableRow>
         <TableCell>{modelNumber}</TableCell>
@@ -74,7 +68,7 @@ class ProductListItem extends Component{
               placement="top"
             >
               <div style={{ 'display': 'inline-block' }}>
-                <IconButton disabled={returnDate != null} onClick={onDelete} color='accent'> 
+                <IconButton disabled={returnDate != null || onDelete == null} onClick={onDelete} color='accent'> 
                   { pageType == "history" ? (
                       <AssignmentReturnIcon />
                     ) : (
