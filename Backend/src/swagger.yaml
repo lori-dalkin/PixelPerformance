@@ -64,7 +64,7 @@
           - name: Authorization
             in: header
             description: API key
-            required: false
+            required: true
             type: string
             format: string
             default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"
@@ -75,6 +75,26 @@
               type: "array"
               items:
                 $ref: "#/definitions/User"
+          "500":
+            description: "Exception thrown on backend."
+      delete:
+        tags:
+          - User Management
+          - Admin Only
+        description: "Deletes a clients account"
+        produces:
+          - "application/json"
+        parameters:
+          - name: Authorization
+            in: header
+            description: API key
+            required: true
+            type: string
+            format: string
+            default: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDZiNWFmLWM1OGMtMTFlNy1hZDAzLTRjY2M2YWQ2MjFkZCIsImlhdCI6MTUxMDI2MDgxMn0.U9tslfPV-WStI--JpM8sICFXn_m3buGybuB62nc1-zo"
+        responses:
+          "200":
+            description: "True or false whether client account was deleted"
           "500":
             description: "Exception thrown on backend."
     /products:
