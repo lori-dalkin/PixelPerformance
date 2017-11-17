@@ -466,6 +466,7 @@ export class Catalog {
         console.log(parameter);
         assert(validator.isUUID(parameter.id), "ProductId needs to be a uuid");
         Catalog.getInstance().validatePositiveNumber(parameter.weight, "Weight");
+        assert(parameter.weight < 10000, "Weight must be less than 100000");
         assert(typeof parameter.modelNumber == "string", "Model Number needs to be a string");
         assert(typeof parameter.brand == "string", "Brand needs to be a string");
         Catalog.getInstance().isTwoDigitNumber(parameter.price, "Price");
