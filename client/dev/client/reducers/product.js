@@ -97,6 +97,9 @@ export default function (state = initialState, action) {
         case actions.HIDE_PRODUCT_VIEW_DIALOG:
             return { ...state, productViewOpen: false };
             break;
+        case actions.SET_PRODUCT:
+            return { ...state, selectedProduct: action.product };
+            break;
         case actions.SHOW_DELETE_PRODUCT_DIALOG:
             return { ...state, productDeleteOpen: true, selectedProduct: action.product };
             break;

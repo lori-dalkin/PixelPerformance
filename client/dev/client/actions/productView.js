@@ -89,6 +89,49 @@ export const getProducts = () => {
     };
 }
 
+export const previousProduct = () => {
+    return function (dispatch, getState) {
+        if (getState().product.selectedProduct.id == getState().product.products[0].id && getState().product.page > 1) {
+            dispatch(setPage(getState().product.page - 1));
+            dispatch(getProducts()).then(() => {
+                dispatch(setProduct(getState().product.products[getState().product.products.length - 1]));
+            });
+        } else {
+            for (let i = 0; i < getState().product.products.length; i++) {
+                if (getState().product.selectedProduct.id == getState().product.products[i].id) {
+                    dispatch(setProduct(getState().product.products[i - 1]));
+                    break;
+                }
+            }
+        }
+    };
+}
+
+export const nextProduct = () => {
+    return function (dispatch, getState) {
+        if (getState().product.selectedProduct.id == getState().product.products[getState().product.products.length - 1].id && getState().product.page < Math.floor(getState().product.numProducts / getState().product.productsPerPage) + 1) {
+            dispatch(setPage(getState().product.page + 1));
+            dispatch(getProducts()).then(() => {
+                dispatch(setProduct(getState().product.products[0]));
+            });
+        } else {
+            for (let i = 0; i < getState().product.products.length; i++) {
+                if (getState().product.selectedProduct.id == getState().product.products[i].id) {
+                    dispatch(setProduct(getState().product.products[i + 1]));
+                    break;
+                }
+            }
+        }
+    };
+}
+
+export const setProduct = (product) => {
+    return {
+        type: actions.SET_PRODUCT,
+        product: product
+    };
+}
+
 // -----------------------------------------------
 //               PAGINATION
 //------------------------------------------------

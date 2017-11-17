@@ -37,6 +37,7 @@ export class Catalog {
         Promise.all(dataPromises).then( ()=>{
             Inventory.setElectronics(this.electronics);
             this.loadInventory();
+            this.getAllBrands();
         });
         
     }
@@ -434,6 +435,15 @@ export class Catalog {
         }
         let numPages = Math.ceil(numProducts / numItems);
         return numPages;
+    }
+
+    public getAllBrands(){
+        let brandSet = new Set();
+        for(let e of this.electronics)
+        {
+            brandSet.add(e.getBrand());
+        }
+        return brandSet;
     }
 }
 

@@ -110,6 +110,7 @@ export class WebPortal {
 
 
         router.get("/api/products/", this.getProducts);
+        router.get("/api/products/brands/", this.getBrands);
         router.post("/api/products/", this.postProduct);
 
         router.get("/api/products/:id", this.getProductById);
@@ -304,13 +305,24 @@ export class WebPortal {
       
 
 
-    @beforeMethod(RoutingAdvice.requireLoggedIn)
     public getProducts(req, res) {
       try{
         let electronics = Catalog.getInstance().getProductPage(parseInt(req.query.page), req.query.type, parseInt(req.query.numOfItems),
                                                                parseInt(req.query.priceLow),parseInt(req.query.priceHigh), req.query.brand,
                                                                parseInt(req.query.maxSize), parseInt(req.query.maxWeight));
         res.send(electronics);
+      }catch (e) {
+        console.log(e);
+        res.status = 500;
+        res.send({data: false, error: e});
+      }
+    }
+
+    public getBrands(req, res) {
+      try{
+        let brands = Catalog.getInstance().getAllBrands();
+        console.log(brands);
+        res.send(Array.from(brands));
       }catch (e) {
         console.log(e);
         res.status = 500;
