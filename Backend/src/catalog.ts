@@ -451,7 +451,7 @@ export class Catalog {
     }
     private isTwoDigitNumber(par:any, message:string) {
         Catalog.getInstance().validatePositiveNumber(par, message);
-        assert((Number(par)*100)%1 === 0, message + " has at most two decimal");
+        assert((Number(par)*100)%1 === 0, message + " has at most two decimals");
     }
     private isWholeNumber(par:any, message:string) {
         Catalog.getInstance().validatePositiveNumber(par, message);
@@ -463,7 +463,7 @@ export class Catalog {
     }
     private validateElectronicParameter(parameter:any) {
         Catalog.getInstance().isTwoDigitNumber(parameter.weight, "Weight");
-        assert(parameter.weight < 10000, "Weight must be less than 100000");
+        assert(parameter.weight < 100, "Weight must be less than 100");
         assert(typeof parameter.modelNumber == "string", "Model Number needs to be a string");
         assert(typeof parameter.brand == "string", "Brand needs to be a string");
         Catalog.getInstance().isTwoDigitNumber(parameter.price, "Price");
