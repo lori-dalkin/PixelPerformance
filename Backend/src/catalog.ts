@@ -463,7 +463,7 @@ export class Catalog {
         assert(Number(par) >= 0, message + " needs to be positive");
     }
     private validateElectronicParameter(parameter:any) {
-
+        console.log(parameter);
         assert(validator.isUUID(parameter.id), "ProductId needs to be a uuid");
         Catalog.getInstance().validatePositiveNumber(parameter.weight, "Weight");
         assert(typeof parameter.modelNumber == "string", "Model Number needs to be a string");
