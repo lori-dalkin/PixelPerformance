@@ -225,6 +225,7 @@ export class PurchaseManagement {
 				});
                 if (returnSuccess) {
                     availableInventory.returnInventory(returningInv);
+                    returningInv.save();
 
                     if (allPurchases[i].getInventory().length == 0){
                         allPurchases[i].delete();
