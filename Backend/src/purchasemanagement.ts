@@ -139,7 +139,7 @@ export class PurchaseManagement {
 
     @beforeMethod(function (meta) {
         assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
-        assert(PurchaseManagement.getInstance().findCart(meta.args[0]) != null, "there are no purchases associated to this account");
+        // assert(PurchaseManagement.getInstance().findCart(meta.args[0]) != null, "there are no purchases associated to this account");
     })
     @afterMethod(function (meta) {
             assert(meta.result != null, "There was an error in retrieving your previous purchases");

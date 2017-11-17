@@ -92,6 +92,9 @@ export class Inventory {
      * Method to return all bought Inventories saved in the database
      *****************************************************************/
     public static async findAllPurchased(): Promise<{[key: string]: Inventory[]}>{
+        const timeout = ms => new Promise(res => setTimeout(res, ms));
+        await timeout(1000);
+
         return db.many('SELECT * FROM bought_inventory;')
             .then(function(rows) {
                 let inventories: { [key: string]: Inventory[]} = {};
