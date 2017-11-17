@@ -1,13 +1,14 @@
 import * as actions from './action-types';
 import callApi from '../utils/apiCaller';
+import { fetchInventory } from './adminProductActions';
 
 // -----------------------------------------------
 //               PRODUCT VIEW
 //------------------------------------------------
-export const setProductFilter = (filter) => {
+export const setProductFilter = (filters) => {
     return {
         type: actions.SET_PRODUCTS_FILTER,
-        productFilter: filter
+        filters: filters
     }
 }
 
@@ -46,36 +47,46 @@ function shouldGetProducts(state) {
 
 export const getProducts = () => {
     return function (dispatch, getState) {
-        if (getState().authentication && getState().authentication.token) {
-            if (shouldGetProducts(getState())) {
-                dispatch(getProductsRequest());
+        dispatch(getProductsRequest());
 
-                let queryStarted = false;
+        let endPoint = 'api/products';
 
-                let endPoint = 'api/products';
+        // Add paging and number of items
+        endPoint += `?page=${getState().product.page}&numOfItems=${getState().product.productsPerPage}`;
 
-                if (getState().product.productFilter) {
-                    endPoint = `api/products?type=${getState().product.productFilter}`
-                    queryStarted = true;
+        // Add filter
+        if (getState().product.filterSet){
+            if (getState().product.filters.electronicType) {
+                if (getState().product.filters.electronicType !== 'Type') {
+                    endPoint += `&type=${getState().product.filters.electronicType}`;
                 }
-
-                // Add paging and number of items
-                if (queryStarted) {
-                    endPoint += '&';
-                } else {
-                    endPoint += '?';
+            }
+            if(getState().product.filters.brand){
+                if(getState().product.filters.brand !== 'Brand'){
+                    endPoint += `&brand=${getState().product.filters.brand}`;
                 }
-                endPoint += `page=${getState().product.page}&numOfItems=${getState().product.productsPerPage}`;
-
-                return callApi(endPoint, 'get', undefined, `Bearer ${getState().authentication.token}`).then(
-                    res => {
-                        dispatch(setNumProducts(res.totalProducts));
-                        dispatch(getProductsSuccess(res.products));
-                    },
-                    error => dispatch(getProductsFailure(error))
-                );
+            }
+            if(getState().product.filters.priceLow){
+                endPoint += `&priceLow=${getState().product.filters.priceLow}`;
+            }
+            if(getState().product.filters.priceHigh){
+                endPoint += `&priceHigh=${getState().product.filters.priceHigh}`;
+            }
+            if(getState().product.filters.maxSize){
+                endPoint += `&maxSize=${getState().product.filters.maxSize}`;
+            }
+            if(getState().product.filters.maxWeight){
+                endPoint += `&maxWeight=${getState().product.filters.maxWeight}`;
             }
         }
+
+        return callApi(endPoint, 'get').then(
+            res => {
+                dispatch(setNumProducts(res.totalProducts));
+                dispatch(getProductsSuccess(res.products));
+            },
+            error => dispatch(getProductsFailure(error))
+        );
     };
 }
 
@@ -85,11 +96,13 @@ export const previousProduct = () => {
             dispatch(setPage(getState().product.page - 1));
             dispatch(getProducts()).then(() => {
                 dispatch(setProduct(getState().product.products[getState().product.products.length - 1]));
+                dispatch(fetchInventory(getState().product.products[getState().product.products.length - 1].id));
             });
         } else {
             for (let i = 0; i < getState().product.products.length; i++) {
                 if (getState().product.selectedProduct.id == getState().product.products[i].id) {
                     dispatch(setProduct(getState().product.products[i - 1]));
+                    dispatch(fetchInventory(getState().product.products[i - 1].id));
                     break;
                 }
             }
@@ -103,11 +116,13 @@ export const nextProduct = () => {
             dispatch(setPage(getState().product.page + 1));
             dispatch(getProducts()).then(() => {
                 dispatch(setProduct(getState().product.products[0]));
+                dispatch(fetchInventory(getState().product.products[0].id));
             });
         } else {
             for (let i = 0; i < getState().product.products.length; i++) {
                 if (getState().product.selectedProduct.id == getState().product.products[i].id) {
                     dispatch(setProduct(getState().product.products[i + 1]));
+                    dispatch(fetchInventory(getState().product.products[i + 1].id));
                     break;
                 }
             }
@@ -121,6 +136,29 @@ export const setProduct = (product) => {
         product: product
     };
 }
+
+export const getBrandSuccess = (brands) => {
+    return {
+        type: actions.GET_BRANDS,
+        brands: brands
+    };
+}
+
+export const getBrandsFailure = (error) => {
+    return {
+        type: actions.GET_BRANDS_FAILURE,
+        error: error
+    };
+}
+
+export const getBrands = () => {
+    return function (dispatch, getState) {
+        return callApi('api/products/brands', 'get').then(
+            res => dispatch(getBrandSuccess(res)),
+            error => dispatch(getBrandsFailure(error))
+        );
+    };
+};
 
 // -----------------------------------------------
 //               PAGINATION

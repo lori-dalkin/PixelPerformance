@@ -17,8 +17,16 @@ const defaultDropDownsProduct = {
     displaySize: '',
     battery: '',
     camera: '',
-    touchScreen: '',
+    touchscreen: '',
     size: ''
+};
+const defaultFilters = {
+    electronicType: 'Type',
+    priceLow: '',
+    priceHigh: '',
+    maxSize: '',
+    maxWeight: '',
+    brand: 'Brand'
 };
 
 const initialState = {
@@ -28,6 +36,7 @@ const initialState = {
     inventoryCount: 0,
     error: "",
     productFilter: "",
+    filters: defaultFilters,
     products: [],
     productViewOpen: false,
     productDeleteOpen: false,
@@ -49,7 +58,8 @@ const initialState = {
     selectedProduct: {},
     page: 1,
     productsPerPage: 10,
-    numProducts: 0
+    numProducts: 0,
+    brands: []
 };
 
 export default function (state = initialState, action) {
@@ -57,7 +67,7 @@ export default function (state = initialState, action) {
         case actions.SET_PRODUCTS_FILTER:
             return {
                 ...state,
-                productFilter: action.productFilter,
+                filters: action.filters,
                 filterSet: true
             };
             break;
@@ -72,7 +82,6 @@ export default function (state = initialState, action) {
                 ...state,
                 products: action.products,
                 isFetching: false,
-                filterSet: false
             };
             break;
         case actions.GET_PRODUCTS_FAILURE:
@@ -133,7 +142,8 @@ export default function (state = initialState, action) {
                 addProduct: {
                     ...state.addProduct,
                     error: false,
-                    addingProduct: false
+                    addingProduct: false,
+                    addProductOpen: false
                 }
             };
             break;
@@ -186,7 +196,8 @@ export default function (state = initialState, action) {
                 modifyProduct: {
                     ...state.modifyProduct,
                     modifyingProduct: false,
-                    error: false
+                    error: false,
+                    modifyProductOpen: false
                 }
             };
             break;
@@ -259,6 +270,22 @@ export default function (state = initialState, action) {
                 isFetchingInventory: false,
                 inventoryCount: action.count
             }
+        case actions.RESET_FILTERS:
+            return {
+                ...state,
+                filters: defaultFilters,
+            }
+        case actions.GET_BRANDS:
+            return {
+                ...state,
+                brands: action.brands,
+            }
+        case actions.GET_BRANDS_FAILURE:
+            return {
+                ...state,
+                error: true
+            };
+            break;
         default:
             return state;
     }

@@ -11,7 +11,19 @@ export const setToken = (token) => {
     };
 }
 
-export const deleteToken = () => { return { type: actions.DELETE_TOKEN }; }
+export const deleteToken = () => {
+    return (dispatch) => {
+        dispatch(resetFilters());
+        dispatch({
+            type: actions.DELETE_TOKEN
+        });
+    }
+}
+
+// -----------------------------------------------
+//                    FILTERS
+//------------------------------------------------
+export const resetFilters = () => { return { type: actions.RESET_FILTERS }; }
 
 // -----------------------------------------------
 //                    USERTYPE
@@ -31,6 +43,8 @@ export const deleteUserType = () => { return { type: actions.DELETE_USER_TYPE };
 export const showSnackbar = () => { return { type: actions.SHOW_SNACKBAR }; }
 
 export const hideSnackbar = () => { return { type: actions.HIDE_SNACKBAR }; }
+
+export const customSnackbar = (message) => { return { type: actions.CUSTOM_SNACKBAR_MESSAGE, message: message }; }
 
 // -----------------------------------------------
 //             PRODUCT VIEW MODAL

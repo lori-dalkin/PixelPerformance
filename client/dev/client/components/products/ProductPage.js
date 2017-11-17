@@ -7,7 +7,7 @@ import ProductTypeDropdown from './ProductTypeDropdown';
 import ProductModifyDialog from './ProductModifyDialog';
 import ProductDeleteDialog from './ProductDeleteDialog';
 import * as actions from '../../actions';
-import { getProducts } from '../../actions/productView';
+import { getProducts, getBrands } from '../../actions/productView';
 
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
@@ -37,16 +37,18 @@ class ProductPage extends React.Component {
 					<Grid item xs={12} md={10} lg={8} >
 						<Paper style={productPaperStyle}>
 							<Grid container spacing={24} justify='center'>
-								<Grid item xs={9}>
+								<Grid item xs={12}>
 									<Typography type='display1' gutterBottom component='h3'>
 										Product Listing
 									</Typography>
 								</Grid>
-								<Grid item xs={3}>
+							</Grid>
+							<Grid container spacing={24} justify='center'>
+								<Grid item xs={12}>
 									<ProductTypeDropdown />
 								</Grid>
 							</Grid>
-							{ this.props.product.isFetching && <LinearProgress color="accent" style={{ width: '100%' }} /> }
+							{ this.props.product.isFetching && <LinearProgress color="accent" style={{ width: '100%', marginTop: '2rem' }} /> }
 							{ !this.props.product.isFetching && <FilteredProductList /> }
 						</Paper>
 					</Grid>
@@ -55,7 +57,7 @@ class ProductPage extends React.Component {
 				<ProductViewDialog open={this.props.product.productViewOpen} handleRequestClose={this.props.hideProductView} actions={true} />
 				<ProductAddDialog open={this.props.product.addProduct.addProductOpen} handleRequestClose={this.props.hideAddProduct} />
 				<ProductModifyDialog open={this.props.product.modifyProduct.modifyProductOpen} handleRequestClose={this.props.hideModifyProduct} />
-                {this.props.authentication.userType === "Client" ? null :
+                {this.props.authentication.userType === "Admin" &&
 					<Button style={{ position: 'fixed', bottom: '2rem', right: '2rem' }} fab color="accent" aria-label="add" onClick={ () => this.props.showAddProduct() }>
 						<AddIcon />
 					</Button>
@@ -86,7 +88,10 @@ const mapStateToProps = ({authentication, product, snackbar}) => ({
 
 const mapDispatchToProps = dispatch => {
 	return {
-		onLoad: () => dispatch(getProducts()),
+		onLoad: () => {
+            dispatch(getBrands());
+			dispatch(getProducts());
+        },
 		showAddProduct: () => dispatch(actions.showAddProduct()),
 		hideAddProduct: () => dispatch(actions.hideAddProduct()),
 		hideProductView: () => dispatch(actions.hideProductView()),
