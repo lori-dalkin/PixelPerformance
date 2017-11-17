@@ -254,56 +254,8 @@ export class Catalog {
 	 ********************************************************/
     @beforeMethod(function(meta){
         assert(meta.args[0] != null,  "Product data cannot be null");
+        Catalog.getInstance().validateElectronicObject(meta.args[0]);
         //console.log(typeof meta.args[0].getWeight() == "number");
-        assert(validator.isUUID(meta.args[0].getId()), "ProductId needs to be a uuid");
-        Catalog.getInstance().validatePositiveNumber(meta.args[0].getWeight(), "Weight");
-        assert(typeof meta.args[0].getModelNumber() == "string", "Model Number needs to be a string");
-        assert(typeof meta.args[0].getBrand() == "string", "Brand needs to be a string");
-        Catalog.getInstance().validatePositiveNumber(meta.args[0].getPrice(), "Price");
-        assert(!Catalog.getInstance().modelNumberExists(meta.args[0].getModelNumber()),"Model Number already exists");
-        let eType:string = meta.args[0].getElectronicType();
-        assert(typeof eType == "string", "Electronic Type needs to be a string");
-        switch(eType)
-        {
-            case "Monitor":
-                Catalog.getInstance().validatePositiveNumber(meta.args[0].getSize(), "Size");
-                break;
-            case "Desktop":
-                assert(typeof meta.args[0].getProcessor() == "string", "Processor needs to be a string");
-                Catalog.getInstance().validatePositiveNumber(meta.args[0].getRam(), "Ram");
-                Catalog.getInstance().validatePositiveNumber(meta.args[0].getCpus(), "Number of CPU's");
-                Catalog.getInstance().validatePositiveNumber(meta.args[0].getHardDrive(), "Hard Drive");
-                assert(typeof meta.args[0].getOs() == "string", "Operating System needs to be a string");
-                assert(typeof meta.args[0].getProcessor() == "string", "Processor needs to be a string");
-                break;
-            case "Laptop":
-                assert(typeof meta.args[0].getProcessor() == "string", "Processor needs to be a string");
-                Catalog.getInstance().validatePositiveNumber(meta.args[0].getRam(), "Ram");
-                Catalog.getInstance().validatePositiveNumber(meta.args[0].getCpus(), "Number of CPU's");
-                Catalog.getInstance().validatePositiveNumber(meta.args[0].getHardDrive(), "Hard Drive");
-                assert(typeof meta.args[0].getOs() == "string", "Operating System needs to be a string");
-                assert(typeof meta.args[0].getProcessor() == "string", "Processor needs to be a string");
-                Catalog.getInstance().validatePositiveNumber(meta.args[0].getDisplaySize(), "Display Size");
-                Catalog.getInstance().validatePositiveNumber(meta.args[0].getBattery(), "Battery");
-                assert(typeof meta.args[0].getCamera() == "boolean", "Camera needs to be a boolean");
-                assert(typeof meta.args[0].getTouchscreen() == "boolean", "Touchscreen needs to be a boolean");
-                break;
-            case "Tablet":
-                assert(typeof meta.args[0].getProcessor() == "string", "Processor needs to be a string");
-                Catalog.getInstance().validatePositiveNumber(meta.args[0].getRam(), "Ram");
-                Catalog.getInstance().validatePositiveNumber(meta.args[0].getCpus(), "Number of CPU's");
-                Catalog.getInstance().validatePositiveNumber(meta.args[0].getHardDrive(), "Hard Drive");
-                assert(typeof meta.args[0].getOs() == "string", "Operating System needs to be a string");
-                assert(typeof meta.args[0].getProcessor() == "string", "Processor needs to be a string");
-                Catalog.getInstance().validatePositiveNumber(meta.args[0].getDisplaySize(), "Display Size");
-                assert(typeof meta.args[0].getDimensions() == "string", "Dimensions needs to be a string");
-                Catalog.getInstance().validatePositiveNumber(meta.args[0].getBattery(), "Battery");
-                assert(typeof meta.args[0].getCamera() == "boolean", "Camera needs to be a boolean");
-                break;
-            default:
-                assert(false,"Electronic Type not valid");
-                break; 
-        }
 	})
 	@afterMethod(function(meta) {
         //compare most recent object with object sent to function
@@ -386,6 +338,11 @@ export class Catalog {
     /*******************************************************************
     * Function to update data fields in existing product specifications
      *******************************************************************/
+    @beforeMethod(function(meta){
+        assert(meta.args[0] != null,  "Product data cannot be null");
+        Catalog.getInstance().validateElectronicObject(meta.args[0]);
+        //console.log(typeof meta.args[0].getWeight() == "number");
+	})
     public async modifyProduct(electronicID: string, data): Promise<boolean> {
         console.log(data);
         for(let index = 0; index < this.electronics.length; index++) {
@@ -495,6 +452,55 @@ export class Catalog {
     private validatePositiveNumber(par:any, message:string) {
         assert(typeof par == "number", message + " needs to be a number");
         assert(par > 0, message + " needs to be positive");
+    }
+    private validateElectronicObject(parameter:any) {
+
+        assert(validator.isUUID(parameter.getId()), "ProductId needs to be a uuid");
+        Catalog.getInstance().validatePositiveNumber(parameter.getWeight(), "Weight");
+        assert(typeof parameter.getModelNumber() == "string", "Model Number needs to be a string");
+        assert(typeof parameter.getBrand() == "string", "Brand needs to be a string");
+        Catalog.getInstance().validatePositiveNumber(parameter.getPrice(), "Price");
+        assert(!Catalog.getInstance().modelNumberExists(parameter.getModelNumber()),"Model Number already exists");
+        let eType:string = parameter.getElectronicType();
+        assert(typeof eType == "string", "Electronic Type needs to be a string");
+        switch(eType)
+        {
+            case "Monitor":
+                Catalog.getInstance().validatePositiveNumber(parameter.getSize(), "Size");
+                break;
+            case "Desktop":
+                assert(typeof parameter.getProcessor() == "string", "Processor needs to be a string");
+                Catalog.getInstance().validatePositiveNumber(parameter.getRam(), "Ram");
+                Catalog.getInstance().validatePositiveNumber(parameter.getCpus(), "Number of CPU's");
+                Catalog.getInstance().validatePositiveNumber(parameter.getHardDrive(), "Hard Drive");
+                assert(typeof parameter.getOs() == "string", "Operating System needs to be a string");
+                break;
+            case "Laptop":
+                assert(typeof parameter.getProcessor() == "string", "Processor needs to be a string");
+                Catalog.getInstance().validatePositiveNumber(parameter.getRam(), "Ram");
+                Catalog.getInstance().validatePositiveNumber(parameter.getCpus(), "Number of CPU's");
+                Catalog.getInstance().validatePositiveNumber(parameter.getHardDrive(), "Hard Drive");
+                assert(typeof parameter.getOs() == "string", "Operating System needs to be a string");
+                Catalog.getInstance().validatePositiveNumber(parameter.getDisplaySize(), "Display Size");
+                Catalog.getInstance().validatePositiveNumber(parameter.getBattery(), "Battery");
+                assert(typeof parameter.getCamera() == "boolean", "Camera needs to be a boolean");
+                assert(typeof parameter.getTouchscreen() == "boolean", "Touchscreen needs to be a boolean");
+                break;
+            case "Tablet":
+                assert(typeof parameter.getProcessor() == "string", "Processor needs to be a string");
+                Catalog.getInstance().validatePositiveNumber(parameter.getRam(), "Ram");
+                Catalog.getInstance().validatePositiveNumber(parameter.getCpus(), "Number of CPU's");
+                Catalog.getInstance().validatePositiveNumber(parameter.getHardDrive(), "Hard Drive");
+                assert(typeof parameter.getOs() == "string", "Operating System needs to be a string");
+                Catalog.getInstance().validatePositiveNumber(parameter.getDisplaySize(), "Display Size");
+                assert(typeof parameter.getDimensions() == "string", "Dimensions needs to be a string");
+                Catalog.getInstance().validatePositiveNumber(parameter.getBattery(), "Battery");
+                assert(typeof parameter.getCamera() == "boolean", "Camera needs to be a boolean");
+                break;
+            default:
+                assert(false,"Electronic Type not valid");
+                break; 
+        }
     }
 }
 
