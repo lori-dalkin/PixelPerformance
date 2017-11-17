@@ -458,17 +458,10 @@ export class Catalog {
         assert(Number(par)%1 === 0, message + " needs to be an integer");
     }
     private validatePositiveNumber(par:any, message:string) {
-        
-        assert(!Number.isNaN(Number(par)), message + " needs to be a number");
+        assert(par.trim(" ") !== "" && !Number.isNaN(Number(par)), message + " needs to be a number");
         assert(Number(par) >= 0, message + " needs to be positive");
     }
     private validateElectronicParameter(parameter:any) {
-<<<<<<< HEAD
-        console.log(parameter);
-        assert(validator.isUUID(parameter.id), "ProductId needs to be a uuid");
-=======
-
->>>>>>> 4fff962f22c078c239df2a88f49481df99c6bb3e
         Catalog.getInstance().validatePositiveNumber(parameter.weight, "Weight");
         assert(parameter.weight < 10000, "Weight must be less than 100000");
         assert(typeof parameter.modelNumber == "string", "Model Number needs to be a string");
