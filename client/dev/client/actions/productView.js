@@ -157,7 +157,7 @@ export const getBrandsFailure = (error) => {
 
 export const getBrands = () => {
     return function (dispatch, getState) {
-        return callApi('api/products/brands', 'get', undefined, `Bearer ${getState().authentication.token}`).then(
+        return callApi('api/products/brands', 'get').then(
             res => dispatch(getBrandSuccess(res)),
             error => dispatch(getBrandsFailure(error))
         );

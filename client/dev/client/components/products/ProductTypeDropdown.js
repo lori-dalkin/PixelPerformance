@@ -98,6 +98,7 @@ class ProductTypeDropdown extends Component {
                             name="maxWeight"
                             label="Max Weight"
                             type="number"
+                            min={0}
                             onChange={(event) => this.syncStateToInputValue("maxWeight", event)}
                             value={this.state.maxWeight}
                         />
