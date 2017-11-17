@@ -59,7 +59,7 @@ class ProductListItem extends Component{
           {userType === "Client" && pageType != "history" ? null :
             <Tooltip
               id="tooltip-controlled"
-              title={deleteLabel}
+              title={(returnDate != null || onDelete == null)?"Already Refunded":deleteLabel}
               onRequestClose={this.handleIconButtonRequestClose}
               enterDelay={300}
               leaveDelay={100}
