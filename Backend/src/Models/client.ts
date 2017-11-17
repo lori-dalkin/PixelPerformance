@@ -28,7 +28,7 @@ export class Client extends User {
     }
 
     public async delete(): Promise<boolean>{
-    return db.none("DELETE FROM clients WHERE id ='"+ this.id + "';")
+    return db.none("DELETE FROM clients CASCADE WHERE id ='"+ this.id + "';")
         .then(function () {
             return true;
         }).catch(function (err) {

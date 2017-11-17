@@ -91,6 +91,9 @@ class ProductViewDialog extends Component {
               { this.props.product.selectedProduct.touchscreen !== undefined &&
                 <span><strong>Touchscreen: </strong>{this.props.product.selectedProduct.touchscreen ? "Yes": "No"}<br/></span>
               }
+              { this.props.product.selectedProduct.camera !== undefined &&
+                <span><strong>Camera: </strong>{this.props.product.selectedProduct.camera ? "Yes": "No"}<br/></span>
+              }
               { this.props.product.selectedProduct.displaySize !== undefined &&
                 <span><strong>Display Size: </strong>{this.props.product.selectedProduct.displaySize}<br/></span>
               }

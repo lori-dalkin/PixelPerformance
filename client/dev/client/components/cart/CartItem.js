@@ -1,16 +1,19 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import Typography from 'material-ui/Typography';
 import { ListItem, ListItemText } from 'material-ui/List';
 import ShoppingBasket from 'material-ui-icons/ShoppingBasket';
 import Avatar from 'material-ui/Avatar';
 
+import { showCartDeleteDialog } from '../../actions/cart';
+
 class CartItem extends React.Component {
 	render() {
 		let displayDate = new Date(this.props.item.lockedUntil);
 		return (
 			<span>
-				<ListItem button>
+				<ListItem button onClick={() => this.props.showCartDeleteDialog(this.props.item)}>
 	        <Avatar>
 	          <ShoppingBasket />
 	        </Avatar>
@@ -30,6 +33,8 @@ const mapStateToProps = ({authentication, cart, snackbar}) => ({
 	snackbar
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+	showCartDeleteDialog
+};
 
-export default CartItem;
+export default connect(mapStateToProps, mapDispatchToProps)(CartItem);

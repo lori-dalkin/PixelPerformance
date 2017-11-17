@@ -107,7 +107,7 @@ export class WebPortal {
         router.post("/api/users/logout", this.logout);
         router.post("/api/users/", this.postUser);
         router.get("/api/users/", this.getAllClients);
-
+        router.delete("/api/users/", this.deleteClient);
 
         router.get("/api/products/", this.getProducts);
         router.get("/api/products/brands/", this.getBrands);
@@ -236,7 +236,6 @@ export class WebPortal {
 
     public logout(req, res) {
         res.send({ data: true });
-
     }
 
     public postUser(req, res) {
@@ -274,6 +273,19 @@ export class WebPortal {
       console.log(e);
       res.status = 500;
       res.send([]);
+    }
+  }
+
+  @beforeMethod(RoutingAdvice.requireClient)
+  public deleteClient(req, res){
+    try{
+      
+      res.send(UserManagement.getInstance().deleteClient(req.user.id));
+
+    }catch(e){
+      console.log(e);
+      res.status = 500;
+      res.send({error:'false'});
     }
   }
 
