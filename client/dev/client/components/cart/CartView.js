@@ -9,7 +9,8 @@ import { LinearProgress } from 'material-ui/Progress';
 
 import CartList from './CartList';
 import Checkout from './Checkout';
-import { fetchCartItems } from '../../actions/cart';
+import CartDeleteDialog from './CartDeleteDialog';
+import { fetchCartItems, hideCartDeleteDialog } from '../../actions/cart';
 
 const productPaperStyle = {
 	padding: '2em'
@@ -46,7 +47,8 @@ class CartView extends React.Component {
 							}
 							{ this.props.cart.isFetchingCart && <LinearProgress color="accent" style={{ width: '100%' }} /> }
 							{ !this.props.cart.isFetchingCart && !this.props.cart.checkedOut && <CartList items = {this.props.cart.inventory}/> }
-							{ this.props.cart.inventory.length > 0 && <Checkout/> }
+							{ this.props.cart.inventory.length > 0 && !this.props.cart.checkedOut && <Checkout/> }
+							<CartDeleteDialog open={this.props.cart.deleteDialogOpened} handleRequestClose={this.props.hideCartDeleteDialog} />
 						</Paper>
 					</Grid>
 				</Grid>
@@ -60,7 +62,8 @@ const mapStateToProps = ({cart}) => ({
 });
 
 const mapDispatchToProps = { 
-	fetchCartItems
+	fetchCartItems,
+	hideCartDeleteDialog
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CartView);

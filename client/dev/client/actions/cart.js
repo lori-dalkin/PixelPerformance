@@ -32,3 +32,22 @@ export const checkoutCart = () => {
 export const receiveCheckoutResult = (code) => {
 	return { type: actions.RECEIVE_CHECKOUT_CART_RESULT, code };
 }
+
+export const showCartDeleteDialog = (item) => {
+  return { type: actions.SHOW_DELETE_CART_ITEM, item };
+}
+
+export const hideCartDeleteDialog = () => {
+  return { type: actions.HIDE_DELETE_CART_ITEM };
+}
+
+export const removeCartItem = (item) => {
+  return (dispatch, getState) => {
+    if (getState().authentication && getState().authentication.token) {
+      return callApi(`api/carts/inventory/${item.serialNumber}`, 'delete', undefined, `Bearer ${getState().authentication.token}`).then(
+          res => dispatch(fetchCartItems()),
+          error => console.log(error)
+      );
+    }
+  };
+}
