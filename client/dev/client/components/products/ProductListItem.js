@@ -56,7 +56,7 @@ class ProductListItem extends Component{
           >
         	  <IconButton onClick={onClick} color='primary'> <DetailsIcon /></IconButton>
           </Tooltip>
-          {userType === "Client" && pageType != "history" ? null :
+          { (userType === "Admin" || pageType === "history") &&
             <Tooltip
               id="tooltip-controlled"
               title={(returnDate != null || onDelete == null)?"Already Refunded":deleteLabel}
@@ -86,7 +86,6 @@ class ProductListItem extends Component{
 };
 
 ProductListItem.propTypes = {
-  userType: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   brand: PropTypes.string.isRequired,
