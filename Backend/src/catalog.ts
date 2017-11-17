@@ -490,6 +490,7 @@ export class Catalog {
                 assert(typeof parameter.os == "string", "Operating System needs to be a string");
                 Catalog.getInstance().validatePositiveNumber(parameter.displaySize, "Display Size");
                 Catalog.getInstance().isWholeNumber(parameter.battery, "Battery");
+                assert((Number(parameter.battery)*10)%1 === 0,  "Battery has at most one decimal");
                 // assert(typeof parameter.camera == "boolean", "Camera needs to be a boolean"); // todo: typecast string of "camera" as boolean
                 // assert(typeof parameter.touchScreen == "boolean", "Touchscreen needs to be a boolean"); // todo: typecast as boolean
                 break;
@@ -502,6 +503,7 @@ export class Catalog {
                 Catalog.getInstance().validatePositiveNumber(parameter.displaySize, "Display Size");
                 assert(typeof parameter.dimensions == "string", "Dimensions needs to be a string");
                 Catalog.getInstance().isWholeNumber(parameter.battery, "Battery");
+                assert((Number(parameter.battery)*10)%1 === 0,  "Battery has at most one decimal");
                 // assert(typeof parameter.camera == "boolean", "Camera needs to be a boolean"); // todo: typecast to boolean
                 break;
             default:
