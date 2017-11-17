@@ -124,17 +124,8 @@ export class Cart {
      * Method to delete cart item and database item
      *********************************************************/
 
-    public async removeInventoryRecord(id: String): Promise<boolean> {
-        let inv: Inventory[] = this.inventory;
-        console.log(id);
-        for (let i = 0; i < this.getInventory().length; i ++){
-            if (this.getInventory()[i].getserialNumber() == id){
-                inv.splice(i, 1);
-                break;
-            }
-        }
-
-        return db.none("DELETE FROM bought_inventory WHERE \"serialNumber\" ='"+ id + "';")
+    public async returnInventoryRecord(id: String, date: Date): Promise<boolean> {
+        return db.none("UPDATE bought_inventory SET \"return_date\" = '"+ (date.toISOString()) +"' WHERE \"serialNumber\" ='"+ id + "';")
         .then(function () {
             return true;
         }).catch(function (err) {

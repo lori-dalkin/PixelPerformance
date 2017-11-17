@@ -113,7 +113,7 @@ CREATE TABLE bought_inventory(
 	"serialNumber" UUID,
 	"electronicID" UUID,
 	cart_id UUID REFERENCES cart(id) ON DELETE CASCADE,
-	PRIMARY KEY("serialNumber")
+	return_date timestamp
 );
 
 
