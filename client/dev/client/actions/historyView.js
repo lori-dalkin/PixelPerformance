@@ -42,6 +42,7 @@ export const getHistoryOfProducts = () => {
                             let product = {};
                             product = res.data[i].inventoryType;
                             product.serialNumber = res.data[i].serialNumber;
+                            product.returnDate = res.data[i].returnDate;
                             products.push(product);
                         }
 
