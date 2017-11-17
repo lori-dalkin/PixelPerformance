@@ -44,6 +44,8 @@ export const showSnackbar = () => { return { type: actions.SHOW_SNACKBAR }; }
 
 export const hideSnackbar = () => { return { type: actions.HIDE_SNACKBAR }; }
 
+export const customSnackbar = (message) => { return { type: actions.CUSTOM_SNACKBAR_MESSAGE, message: message }; }
+
 // -----------------------------------------------
 //             PRODUCT VIEW MODAL
 //------------------------------------------------

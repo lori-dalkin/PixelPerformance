@@ -35,6 +35,12 @@ class ProductFieldPresentationDialog extends Component {
         this.props.product.dropDownsProduct = this.state;
       });
     }
+
+    this.syncStateToCheckedValue = (field, event) => {
+      this.setState({ ...this.state, [field]: event.target.checked}, () => {
+        this.props.product.dropDownsProduct = this.state;
+      });
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -202,8 +208,8 @@ class ProductFieldPresentationDialog extends Component {
                                       <Checkbox
                                         id="camera"
                                         name="camera"
-                                        onChange={(event) => this.syncStateToInputValue("camera", event)}
-                                        value={this.state.camera}
+                                        checked={this.state.camera}
+                                        onChange={(event) => this.syncStateToCheckedValue("camera", event)}
                                       />
                                     }
                                     label="Camera"
@@ -215,8 +221,8 @@ class ProductFieldPresentationDialog extends Component {
                                       <Checkbox
                                         id="touchScreen"
                                         name="touchScreen"
-                                        onChange={(event) => this.syncStateToInputValue("touchScreen", event)}
-                                        value={this.state.touchScreen}
+                                        checked={this.state.touchscreen}
+                                        onChange={(event) => this.syncStateToCheckedValue("touchscreen", event)}
                                       />
                                     }
                                     label="Touch Screen"
@@ -253,8 +259,8 @@ class ProductFieldPresentationDialog extends Component {
                                       <Checkbox
                                         id="camera"
                                         name="camera"
-                                        onChange={(event) => this.syncStateToInputValue("camera", event)}
-                                        value={this.state.camera}
+                                        checked={this.state.camera}
+                                        onChange={(event) => this.syncStateToCheckedValue("camera", event)}
                                       />
                                     }
                                     label="Camera"
