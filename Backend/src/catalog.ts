@@ -37,6 +37,7 @@ export class Catalog {
         Promise.all(dataPromises).then( ()=>{
             Inventory.setElectronics(this.electronics);
             this.loadInventory();
+            this.getAllBrands();
         });
         
     }
@@ -449,6 +450,7 @@ export class Catalog {
         let numPages = Math.ceil(numProducts / numItems);
         return numPages;
     }
+
     private isTwoDigitNumber(par:any, message:string) {
         Catalog.getInstance().validatePositiveNumber(par, message);
         assert((Number(par)*100)%1 === 0, message + " has at most two decimals");
@@ -510,6 +512,15 @@ export class Catalog {
                 assert(false,"Electronic Type not valid");
                 break; 
         }
+    }
+
+    public getAllBrands(){
+        let brandSet = new Set();
+        for(let e of this.electronics)
+        {
+            brandSet.add(e.getBrand());
+        }
+        return brandSet;
     }
 }
 

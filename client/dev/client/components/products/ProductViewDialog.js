@@ -16,6 +16,7 @@ import RemoveCircleOutline from 'material-ui-icons/RemoveCircleOutline';
 import { addToInventory, removeFromInventory, fetchInventory } from '../../actions/adminProductActions';
 import { showModifyProduct } from '../../actions';
 import { addToCart } from '../../actions/clientProductActions';
+import { previousProduct, nextProduct } from '../../actions/productView';
 
 class ProductViewDialog extends Component {
 
@@ -48,6 +49,12 @@ class ProductViewDialog extends Component {
   }
 
 	render() {
+    let previousDisabled = this.props.product.products.length == 0 || Object.keys(this.props.product.selectedProduct).length == 0
+                            || (this.props.product.page == 1 && this.props.product.selectedProduct.id == this.props.product.products[0].id);
+    let nextDisabled = this.props.product.products.length == 0 || Object.keys(this.props.product.selectedProduct).length == 0
+                        || (this.props.product.page == Math.floor(this.props.product.numProducts / this.props.product.productsPerPage) + 1
+                        && this.props.product.selectedProduct.id == this.props.product.products[this.props.product.products.length - 1].id);
+
 		return (
 				<Dialog open={this.props.open} transition={Slide} onRequestClose={this.props.handleRequestClose}>
           <DialogTitle>{`Item ${this.props.product.selectedProduct.brand} ${this.props.product.selectedProduct.electronicType}`}</DialogTitle>
@@ -113,33 +120,37 @@ class ProductViewDialog extends Component {
             }
           </DialogContent>
           <DialogActions>
-           {this.props.authentication.userType === "Client" || !this.props.actions ? null :
-               <span>
-                 <Button onClick={ () => this.toggleInventoryView() } color='primary'>
+            { this.props.authentication.userType === "Client" || !this.props.actions ? null :
+              <span>
+                <Button onClick={ () => this.toggleInventoryView() } color='primary'>
                     { this.state.showInventory ? "Hide Inventory" : "Show Inventory" }
-                  </Button>
-                 <Button onClick={ () => this.props.showModifyProduct(this.props.product.selectedProduct) } color='primary'>
+                </Button>
+                <Button onClick={ () => this.props.showModifyProduct(this.props.product.selectedProduct) } color='primary'>
                   Modify
                 </Button>
-               </span>
-
-           }
-              {this.props.authentication.userType === "Admin" || !this.props.actions ? null :
-                  (this.props.product.inventoryCount > 0 ?
-                  <Button onClick={ () => this.props.addToCart(this.props.product.selectedProduct.id) } color='primary'>
-                      Add to Cart
-                  </Button>
-                          :
-                  <Button disabled color='primary'>
-                    Add to Cart
-                  </Button>
-                  )
-              }
-
-             <Button onClick={this.props.handleRequestClose} color="default">
-               Back
-             </Button>
-           </DialogActions>
+              </span>
+            }
+            { this.props.authentication.userType === "Admin" || !this.props.actions ? null :
+              ( this.props.product.inventoryCount > 0 ?
+                <Button onClick={ () => this.props.addToCart(this.props.product.selectedProduct.id) } color='primary'>
+                  Add to Cart
+                </Button>
+                :
+                <Button disabled color='primary'>
+                  Add to Cart
+                </Button>
+              )
+            }
+            <Button disabled={ previousDisabled } onClick={ () => this.props.previousProduct() } color='primary'>
+              Previous
+            </Button>
+            <Button disabled={ nextDisabled } onClick={ () => this.props.nextProduct() } color='primary'>
+              Next
+            </Button>
+            <Button onClick={this.props.handleRequestClose} color="default">
+              Back
+            </Button>
+          </DialogActions>
         </Dialog>
 		  )
 	}
@@ -156,7 +167,9 @@ const mapDispatchToProps = {
   addToInventory,
   removeFromInventory,
   addToCart,
-  fetchInventory
+  fetchInventory,
+  previousProduct,
+  nextProduct
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductViewDialog);
