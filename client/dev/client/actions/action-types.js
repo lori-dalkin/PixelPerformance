@@ -74,3 +74,6 @@ export const SET_USER_TYPE = "SET_USER_TYPE";
 export const DELETE_USER_TYPE = "DELETE_USER_TYPE";
 
 export const RESET_FILTERS = "RESET_FILTERS";
+
+export const GET_BRANDS = 'GET_BRANDS';
+export const GET_BRANDS_FAILURE = 'GET_BRANDS_FAILURE';

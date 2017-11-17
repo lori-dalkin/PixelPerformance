@@ -58,10 +58,14 @@ export const getProducts = () => {
                 // Add filter
                 if (getState().product.filterSet){
                     if (getState().product.filters.electronicType) {
-                        endPoint += `&type=${getState().product.filters.electronicType}`;
+                        if (getState().product.filters.electronicType !== 'Type') {
+                            endPoint += `&type=${getState().product.filters.electronicType}`;
+                        }
                     }
                     if(getState().product.filters.brand){
-                        endPoint += `&brand=${getState().product.filters.brand}`;
+                        if(getState().product.filters.brand !== 'Brand'){
+                            endPoint += `&brand=${getState().product.filters.brand}`;
+                        }
                     }
                     if(getState().product.filters.priceLow){
                         endPoint += `&priceLow=${getState().product.filters.priceLow}`;
@@ -131,6 +135,29 @@ export const setProduct = (product) => {
         product: product
     };
 }
+
+export const getBrandSuccess = (brands) => {
+    return {
+        type: actions.GET_BRANDS,
+        brands: brands
+    };
+}
+
+export const getBrandsFailure = (error) => {
+    return {
+        type: actions.GET_BRANDS_FAILURE,
+        error: error
+    };
+}
+
+export const getBrands = () => {
+    return function (dispatch, getState) {
+        return callApi('api/products/brands', 'get', undefined, `Bearer ${getState().authentication.token}`).then(
+            res => dispatch(getBrandSuccess(res)),
+            error => dispatch(getBrandsFailure(error))
+        );
+    };
+};
 
 // -----------------------------------------------
 //               PAGINATION

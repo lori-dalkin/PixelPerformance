@@ -14,31 +14,25 @@ const eTypes = [
     'Tablet'
 ];
 
-const brands = [
-    "Acer",
-    "Apple",
-    "Asus",
-    "Dell",
-    "HP",
-    "Lenovo",
-    "LG",
-    "Samsung"
-];
-
 class ProductTypeDropdown extends Component {
 
     constructor(props) {
         super(props);
-        this.state = this.props.product.filters;
-
+        this.state = {
+            brand: this.props.product.filters.brand,
+            electronicType: this.props.product.filters.electronicType,
+            priceLow: this.props.product.filters.priceLow,
+            priceHigh: this.props.product.filters.priceHigh,
+            maxSize: this.props.product.filters.maxSize,
+            maxWeight: this.props.product.filters.maxWeight,
+        }
         this.syncStateToInputValue = this.syncStateToInputValue.bind(this);
-
     }
 
     syncStateToInputValue = (field, event) => {
         this.props.setPage(1);
         let filter;
-        this.setState({...this.state, [field]: event.target.value}, () => {
+        this.setState({[field]: event.target.value}, () => {
             filter = this.state;
             this.props.setProductFilter(filter);
             this.props.getProducts();
@@ -53,9 +47,9 @@ class ProductTypeDropdown extends Component {
                         <Select name="electronicType"
                                 value={this.state.electronicType}
                                 onChange={(event) => this.syncStateToInputValue("electronicType", event)}
-                                style={{paddingLeft: '20px'}}
+                                style={{marginLeft: '1rem'}}
                         >
-                            <MenuItem value="">All</MenuItem>
+                            <MenuItem value="Type">Types</MenuItem>
                             {eTypes.map((type, index) => (
                                 <MenuItem key={index} value={type}>
                                     {type}
@@ -67,14 +61,15 @@ class ProductTypeDropdown extends Component {
                         <Select name="brand"
                                 value={this.state.brand}
                                 onChange={(event) => this.syncStateToInputValue("brand", event)}
-                                style={{paddingLeft: '20px'}}
                         >
-                            <MenuItem value="">All</MenuItem>
-                            {brands.map((brand, index) => (
+                            <MenuItem value="Brand">Brands</MenuItem>
+                            { this.props.product.brands.length > 0 &&
+                            this.props.product.brands.map((brand, index) => (
                                 <MenuItem key={index} value={brand}>
                                     {brand}
                                 </MenuItem>
-                            ))}
+                            ))
+                            }
                         </Select>
                     </Grid>
                     <Grid item xs={2}>

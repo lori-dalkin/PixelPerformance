@@ -21,12 +21,12 @@ const defaultDropDownsProduct = {
     size: ''
 };
 const defaultFilters = {
-    electronicType: '',
+    electronicType: 'Type',
     priceLow: '',
     priceHigh: '',
     maxSize: '',
     maxWeight: '',
-    brand: ''
+    brand: 'Brand'
 };
 
 const initialState = {
@@ -58,7 +58,8 @@ const initialState = {
     selectedProduct: {},
     page: 1,
     productsPerPage: 10,
-    numProducts: 0
+    numProducts: 0,
+    brands: []
 };
 
 export default function (state = initialState, action) {
@@ -272,6 +273,17 @@ export default function (state = initialState, action) {
                 ...state,
                 filters: defaultFilters,
             }
+        case actions.GET_BRANDS:
+            return {
+                ...state,
+                brands: action.brands,
+            }
+        case actions.GET_BRANDS_FAILURE:
+            return {
+                ...state,
+                error: true
+            };
+            break;
         default:
             return state;
     }
