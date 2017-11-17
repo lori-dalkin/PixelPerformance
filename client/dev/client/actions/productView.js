@@ -1,5 +1,6 @@
 import * as actions from './action-types';
 import callApi from '../utils/apiCaller';
+import { fetchInventory } from './adminProductActions';
 
 // -----------------------------------------------
 //               PRODUCT VIEW
@@ -85,11 +86,13 @@ export const previousProduct = () => {
             dispatch(setPage(getState().product.page - 1));
             dispatch(getProducts()).then(() => {
                 dispatch(setProduct(getState().product.products[getState().product.products.length - 1]));
+                dispatch(fetchInventory(getState().product.products[getState().product.products.length - 1].id));
             });
         } else {
             for (let i = 0; i < getState().product.products.length; i++) {
                 if (getState().product.selectedProduct.id == getState().product.products[i].id) {
                     dispatch(setProduct(getState().product.products[i - 1]));
+                    dispatch(fetchInventory(getState().product.products[i - 1].id));
                     break;
                 }
             }
@@ -103,11 +106,13 @@ export const nextProduct = () => {
             dispatch(setPage(getState().product.page + 1));
             dispatch(getProducts()).then(() => {
                 dispatch(setProduct(getState().product.products[0]));
+                dispatch(fetchInventory(getState().product.products[0].id));
             });
         } else {
             for (let i = 0; i < getState().product.products.length; i++) {
                 if (getState().product.selectedProduct.id == getState().product.products[i].id) {
                     dispatch(setProduct(getState().product.products[i + 1]));
+                    dispatch(fetchInventory(getState().product.products[i + 1].id));
                     break;
                 }
             }
