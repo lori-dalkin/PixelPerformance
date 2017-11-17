@@ -86,4 +86,5 @@ export class Client extends User {
         return Client.name;
     }
 
+    async modify(): Promise<boolean> { return Promise.resolve(true)};
 }

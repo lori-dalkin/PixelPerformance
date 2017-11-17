@@ -1,4 +1,5 @@
 import {ModelModifyStrategy} from "../Strategies/modelmodifystrategy";
+import {Igateway} from "./igateway";
 
 enum ElectronicTypes {
     Desktop = "Desktop",
@@ -7,7 +8,7 @@ enum ElectronicTypes {
     Tablet = "Tablet"
 }
 
-export abstract class Electronic {
+export abstract class Electronic implements Igateway{
     protected id: string;
 	protected weight: number ;
     protected modelNumber: string;

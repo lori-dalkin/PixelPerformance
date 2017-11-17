@@ -1,6 +1,7 @@
 import * as bcrypt from "bcrypt";
+import {Igateway} from "./igateway";
 
-export abstract class User {
+export abstract class User implements Igateway{
 	public id: string;
 	protected fname: string;
 	protected lname: string;
@@ -46,4 +47,7 @@ export abstract class User {
 	}
 
 	abstract getType(): string;
+    abstract async save(): Promise<boolean>;
+    abstract async modify(): Promise<boolean>;
+    abstract async delete(): Promise<boolean>;
 }

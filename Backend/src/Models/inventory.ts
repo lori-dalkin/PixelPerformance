@@ -2,10 +2,11 @@ import { dbconnection } from "./dbconnection";
 import { Electronic} from "./electronic";
 import { Cart } from "./cart";
 import {isUndefined} from "util";
+import {Igateway} from "./igateway";
 
 var db = new dbconnection().getDBConnector();
 
-export class Inventory {
+export class Inventory implements Igateway{
 
     private static electronics: Electronic[] = new Array<Electronic>();
     private serialNumber: string;
@@ -36,6 +37,8 @@ export class Inventory {
 
     public setReturnDate(returnDate:Date): void{this.returnDate = returnDate;}
     public getReturnDate(): Date{return this.returnDate;}
+
+    async modify(): Promise<boolean> { return Promise.resolve(true)};
 
     public static setElectronics(eletronics:Electronic[]):void{
         Inventory.electronics = eletronics;
