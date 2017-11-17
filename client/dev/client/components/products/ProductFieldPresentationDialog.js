@@ -8,6 +8,8 @@ import Dialog, {
   DialogTitle,
 } from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
+import Checkbox from 'material-ui/Checkbox';
+import { FormControlLabel } from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import { MenuItem } from 'material-ui/Menu';
 import Slide from 'material-ui/transitions/Slide';
@@ -195,23 +197,29 @@ class ProductFieldPresentationDialog extends Component {
                                   />
                                 </Grid>
                                 <Grid item xs={6}>
-                                  <TextField
-                                    style={fullWidthStyle}
-                                    id="camera"
-                                    name="camera"
+                                  <FormControlLabel
+                                    control={
+                                      <Checkbox
+                                        id="camera"
+                                        name="camera"
+                                        onChange={(event) => this.syncStateToInputValue("camera", event)}
+                                        value={this.state.camera}
+                                      />
+                                    }
                                     label="Camera"
-                                    onChange={(event) => this.syncStateToInputValue("camera", event)}
-                                    value={this.state.camera}
                                   />
                                 </Grid>
                                 <Grid item xs={6}>
-                                  <TextField
-                                    style={fullWidthStyle}
-                                    id="touchScreen"
-                                    name="touchScreen"
+                                  <FormControlLabel
+                                    control={
+                                      <Checkbox
+                                        id="touchScreen"
+                                        name="touchScreen"
+                                        onChange={(event) => this.syncStateToInputValue("touchScreen", event)}
+                                        value={this.state.touchScreen}
+                                      />
+                                    }
                                     label="Touch Screen"
-                                    onChange={(event) => this.syncStateToInputValue("touchScreen", event)}
-                                    value={this.state.touchScreen}
                                   />
                                 </Grid>
                               </Grid>
@@ -240,13 +248,16 @@ class ProductFieldPresentationDialog extends Component {
                                   />
                                 </Grid>
                                 <Grid item xs={6}>
-                                  <TextField
-                                    style={fullWidthStyle}
-                                    id="camera"
-                                    name="camera"
+                                  <FormControlLabel
+                                    control={
+                                      <Checkbox
+                                        id="camera"
+                                        name="camera"
+                                        onChange={(event) => this.syncStateToInputValue("camera", event)}
+                                        value={this.state.camera}
+                                      />
+                                    }
                                     label="Camera"
-                                    onChange={(event) => this.syncStateToInputValue("camera", event)}
-                                    value={this.state.camera}
                                   />
                                 </Grid>
                                 <Grid item xs={6}>

@@ -51,10 +51,12 @@ export const addProduct = (body) => {
 
                 body = {
                     ...body,
+                    camera: body.camera == "on",
                     electronictype: body.electronicType,
                     displaysize: body.displaySize,
                     harddrive: body.hardDrive,
-                    touchscreen: body.touchScreen
+                    touchscreen: body.touchScreen == "on",
+                    touchScreen: body.touchScreen == "on"
                 };
 
                 return callApi('api/products', 'post', body, `Bearer ${getState().authentication.token}`).then(
