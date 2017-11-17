@@ -12,12 +12,14 @@ export class Inventory {
 	private inventoryType: Electronic;
     private lockedUntil: Date;
     private cartid: string;
+    private returnDate: Date;
 
     constructor(serialNumber: string, inventoryType: Electronic) {
         this.serialNumber = serialNumber;
         this.inventoryType = inventoryType;
         this.lockedUntil = null;
         this.cartid = null;
+        this.returnDate = null;
     }
 
     public setserialNumber(serialNumber:string): void{this.serialNumber = serialNumber;}
@@ -26,11 +28,14 @@ export class Inventory {
     public setinventoryType(inventoryType:Electronic): void{this.inventoryType = inventoryType;}
     public getinventoryType():Electronic{return this.inventoryType;}
 
-    public setLockedUntil(lockedUntil:Date){this.lockedUntil = lockedUntil};
-    public getLockedUntil():Date{return this.lockedUntil};
+    public setLockedUntil(lockedUntil:Date){this.lockedUntil = lockedUntil;}
+    public getLockedUntil():Date{return this.lockedUntil;}
 
-    public setCartId(cartid:string){this.cartid = cartid};
-    public getCartId():string{return this.cartid};
+    public setCartId(cartid:string){this.cartid = cartid;}
+    public getCartId():string{return this.cartid;}
+
+    public setReturnDate(returnDate:Date): void{this.returnDate = returnDate;}
+    public getReturnDate(): Date{return this.returnDate;}
 
     public static setElectronics(eletronics:Electronic[]):void{
         Inventory.electronics = eletronics;
@@ -87,14 +92,25 @@ export class Inventory {
      * Method to return all bought Inventories saved in the database
      *****************************************************************/
     public static async findAllPurchased(): Promise<{[key: string]: Inventory[]}>{
+        const timeout = ms => new Promise(res => setTimeout(res, ms));
+        await timeout(1000);
+
         return db.many('SELECT * FROM bought_inventory;')
             .then(function(rows) {
                 let inventories: { [key: string]: Inventory[]} = {};
+
                 for(let i=0; i < rows.length; i++) {
                     if (inventories[rows[i].cart_id] == null){
                         inventories[rows[i].cart_id] = new Array<Inventory>();
                     }
-                    inventories[rows[i].cart_id].push(new Inventory(rows[i].serialNumber, Inventory.getProduct(rows[i].electronicID)));
+
+                    let currInventory: Inventory = new Inventory(rows[i].serialNumber, Inventory.getProduct(rows[i].electronicID));
+
+                    if (rows[i].return_date != null) {
+                        currInventory.setReturnDate(new Date(rows[i].return_date));
+                    }
+
+                    inventories[rows[i].cart_id].push(currInventory);
                 }
                 return inventories;
             }).catch(function (err) {
@@ -106,8 +122,9 @@ export class Inventory {
     public static getProduct(productId:string): Electronic {
 		let elecIterator = Inventory.getElectronics();
 		for(var iter = 0; iter < elecIterator.length; iter++){
-			if(productId == elecIterator[iter].getId())
+			if(productId == elecIterator[iter].getId()) {
 				return elecIterator[iter];
+            }
 		}
 		return null;
     }
