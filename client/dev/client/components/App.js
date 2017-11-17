@@ -51,7 +51,7 @@ class App extends Component {
 		if(userType !== undefined){
 			this.props.setUserType(userType);
 		}else {
-      this.props.deleteUserType();
+      		this.props.deleteUserType();
 		}
 	}
 
