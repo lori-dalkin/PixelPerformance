@@ -111,4 +111,15 @@ export class UserManagement {
         }
         return clients
     }
+
+    /**************************************
+    * Function to delete a client
+     **************************************/
+
+    public deleteClient(id): boolean {
+        let client: Client = this.getAllClients().find(client => client.id === id);
+        this.users = this.users.filter(user => user.id !== id);
+        client.delete();
+        return true;
+    }
 }
