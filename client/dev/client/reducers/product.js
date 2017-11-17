@@ -130,7 +130,8 @@ export default function (state = initialState, action) {
                 addProduct: {
                     ...state.addProduct,
                     error: false,
-                    addingProduct: false
+                    addingProduct: false,
+                    addProductOpen: false
                 }
             };
             break;
@@ -183,7 +184,8 @@ export default function (state = initialState, action) {
                 modifyProduct: {
                     ...state.modifyProduct,
                     modifyingProduct: false,
-                    error: false
+                    error: false,
+                    modifyProductOpen: false
                 }
             };
             break;
