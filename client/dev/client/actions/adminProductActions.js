@@ -29,7 +29,13 @@ export const modifyProduct = (body) => {
                             dispatch(modifyProductSuccessSnackbar());
                             dispatch(getProducts());
                         } else {
-                            dispatch(customSnackbar(res.error.message));
+                            let message = 'Error in one or more input fields.';
+
+                            if (res.error && res.error.message) {
+                                message = res.error.message;
+                            }
+
+                            dispatch(customSnackbar(message));
                             dispatch(modifyProductFailure());
                         }
                     },
@@ -82,7 +88,13 @@ export const addProduct = (body) => {
                             dispatch(addProductSuccessSnackbar());
                             dispatch(getProducts());
                         } else {
-                            dispatch(customSnackbar(res.error.message));
+                            let message = 'Error in one or more input fields.';
+
+                            if (res.error && res.error.message) {
+                                message = res.error.message;
+                            }
+
+                            dispatch(customSnackbar(message));
                             dispatch(addProductFailure());
                         }
                     },
