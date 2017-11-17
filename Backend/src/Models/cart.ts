@@ -87,7 +87,7 @@ export class Cart {
     @afterMethod(function (meta) {
         assert(meta.result != null);
     })
-    public async saveCart(): Promise<Boolean> {
+    public async save(): Promise<Boolean> {
         let storeOrNot = new Boolean;
         var cart = this;
         let dataPromises = new Array<Promise<void>>();

@@ -6,6 +6,7 @@ import  validator = require('validator');
 import assert = require('assert');
 import * as uuid from "uuid";
 import {isUndefined} from "util";
+import {UnitOfWork} from "./UnitOfWork";
 
 
 export class PurchaseManagement {
@@ -14,11 +15,13 @@ export class PurchaseManagement {
 	catalog: Catalog;
 	activeCarts: Cart[];
 	purchaseRecords: Cart[];
+	unitOfWork: UnitOfWork;
 
 	private constructor() {
 		this.catalog = Catalog.getInstance();
 		this.activeCarts = [];
 		this.purchaseRecords = [];
+		this.unitOfWork = UnitOfWork.getInstance();
 		let dataPromises = new Array<Promise<Cart[]>>();
 
 		dataPromises.push(Cart.findAllRecords());
@@ -218,6 +221,7 @@ export class PurchaseManagement {
 
 		//Modify the cart to remove the inventory from its records
 		console.log("Modifying db");
+		let uow: UnitOfWork = this.unitOfWork;
 		for (let i=0; i<allPurchases.length; i++){
 			if (allPurchases[i].getId() == modifiedCartId){
 				allPurchases[i].returnInventoryRecord(serialNumber, dateReturned).then((data) => {
@@ -225,10 +229,13 @@ export class PurchaseManagement {
 				});
                 if (returnSuccess) {
                     availableInventory.returnInventory(returningInv);
-                    returningInv.save();
+                    uow.registerNew(returningInv);
+                    //returningInv.save();
 
                     if (allPurchases[i].getInventory().length == 0){
-                        allPurchases[i].delete();
+                    	let emptyCart: Cart = allPurchases[i];
+                    	uow.registerDeleted(emptyCart);
+                        //allPurchases[i].delete();
                     }
                     return returnSuccess;
                 }
@@ -255,6 +262,7 @@ export class PurchaseManagement {
 	})
 	public checkout(userId: string):void{
 		let cart:Cart =  this.findCart(userId);
+		let uow: UnitOfWork = this.unitOfWork;
 		for(let i=0; i< this.activeCarts.length;i++){
 			if(this.activeCarts[i].getUserId() == userId){
 				cart = this.activeCarts.splice(i, 1)[0];
@@ -263,10 +271,13 @@ export class PurchaseManagement {
 		}
 		this.purchaseRecords.push(cart);
 		for(let inventory of cart.getInventory()){
+			let invtodelete: Inventory = inventory;
 			this.catalog.checkoutInventory(inventory.getserialNumber());
-			inventory.delete(); //deletes the bought inventory from the inventories table in DB
+			uow.registerDeleted(invtodelete);
+			//inventory.delete(); //deletes the bought inventory from the inventories table in DB
 		}
-		cart.saveCart();
+		uow.registerNew(cart);
+		//cart.save();
 		this.startTransaction(userId);
 	}
 

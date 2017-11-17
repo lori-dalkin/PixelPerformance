@@ -6,6 +6,7 @@ import { dbconnection } from "./Models/dbconnection"
 import {afterMethod, beforeInstance, beforeMethod} from 'kaop-ts'
 import  validator = require('validator');
 import assert = require('assert');
+import {UnitOfWork} from "./UnitOfWork";
 
 var db = new dbconnection().getDBConnector();
 
@@ -13,9 +14,11 @@ export class UserManagement {
 
     private static _instance: UserManagement;
 	users: User[];
+	unitOfWork: UnitOfWork;
 
 	private constructor(){
 		this.users = [];
+		this.unitOfWork = UnitOfWork.getInstance();
 		//Load all entities from the database
 		this.loadClient();
 		this.loadAdmin();
@@ -93,8 +96,9 @@ export class UserManagement {
     public addClient(data): boolean {
         let client: Client;
         client = new Client(uuid.v1(), data.fname, data.lname, data.email, data.password, data.address, data.phone);
-        client.save();
+        //client.save();
         this.users.push(client);
+        this.unitOfWork.registerNew(client);
         return true;
     }
 
