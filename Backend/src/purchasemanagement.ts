@@ -6,7 +6,7 @@ import  validator = require('validator');
 import assert = require('assert');
 import * as uuid from "uuid";
 import {isUndefined} from "util";
-import {UnitOfWork} from "./UnitOfWork";
+import {UnitOfWork} from "./unitofwork";
 
 
 export class PurchaseManagement {
@@ -230,12 +230,10 @@ export class PurchaseManagement {
                 if (returnSuccess) {
                     availableInventory.returnInventory(returningInv);
                     uow.registerNew(returningInv);
-                    //returningInv.save();
 
                     if (allPurchases[i].getInventory().length == 0){
                     	let emptyCart: Cart = allPurchases[i];
                     	uow.registerDeleted(emptyCart);
-                        //allPurchases[i].delete();
                     }
                     return returnSuccess;
                 }
@@ -274,10 +272,8 @@ export class PurchaseManagement {
 			let invtodelete: Inventory = inventory;
 			this.catalog.checkoutInventory(inventory.getserialNumber());
 			uow.registerDeleted(invtodelete);
-			//inventory.delete(); //deletes the bought inventory from the inventories table in DB
 		}
 		uow.registerNew(cart);
-		//cart.save();
 		this.startTransaction(userId);
 	}
 

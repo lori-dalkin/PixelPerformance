@@ -243,7 +243,6 @@ export class WebPortal {
     public postUser(req, res) {
       try{
         let userSuccess = UserManagement.getInstance().addClient(req.body);
-        console.log(UnitOfWork.getInstance().getNewProducts());
         UnitOfWork.getInstance().commit();
         res.send({data: userSuccess});
       }catch (e) {
@@ -326,7 +325,7 @@ export class WebPortal {
     @beforeMethod(RoutingAdvice.requireAdmin)
     public postProduct(req, res) {
         try {
-            Catalog.getInstance().addProduct(req.body)
+            Catalog.getInstance().addProduct(req.body);
             UnitOfWork.getInstance().commit();
             res.send({ data: true });
         }

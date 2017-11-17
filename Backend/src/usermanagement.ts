@@ -6,7 +6,7 @@ import { dbconnection } from "./Models/dbconnection"
 import {afterMethod, beforeInstance, beforeMethod} from 'kaop-ts'
 import  validator = require('validator');
 import assert = require('assert');
-import {UnitOfWork} from "./UnitOfWork";
+import {UnitOfWork} from "./unitofwork";
 
 var db = new dbconnection().getDBConnector();
 
