@@ -472,45 +472,37 @@ export class Catalog {
         assert(modify || !Catalog.getInstance().modelNumberExists(parameter.modelNumber),"Model Number already exists");
         let eType:string = parameter.electronicType;
         assert(typeof eType == "string", "Electronic Type needs to be a string");
-        switch(eType)
-        {
-            case "Monitor":
-                Catalog.getInstance().validatePositiveNumber(parameter.size, "Size");
-                break;
-            case "Desktop":
-                assert(typeof parameter.processor == "string", "Processor needs to be a string");
-                Catalog.getInstance().isWholeNumber(parameter.ram, "Ram");
-                Catalog.getInstance().isWholeNumber(parameter.cpus, "Number of CPU's");
-                Catalog.getInstance().isWholeNumber(parameter.hardDrive, "Hard Drive");
-                assert(typeof parameter.os == "string", "Operating System needs to be a string");
-                break;
-            case "Laptop":
-                assert(typeof parameter.processor == "string", "Processor needs to be a string");
-                Catalog.getInstance().isWholeNumber(parameter.ram, "Ram");
-                Catalog.getInstance().isWholeNumber(parameter.cpus, "Number of CPU's");
-                Catalog.getInstance().isWholeNumber(parameter.hardDrive, "Hard Drive");
-                assert(typeof parameter.os == "string", "Operating System needs to be a string");
-                Catalog.getInstance().validatePositiveNumber(parameter.displaySize, "Display Size");
-                Catalog.getInstance().isWholeNumber(parameter.battery, "Battery");
-                assert((Number(parameter.battery)*10)%1 === 0,  "Battery has at most one decimal");
-                // assert(typeof parameter.camera == "boolean", "Camera needs to be a boolean"); // todo: typecast string of "camera" as boolean
-                // assert(typeof parameter.touchScreen == "boolean", "Touchscreen needs to be a boolean"); // todo: typecast as boolean
-                break;
-            case "Tablet":
-                assert(typeof parameter.processor == "string", "Processor needs to be a string");
-                Catalog.getInstance().isWholeNumber(parameter.ram, "Ram");
-                Catalog.getInstance().isWholeNumber(parameter.cpus, "Number of CPU's");
-                Catalog.getInstance().isWholeNumber(parameter.hardDrive, "Hard Drive");
-                assert(typeof parameter.os == "string", "Operating System needs to be a string");
-                Catalog.getInstance().validatePositiveNumber(parameter.displaySize, "Display Size");
-                assert(typeof parameter.dimensions == "string", "Dimensions needs to be a string");
-                Catalog.getInstance().isWholeNumber(parameter.battery, "Battery");
-                assert((Number(parameter.battery)*10)%1 === 0,  "Battery has at most one decimal");
-                // assert(typeof parameter.camera == "boolean", "Camera needs to be a boolean"); // todo: typecast to boolean
-                break;
-            default:
-                assert(false,"Electronic Type not valid");
-                break; 
+        if(eType === "Monitor") {
+            Catalog.getInstance().validatePositiveNumber(parameter.size, "Size");
+        }
+        else {
+            assert(typeof parameter.processor == "string", "Processor needs to be a string");
+            Catalog.getInstance().isWholeNumber(parameter.ram, "Ram");
+            Catalog.getInstance().isWholeNumber(parameter.cpus, "Number of CPU's");
+            Catalog.getInstance().isWholeNumber(parameter.hardDrive, "Hard Drive");
+            assert(typeof parameter.os == "string", "Operating System needs to be a string");
+            switch(eType) {
+                
+                case "Desktop":
+                    break;
+                case "Laptop":
+                case "Tablet":
+                    Catalog.getInstance().validatePositiveNumber(parameter.displaySize, "Display Size");
+                    Catalog.getInstance().isWholeNumber(parameter.battery, "Battery");
+                    assert((Number(parameter.battery)*10)%1 === 0,  "Battery has at most one decimal");
+                    if(eType === "Laptop") {
+                        assert(typeof parameter.camera == "boolean", "Camera needs to be a boolean"); // todo: typecast string of "camera" as boolean
+                        assert(typeof parameter.touchScreen == "boolean", "Touchscreen needs to be a boolean"); // todo: typecast as boolean
+                    }
+                    else if(eType === "Tablet") {
+                        assert(typeof parameter.dimensions == "string", "Dimensions needs to be a string");
+                        assert(typeof parameter.camera == "boolean", "Camera needs to be a boolean"); // todo: typecast to boolean
+                    }
+                    break;
+                default:
+                    assert(false,"Electronic Type not valid");
+                    break; 
+            }
         }
     }
 
