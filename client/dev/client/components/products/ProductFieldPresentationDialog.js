@@ -139,11 +139,11 @@ class ProductFieldPresentationDialog extends Component {
                       <Grid item xs={6}>
                         <TextField
                           style={fullWidthStyle}
-                          id="cpu"
-                          name="cpu"
+                          id="cpus"
+                          name="cpus"
                           label="CPUs"
-                          onChange={(event) => this.syncStateToInputValue("cpu", event)}
-                          value={this.state.cpu}
+                          onChange={(event) => this.syncStateToInputValue("cpus", event)}
+                          value={this.state.cpus}
                         />
                       </Grid>
                       <Grid item xs={6}>

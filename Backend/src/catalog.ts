@@ -254,7 +254,9 @@ export class Catalog {
 	* Function to add a new product
 	 ********************************************************/
     @beforeMethod(function(meta){
-		assert(meta.args[0] != null,  "Product data cannot be null");
+        assert(meta.args[0] != null,  "Product data cannot be null");
+        Catalog.getInstance().validateElectronicParameter(meta.args[0], false);
+        //console.log(typeof meta.args[0].getWeight() == "number");
 	})
 	@afterMethod(function(meta) {
         //compare most recent object with object sent to function
@@ -337,6 +339,11 @@ export class Catalog {
     /*******************************************************************
     * Function to update data fields in existing product specifications
      *******************************************************************/
+    @beforeMethod(function(meta){
+        assert(meta.args[0] != null,  "Product data cannot be null");
+        Catalog.getInstance().validateElectronicParameter(meta.args[1], true);
+        //console.log(typeof meta.args[0].getWeight() == "number");
+	})
     public async modifyProduct(electronicID: string, data): Promise<boolean> {
         console.log(data);
         for(let index = 0; index < this.electronics.length; index++) {
@@ -405,7 +412,14 @@ export class Catalog {
         }
         return numMatching;
     }
-
+    private modelNumberExists(modelNum: string): Boolean {
+        for(let product of this.electronics) {
+            if(product.getModelNumber() === modelNum) {
+                return true;
+            }
+        }
+        return false;
+    }
     private productExists(productId: string): Boolean {
         for(let product of this.electronics) {
             if(product.getId() == productId) {
@@ -435,6 +449,69 @@ export class Catalog {
         }
         let numPages = Math.ceil(numProducts / numItems);
         return numPages;
+    }
+
+    private isTwoDigitNumber(par:any, message:string) {
+        Catalog.getInstance().validatePositiveNumber(par, message);
+        assert((Number(par)*100)%1 === 0, message + " has at most two decimals");
+    }
+    private isWholeNumber(par:any, message:string) {
+        Catalog.getInstance().validatePositiveNumber(par, message);
+        assert(Number(par)%1 === 0, message + " needs to be an integer");
+    }
+    private validatePositiveNumber(par:any, message:string) {
+        assert((typeof par == "number" || par.trim(" ") !== "") && !Number.isNaN(Number(par)), message + " needs to be a number");
+        assert(Number(par) >= 0, message + " needs to be positive");
+    }
+    private validateElectronicParameter(parameter:any, modify:boolean) {
+        Catalog.getInstance().isTwoDigitNumber(parameter.weight, "Weight");
+        assert(parameter.weight < 100, "Weight must be less than 100");
+        assert(typeof parameter.modelNumber == "string", "Model Number needs to be a string");
+        assert(typeof parameter.brand == "string", "Brand needs to be a string");
+        Catalog.getInstance().isTwoDigitNumber(parameter.price, "Price");
+        assert(modify || !Catalog.getInstance().modelNumberExists(parameter.modelNumber),"Model Number already exists");
+        let eType:string = parameter.electronicType;
+        assert(typeof eType == "string", "Electronic Type needs to be a string");
+        switch(eType)
+        {
+            case "Monitor":
+                Catalog.getInstance().validatePositiveNumber(parameter.size, "Size");
+                break;
+            case "Desktop":
+                assert(typeof parameter.processor == "string", "Processor needs to be a string");
+                Catalog.getInstance().isWholeNumber(parameter.ram, "Ram");
+                Catalog.getInstance().isWholeNumber(parameter.cpus, "Number of CPU's");
+                Catalog.getInstance().isWholeNumber(parameter.hardDrive, "Hard Drive");
+                assert(typeof parameter.os == "string", "Operating System needs to be a string");
+                break;
+            case "Laptop":
+                assert(typeof parameter.processor == "string", "Processor needs to be a string");
+                Catalog.getInstance().isWholeNumber(parameter.ram, "Ram");
+                Catalog.getInstance().isWholeNumber(parameter.cpus, "Number of CPU's");
+                Catalog.getInstance().isWholeNumber(parameter.hardDrive, "Hard Drive");
+                assert(typeof parameter.os == "string", "Operating System needs to be a string");
+                Catalog.getInstance().validatePositiveNumber(parameter.displaySize, "Display Size");
+                Catalog.getInstance().isWholeNumber(parameter.battery, "Battery");
+                assert((Number(parameter.battery)*10)%1 === 0,  "Battery has at most one decimal");
+                // assert(typeof parameter.camera == "boolean", "Camera needs to be a boolean"); // todo: typecast string of "camera" as boolean
+                // assert(typeof parameter.touchScreen == "boolean", "Touchscreen needs to be a boolean"); // todo: typecast as boolean
+                break;
+            case "Tablet":
+                assert(typeof parameter.processor == "string", "Processor needs to be a string");
+                Catalog.getInstance().isWholeNumber(parameter.ram, "Ram");
+                Catalog.getInstance().isWholeNumber(parameter.cpus, "Number of CPU's");
+                Catalog.getInstance().isWholeNumber(parameter.hardDrive, "Hard Drive");
+                assert(typeof parameter.os == "string", "Operating System needs to be a string");
+                Catalog.getInstance().validatePositiveNumber(parameter.displaySize, "Display Size");
+                assert(typeof parameter.dimensions == "string", "Dimensions needs to be a string");
+                Catalog.getInstance().isWholeNumber(parameter.battery, "Battery");
+                assert((Number(parameter.battery)*10)%1 === 0,  "Battery has at most one decimal");
+                // assert(typeof parameter.camera == "boolean", "Camera needs to be a boolean"); // todo: typecast to boolean
+                break;
+            default:
+                assert(false,"Electronic Type not valid");
+                break; 
+        }
     }
 
     public getAllBrands(){
