@@ -48,7 +48,7 @@ class ProductPage extends React.Component {
 									<ProductTypeDropdown />
 								</Grid>
 							</Grid>
-							{ this.props.product.isFetching && <LinearProgress color="accent" style={{ width: '100%' }} /> }
+							{ this.props.product.isFetching && <LinearProgress color="accent" style={{ width: '100%', marginTop: '2rem' }} /> }
 							{ !this.props.product.isFetching && <FilteredProductList /> }
 						</Paper>
 					</Grid>
