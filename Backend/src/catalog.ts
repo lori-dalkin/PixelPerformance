@@ -340,7 +340,7 @@ export class Catalog {
      *******************************************************************/
     @beforeMethod(function(meta){
         assert(meta.args[0] != null,  "Product data cannot be null");
-        Catalog.getInstance().validateElectronicObject(meta.args[0]);
+        Catalog.getInstance().validateElectronicParameter(meta.args[0]);
         //console.log(typeof meta.args[0].getWeight() == "number");
 	})
     public async modifyProduct(electronicID: string, data): Promise<boolean> {
