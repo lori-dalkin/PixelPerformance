@@ -109,12 +109,10 @@ export const deleteProduct = (product) => {
 export const fetchInventory = (productId) => {
     return (dispatch, getState) => {
         dispatch(fetchInventoryRequest());
-        if (getState().authentication && getState().authentication.token) {
-            return callApi(`api/inventories/product/${productId}`, 'get', undefined, `Bearer ${getState().authentication.token}`).then(
-                res => dispatch(receiveInventoryCount(res)),
-                error => dispatch(receiveInventoryCount({ count: 0 }))
-            );
-        }
+        return callApi(`api/inventories/product/${productId}`, 'get').then(
+            res => dispatch(receiveInventoryCount(res)),
+            error => dispatch(receiveInventoryCount({ count: 0 }))
+        );
     }
 }
 

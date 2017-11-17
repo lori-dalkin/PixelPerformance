@@ -64,7 +64,6 @@ ProductList.propTypes = {
     onProductClick: PropTypes.func.isRequired,
     pagination: PropTypes.bool.isRequired,
     deleteLabel: PropTypes.string.isRequired,
-    userType: PropTypes.string.isRequired,
     products: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.string.isRequired,

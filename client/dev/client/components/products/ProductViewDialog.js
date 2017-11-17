@@ -92,12 +92,12 @@ class ProductViewDialog extends Component {
                 <span><strong>Touchscreen: </strong>{this.props.product.selectedProduct.touchscreen ? "Yes": "No"}<br/></span>
               }
               { this.props.product.selectedProduct.camera !== undefined &&
-                <span><strong>Camera: </strong>{this.props.product.selectedProduct.camera ? "Yes": "No"}<br/></span>
+                <span><strong>Touchscreen: </strong>{this.props.product.selectedProduct.camera ? "Yes": "No"}<br/></span>
               }
               { this.props.product.selectedProduct.displaySize !== undefined &&
                 <span><strong>Display Size: </strong>{this.props.product.selectedProduct.displaySize}<br/></span>
               }
-              {this.props.authentication.userType === "Client"  && <span><strong>In Stock: </strong>{this.state.inventory}<br/></span> }
+              {this.props.authentication.userType !== "Admin"  && <span><strong>In Stock: </strong>{this.state.inventory}<br/></span> }
               <strong>Model Number: </strong>{this.props.product.selectedProduct.modelNumber}<br/>
               <strong>Identifier: </strong>{this.props.product.selectedProduct.id}<br/>
             </DialogContentText>
@@ -123,7 +123,7 @@ class ProductViewDialog extends Component {
             }
           </DialogContent>
           <DialogActions>
-            { this.props.authentication.userType === "Client" || !this.props.actions ? null :
+            { this.props.authentication.userType === "Admin" &&
               <span>
                 <Button onClick={ () => this.toggleInventoryView() } color='primary'>
                     { this.state.showInventory ? "Hide Inventory" : "Show Inventory" }
@@ -133,7 +133,7 @@ class ProductViewDialog extends Component {
                 </Button>
               </span>
             }
-            { this.props.authentication.userType === "Admin" || !this.props.actions ? null :
+            { this.props.authentication.userType === "Client" &&
               ( this.props.product.inventoryCount > 0 ?
                 <Button onClick={ () => this.props.addToCart(this.props.product.selectedProduct.id) } color='primary'>
                   Add to Cart

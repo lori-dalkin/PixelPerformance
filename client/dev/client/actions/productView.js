@@ -47,35 +47,33 @@ function shouldGetProducts(state) {
 
 export const getProducts = () => {
     return function (dispatch, getState) {
-        if (getState().authentication && getState().authentication.token) {
-            if (shouldGetProducts(getState())) {
-                dispatch(getProductsRequest());
+        if (shouldGetProducts(getState())) {
+            dispatch(getProductsRequest());
 
-                let queryStarted = false;
+            let queryStarted = false;
 
-                let endPoint = 'api/products';
+            let endPoint = 'api/products';
 
-                if (getState().product.productFilter) {
-                    endPoint = `api/products?type=${getState().product.productFilter}`
-                    queryStarted = true;
-                }
-
-                // Add paging and number of items
-                if (queryStarted) {
-                    endPoint += '&';
-                } else {
-                    endPoint += '?';
-                }
-                endPoint += `page=${getState().product.page}&numOfItems=${getState().product.productsPerPage}`;
-
-                return callApi(endPoint, 'get', undefined, `Bearer ${getState().authentication.token}`).then(
-                    res => {
-                        dispatch(setNumProducts(res.totalProducts));
-                        dispatch(getProductsSuccess(res.products));
-                    },
-                    error => dispatch(getProductsFailure(error))
-                );
+            if (getState().product.productFilter) {
+                endPoint = `api/products?type=${getState().product.productFilter}`
+                queryStarted = true;
             }
+
+            // Add paging and number of items
+            if (queryStarted) {
+                endPoint += '&';
+            } else {
+                endPoint += '?';
+            }
+            endPoint += `page=${getState().product.page}&numOfItems=${getState().product.productsPerPage}`;
+
+            return callApi(endPoint, 'get').then(
+                res => {
+                    dispatch(setNumProducts(res.totalProducts));
+                    dispatch(getProductsSuccess(res.products));
+                },
+                error => dispatch(getProductsFailure(error))
+            );
         }
     };
 }

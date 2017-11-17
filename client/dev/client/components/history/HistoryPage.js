@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import HistoryOfProductsList from './HistoryOfProductsList';
 import ProductViewDialog from '../products/ProductViewDialog';
 import HistoryRefundDialog from './HistoryRefundDialog';
+import DeleteAccount from './DeleteAccount';
 import * as actions from '../../actions';
 import { getHistoryOfProducts } from '../../actions/historyView';
 
@@ -43,6 +44,7 @@ class HistoryPage extends React.Component {
 							{ this.props.history.isFetching && <LinearProgress color="accent" style={{ width: '100%' }} /> }
 							{ !this.props.history.isFetching && <HistoryOfProductsList /> }
 						</Paper>
+						<DeleteAccount/>
 					</Grid>
 				</Grid>
 				<ProductViewDialog open={this.props.product.productViewOpen} handleRequestClose={this.props.hideProductView} actions={false} />
