@@ -1,6 +1,7 @@
 import * as actions from './action-types';
 import callApi from '../utils/apiCaller';
 import { getProducts } from './productView';
+import { customSnackbar } from './index';
 
 // -----------------------------------------------
 //                MODIFY PRODUCT
@@ -11,11 +12,26 @@ export const modifyProduct = (body) => {
             if (shouldModifyProduct(getState())) {
                 dispatch(modifyProductRequest());
 
+                body = {
+                    ...body,
+                    camera: (body.camera) ? 'true' : 'false',
+                    electronictype: body.electronicType,
+                    displaysize: body.displaySize,
+                    harddrive: body.hardDrive,
+                    touchscreen: (body.touchscreen) ? 'true' : 'false',
+                    touchScreen: (body.touchscreen) ? 'true' : 'false'
+                };
+
                 return callApi(`api/products/${getState().product.dropDownsProduct.id}`, 'put', body, `Bearer ${getState().authentication.token}`).then(
                     res => {
-                        dispatch(modifyProductSuccess(res));
-                        dispatch(modifyProductSuccessSnackbar());
-                        dispatch(getProducts());
+                        if (res.data) {
+                            dispatch(modifyProductSuccess(res));
+                            dispatch(modifyProductSuccessSnackbar());
+                            dispatch(getProducts());
+                        } else {
+                            dispatch(customSnackbar(res.error.message));
+                            dispatch(modifyProductFailure());
+                        }
                     },
                     error => dispatch(modifyProductFailure())
                 );
@@ -51,19 +67,24 @@ export const addProduct = (body) => {
 
                 body = {
                     ...body,
-                    camera: body.camera == "on",
+                    camera: (body.camera) ? 'true' : 'false',
                     electronictype: body.electronicType,
                     displaysize: body.displaySize,
                     harddrive: body.hardDrive,
-                    touchscreen: body.touchScreen == "on",
-                    touchScreen: body.touchScreen == "on"
+                    touchscreen: (body.touchscreen) ? 'true' : 'false',
+                    touchScreen: (body.touchscreen) ? 'true' : 'false'
                 };
 
                 return callApi('api/products', 'post', body, `Bearer ${getState().authentication.token}`).then(
                     res => {
-                        dispatch(addProductSuccess(res));
-                        dispatch(addProductSuccessSnackbar());
-                        dispatch(getProducts());
+                        if (res.data) {
+                            dispatch(addProductSuccess(res));
+                            dispatch(addProductSuccessSnackbar());
+                            dispatch(getProducts());
+                        } else {
+                            dispatch(customSnackbar(res.error.message));
+                            dispatch(addProductFailure());
+                        }
                     },
                     error => dispatch(addProductFailure())
                 );

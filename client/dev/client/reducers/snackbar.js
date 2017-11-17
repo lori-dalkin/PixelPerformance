@@ -25,6 +25,11 @@ export default function (state = initialState, action) {
       case actions.ADD_TO_CART_SUCCESS_SNACKBAR:
         return { ...state, open: true, message: "Successfully added product to cart." };
         break;
+      case actions.CUSTOM_SNACKBAR_MESSAGE:
+        return { ...state, open: true, message: action.message }
+        break;
+      default:
+        return state;
     }
     return state;
 }

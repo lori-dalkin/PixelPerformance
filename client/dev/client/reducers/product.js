@@ -17,7 +17,7 @@ const defaultDropDownsProduct = {
     displaySize: '',
     battery: '',
     camera: '',
-    touchScreen: '',
+    touchscreen: '',
     size: ''
 };
 const defaultFilters = {
