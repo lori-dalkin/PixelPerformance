@@ -168,7 +168,6 @@ export class WebPortal {
         }
     }
 
-  @beforeMethod(RoutingAdvice.requireLoggedIn)
   public getProductById(req, res) {
     try{
       let electronic: Electronic;
@@ -208,7 +207,6 @@ export class WebPortal {
     }
   }
     
-  @beforeMethod(RoutingAdvice.requireLoggedIn)
   public getInventoriesById(req, res) {
     try{
       let inventories = Catalog.getInstance().getAllInventories(req.params.id);

@@ -57,8 +57,8 @@ class App extends Component {
 
 	componentWillReceiveProps(nextProps){
 		const authentication = nextProps.authentication;
-		if(authentication === undefined ||  
-			 authentication.token === undefined || window.location.hash === "#/products"){
+		if((authentication === undefined ||  
+			 authentication.token === undefined) && window.location.hash !== "#/products"){
 			window.location.hash = "#/";
 		}
 		else if(window.location.hash === "#/" && authentication !== undefined && authentication.token !== undefined ){
@@ -74,21 +74,21 @@ class App extends Component {
 				  <div className={classes.root}>
 				    <AppBar position="static">
 					    <Toolbar>
-						<Typography style={{ flex: '1' }} type="title" color="inherit">
+						<Typography style={{ flex: '1' }} type="title" color="inherit" onClick={() => window.location.hash = "#/"}>
 							Pixel Performance
 						</Typography>
-						<Button color="contrast" onClick={ () => window.location.hash = "#/products" }> Browse Products</Button>
+						<Button color="contrast" onClick={ () => window.location.hash = "#/products" }> Products</Button>
 						{ this.props.authentication.token !== undefined && this.props.authentication.userType === "Admin" &&
-							<Button color="contrast" onClick={() => window.location.hash = "#/clients"}>View Clients</Button> 
+							<Button color="contrast" onClick={() => window.location.hash = "#/clients"}> Clients</Button> 
 						}
 						{ this.props.authentication.token !== undefined && this.props.authentication.userType === "Client" &&
-							<Button color="contrast" onClick={ () => window.location.hash = "#/cart" }> View Cart</Button>
+							<Button color="contrast" onClick={ () => window.location.hash = "#/cart" }> Cart</Button>
 						}
 						{ this.props.authentication.token !== undefined && this.props.authentication.userType === "Client" &&
-							<Button color="contrast" onClick={ () => window.location.hash = "#/history" }> Purchase History</Button>
+							<Button color="contrast" onClick={ () => window.location.hash = "#/history" }> Account</Button>
 						}
 						{ this.props.authentication.token !== undefined &&
-							<Button color="contrast" onClick={this.props.deleteToken}>Logout</Button>
+							<Button color="contrast" onClick={() => {this.props.deleteToken(); this.props.deleteUserType()}}>Logout</Button> 
 						}
 						</Toolbar>
 				    </AppBar>

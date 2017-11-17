@@ -47,50 +47,46 @@ function shouldGetProducts(state) {
 
 export const getProducts = () => {
     return function (dispatch, getState) {
-        if (getState().authentication && getState().authentication.token) {
-            if (shouldGetProducts(getState())) {
-                dispatch(getProductsRequest());
+        dispatch(getProductsRequest());
 
-                let endPoint = 'api/products';
+        let endPoint = 'api/products';
 
-                // Add paging and number of items
-                endPoint += `?page=${getState().product.page}&numOfItems=${getState().product.productsPerPage}`;
+        // Add paging and number of items
+        endPoint += `?page=${getState().product.page}&numOfItems=${getState().product.productsPerPage}`;
 
-                // Add filter
-                if (getState().product.filterSet){
-                    if (getState().product.filters.electronicType) {
-                        if (getState().product.filters.electronicType !== 'Type') {
-                            endPoint += `&type=${getState().product.filters.electronicType}`;
-                        }
-                    }
-                    if(getState().product.filters.brand){
-                        if(getState().product.filters.brand !== 'Brand'){
-                            endPoint += `&brand=${getState().product.filters.brand}`;
-                        }
-                    }
-                    if(getState().product.filters.priceLow){
-                        endPoint += `&priceLow=${getState().product.filters.priceLow}`;
-                    }
-                    if(getState().product.filters.priceHigh){
-                        endPoint += `&priceHigh=${getState().product.filters.priceHigh}`;
-                    }
-                    if(getState().product.filters.maxSize){
-                        endPoint += `&maxSize=${getState().product.filters.maxSize}`;
-                    }
-                    if(getState().product.filters.maxWeight){
-                        endPoint += `&maxWeight=${getState().product.filters.maxWeight}`;
-                    }
+        // Add filter
+        if (getState().product.filterSet){
+            if (getState().product.filters.electronicType) {
+                if (getState().product.filters.electronicType !== 'Type') {
+                    endPoint += `&type=${getState().product.filters.electronicType}`;
                 }
-
-                return callApi(endPoint, 'get', undefined, `Bearer ${getState().authentication.token}`).then(
-                    res => {
-                        dispatch(setNumProducts(res.totalProducts));
-                        dispatch(getProductsSuccess(res.products));
-                    },
-                    error => dispatch(getProductsFailure(error))
-                );
+            }
+            if(getState().product.filters.brand){
+                if(getState().product.filters.brand !== 'Brand'){
+                    endPoint += `&brand=${getState().product.filters.brand}`;
+                }
+            }
+            if(getState().product.filters.priceLow){
+                endPoint += `&priceLow=${getState().product.filters.priceLow}`;
+            }
+            if(getState().product.filters.priceHigh){
+                endPoint += `&priceHigh=${getState().product.filters.priceHigh}`;
+            }
+            if(getState().product.filters.maxSize){
+                endPoint += `&maxSize=${getState().product.filters.maxSize}`;
+            }
+            if(getState().product.filters.maxWeight){
+                endPoint += `&maxWeight=${getState().product.filters.maxWeight}`;
             }
         }
+
+        return callApi(endPoint, 'get').then(
+            res => {
+                dispatch(setNumProducts(res.totalProducts));
+                dispatch(getProductsSuccess(res.products));
+            },
+            error => dispatch(getProductsFailure(error))
+        );
     };
 }
 
