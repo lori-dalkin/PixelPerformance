@@ -462,7 +462,7 @@ export class Catalog {
         assert(Number(par) >= 0, message + " needs to be positive");
     }
     private validateElectronicParameter(parameter:any) {
-        Catalog.getInstance().validatePositiveNumber(parameter.weight, "Weight");
+        Catalog.getInstance().isTwoDigitNumber(parameter.weight, "Weight");
         assert(parameter.weight < 10000, "Weight must be less than 100000");
         assert(typeof parameter.modelNumber == "string", "Model Number needs to be a string");
         assert(typeof parameter.brand == "string", "Brand needs to be a string");
