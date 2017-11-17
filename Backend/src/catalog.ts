@@ -254,7 +254,7 @@ export class Catalog {
 	 ********************************************************/
     @beforeMethod(function(meta){
         assert(meta.args[0] != null,  "Product data cannot be null");
-        Catalog.getInstance().validateElectronicParameter(meta.args[0]);
+        Catalog.getInstance().validateElectronicParameter(meta.args[0], false);
         //console.log(typeof meta.args[0].getWeight() == "number");
 	})
 	@afterMethod(function(meta) {
@@ -340,7 +340,7 @@ export class Catalog {
      *******************************************************************/
     @beforeMethod(function(meta){
         assert(meta.args[0] != null,  "Product data cannot be null");
-        Catalog.getInstance().validateElectronicParameter(meta.args[0]);
+        Catalog.getInstance().validateElectronicParameter(meta.args[1], true);
         //console.log(typeof meta.args[0].getWeight() == "number");
 	})
     public async modifyProduct(electronicID: string, data): Promise<boolean> {
@@ -458,16 +458,16 @@ export class Catalog {
         assert(Number(par)%1 === 0, message + " needs to be an integer");
     }
     private validatePositiveNumber(par:any, message:string) {
-        assert(par.trim(" ") !== "" && !Number.isNaN(Number(par)), message + " needs to be a number");
+        assert((typeof par == "number" || par.trim(" ") !== "") && !Number.isNaN(Number(par)), message + " needs to be a number");
         assert(Number(par) >= 0, message + " needs to be positive");
     }
-    private validateElectronicParameter(parameter:any) {
+    private validateElectronicParameter(parameter:any, modify:boolean) {
         Catalog.getInstance().isTwoDigitNumber(parameter.weight, "Weight");
         assert(parameter.weight < 100, "Weight must be less than 100");
         assert(typeof parameter.modelNumber == "string", "Model Number needs to be a string");
         assert(typeof parameter.brand == "string", "Brand needs to be a string");
         Catalog.getInstance().isTwoDigitNumber(parameter.price, "Price");
-        assert(!Catalog.getInstance().modelNumberExists(parameter.modelNumber),"Model Number already exists");
+        assert(modify || !Catalog.getInstance().modelNumberExists(parameter.modelNumber),"Model Number already exists");
         let eType:string = parameter.electronicType;
         assert(typeof eType == "string", "Electronic Type needs to be a string");
         switch(eType)
