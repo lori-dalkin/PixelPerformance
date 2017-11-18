@@ -1,10 +1,12 @@
 
+import {Igateway} from "./Models/igateway";
+
 export class UnitOfWork {
 
     private static _instance: UnitOfWork = null;
-    private newProducts: any[];
-    private dirtyProducts: any[];
-    private deletedProducts: any[];
+    private newProducts: Igateway[];
+    private dirtyProducts: Igateway[];
+    private deletedProducts: Igateway[];
 
     constructor(){
         this.newProducts = [];
@@ -22,23 +24,23 @@ export class UnitOfWork {
         return this._instance;
     }
 
-    public getNewProducts(): any[] { return this.newProducts;}
-    public getDirtyProducts(): any[] { return this.dirtyProducts;}
-    public getDeletedProducts(): any[] { return this.deletedProducts;}
+    public getNewProducts(): Igateway[] { return this.newProducts;}
+    public getDirtyProducts(): Igateway[] { return this.dirtyProducts;}
+    public getDeletedProducts(): Igateway[] { return this.deletedProducts;}
 
-    public setNewProducts(newprod: any[]) { this.newProducts = newprod;}
-    public setDirtyProducts(dirty: any[]) { this.dirtyProducts = dirty;}
-    public setDeletedProducts(deleted: any[]) { this.deletedProducts = deleted;}
+    public setNewProducts(newprod: Igateway[]) { this.newProducts = newprod;}
+    public setDirtyProducts(dirty: Igateway[]) { this.dirtyProducts = dirty;}
+    public setDeletedProducts(deleted: Igateway[]) { this.deletedProducts = deleted;}
 
-    public registerNew(newProd: any): void {
+    public registerNew(newProd: Igateway): void {
         this.newProducts.push(newProd);
     }
 
-    public registerDirty(dirty: any): void {
+    public registerDirty(dirty: Igateway): void {
         this.dirtyProducts.push(dirty);
     }
 
-    public registerDeleted(deleted: any): void {
+    public registerDeleted(deleted: Igateway): void {
         this.deletedProducts.push(deleted);
     }
 

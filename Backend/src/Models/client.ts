@@ -1,9 +1,10 @@
 import { dbconnection } from "./dbconnection";
 import { User } from "./user";
+import {Igateway} from "./igateway";
 
 var db =   new dbconnection().getDBConnector();
 
-export class Client extends User {
+export class Client extends User implements Igateway{
 
 	private address: string;
 	private phone: string;

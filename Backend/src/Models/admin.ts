@@ -74,7 +74,4 @@ export class Admin extends User {
         return Admin.name;
     }
 
-    async modify(): Promise<boolean> { return Promise.resolve(true)};
-    async save(): Promise<boolean> { return Promise.resolve(true)};
-
 }
