@@ -464,12 +464,18 @@ export class Catalog {
         assert(Number(par) >= 0, message + " needs to be positive");
     }
     private validateElectronicParameter(parameter:any, modify:boolean) {
+        console.log(parameter);
         Catalog.getInstance().isTwoDigitNumber(parameter.weight, "Weight");
         assert(parameter.weight < 100, "Weight must be less than 100");
         assert(typeof parameter.modelNumber == "string", "Model Number needs to be a string");
         assert(typeof parameter.brand == "string", "Brand needs to be a string");
         Catalog.getInstance().isTwoDigitNumber(parameter.price, "Price");
-        assert(modify || !Catalog.getInstance().modelNumberExists(parameter.modelNumber),"Model Number already exists");
+        if(modify) {
+            assert(Catalog.getInstance().verifyModifyModelNumber(parameter.id, parameter.modelNumber),"Model Number already given to other specification");
+        }
+        else {
+            assert(!Catalog.getInstance().modelNumberExists(parameter.modelNumber),"Model Number already exists");
+        }
         let eType:string = parameter.electronicType;
         assert(typeof eType == "string", "Electronic Type needs to be a string");
         if(eType === "Monitor") {
@@ -505,11 +511,23 @@ export class Catalog {
             }
         }
     }
-
-    public getAllBrands(){
+    private verifyModifyModelNumber(id:string,modelNum:string):boolean {
+        for(let product of this.electronics) {
+            if(product.getModelNumber() === modelNum) {
+                //product modified model number did not change
+                if(product.getId() === id) {
+                    return true;
+                }
+                //change model number to exiting model number
+                return false;
+            }
+        }
+        //new model number entered during modification
+        return true;
+    }
+    public getAllBrands() {
         let brandSet = new Set();
-        for(let e of this.electronics)
-        {
+        for(let e of this.electronics) {
             brandSet.add(e.getBrand());
         }
         return brandSet;
