@@ -468,6 +468,7 @@ export class Catalog {
         Catalog.getInstance().isTwoDigitNumber(parameter.weight, "Weight");
         assert(parameter.weight < 100, "Weight must be less than 100");
         assert(typeof parameter.modelNumber == "string", "Model Number needs to be a string");
+        assert(parameter.modelNumber.match(/^[a-z0-9]+$/i), "Model Number must be alphanumeric")
         assert(typeof parameter.brand == "string", "Brand needs to be a string");
         Catalog.getInstance().isTwoDigitNumber(parameter.price, "Price");
         if(modify) {
