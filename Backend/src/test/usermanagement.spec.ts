@@ -1,4 +1,4 @@
-import { UserManagement} from '../userManagement';
+import { UserManagement} from '../usermanagement';
 import { WebPortal } from '../webportal';
 import { expect } from 'chai';
 import 'mocha';
