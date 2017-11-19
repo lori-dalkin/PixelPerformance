@@ -471,6 +471,7 @@ export class Catalog {
         assert(parameter.modelNumber.match(/^[a-z0-9]+$/i), "Model Number must be alphanumeric")
         assert(typeof parameter.brand == "string", "Brand needs to be a string");
         Catalog.getInstance().isTwoDigitNumber(parameter.price, "Price");
+        assert(Number(parameter.price) < 10000, "Price should be less than 10000" );
         if(modify) {
             assert(Catalog.getInstance().verifyModifyModelNumber(parameter.id, parameter.modelNumber),"Model Number already given to other specification");
         }
@@ -495,15 +496,16 @@ export class Catalog {
                 case "Laptop":
                 case "Tablet":
                     Catalog.getInstance().validatePositiveNumber(parameter.displaySize, "Display Size");
+                    assert((Number(parameter.displaySize)*10)%1 === 0,  "Display size has at most one decimal");
+                    assert((Number(parameter.displaySize))<100,"Display size should be less than 100");
                     Catalog.getInstance().isWholeNumber(parameter.battery, "Battery");
-                    assert((Number(parameter.battery)*10)%1 === 0,  "Battery has at most one decimal");
                     if(eType === "Laptop") {
-                        assert(typeof parameter.camera == "boolean", "Camera needs to be a boolean"); // todo: typecast string of "camera" as boolean
-                        assert(typeof parameter.touchScreen == "boolean", "Touchscreen needs to be a boolean"); // todo: typecast as boolean
+                        //assert(typeof parameter.camera == "boolean", "Camera needs to be a boolean"); // todo: typecast string of "camera" as boolean
+                        //assert(typeof parameter.touchScreen == "boolean", "Touchscreen needs to be a boolean"); // todo: typecast as boolean
                     }
                     else if(eType === "Tablet") {
                         assert(typeof parameter.dimensions == "string", "Dimensions needs to be a string");
-                        assert(typeof parameter.camera == "boolean", "Camera needs to be a boolean"); // todo: typecast to boolean
+                        //assert(typeof parameter.camera == "boolean", "Camera needs to be a boolean"); // todo: typecast to boolean
                     }
                     break;
                 default:
