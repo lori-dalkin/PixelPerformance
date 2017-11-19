@@ -1,12 +1,14 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "The backend server for 20 dollars is 20 dollars application",
+  "description": "The backend server for the pixelperformance application",
   "main": "index.js",
   "scripts": {
     "dev": "SET NODE_ENV=development && nodemon ./bin/www",
     "grunt": "grunt",
-    "start": "npm run grunt && node ./bin/www"
+    "start": "npm run grunt && node ./bin/www",
+    "pretest": "tsc src/test/usermanagement.spec.ts src/test/catalog.spec.ts src/test/purchasemanagement.spec.ts --target es6 --module commonjs --experimentalDecorators true --outDir ./dist/src",
+    "test": "mocha dist/src/test/" 
   },
   "repository": {
     "type": "git",
@@ -47,14 +49,19 @@
   },
   "devDependencies": {
     "@types/body-parser": "^1.16.5",
+    "@types/chai": "^4.0.5",
     "@types/cookie-parser": "^1.4.1",
     "@types/errorhandler": "0.0.31",
     "@types/method-override": "0.0.30",
+    "@types/mocha": "^2.2.44",
     "@types/morgan": "^1.7.33",
+    "chai": "^4.1.2",
     "grunt": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-ts": "^6.0.0-beta.16",
+    "mocha": "^4.0.1",
+    "ts-node": "^3.3.0",
     "typescript": "^2.5.2"
   }
 }
