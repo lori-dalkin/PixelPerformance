@@ -42,6 +42,7 @@ export class WebPortal {
     protected usermanagement: UserManagement;
     protected purchasemanagement: PurchaseManagement;
     protected systemmonitor: SystemMonitor;
+    protected unitofwork: UnitOfWork;
 
     /**
      * Bootstrap the application.
@@ -68,6 +69,7 @@ export class WebPortal {
         this.usermanagement = UserManagement.getInstance();
         this.purchasemanagement = PurchaseManagement.getInstance();
         this.systemmonitor = SystemMonitor.getInstance();
+        this.unitofwork = UnitOfWork.getInstance();
 
         //configure application
         this.config();
@@ -238,7 +240,9 @@ export class WebPortal {
 
     public postUser(req, res) {
       try{
-        res.send({data: UserManagement.getInstance().addClient(req.body)});
+        let userSuccess = UserManagement.getInstance().addClient(req.body);
+        UnitOfWork.getInstance().commit();
+        res.send({data: userSuccess});
       }catch (e) {
         console.log(e);
         res.status = 500;
@@ -343,7 +347,7 @@ export class WebPortal {
     @beforeMethod(RoutingAdvice.requireAdmin)
     public postProduct(req, res) {
         try {
-            Catalog.getInstance().addProduct(req.body)
+            Catalog.getInstance().addProduct(req.body);
             UnitOfWork.getInstance().commit();
             res.send({ data: true });
         }
@@ -412,7 +416,8 @@ export class WebPortal {
     @beforeMethod(RoutingAdvice.requireClient)
     public postCartCheckout(req, res) {
         try {
-            PurchaseManagement.getInstance().checkout(req.user.id)
+            PurchaseManagement.getInstance().checkout(req.user.id);
+            UnitOfWork.getInstance().commit();
             res.send({ data: true });
         }
         catch (e) {
@@ -439,6 +444,7 @@ export class WebPortal {
     public deleteRecordsInventoryById(req, res) {
         try {
             let returnSuccess = PurchaseManagement.getInstance().returnInventory(req.user.id, req.params.id);
+            UnitOfWork.getInstance().commit();
             res.send({ data: true });
         }
         catch (e) {

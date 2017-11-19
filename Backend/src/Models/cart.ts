@@ -3,11 +3,12 @@ import {dbconnection} from "./dbconnection";
 import {afterMethod, beforeMethod} from 'kaop-ts'
 import  validator = require('validator');
 import assert = require('assert');
+import {Igateway} from "./igateway";
 
 
 
 var db = new dbconnection().getDBConnector();
-export class Cart {
+export class Cart implements Igateway{
        //This class will have an array of inventory objects, an id, and a userId.
     private id: string;
     private userId: string;
@@ -25,6 +26,8 @@ export class Cart {
 
     public setInventory(inv: Inventory[]):void{ this.inventory  = inv;}
     public getInventory(): Inventory[]{ return this.inventory;}
+
+    async modify(): Promise<boolean>{ return Promise.resolve(true)};
 
     /*******************************************************
      * Method to return all carts saved in the database
@@ -87,7 +90,7 @@ export class Cart {
     @afterMethod(function (meta) {
         assert(meta.result != null);
     })
-    public async saveCart(): Promise<Boolean> {
+    public async save(): Promise<boolean> {
         let storeOrNot = new Boolean;
         var cart = this;
         let dataPromises = new Array<Promise<void>>();
