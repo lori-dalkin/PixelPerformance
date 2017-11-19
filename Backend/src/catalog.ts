@@ -6,7 +6,7 @@ import { Desktop } from "./Models/desktop";
 import { Tablet } from "./Models/tablet";
 import { Laptop } from "./Models/laptop";
 import { Inventory  } from "./Models/inventory";
-import { ElectronicFactory } from "./ElectronicFactory";
+import { ElectronicFactory } from "./electronicfactory";
 
 // Dependencies for contracts
 import { afterMethod, beforeInstance, beforeMethod } from 'kaop-ts';
