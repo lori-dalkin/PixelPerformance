@@ -7,6 +7,12 @@ import { Tablet } from "./Models/tablet";
 import { Laptop } from "./Models/laptop";
 import { Inventory  } from "./Models/inventory";
 import { ElectronicFactory } from "./electronicfactory";
+import { TypeFilterProductStrategy } from "./Strategies/typefilterproductstrategy";
+import { BrandFilterProductStrategy } from "./Strategies/brandfilterproductstrategy";
+import { SizeFilterProductStrategy } from "./Strategies/sizefilterproductstrategy";
+import { WeightFilterProductStrategy } from "./Strategies/weightfilterproductstrategy";
+import { LowPriceFilterProductStrategy } from "./Strategies/lowpricefilterproductstrategy";
+import { HighPriceFilterProductStrategy } from "./Strategies/highpricefilterproductstrategy";
 
 // Dependencies for contracts
 import { afterMethod, beforeInstance, beforeMethod } from 'kaop-ts';
@@ -166,59 +172,47 @@ export class Catalog {
         maxSize = isNaN(maxSize) ? 100000 : maxSize; //default arbitrarly high
         numOfItems = isNaN(numOfItems) ? 25 : numOfItems;
         page = isNaN(page) ? null : page;
-        /*For testing. Remove after UI is integrated.
-        console.log("**** Product Filtering ****")
-        console.log("Price range:" +priceLow + " to " + priceHigh);
-        console.log("Brand:" +brand);
-        console.log("Max weight:" + maxWeight);
-        console.log("Type:" + type);
-        console.log("Size: " + maxSize);
-        console.log("#items: " +numOfItems);
-        console.log("Page:" + page);
-        console.log("***************************")
-        */
-        var desiredType: Electronic[] = [];
-        var desiredProducts: Electronic[] = [];
-        if(type == null || type == undefined){
-            desiredType = this.electronics;
+
+        var desiredProducts: Electronic[] = this.electronics;
+        var products: Electronic[];
+        var filter;
+
+        if(type !== null && type !== undefined){
+            // set Strategy to type filtering
+            products = desiredProducts;
+            filter = new TypeFilterProductStrategy();
+            desiredProducts = filter.filterProduct(products, type)
         }
-        else{
-            for (var i = 0; i < this.electronics.length; i++) {
-                if(this.electronics[i].getElectronicType() == type){
-                    if(type == "Desktop")
-                        desiredType.push(this.electronics[i]);
-                    else {
-                        let eSize;
-                        switch(type){
-                            case "Monitor":
-                                eSize = (this.electronics[i] as Monitor).getSize();
-                                break;
-                            case "Laptop":
-                                eSize = (this.electronics[i] as Laptop).getDisplaySize();
-                                break;
-                            case "Tablet":
-                                eSize = (this.electronics[i] as Tablet).getDisplaySize();
-                                break;
-                            default:
-                                eSize = 1000000;
-                        }
-                        if(eSize < maxSize)
-                            desiredType.push(this.electronics[i]);
-                    }
-                }     
-            }
+        if(brand !== null && brand !== undefined) {
+            // set Strategy to brand filtering
+            products = desiredProducts;
+            filter = new BrandFilterProductStrategy();
+            desiredProducts = filter.filterProduct(products, brand);
         }
-        //Now that you array filled with desired type, filter down from other params
-        for(let e of desiredType)
-        {
-            if(e.getPrice() > priceLow && e.getPrice() < priceHigh && e.getWeight() < maxWeight)
-            {
-                if(brand == undefined)
-                    desiredProducts.push(e);
-                else if(e.getBrand() == brand){
-                    desiredProducts.push(e);
-                }
-            }  
+        if(type !== 'Desktop') {
+            // set Strategy to size filtering
+            products = desiredProducts;
+            filter = new SizeFilterProductStrategy();
+            desiredProducts = filter.filterProduct(products, maxSize);
+        }
+        if(maxWeight) {
+            // set Strategy to weight filtering
+            products = desiredProducts;
+            filter = new WeightFilterProductStrategy();
+            desiredProducts = filter.filterProduct(products, maxWeight);
+        }
+
+        if(priceLow) {
+            // set Strategy to lowprice filtering
+            products = desiredProducts;
+            filter = new LowPriceFilterProductStrategy();
+            desiredProducts = filter.filterProduct(products, priceLow);
+        }
+        if(priceHigh) {
+            // set Strategy to highprice filtering
+            products = desiredProducts;
+            filter = new HighPriceFilterProductStrategy();
+            desiredProducts = filter.filterProduct(products, priceHigh);
         }
 
         let totalProducts= desiredProducts.length;
