@@ -282,6 +282,7 @@ export class WebPortal {
   public deleteClient(req, res){
     try{
       
+      PurchaseManagement.getInstance().cancelTransaction(req.user.id);
       res.send(UserManagement.getInstance().deleteClient(req.user.id));
 
     }catch(e){
