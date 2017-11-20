@@ -65,8 +65,8 @@ export class PurchaseManagement {
 	public cancelTransaction(userId: String): void{
 		for (let i = 0; i < this.activeCarts.length; i++){
 			if (String(this.activeCarts[i].getUserId()) == userId){
-				for (let a = 0; this.activeCarts[i].getInventory().length; a++){
-					let tempCart = this.activeCarts[i].getInventory();
+				let tempCart = this.activeCarts[i].getInventory();
+				for (let a = 0; a < this.activeCarts[i].getInventory().length; a++){
 					tempCart[a].setLockedUntil(null);
 				}
 				this.activeCarts.splice(i,1);
