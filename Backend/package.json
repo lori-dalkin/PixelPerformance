@@ -8,7 +8,7 @@
     "grunt": "grunt",
     "start": "npm run grunt && node ./bin/www",
     "pretest": "tsc src/test/usermanagement.spec.ts src/test/catalog.spec.ts src/test/purchasemanagement.spec.ts --target es6 --module commonjs --experimentalDecorators true --outDir ./dist/src",
-    "test": "mocha dist/src/test/"
+    "test": "mocha dist/src/test/" 
   },
   "repository": {
     "type": "git",
@@ -56,7 +56,6 @@
     "@types/mocha": "^2.2.44",
     "@types/morgan": "^1.7.33",
     "chai": "^4.1.2",
-    "chai-as-promised": "^7.1.1",
     "grunt": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
