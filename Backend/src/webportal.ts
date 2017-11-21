@@ -79,7 +79,6 @@ export class WebPortal {
 
         //add api
         this.api();
-
     }
 
     /**
@@ -91,10 +90,6 @@ export class WebPortal {
     public api() {
         let router: express.Router;
         router = express.Router();
-        // some dummy data
-        let monitor = new Monitor('1', 1, "modelNumber", "brand", 1, 1);
-        let monitors = new Array(monitor, monitor, monitor);
-        let token = jwt.sign({ foo: 'bar' }, 'shhhhh');
         //home page
         let routingCatalog = this.catalog;
         let routingUsers = this.usermanagement;
@@ -102,7 +97,7 @@ export class WebPortal {
         let routingSystem = this.systemmonitor;
 
         router.get('/', function (req, res) {
-            res.send('20 dollars is 20 dollars backend home page')
+            res.send('backend home page')
         });
 
         router.post("/api/users/login", this.login);
