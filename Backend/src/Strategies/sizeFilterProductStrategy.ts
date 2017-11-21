@@ -1,6 +1,3 @@
-/**
- * Created by saman on 2017-11-19.
- */
 import {Electronic} from "../Models/electronic";
 import { Monitor } from "../Models/monitor"
 import { Tablet } from "../Models/tablet";

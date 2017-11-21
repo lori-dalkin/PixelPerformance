@@ -13,6 +13,7 @@ import { SizeFilterProductStrategy } from "./Strategies/sizefilterproductstrateg
 import { WeightFilterProductStrategy } from "./Strategies/weightfilterproductstrategy";
 import { LowPriceFilterProductStrategy } from "./Strategies/lowpricefilterproductstrategy";
 import { HighPriceFilterProductStrategy } from "./Strategies/highpricefilterproductstrategy";
+import { PriceSortingProductStrategy } from "./Strategies/pricesortingproductstrategy"
 
 // Dependencies for contracts
 import { afterMethod, beforeInstance, beforeMethod } from 'kaop-ts';
@@ -164,7 +165,7 @@ export class Catalog {
     })
     public getProductPage(page:number, type:string, numOfItems:number, 
                             priceLow:number, priceHigh:number, brand:string,
-                            maxSize:number, maxWeight:number) {
+                            maxSize:number, maxWeight:number, priceSort:string) {
         //set defaults in case of undefined
         priceLow = isNaN(priceLow) ? 0 : priceLow;
         priceHigh = isNaN(priceHigh) ? 1000000 : priceHigh; //default arbitrarly high
@@ -175,44 +176,54 @@ export class Catalog {
 
         var desiredProducts: Electronic[] = this.electronics;
         var products: Electronic[];
-        var filter;
+        var filters = [];
+        var sorts = [];
+        var filterData = [];
+        var sortData = [];
 
+        // Set filter Strategies given filters
         if(type !== null && type !== undefined){
-            // set Strategy to type filtering
-            products = desiredProducts;
-            filter = new TypeFilterProductStrategy();
-            desiredProducts = filter.filterProduct(products, type)
+            filters.push(new TypeFilterProductStrategy());
+            filterData.push(type);
         }
         if(brand !== null && brand !== undefined) {
-            // set Strategy to brand filtering
-            products = desiredProducts;
-            filter = new BrandFilterProductStrategy();
-            desiredProducts = filter.filterProduct(products, brand);
+            filters.push(new BrandFilterProductStrategy());
+            filterData.push(brand);
         }
         if(type !== 'Desktop') {
-            // set Strategy to size filtering
-            products = desiredProducts;
-            filter = new SizeFilterProductStrategy();
-            desiredProducts = filter.filterProduct(products, maxSize);
+            filters.push(new SizeFilterProductStrategy());
+            filterData.push(maxSize);
         }
         if(maxWeight) {
-            // set Strategy to weight filtering
-            products = desiredProducts;
-            filter = new WeightFilterProductStrategy();
-            desiredProducts = filter.filterProduct(products, maxWeight);
+            filters.push(new WeightFilterProductStrategy());
+            filterData.push(maxWeight);
         }
 
         if(priceLow) {
-            // set Strategy to lowprice filtering
-            products = desiredProducts;
-            filter = new LowPriceFilterProductStrategy();
-            desiredProducts = filter.filterProduct(products, priceLow);
+            filters.push(new LowPriceFilterProductStrategy());
+            filterData.push(priceLow);
         }
         if(priceHigh) {
-            // set Strategy to highprice filtering
+            filters.push(new HighPriceFilterProductStrategy());
+            filterData.push(priceHigh);
+        }
+
+        // Set sort Strategies
+        if(priceSort !== null && priceSort !== undefined) {
+            sorts.push(new PriceSortingProductStrategy());
+            sortData.push(priceSort);
+        }
+
+        // Applying the filters
+        for(let i = 0; i < filters.length; i++){
             products = desiredProducts;
-            filter = new HighPriceFilterProductStrategy();
-            desiredProducts = filter.filterProduct(products, priceHigh);
+            desiredProducts = filters[i].filterProduct(products, filterData[i]);
+        }
+
+        //Applying the sort
+        for(let i = 0; i < sorts.length; i++){
+            products = desiredProducts;
+            desiredProducts = sorts[i].sortProduct(products, sortData[i]);
         }
 
         let totalProducts= desiredProducts.length;
