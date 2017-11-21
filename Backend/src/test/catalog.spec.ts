@@ -5,7 +5,6 @@ import { Monitor } from '../Models/monitor';
 import { Electronic } from '../Models/electronic';
 import { expect } from 'chai';
 import 'mocha';
-import * as uuid from "uuid";
 
 
 var db = new dbconnection().getDBConnector();
