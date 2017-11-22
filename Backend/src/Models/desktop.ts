@@ -99,7 +99,7 @@ export class Desktop extends ComputerSystem {
                        + "', dimensions='" + this.getDimensions()
                        + "' WHERE id = '"+ this.getId() + "';")
             .then(function () {
-                console.log("Tablet was modified.");
+                console.log("Desktop was modified.");
                 return true;
             })
             .catch(function (err) {
@@ -113,24 +113,14 @@ export class Desktop extends ComputerSystem {
      ********************************************************/    
     public async delete(): Promise<boolean> {
         this.setDecommissioned(true);
-        return db.none("UPDATE desktops SET weight=" + this.getWeight()
-                        + ", modelnumber='" + this.getModelNumber()
-                        + "', brand='" + this.getBrand()
-                        + "', price=" + this.getPrice()
-                        + ", decommissioned=" + this.getDecommissioned()
-                        + ", processor='" + this.getProcessor()
-                        + "', ram=" + this.getRam()
-                        + ", cpus=" + this.getCpus()
-                        + ", harddrive=" + this.getHardDrive()
-                        + ", os='" + this.getOs()
-                        + "', dimensions='" + this.getDimensions()
-                        + "' WHERE id = '"+ this.getId() + "';")
+        return db.none("UPDATE desktops SET decommissioned=" + this.getDecommissioned()
+                        + " WHERE id = '"+ this.getId() + "';")
         .then(function () {
-            console.log("Tablet was modified.");
+            console.log("Desktop was decommissioned");
             return true;
         })
         .catch(function (err) {
-            console.log("Could not update desktop: " + err);
+            console.log("Could not decommissioned/delete desktop: " + err);
             return false;
         });
     }

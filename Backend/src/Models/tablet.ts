@@ -111,18 +111,12 @@ export class Tablet extends ComputerSystem{
      ********************************************************/
     public async delete(): Promise<boolean> {
         this.setDecommissioned(true);
-        return db.none("UPDATE tablets SET weight=" + this.getWeight() + ", modelnumber='" +
-            this.getModelNumber() + "', brand='" + this.getBrand() + "', price=" + this.getPrice() +
-            ", processor='" + this.processor + "', ram=" + this.ram + ", cpus=" + this.cpus +
-            ", harddrive=" + this.hardDrive + ", os='" + this.os + "', displaysize=" + this.getDisplaySize() +
-            ", dimensions='" + this.getDimensions() + "', battery=" + this.getBattery() + ", camera=" + this.getCamera() +
-            ", decommissioned=" + this.getDecommissioned() +
-            " WHERE id = '"+ this.getId() + "';").
+        return db.none("UPDATE tablets SET decommissioned=" + this.getDecommissioned() + " WHERE id = '" + this.getId() + "';").
             then(function () {
-                console.log("Tablet was modified.");
+                console.log("Tablet was decommissioned.");
                 return true;
         }).catch(function (err) {
-            console.log("Could not update tablet: " + err);
+            console.log("Could not decommission/delete Tablet:" + err);
             return false;
         });
     }

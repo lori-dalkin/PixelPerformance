@@ -98,17 +98,14 @@ export class Laptop extends ComputerSystem {
 	 **************************************************************/
 	public async delete(): Promise<boolean> {
 		this.setDecommissioned(true);
-        let queryText = "UPDATE laptops SET weight=" + this.getWeight() + ",modelnumber='"+ this.getModelNumber() + "',brand='" + this.getBrand()
-						+ "',price=" + this.getPrice() + ", processor='" +this.processor + "',ram=" + this.ram + ",cpus="+ this.cpus
-						+ ",harddrive=" + this.hardDrive + ",os='" + this.os + "',displaysize=" + this.getDisplaySize() + ",battery="+ this.getBattery()
-						+ ",camera=" + this.getCamera() + ",touchscreen=" +this.getTouchscreen() + ",decommissioned=" +this.getDecommissioned() +  " WHERE id ='" + this.getId() + "';";
+		let queryText = "UPDATE laptops SET decommissioned=" + this.getDecommissioned() + " WHERE id ='" + this.getId() + "';";
 		return db.none(queryText)
 			.then(function() {
-				console.log("Modified Laptop in the db");
+				console.log("Laptop was decommissioned");
 				return true;
 			})
 			.catch(function(err) {
-				console.log("Error modifying Laptop in the db" + err);
+				console.log("Could not decommission/delete Laptop:" + err);
 				return false;
 		});
 	}

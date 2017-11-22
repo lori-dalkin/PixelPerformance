@@ -62,12 +62,12 @@ export class Monitor extends Electronic {
 	public async delete(): Promise<boolean>{
 		//more of a modify method now
 		this.setDecommissioned(true);
-		return db.none("UPDATE monitors SET weight=" + this.getWeight() + ", modelnumber='" + this.getModelNumber() + "', brand='" + this.getBrand() + "', price=" + this.getPrice() + ", decommissioned=" + this.getDecommissioned() + ", size=" + this.getSize() + " WHERE id='"+ this.getId() + "';")
-		.then(function(){
-			console.log("monitor was decomissioned");
+		return db.none("UPDATE monitors SET decommissioned=" + this.getDecommissioned() + " WHERE id='"+ this.getId() + "';")
+				.then(function(){
+			console.log("Monitor was decomissioned.");
 			return true;
 		}).catch(function (err){
-			console.log("No matching object found to decommission: " + err);
+			console.log("Could not decommission/delete Monitor: " + err);
 			return false;
 		});
 
