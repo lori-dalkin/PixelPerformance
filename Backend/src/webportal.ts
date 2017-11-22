@@ -319,7 +319,7 @@ export class WebPortal {
       try{
         let electronics = Catalog.getInstance().getProductPage(parseInt(req.query.page), req.query.type, parseInt(req.query.numOfItems),
                                                                parseInt(req.query.priceLow),parseInt(req.query.priceHigh), req.query.brand,
-                                                               parseInt(req.query.maxSize), parseInt(req.query.maxWeight));
+                                                               parseInt(req.query.maxSize), parseInt(req.query.maxWeight), req.query.priceSort);
         res.send(electronics);
       }catch (e) {
         console.log(e);

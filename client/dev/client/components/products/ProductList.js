@@ -6,7 +6,7 @@ import Button from 'material-ui/Button';
 
 import Table, { TableBody, TableCell, TableHead, TableFooter, TableRow, TablePagination } from 'material-ui/Table';
 
-const ProductList = ({ userType, products, onProductClick, onProductDelete, onAddToCartClick, currPage, numItems, numItemsPerPage, gotoPage, changeRowsPerPage, pagination, deleteLabel, pageType }) => {
+const ProductList = ({ onSort, userType, products, onProductClick, onProductDelete, onAddToCartClick, currPage, numItems, numItemsPerPage, gotoPage, changeRowsPerPage, pagination, deleteLabel, pageType }) => {
   return (
     <Grid container spacing={8} style={{ margin: '0px', marginTop: '5px' }}>
       <Grid item xs={12}>
@@ -16,7 +16,10 @@ const ProductList = ({ userType, products, onProductClick, onProductDelete, onAd
               <TableCell>Model Number</TableCell>
               <TableCell>Electronic Type</TableCell>
               <TableCell>Product Brand</TableCell>
-              <TableCell numeric>Price</TableCell>
+              <TableCell numeric>
+                <a style={{cursor: 'pointer'}} onClick={ () => onSort('asc') }>Price ▲</a>
+                <a style={{cursor: 'pointer'}} onClick={ () => onSort('desc') }>▼</a>
+              </TableCell>
               <TableCell numeric>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -77,7 +80,8 @@ ProductList.propTypes = {
     changeRowsPerPage: PropTypes.func,
     numItems: PropTypes.number,
     numItemsPerPage: PropTypes.number,
-    pageType: PropTypes.string
+    pageType: PropTypes.string,
+    onSort: PropTypes.func.isRequired,
 };
 
 export default ProductList;

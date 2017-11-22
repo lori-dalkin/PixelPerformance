@@ -27,6 +27,7 @@ INSERT INTO laptops(weight, modelNumber, brand, price, processor, ram, cpus, har
 INSERT INTO laptops(weight, modelNumber, brand, price, processor, ram, cpus, hardDrive, os, displaySize, battery, camera, touchscreen, decommissioned) VALUES (77,'i3542-5000BK','Dell',369.50,'Intel Core i3',4,2,500,'Windows',15.6,9.6,True,True,False);
 
 
+
 DELETE FROM monitors;
 INSERT INTO monitors(weight, modelNumber, brand, price, size, decommissioned) VALUES(13 ,'OLEDLG21X','LG', 432.00, 21,False);
 INSERT INTO monitors(weight, modelNumber, brand, price, size, decommissioned) VALUES(17 ,'OLEDLG24X','LG', 656.00, 24,False);

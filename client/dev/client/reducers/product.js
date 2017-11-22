@@ -59,7 +59,8 @@ const initialState = {
     page: 1,
     productsPerPage: 10,
     numProducts: 0,
-    brands: []
+    brands: [],
+    priceSort: ''
 };
 
 export default function (state = initialState, action) {
@@ -284,6 +285,13 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 error: true
+            };
+            break;
+        case actions.SET_PRICE_SORT:
+            return {
+                ...state,
+                priceSort: action.priceSort,
+                filterSet: true
             };
             break;
         default:

@@ -269,10 +269,10 @@ class ProductFieldPresentationDialog extends Component {
                                 <Grid item xs={6}>
                                   <TextField
                                     style={fullWidthStyle}
-                                    id="dimension"
+                                    id="dimensions"
                                     name="dimensions"
                                     label="Dimensions"
-                                    onChange={(event) => this.syncStateToInputValue("dimension", event)}
+                                    onChange={(event) => this.syncStateToInputValue("dimensions", event)}
                                     value={this.state.dimensions}
                                   />
                                 </Grid>
