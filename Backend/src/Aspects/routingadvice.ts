@@ -6,23 +6,15 @@ import { User } from "../Models/user";
 export class RoutingAdvice extends AdvicePool {
 
   static requireLoggedIn(meta) {
-    let self = this;
     RoutingAdvice.verifyUserOfType(this, meta, ["User"]);
   }
 
   static requireAdmin(meta) {
-    let self = this;
     RoutingAdvice.verifyUserOfType(this, meta, ["Admin"]);
   }
 
   static requireClient(meta) {
-    let self = this;
     RoutingAdvice.verifyUserOfType(this, meta, ["Client"]);
-  }
-
-  static requireClientOrAdmin(meta) {
-    let self = this;
-    RoutingAdvice.verifyUserOfType(this, meta, ["Client", "User"]);
   }
 
   private static verifyUserOfType(self: any, meta: any, types: string[]): void {

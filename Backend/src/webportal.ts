@@ -6,8 +6,6 @@ import * as path from "path";
 import * as jwt from "jsonwebtoken";
 import * as corser from "corser";
 var cors = require('cors');
-import * as passport from "passport";
-import * as passportJWT from "passport-jwt";
 import * as bcrypt from "bcrypt";
 import errorHandler = require("errorhandler");
 import methodOverride = require("method-override");
