@@ -156,9 +156,6 @@ describe('Deleting an Inventory by its ID', () => {
 
             //adding the newly created monitor just to verify that it can be deleted too
             var newMonitorAdded = catalog.addInventory(newTestMonitor.getId());
-            newMonitorAdded.then(function (newMonitorAdded) {
-                expect(newMonitorAdded).to.equal(valueShouldBeTrue);
-            })
 
             //verify I can delete the new monitor from my inventory
             var newMonitorDeleted = catalog.deleteInventory(newTestMonitor.getId());
