@@ -156,10 +156,8 @@ export class PurchaseManagement {
         // assert(PurchaseManagement.getInstance().findCart(meta.args[0]) != null, "there are no purchases associated to this account");
     })
     @afterMethod(function (meta) {
-            assert(meta.result != null, "There was an error in retrieving your previous purchases");
+        assert(meta.result != null, "There was an error in retrieving your previous purchases");
     })
-	// viewPurchases(userId: string): Inventory []
-
     public viewPurchases(userId: String): Inventory[] {
         let purchase_history: Inventory[] = new Array<Inventory>();
         for (let i = 0; i < this.purchaseRecords.length; i++) {
@@ -180,8 +178,10 @@ export class PurchaseManagement {
     @afterMethod(function(meta) {
 		// The return is recorded to the client’s account.
 		assert(PurchaseManagement.getInstance().getAllUsersPurchasedSerials(meta.args[0]).indexOf(meta.args[1]) < 0, "The return was not recorded to the user's account");
-        //The returned items are put back into the system.
+        // The returned items are put back into the system.
 		assert(PurchaseManagement.getInstance().findInventoryBySerialNumber(meta.args[1]) != null, "The item was not successfully returned to the catalog.");
+		// Unlock the given Inventory item
+		InventoryLockingAdvice.ensureUnlocked(meta.args[1])
     })
     public returnInventory(userId: string, serialNumber: string): boolean{
 		let allPurchases = this.purchaseRecords;
@@ -227,7 +227,6 @@ export class PurchaseManagement {
 		//set the cart and lockedUntil variables to null
 		returningInv = new Inventory(returningInv.getserialNumber(), returningInv.getinventoryType());
 		returningInv.setCartId(null);
-		returningInv.setLockedUntil(null);
 
 		//Modify the cart to remove the inventory from its records
 		console.log("Modifying db");
@@ -296,6 +295,7 @@ export class PurchaseManagement {
 
 	@afterMethod(function(meta) {
 		assert(meta.result != null,"matching inventory could not be found");
+		InventoryLockingAdvice.ensureUnlocked(meta.args[1])
 	})
 	public removeFromCart(userId: string, serialNumber: string):Inventory{
 		let cart = this.findCart(userId);
@@ -303,14 +303,11 @@ export class PurchaseManagement {
 		for( let i=0;i<inventory.length;i++){
 			if(inventory[i].getserialNumber() == serialNumber){
 				inventory[i].setCartId(null);
-				inventory[i].setLockedUntil(null);
 				return inventory.splice(i, 1)[0];
 			}
 		}
 		return null;
 	}
-
-	// removeFromCart(userId: string, serialNumber: string): bool
 
 	//Methods for Contract Programming
 	public checkItemAddedToCart(userId:string, serialNumber:string):Boolean{
