@@ -67,7 +67,7 @@ export class Cart implements Igateway{
         });
 
         //find all previously purchased inventories
-        dataPromises.push(Inventory.findAllPurchased());
+        dataPromises.push(InventoryRecord.findAllPurchased());
         dataPromises[1].then( (data) => {
             for (let cartid in data){
                 savedInventories[cartid] = data[cartid];
@@ -94,12 +94,14 @@ export class Cart implements Igateway{
     public async save(): Promise<boolean> {
         let storeOrNot = new Boolean;
         var cart = this;
-        let dataPromises = new Array<Promise<void>>();
+        let dataPromises = new Array<Promise<boolean>>();
         dataPromises.push(db.none("INSERT INTO cart VALUES ('" + this.id + "','" + this.userId + "')")
             .then(function () {
                 console.log("UserCart added to db");
                 for (let i = 0; i < cart.inventory.length; i++) {
+                    
                     let record: InventoryRecord = new InventoryRecord(cart.inventory[i].getserialNumber(), cart.inventory[i].getinventoryType());
+                    
                     dataPromises.push(record.save());
                 }
                 return true;

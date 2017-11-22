@@ -41,14 +41,13 @@ export class InventoryRecord extends Inventory {
             });
     }
     public async save(): Promise<boolean> {
-
         return db.none("INSERT INTO bought_inventory VALUES ('" + this.getserialNumber() + "','" + this.getinventoryType().getId() + "','" + this.getCartId() +
             "','" + this.getReturnDate() + "');")
             .then(function () {
-                console.log("monitor added to db");
+                console.log("inventory added to db");
                 return true;
             }).catch(function (err) {
-                console.log("Error adding monitor to the db: " + err);
+                console.log("Error adding inventory to the db: " + err);
                 return false;
             });
     }
