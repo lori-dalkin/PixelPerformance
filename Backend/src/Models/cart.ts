@@ -1,5 +1,6 @@
 import { Inventory } from "./inventory";
-import {dbconnection} from "./dbconnection";
+import { dbconnection } from "./dbconnection";
+import { InventoryRecord } from "./inventoryrecord";
 import {afterMethod, beforeMethod} from 'kaop-ts'
 import  validator = require('validator');
 import assert = require('assert');
@@ -98,14 +99,8 @@ export class Cart implements Igateway{
             .then(function () {
                 console.log("UserCart added to db");
                 for (let i = 0; i < cart.inventory.length; i++) {
-                    dataPromises.push(db.none("INSERT INTO bought_inventory VALUES ('" + cart.inventory[i].getserialNumber() + "','" + cart.inventory[i].getinventoryType().getId() + "','" + cart.id + "')")
-                        .then(function () {
-                            console.log("UserCart added to db");
-                            return true;
-                        }).catch(function (err) {
-                            console.log("Error adding UserCart to the db: " + err);
-                            return false;
-                        }));
+                    let record: InventoryRecord = new InventoryRecord(cart.inventory[i].getserialNumber(), cart.inventory[i].getinventoryType());
+                    dataPromises.push(record.save());
                 }
                 return true;
             }).catch(function (err) {

@@ -91,36 +91,7 @@ export class Inventory implements Igateway{
             });
     }
 
-    /****************************************************************
-     * Method to return all bought Inventories saved in the database
-     *****************************************************************/
-    public static async findAllPurchased(): Promise<{[key: string]: Inventory[]}>{
-        const timeout = ms => new Promise(res => setTimeout(res, ms));
-        await timeout(1000);
-
-        return db.many('SELECT * FROM bought_inventory;')
-            .then(function(rows) {
-                let inventories: { [key: string]: Inventory[]} = {};
-
-                for(let i=0; i < rows.length; i++) {
-                    if (inventories[rows[i].cart_id] == null){
-                        inventories[rows[i].cart_id] = new Array<Inventory>();
-                    }
-
-                    let currInventory: Inventory = new Inventory(rows[i].serialNumber, Inventory.getProduct(rows[i].electronicID));
-
-                    if (rows[i].return_date != null) {
-                        currInventory.setReturnDate(new Date(rows[i].return_date));
-                    }
-
-                    inventories[rows[i].cart_id].push(currInventory);
-                }
-                return inventories;
-            }).catch(function (err) {
-                console.log("There was an error retrieving all bought inventory: " + err);
-                return null;
-            });
-    }
+  
 
     public static getProduct(productId:string): Electronic {
 		let elecIterator = Inventory.getElectronics();
