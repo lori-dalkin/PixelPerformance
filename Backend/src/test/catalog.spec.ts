@@ -10,9 +10,6 @@ import { expect } from 'chai';
 import 'mocha';
 import * as uuid from "uuid";
 
-import { Electronic } from '../Models/electronic';
-import { expect } from 'chai';
-import 'mocha';
 
 var db = new dbconnection().getDBConnector();
 let catalog = Catalog.getInstance();
@@ -31,8 +28,6 @@ describe('Getting Products from Catalog', () => {
           let undef:any;
           //get all electronics
           const elec = catalog.getProductPage(undef,undef,undef,undef,undef,undef,undef,undef,undef);
-          console.log("%%%" + catalog.electronics.length);
-          console.log("---" + elec.totalProducts);
           //compare products returned from products in catalog
           let anElec:Electronic;
           for(var i=0; i<elec.totalProducts; i++) {
@@ -58,7 +53,6 @@ describe('Getting Products from Catalog', () => {
         it('add product in the catalog', () => {
     
             
-            let undef:any;
             //get inital electronics length
             let numElecStart:number = catalog.electronics.length;
             //create electronics to add in catalog

@@ -175,7 +175,6 @@ export class Catalog {
         page = isNaN(page) ? null : page;
 
         var desiredProducts: Electronic[] = this.electronics;
-        console.log("9999  " + desiredProducts.length);
         var products: Electronic[];
         var filters = [];
         var sorts = [];
@@ -192,23 +191,19 @@ export class Catalog {
             filterData.push(brand);
         }
         if(type !== 'Desktop' && type !== undefined) {
-            console.log("Desktop filter applied");
             filters.push(new SizeFilterProductStrategy());
             filterData.push(maxSize);
         }
         if(maxWeight) {
-            console.log("Weight filter applied");
             filters.push(new WeightFilterProductStrategy());
             filterData.push(maxWeight);
         }
 
         if(priceLow) {
-            console.log("PriceLow filter applied");
             filters.push(new LowPriceFilterProductStrategy());
             filterData.push(priceLow);
         }
         if(priceHigh) {
-            console.log("PriceHigh filter applied");
             filters.push(new HighPriceFilterProductStrategy());
             filterData.push(priceHigh);
         }
@@ -218,7 +213,6 @@ export class Catalog {
             sorts.push(new PriceSortingProductStrategy());
             sortData.push(priceSort);
         }
-        console.log("8888  " + desiredProducts.length);
         // Applying the filters
         for(let i = 0; i < filters.length; i++){
             products = desiredProducts;
@@ -229,7 +223,6 @@ export class Catalog {
             products = desiredProducts;
             desiredProducts = sorts[i].sortProduct(products, sortData[i]);
         }
-        console.log("6666  " + desiredProducts.length);
         let totalProducts= desiredProducts.length;
         if(page != null)
         {
@@ -265,7 +258,6 @@ export class Catalog {
     @beforeMethod(function(meta){
         assert(meta.args[0] != null,  "Product data cannot be null");
         Catalog.getInstance().validateElectronicParameter(meta.args[0], false);
-        //console.log(typeof meta.args[0].getWeight() == "number");
 	})
 	@afterMethod(function(meta) {
         //compare most recent object with object sent to function
@@ -351,10 +343,8 @@ export class Catalog {
     @beforeMethod(function(meta){
         assert(meta.args[0] != null,  "Product data cannot be null");
         Catalog.getInstance().validateElectronicParameter(meta.args[1], true);
-        //console.log(typeof meta.args[0].getWeight() == "number");
 	})
     public async modifyProduct(electronicID: string, data): Promise<boolean> {
-        console.log(data);
         for(let index = 0; index < this.electronics.length; index++) {
             if (this.electronics[index].getId() == electronicID) {
                 let elec: Electronic = this.electronics[index];
