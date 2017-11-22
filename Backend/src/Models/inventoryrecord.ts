@@ -6,13 +6,9 @@ var db = new dbconnection().getDBConnector();
 
 export class InventoryRecord extends Inventory {
 
-    /****************************************************************
+        /****************************************************************
    * Method to return all bought Inventories saved in the database
    *****************************************************************/
-
-
-
-
     public static async findAllPurchased(): Promise<{ [key: string]: Inventory[] }> {
         const timeout = ms => new Promise(res => setTimeout(res, ms));
         await timeout(1000);
@@ -41,8 +37,7 @@ export class InventoryRecord extends Inventory {
             });
     }
     public async save(): Promise<boolean> {
-        return db.none("INSERT INTO bought_inventory VALUES ('" + this.getserialNumber() + "','" + this.getinventoryType().getId() + "','" + this.getCartId() +
-            "','" + this.getReturnDate() + "');")
+        return db.none("INSERT INTO bought_inventory VALUES ('" + this.getserialNumber() + "','" + this.getinventoryType().getId() + "','" + this.getCartId() + "');")
             .then(function () {
                 console.log("inventory added to db");
                 return true;
@@ -52,12 +47,20 @@ export class InventoryRecord extends Inventory {
             });
     }
 
-    /* public static async updatePurchased(): Promise<boolean> {
- 
- 
- 
- 
-     }*/
+      /********************************************************
+     * Method to delete cart item and database item
+     *********************************************************/
+
+    public async returnInventoryRecord(id: String, date: Date): Promise<boolean> {
+        return db.none("UPDATE bought_inventory SET \"return_date\" = '"+ (date.toISOString()) +"' WHERE \"serialNumber\" ='"+ id + "';")
+            .then(function () {
+            console.log("done updating bought_inventory");
+            return true;
+        }).catch(function (err) {
+            console.log("No matching object found for delete:"+ err);
+            return false;
+        });
+    }
 
 
 }

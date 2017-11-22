@@ -1,6 +1,7 @@
 import { Catalog } from "./catalog";
 import { Cart } from "./Models/cart";
-import {Inventory} from "./Models/inventory";
+import { Inventory } from "./Models/inventory";
+import { InventoryRecord } from "./Models/inventoryrecord";
 import {afterMethod, beforeInstance, beforeMethod} from 'kaop-ts'
 import  validator = require('validator');
 import assert = require('assert');
@@ -223,8 +224,9 @@ export class PurchaseManagement {
 		console.log("Modifying db");
 		let uow: UnitOfWork = this.unitOfWork;
 		for (let i=0; i<allPurchases.length; i++){
-			if (allPurchases[i].getId() == modifiedCartId){
-				allPurchases[i].returnInventoryRecord(serialNumber, dateReturned).then((data) => {
+            if (allPurchases[i].getId() == modifiedCartId) {
+                let record: InventoryRecord = new InventoryRecord(serialNumber, returningInv.getinventoryType());
+				record.returnInventoryRecord(serialNumber, dateReturned).then((data) => {
 					returnSuccess = data;
 				});
                 if (returnSuccess) {

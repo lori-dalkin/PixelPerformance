@@ -101,7 +101,7 @@ export class Cart implements Igateway{
                 for (let i = 0; i < cart.inventory.length; i++) {
                     
                     let record: InventoryRecord = new InventoryRecord(cart.inventory[i].getserialNumber(), cart.inventory[i].getinventoryType());
-                    
+                    record.setCartId(cart.id);
                     dataPromises.push(record.save());
                 }
                 return true;
@@ -120,19 +120,7 @@ export class Cart implements Igateway{
 
 
 
-    /********************************************************
-     * Method to delete cart item and database item
-     *********************************************************/
-
-    public async returnInventoryRecord(id: String, date: Date): Promise<boolean> {
-        return db.none("UPDATE bought_inventory SET \"return_date\" = '"+ (date.toISOString()) +"' WHERE \"serialNumber\" ='"+ id + "';")
-        .then(function () {
-            return true;
-        }).catch(function (err) {
-            console.log("No matching object found for delete:"+ err);
-            return false;
-        });
-    }
+   
 
     /********************************************************
         * Method to remove the current object from the database
