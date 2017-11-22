@@ -104,7 +104,7 @@ export class UserManagement {
         assert(param.password.length <= 128, "Password is at most 128 characters long");
         assert(param.address.length <= 30, "Address is at most 30 characters long");
         assert(param.phone.length <= 30, "Phone is at most 30 characters long");
-        assert(param.phone.match(/^[0-9]+$/i), "Phone number only accepts numeric characters");
+        assert(param.phone.match(/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/i), "Phone number formats accepted [1234567890] [123-456-7890] [(123) 456-7890] [123 456 7890] [123.456.7890] [+91 (123) 456-7890]");
     })
     public addClient(data): boolean {
         let client: Client;
