@@ -5,7 +5,7 @@ import { User } from "./Models/user";
 
 export class RoutingAdvice extends AdvicePool {
 
- static requireLoggedIn(meta) {
+  static requireLoggedIn(meta) {
     let self = this;
     RoutingAdvice.verifyUserOfType(this, meta, ["User"]);
   }

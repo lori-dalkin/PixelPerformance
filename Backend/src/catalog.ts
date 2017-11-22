@@ -242,7 +242,7 @@ export class Catalog {
     {
         assert(meta.result.length > 0, "No inventory found.");
     })
-    public getAllInventories( electronicId:string): Inventory[] {
+    public getAllInventories(electronicId:string): Inventory[] {
         var desired: Inventory[] = [];
         for(let i=0;i<this.inventories.length;i++){
             if(this.inventories[i].getinventoryType() == null){
