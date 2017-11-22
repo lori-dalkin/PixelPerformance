@@ -93,6 +93,19 @@ export class UserManagement {
     /***************************************
     * Function to add a new Client
      ****************************************/
+    @beforeMethod(function(meta){
+        var param = meta.args[0];
+        assert(param.fname.match(/^[a-zA-Z]+$/i), "First Name only accepts alphabet characters");
+        assert(param.fname.length <= 20, "First Name is at most 20 characters long");
+        assert(param.lname.match(/^[a-zA-Z]+$/i), "Last Name only accepts alphabet characters");
+        assert(param.lname.length <= 20, "Last Name is at most 20 characters long");
+        assert(validator.isEmail(param.email), "Email type is invalid");
+        assert(param.email.length <= 30, "Email is at most 30 characters long");
+        assert(param.password.length <= 128, "Password is at most 128 characters long");
+        assert(param.address.length <= 30, "Address is at most 30 characters long");
+        assert(param.phone.length <= 30, "Phone is at most 30 characters long");
+        assert(param.phone.match(/^[0-9]+$/i), "Phone number only accepts numeric characters");
+    })
     public addClient(data): boolean {
         let client: Client;
         client = new Client(uuid.v1(), data.fname, data.lname, data.email, data.password, data.address, data.phone);
