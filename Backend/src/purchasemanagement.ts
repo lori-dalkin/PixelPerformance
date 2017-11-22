@@ -1,9 +1,9 @@
 import { Catalog } from "./catalog";
 import { Cart } from "./Models/cart";
 import {Inventory} from "./Models/inventory";
-import {afterMethod, beforeInstance, beforeMethod} from 'kaop-ts'
-import  validator = require('validator');
-import assert = require('assert');
+import { afterMethod, beforeInstance, beforeMethod } from 'kaop-ts'
+import { assert } from "./assert";
+import validator = require('validator');
 import * as uuid from "uuid";
 import {isUndefined} from "util";
 import {UnitOfWork} from "./unitofwork";

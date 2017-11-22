@@ -18,13 +18,13 @@ INSERT INTO desktops(weight, modelNumber, brand, price, processor, ram, cpus, ha
 DELETE FROM tablets;
 INSERT INTO tablets(weight, modelNumber, brand, price, processor, ram, cpus, hardDrive, os, displaySize, dimensions, battery, camera) VALUES(19, 'A1432', 'Apple', 579.00, 'Apple A9', 2, 2, 128, 'IOS', 9.7, '240x169.5x7.5', 32.4, True);
 INSERT INTO tablets(weight, modelNumber, brand, price, processor, ram, cpus, hardDrive, os, displaySize, dimensions, battery, camera) VALUES(21, 'A1435', 'Apple', 1299.00, 'Apple A10X', 4, 6, 512, 'IOS', 10.5, '250.6x174.1x6.1', 30.4, True);
-INSERT INTO tablets(weight, modelNumber, brand, price, processor, ram, cpus, hardDrive, os, displaySize, dimensions, battery, camera) VALUES(20, 'SM-T1818WZKEXAC', 'Samsung', 699.00, 'T810', 3, 8, 256, 'Android', 9.7, '237.3x169x5.6', 5870, True);
+INSERT INTO tablets(weight, modelNumber, brand, price, processor, ram, cpus, hardDrive, os, displaySize, dimensions, battery, camera) VALUES(20, 'SMT1818WZKEXAC', 'Samsung', 699.00, 'T810', 3, 8, 256, 'Android', 9.7, '237.3x169x5.6', 5870, True);
 INSERT INTO tablets(weight, modelNumber, brand, price, processor, ram, cpus, hardDrive, os, displaySize, dimensions, battery, camera) VALUES(20, 'Z500M', 'Asus', 357.76, 'MTK MT8176', 4, 4, 64, 'Android', 9.7, '240.5x163.7.5x5.8', 22, True);
 
 DELETE FROM laptops;
 INSERT INTO laptops(weight, modelNumber, brand, price, processor, ram, cpus, hardDrive, os, displaySize, battery, camera, touchscreen) VALUES (42,'UX330UA','Asus',1049.00,'Intel Core i5',8,2,256,'Windows',13.3,10.5,True,False);
-INSERT INTO laptops(weight, modelNumber, brand, price, processor, ram, cpus, hardDrive, os, displaySize, battery, camera, touchscreen) VALUES (56,'AN515-51-56U0','Acer',999.00,'Intel Core i5',8,4,256,'Windows',15.6,11.2,True,False);
-INSERT INTO laptops(weight, modelNumber, brand, price, processor, ram, cpus, hardDrive, os, displaySize, battery, camera, touchscreen) VALUES (77,'i3542-5000BK','Dell',369.50,'Intel Core i3',4,2,500,'Windows',15.6,9.6,True,True);
+INSERT INTO laptops(weight, modelNumber, brand, price, processor, ram, cpus, hardDrive, os, displaySize, battery, camera, touchscreen) VALUES (56,'AN5155156U0','Acer',999.00,'Intel Core i5',8,4,256,'Windows',15.6,11.2,True,False);
+INSERT INTO laptops(weight, modelNumber, brand, price, processor, ram, cpus, hardDrive, os, displaySize, battery, camera, touchscreen) VALUES (77,'i35425000BK','Dell',369.50,'Intel Core i3',4,2,500,'Windows',15.6,9.6,True,True);
 
 
 DELETE FROM monitors;
