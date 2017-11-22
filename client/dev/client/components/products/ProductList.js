@@ -16,7 +16,10 @@ const ProductList = ({ onSort, userType, products, onProductClick, onProductDele
               <TableCell>Model Number</TableCell>
               <TableCell>Electronic Type</TableCell>
               <TableCell>Product Brand</TableCell>
-              <TableCell numeric>Price <a onClick={ () => onSort('asc') }>▲</a> <a onClick={ () => onSort('desc') }>▼</a></TableCell>
+              <TableCell numeric>
+                <a style={{cursor: 'pointer'}} onClick={ () => onSort('asc') }>Price ▲</a>
+                <a style={{cursor: 'pointer'}} onClick={ () => onSort('desc') }>▼</a>
+              </TableCell>
               <TableCell numeric>Actions</TableCell>
             </TableRow>
           </TableHead>
