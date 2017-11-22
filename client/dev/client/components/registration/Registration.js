@@ -56,7 +56,9 @@ class Registration extends Component {
         }
 
         this.validate = () => {
-            if(this.state.fname === "" || this.state.lname === "" || this.state.email === "" || this.state.password === "" || this.state.address === "" || this.state.phone === "") {
+            this.resetErrors();
+
+            if (this.state.fname === "" || this.state.lname === "" || this.state.email === "" || this.state.password === "" || this.state.address === "" || this.state.phone === "") {
                 this.state.fname === "" ? this.setState({ fname_error: true }) : this.setState({ fname_error: false });
                 this.state.lname === "" ? this.setState({ lname_error: true }) : this.setState({ lname_error: false });
                 this.state.email === "" ? this.setState({ email_error: true }) : this.setState({ email_error: false });
@@ -82,6 +84,10 @@ class Registration extends Component {
             this.setState({ password: "" });
             this.setState({ address: "" });
             this.setState({ phone: "" });
+            this.resetErrors();
+        }
+
+        this.resetErrors = () => {
             this.setState({ fname_error: false });
             this.setState({ lname_error: false });
             this.setState({ email_error: false });
