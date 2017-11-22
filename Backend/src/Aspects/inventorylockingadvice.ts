@@ -1,6 +1,6 @@
 import { AdvicePool } from 'kaop-ts';
-import { Inventory } from './Models/inventory';
-import { Catalog } from './catalog';
+import { Inventory } from '../Models/inventory';
+import { Catalog } from '../catalog';
 
 export class InventoryLockingAdvice extends AdvicePool {
 	private static lockedFor = 60 * 10 * 1000;

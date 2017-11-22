@@ -23,7 +23,7 @@ import { PurchaseManagement } from "./purchasemanagement";
 import { SystemMonitor } from "./Models/systemmonitor";
 import * as uuid from "uuid";
 import { AdvicePool, beforeMethod } from 'kaop-ts';
-import { RoutingAdvice } from "./routingadvice";
+import { RoutingAdvice } from "./Aspects/routingadvice";
 import {Inventory} from "./Models/inventory";
 import {UnitOfWork} from "./unitofwork";
 var swaggerUi = require('swagger-ui-express');

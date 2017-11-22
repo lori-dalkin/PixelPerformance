@@ -1,7 +1,7 @@
 import * as jwt from "jsonwebtoken";
 import { AdvicePool, beforeMethod } from 'kaop-ts';
-import { UserManagement } from "./usermanagement";
-import { User } from "./Models/user";
+import { UserManagement } from "../usermanagement";
+import { User } from "../Models/user";
 
 export class RoutingAdvice extends AdvicePool {
 

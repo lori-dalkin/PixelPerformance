@@ -7,7 +7,7 @@ import validator = require('validator');
 import * as uuid from "uuid";
 import {isUndefined} from "util";
 import {UnitOfWork} from "./unitofwork";
-import { InventoryLockingAdvice } from "./inventorylockingadvice";
+import { InventoryLockingAdvice } from "./Aspects/inventorylockingadvice";
 
 
 export class PurchaseManagement {
