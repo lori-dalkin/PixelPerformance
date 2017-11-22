@@ -458,6 +458,7 @@ export class Catalog {
     private isWholeNumber(par:any, message:string) {
         Catalog.getInstance().validatePositiveNumber(par, message);
         assert(Number(par)%1 === 0, message + " needs to be an integer");
+        assert(Number(par) < 100000, message + " needs to be less than 100000")
     }
     private validatePositiveNumber(par:any, message:string) {
         assert((typeof par == "number" || par.trim(" ") !== "") && !Number.isNaN(Number(par)), message + " needs to be a number");
@@ -468,8 +469,10 @@ export class Catalog {
         Catalog.getInstance().isTwoDigitNumber(parameter.weight, "Weight");
         assert(parameter.weight < 100, "Weight must be less than 100");
         assert(typeof parameter.modelNumber == "string", "Model Number needs to be a string");
-        assert(parameter.modelNumber.match(/^[a-z0-9]+$/i), "Model Number must be alphanumeric")
+        assert(parameter.modelNumber.length <= 20, "Model Number is at most 20 characters long");
+        assert(parameter.modelNumber.match(/^[a-z0-9]+$/i), "Model Number must be alphanumeric");
         assert(typeof parameter.brand == "string", "Brand needs to be a string");
+        assert(parameter.brand.length <= 30, "Brand is at most 30 characters long");
         Catalog.getInstance().isTwoDigitNumber(parameter.price, "Price");
         assert(Number(parameter.price) < 10000, "Price should be less than 10000" );
         if(modify) {
@@ -481,17 +484,21 @@ export class Catalog {
         let eType:string = parameter.electronicType;
         assert(typeof eType == "string", "Electronic Type needs to be a string");
         if(eType === "Monitor") {
-            Catalog.getInstance().validatePositiveNumber(parameter.size, "Size");
+            Catalog.getInstance().isWholeNumber(parameter.size, "Size");
         }
         else {
             assert(typeof parameter.processor == "string", "Processor needs to be a string");
+            assert(parameter.processor.length <= 20, "Processor is at most 20 characters long");
             Catalog.getInstance().isWholeNumber(parameter.ram, "Ram");
             Catalog.getInstance().isWholeNumber(parameter.cpus, "Number of CPU's");
             Catalog.getInstance().isWholeNumber(parameter.hardDrive, "Hard Drive");
             assert(typeof parameter.os == "string", "Operating System needs to be a string");
+            assert(parameter.os.length <= 15, "Operating System is at most 15 characters long");
             switch(eType) {
                 
                 case "Desktop":
+                assert(typeof parameter.dimensions == "string", "Dimensions needs to be a string");
+                assert(parameter.dimensions.length <= 20, "Dimensions is at most 20 characters long");
                     break;
                 case "Laptop":
                 case "Tablet":
@@ -505,6 +512,7 @@ export class Catalog {
                     }
                     else if(eType === "Tablet") {
                         assert(typeof parameter.dimensions == "string", "Dimensions needs to be a string");
+                        assert(parameter.dimensions.length <= 20, "Dimensions is at most 20 characters long");
                         //assert(typeof parameter.camera == "boolean", "Camera needs to be a boolean"); // todo: typecast to boolean
                     }
                     break;
