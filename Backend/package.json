@@ -8,7 +8,7 @@
     "grunt": "grunt",
     "start": "npm run grunt && node ./bin/www",
     "pretest": "tsc src/test/usermanagement.spec.ts src/test/catalog.spec.ts src/test/purchasemanagement.spec.ts --target es6 --module commonjs --experimentalDecorators true --outDir ./dist/src",
-    "test": "mocha dist/src/test/" 
+    "test": "mocha dist/src/test/"
   },
   "repository": {
     "type": "git",

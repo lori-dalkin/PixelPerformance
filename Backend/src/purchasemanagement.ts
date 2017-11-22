@@ -7,6 +7,7 @@ import validator = require('validator');
 import * as uuid from "uuid";
 import {isUndefined} from "util";
 import {UnitOfWork} from "./unitofwork";
+import { InventoryLockingAdvice } from "./inventorylockingadvice";
 
 
 export class PurchaseManagement {
@@ -88,7 +89,6 @@ export class PurchaseManagement {
 		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
 		assert(validator.isUUID(meta.args[1]), "electronic id needs to be a uuid");
 		assert(Catalog.getInstance().getInventoryByElectronic(meta.args[1]) != null,"electronic id  does not correspond to any item within Inventory");
-		//assert(!meta.args[1].isLocked(), "Item is unavaible");
 		//assert(PurchaseManagement.getInstance().findCart(meta.args[0]) == null || PurchaseManagement.getInstance().findCart(meta.args[0]).getInventory().length < 7,"Your cart is already full. (7 Max)")
 	})
 	@afterMethod(function(meta) {
@@ -96,6 +96,24 @@ export class PurchaseManagement {
 	})
 	public addItemToCart(userId: string, electronicId: string): Boolean
 	{
+		let inventoryObj:Inventory = this.catalog.getInventoryByElectronic(electronicId);
+		return PurchaseManagement.getInstance().addItemToCartBySerialNumber(userId, inventoryObj.getserialNumber());
+	}
+
+	@beforeMethod(function(meta){
+		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
+		assert(validator.isUUID(meta.args[1]), "serial number needs to be a uuid");
+		InventoryLockingAdvice.requireUnlocked(meta.args[1])
+		//assert(PurchaseManagement.getInstance().findCart(meta.args[0]) == null || PurchaseManagement.getInstance().findCart(meta.args[0]).getInventory().length < 7,"Your cart is already full. (7 Max)")
+	})
+	@afterMethod(function(meta) {
+		//assert(PurchaseManagement.getInstance().checkItemAddedToCart(meta.args[0],meta.args[1]), "Item was not added to cart" )
+		InventoryLockingAdvice.ensureLocked(meta.args[1])
+	})
+	public addItemToCartBySerialNumber(userId: string, serialNumber: string): Boolean
+	{
+		let inventoryObj:Inventory = this.catalog.getInventory(serialNumber);
+
 		let cart:Cart;
 		try{
 			cart = this.getCart(userId);
@@ -105,14 +123,9 @@ export class PurchaseManagement {
 			this.activeCarts.push(cart);
 		}
 
-		let inventoryObj:Inventory = this.catalog.getInventoryByElectronic(electronicId);
-
 		//obj is available to be taken since beforeMethod was successful
 		//add obj to cart
 		cart.getInventory().push(inventoryObj);
-		//set obj lock time
-		var futureDate = new Date(new Date().getTime() + 10*60000);
-		inventoryObj.setLockedUntil(futureDate);
 
 		//if obj was previously in another cart, remove it
 		let prevCart =  this.findCart(inventoryObj.getCartId());

@@ -8,6 +8,13 @@ import { Laptop } from "./Models/laptop";
 import { Inventory  } from "./Models/inventory";
 import { ElectronicFactory } from "./electronicfactory";
 import { UnitOfWork } from "./unitofwork";
+import { TypeFilterProductStrategy } from "./Strategies/typefilterproductstrategy";
+import { BrandFilterProductStrategy } from "./Strategies/brandfilterproductstrategy";
+import { SizeFilterProductStrategy } from "./Strategies/sizefilterproductstrategy";
+import { WeightFilterProductStrategy } from "./Strategies/weightfilterproductstrategy";
+import { LowPriceFilterProductStrategy } from "./Strategies/lowpricefilterproductstrategy";
+import { HighPriceFilterProductStrategy } from "./Strategies/highpricefilterproductstrategy";
+import { PriceSortingProductStrategy } from "./Strategies/pricesortingproductstrategy"
 
 // Dependencies for contracts
 import { afterMethod, beforeInstance, beforeMethod } from 'kaop-ts';
@@ -158,7 +165,7 @@ export class Catalog {
     })
     public getProductPage(page:number, type:string, numOfItems:number, 
                             priceLow:number, priceHigh:number, brand:string,
-                            maxSize:number, maxWeight:number) {
+                            maxSize:number, maxWeight:number, priceSort:string) {
         //set defaults in case of undefined
         priceLow = isNaN(priceLow) ? 0 : priceLow;
         priceHigh = isNaN(priceHigh) ? 1000000 : priceHigh; //default arbitrarly high
@@ -166,59 +173,57 @@ export class Catalog {
         maxSize = isNaN(maxSize) ? 100000 : maxSize; //default arbitrarly high
         numOfItems = isNaN(numOfItems) ? 25 : numOfItems;
         page = isNaN(page) ? null : page;
-        /*For testing. Remove after UI is integrated.
-        console.log("**** Product Filtering ****")
-        console.log("Price range:" +priceLow + " to " + priceHigh);
-        console.log("Brand:" +brand);
-        console.log("Max weight:" + maxWeight);
-        console.log("Type:" + type);
-        console.log("Size: " + maxSize);
-        console.log("#items: " +numOfItems);
-        console.log("Page:" + page);
-        console.log("***************************")
-        */
-        var desiredType: Electronic[] = [];
-        var desiredProducts: Electronic[] = [];
-        if(type == null || type == undefined){
-            desiredType = this.electronics;
+
+        var desiredProducts: Electronic[] = this.electronics;
+        var products: Electronic[];
+        var filters = [];
+        var sorts = [];
+        var filterData = [];
+        var sortData = [];
+
+        // Set filter Strategies given filters
+        if(type !== null && type !== undefined){
+            filters.push(new TypeFilterProductStrategy());
+            filterData.push(type);
         }
-        else{
-            for (var i = 0; i < this.electronics.length; i++) {
-                if(this.electronics[i].getElectronicType() == type){
-                    if(type == "Desktop")
-                        desiredType.push(this.electronics[i]);
-                    else {
-                        let eSize;
-                        switch(type){
-                            case "Monitor":
-                                eSize = (this.electronics[i] as Monitor).getSize();
-                                break;
-                            case "Laptop":
-                                eSize = (this.electronics[i] as Laptop).getDisplaySize();
-                                break;
-                            case "Tablet":
-                                eSize = (this.electronics[i] as Tablet).getDisplaySize();
-                                break;
-                            default:
-                                eSize = 1000000;
-                        }
-                        if(eSize < maxSize)
-                            desiredType.push(this.electronics[i]);
-                    }
-                }     
-            }
+        if(brand !== null && brand !== undefined) {
+            filters.push(new BrandFilterProductStrategy());
+            filterData.push(brand);
         }
-        //Now that you array filled with desired type, filter down from other params
-        for(let e of desiredType)
-        {
-            if(e.getPrice() > priceLow && e.getPrice() < priceHigh && e.getWeight() < maxWeight)
-            {
-                if(brand == undefined)
-                    desiredProducts.push(e);
-                else if(e.getBrand() == brand){
-                    desiredProducts.push(e);
-                }
-            }  
+        if(type !== 'Desktop') {
+            filters.push(new SizeFilterProductStrategy());
+            filterData.push(maxSize);
+        }
+        if(maxWeight) {
+            filters.push(new WeightFilterProductStrategy());
+            filterData.push(maxWeight);
+        }
+
+        if(priceLow) {
+            filters.push(new LowPriceFilterProductStrategy());
+            filterData.push(priceLow);
+        }
+        if(priceHigh) {
+            filters.push(new HighPriceFilterProductStrategy());
+            filterData.push(priceHigh);
+        }
+
+        // Set sort Strategies
+        if(priceSort !== null && priceSort !== undefined) {
+            sorts.push(new PriceSortingProductStrategy());
+            sortData.push(priceSort);
+        }
+
+        // Applying the filters
+        for(let i = 0; i < filters.length; i++){
+            products = desiredProducts;
+            desiredProducts = filters[i].filterProduct(products, filterData[i]);
+        }
+
+        //Applying the sort
+        for(let i = 0; i < sorts.length; i++){
+            products = desiredProducts;
+            desiredProducts = sorts[i].sortProduct(products, sortData[i]);
         }
 
         let totalProducts= desiredProducts.length;
@@ -237,7 +242,7 @@ export class Catalog {
     {
         assert(meta.result.length > 0, "No inventory found.");
     })
-    public getAllInventories( electronicId:string): Inventory[] {
+    public getAllInventories(electronicId:string): Inventory[] {
         var desired: Inventory[] = [];
         for(let i=0;i<this.inventories.length;i++){
             if(this.inventories[i].getinventoryType() == null){

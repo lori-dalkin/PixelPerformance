@@ -12,6 +12,13 @@ export const setProductFilter = (filters) => {
     }
 }
 
+export const setPriceSort = (priceSort) => {
+    return {
+        type: actions.SET_PRICE_SORT,
+        priceSort: priceSort
+    }
+}
+
 export const getProductsRequest = () => { return { type: actions.GET_PRODUCTS_REQUEST }; }
 
 export const getProductsSuccess = (products) => {
@@ -77,6 +84,9 @@ export const getProducts = () => {
             }
             if(getState().product.filters.maxWeight){
                 endPoint += `&maxWeight=${getState().product.filters.maxWeight}`;
+            }
+            if(getState().product.priceSort){
+                endPoint += `&priceSort=${getState().product.priceSort}`;
             }
         }
 
