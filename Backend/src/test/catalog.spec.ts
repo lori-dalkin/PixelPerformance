@@ -60,10 +60,10 @@ describe('Getting Products from Catalog', () => {
             let dId:string = uuid.v1();
             let lId:string = uuid.v1();
             let tId:string = uuid.v1();
-            let monitor = new Monitor(mId, 1, "modelNumber99", "brand", 1, 1);
-            let desktop = new Desktop(dId, 1, "modelNumber98", "brand", 1,"Intel",1,1,1,"Mac","13.5");
-            let laptop = new Laptop(lId, 1, "modelNumber97", "brand", 1,"Intel",1,1,1,"Mac",13,1400,true,true);
-            let tablet = new Tablet(tId, 1, "modelNumber96", "brand", 1,"Intel",1,1,1,"Mac",13,"13.5",1400,true);
+            let monitor = new Monitor(mId, 1, "modelNumber99", "brand", 1, false, 1);
+            let desktop = new Desktop(dId, 1, "modelNumber98", "brand", 1,false, "Intel",1,1,1,"Mac","13.5");
+            let laptop = new Laptop(lId, 1, "modelNumber97", "brand", 1, false, "Intel",1,1,1,"Mac",13,1400,true,true);
+            let tablet = new Tablet(tId, 1, "modelNumber96", "brand", 1, false, "Intel",1,1,1,"Mac",13,"13.5",1400,true);
             let electronics: Electronic[] = [];
             electronics.push(monitor);
             electronics.push(desktop);
@@ -189,7 +189,7 @@ describe('Deleting a Product by its ID', () => {
 
 
         //add a product just verify that the a new item can be deleted too
-        let monitor = new Monitor(null, 1, "a", "b", 1, 1);
+        let monitor = new Monitor(null, 1, "a", "b", 1, false, 1);
         catalog.addProduct(monitor);
 
         // get the array of electronics
