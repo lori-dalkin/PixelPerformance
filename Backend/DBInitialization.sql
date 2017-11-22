@@ -10,6 +10,7 @@ CREATE TABLE monitors(
 	brand varchar(30),
 	price dec(6,2),
     size int,
+	decommissioned bool,
 	PRIMARY KEY(id)
 );
 
@@ -26,6 +27,7 @@ CREATE TABLE desktops(
 	hardDrive int,
 	os varchar(15),
 	dimensions varchar(20),
+	decommissioned bool,
 	PRIMARY KEY(id)
 );
 
@@ -45,6 +47,7 @@ CREATE TABLE tablets(
     dimensions varchar(20),
     battery int,
     camera bool,
+	decommissioned bool,
     PRIMARY KEY(id)
 );
 
@@ -64,6 +67,7 @@ CREATE TABLE laptops(
 	battery int,
 	camera bool,
 	touchscreen bool,
+	decommissioned bool,
 	PRIMARY KEY(id)
 );
 

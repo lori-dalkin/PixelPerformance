@@ -190,7 +190,7 @@ export class Catalog {
             filters.push(new BrandFilterProductStrategy());
             filterData.push(brand);
         }
-        if(type !== 'Desktop') {
+        if(type !== 'Desktop' && type !== undefined) {
             filters.push(new SizeFilterProductStrategy());
             filterData.push(maxSize);
         }
@@ -213,19 +213,16 @@ export class Catalog {
             sorts.push(new PriceSortingProductStrategy());
             sortData.push(priceSort);
         }
-
         // Applying the filters
         for(let i = 0; i < filters.length; i++){
             products = desiredProducts;
             desiredProducts = filters[i].filterProduct(products, filterData[i]);
         }
-
         //Applying the sort
         for(let i = 0; i < sorts.length; i++){
             products = desiredProducts;
             desiredProducts = sorts[i].sortProduct(products, sortData[i]);
         }
-
         let totalProducts= desiredProducts.length;
         if(page != null)
         {
@@ -261,7 +258,6 @@ export class Catalog {
     @beforeMethod(function(meta){
         assert(meta.args[0] != null,  "Product data cannot be null");
         Catalog.getInstance().validateElectronicParameter(meta.args[0], false);
-        //console.log(typeof meta.args[0].getWeight() == "number");
 	})
 	@afterMethod(function(meta) {
         //compare most recent object with object sent to function
@@ -347,10 +343,8 @@ export class Catalog {
     @beforeMethod(function(meta){
         assert(meta.args[0] != null,  "Product data cannot be null");
         Catalog.getInstance().validateElectronicParameter(meta.args[1], true);
-        //console.log(typeof meta.args[0].getWeight() == "number");
 	})
     public async modifyProduct(electronicID: string, data): Promise<boolean> {
-        console.log(data);
         for(let index = 0; index < this.electronics.length; index++) {
             if (this.electronics[index].getId() == electronicID) {
                 let elec: Electronic = this.electronics[index];
@@ -475,7 +469,7 @@ export class Catalog {
     private validateElectronicParameter(parameter:any, modify:boolean) {
         assert(typeof parameter.modelNumber == "string", "Model Number needs to be a string");
         assert(typeof parameter.brand == "string", "Brand needs to be a string");
-        for(let paramName of ["weight", "modelNumber", "brand", "price"])
+        for(let paramName of ["modelNumber", "brand"])
             Catalog.getInstance().isNotEmpty(parameter[paramName], paramName);
         Catalog.getInstance().isTwoDigitNumber(parameter.weight, "Weight");
         assert(parameter.weight < 100, "Weight must be less than 100");
@@ -493,11 +487,10 @@ export class Catalog {
         let eType:string = parameter.electronicType;
         assert(typeof eType == "string", "Electronic Type needs to be a string");
         if(eType === "Monitor") {
-            Catalog.getInstance().isNotEmpty(parameter.size, "size");
             Catalog.getInstance().isWholeNumber(parameter.size, "Size");
         }
         else {
-            for(let paramName of ["processor", "ram", "hardDrive", "cpus", "os"])
+            for(let paramName of ["processor", "os"])
                 Catalog.getInstance().isNotEmpty(parameter[paramName], paramName);
             assert(typeof parameter.processor == "string", "Processor needs to be a string");
             assert(parameter.processor.length <= 20, "Processor is at most 20 characters long");
@@ -515,14 +508,12 @@ export class Catalog {
                     break;
                 case "Laptop":
                 case "Tablet":
-                    for(let paramName of ["displaySize", "battery", "camera"])
-                        Catalog.getInstance().isNotEmpty(parameter[paramName], paramName);
                     Catalog.getInstance().validatePositiveNumber(parameter.displaySize, "Display Size");
                     assert((Number(parameter.displaySize)*10)%1 === 0,  "Display size has at most one decimal");
                     assert((Number(parameter.displaySize))<100,"Display size should be less than 100");
                     Catalog.getInstance().isWholeNumber(parameter.battery, "Battery");
                     if(eType === "Laptop") {
-                        Catalog.getInstance().isNotEmpty(parameter.touchScreen, "touchScreen");
+                        //Catalog.getInstance().isNotEmpty(parameter.touchScreen, "touchScreen");
                         //assert(typeof parameter.camera == "boolean", "Camera needs to be a boolean"); // todo: typecast string of "camera" as boolean
                         //assert(typeof parameter.touchScreen == "boolean", "Touchscreen needs to be a boolean"); // todo: typecast as boolean
                     }

@@ -442,6 +442,7 @@
         - "modelNumber"
         - "brand"
         - "price"
+        - "decommissioned"
         - "electronicType"
       properties:
         id:
@@ -454,6 +455,8 @@
           type: "string"
         price:
           type: "number" 
+        decommissioned:
+          type: "boolean"
         electronicType:
           type: "string"
         size:
