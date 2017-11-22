@@ -45,7 +45,6 @@ export class PurchaseManagement {
     @afterMethod(function (meta) {
             assert(PurchaseManagement.getInstance().getCart(meta.args[0]) != null,"Cart was not create")
     })
-	// startTransaction(userId: string): void
     public startTransaction(userId: string): void {
 		if(this.findCart(userId)!=null){
 			return;
@@ -54,15 +53,14 @@ export class PurchaseManagement {
         let newCart = new Cart(uuid1, userId);
         this.activeCarts.push(newCart);
     }
-	// cancelTransaction(userId: String): void
+	
 	@beforeMethod(function(meta){
 		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
-		assert( PurchaseManagement.getInstance().findCart(meta.args[0]) != null, "no cart is assiated with the user");
+		assert( PurchaseManagement.getInstance().findCart(meta.args[0]) != null, "no cart is associated with the user");
 	})
 	@afterMethod(function(meta) {
-		assert( PurchaseManagement.getInstance().findCart(meta.args[0]) == null, "cart was not removed from active carts");
+		assert(PurchaseManagement.getInstance().findCart(meta.args[0]) == null, "cart was not removed from active carts");
 	})
-
 	public cancelTransaction(userId: String): void{
 		for (let i = 0; i < this.activeCarts.length; i++){
 			if (String(this.activeCarts[i].getUserId()) == userId){
@@ -172,7 +170,6 @@ export class PurchaseManagement {
         
         return purchase_history;
     }
-	// returnInventory(userId: string, serialNumber: string): bool
 
     @beforeMethod(function(meta) {
 		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
@@ -262,7 +259,7 @@ export class PurchaseManagement {
 
 	@beforeMethod(function(meta){
 		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
-		assert( PurchaseManagement.getInstance().findCart(meta.args[0]) != null, "no cart is assiated with the user");
+		assert( PurchaseManagement.getInstance().findCart(meta.args[0]) != null, "no cart is associated with the user");
 		assert( meta.scope.getCart(meta.args[0]).getInventory().length>0, "an empty cart cannot be checkedout" )
 	})
 	@afterMethod(function(meta) {
