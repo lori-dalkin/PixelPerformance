@@ -3,9 +3,9 @@ import { User } from "./Models/user"
 import { Client } from "./Models/client"
 import { Admin } from "./Models/admin"
 import { dbconnection } from "./Models/dbconnection"
-import {afterMethod, beforeInstance, beforeMethod} from 'kaop-ts'
-import  validator = require('validator');
-import assert = require('assert');
+import { afterMethod, beforeInstance, beforeMethod } from 'kaop-ts'
+import { assert } from "./assert";
+import validator = require('validator');
 import {UnitOfWork} from "./unitofwork";
 
 var db = new dbconnection().getDBConnector();

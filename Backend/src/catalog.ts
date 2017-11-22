@@ -7,12 +7,12 @@ import { Tablet } from "./Models/tablet";
 import { Laptop } from "./Models/laptop";
 import { Inventory  } from "./Models/inventory";
 import { ElectronicFactory } from "./electronicfactory";
+import { UnitOfWork } from "./unitofwork";
 
 // Dependencies for contracts
 import { afterMethod, beforeInstance, beforeMethod } from 'kaop-ts';
+import { assert } from "./assert";
 import validator = require('validator');
-import assert = require('assert');
-import {UnitOfWork} from "./unitofwork";
 
 var db = new dbconnection().getDBConnector();
 export class Catalog {
