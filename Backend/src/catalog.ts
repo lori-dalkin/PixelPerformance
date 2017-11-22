@@ -451,7 +451,7 @@ export class Catalog {
     }
 
     private isNotEmpty(param: string, paramName: string) {
-        //assert(param !== undefined && param.match(/.*\S.*/) !== null, `${paramName} cannot be empty or whitespace`);
+        assert(param !== undefined && param.match(/.*\S.*/) !== null, `${paramName} cannot be empty or whitespace`);
     }
     private isTwoDigitNumber(par:any, message:string) {
         Catalog.getInstance().validatePositiveNumber(par, message);

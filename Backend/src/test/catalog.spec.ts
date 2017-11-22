@@ -244,7 +244,7 @@ describe ('Adding an Inventory by ID', () => {
     it('return true if Inventory is successfully added', () => {
         
         //add a product just verify that the a new item can be added to inventory too
-        let monitor = new Monitor(null, 1, "model100", "b", 1, 1);
+        let monitor = new Monitor(null, 1, "a", "b", 1, 1);
         catalog.addProduct(monitor);
 
         // get the array of electronics
@@ -255,9 +255,15 @@ describe ('Adding an Inventory by ID', () => {
 
         //verify I can add the new monitor to my inventory;
         var newMonitorAdded = catalog.addInventory(newTestMonitor.getId());
+<<<<<<< HEAD
         // newMonitorAdded.then(function (newMonitorAdded) {
             expect(newMonitorAdded).to.equal(valueShouldBeTrue);
         // })
+=======
+        newMonitorAdded.then(function (newMonitorAdded) {
+            expect(newMonitorAdded).to.equal(valueShouldBeTrue);
+        })
+>>>>>>> parent of 8afcd09... WIP
 
     });
 });
@@ -267,7 +273,7 @@ describe('Deleting an Inventory by its ID', () => {
         it('true will be returned once the inventory is deleted', () => {
     
             //add a product just verify that the a new item can be added to inventory too
-            let monitor = new Monitor(null, 1, "model101", "b", 1, 1);
+            let monitor = new Monitor(null, 1, "a", "b", 1, 1);
             catalog.addProduct(monitor);
 
             //get the array of electronics
@@ -284,6 +290,18 @@ describe('Deleting an Inventory by its ID', () => {
             newMonitorDeleted.then(function (newMonitorDeleted){
                 expect(newMonitorDeleted).to.equal(valueShouldBeTrue);
             })
+    
+            //try deleting all the other items within our electronic inventory
+            let length = catalog.electronics.length;
+            for (let i = 0; i <= length - 1; i++) {
+                var value = catalog.deleteInventory(catalog.electronics[0].getId());
+                value.then(function (value) {
+                    expect(value).to.equal(valueShouldBeTrue);
+                });
+            }
+    
+            //verify the array is null after deleting all the electronics, just to verify that the last loop effectively called deleteInventory(electronicID)
+            expect(0).to.equal(catalog.electronics.length);
         });
     
     });
