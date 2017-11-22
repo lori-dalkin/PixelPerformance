@@ -26,18 +26,25 @@ describe('Getting Products from Catalog', () => {
           
           let undef:any;
           //get all electronics
-          const electronics = catalog.getProductPage(undef,undef,undef,undef,undef,undef,undef,undef,);
-
+          const elec = catalog.getProductPage(undef,undef,undef,undef,undef,undef,undef,undef,undef);
+          console.log("%%%" + catalog.electronics.length);
+          console.log("---" + elec.totalProducts);
           //compare products returned from products in catalog
-          for(var i=0; i<electronics.totalProducts; i++) {
-            expect(catalog.electronics[i]).to.deep.equal(electronics.products[i]);
+          let anElec:Electronic;
+          for(var i=0; i<elec.totalProducts; i++) {
+            anElec = elec.products[i];
+            for(var j=0; j<catalog.electronics.length;j++) {
+              if(anElec.getId() === catalog.electronics[j].getId() )
+              {
+                expect(catalog.electronics[j]).to.equal(anElec);
+              }
+            }
           }
 
           //compare size of products in catalog with getProducts call
-          expect(catalog.electronics.length).to.equal(electronics.totalProducts);
-
+          expect(catalog.electronics.length).to.equal(elec.totalProducts);
           //verify electronic properties
-          verifyElectronicProperties(electronics.products);
+          verifyElectronicProperties(elec.products);
   
       })
   });

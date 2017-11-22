@@ -175,6 +175,7 @@ export class Catalog {
         page = isNaN(page) ? null : page;
 
         var desiredProducts: Electronic[] = this.electronics;
+        console.log("9999  " + desiredProducts.length);
         var products: Electronic[];
         var filters = [];
         var sorts = [];
@@ -190,20 +191,24 @@ export class Catalog {
             filters.push(new BrandFilterProductStrategy());
             filterData.push(brand);
         }
-        if(type !== 'Desktop') {
+        if(type !== 'Desktop' && type !== undefined) {
+            console.log("Desktop filter applied");
             filters.push(new SizeFilterProductStrategy());
             filterData.push(maxSize);
         }
         if(maxWeight) {
+            console.log("Weight filter applied");
             filters.push(new WeightFilterProductStrategy());
             filterData.push(maxWeight);
         }
 
         if(priceLow) {
+            console.log("PriceLow filter applied");
             filters.push(new LowPriceFilterProductStrategy());
             filterData.push(priceLow);
         }
         if(priceHigh) {
+            console.log("PriceHigh filter applied");
             filters.push(new HighPriceFilterProductStrategy());
             filterData.push(priceHigh);
         }
@@ -213,19 +218,18 @@ export class Catalog {
             sorts.push(new PriceSortingProductStrategy());
             sortData.push(priceSort);
         }
-
+        console.log("8888  " + desiredProducts.length);
         // Applying the filters
         for(let i = 0; i < filters.length; i++){
             products = desiredProducts;
             desiredProducts = filters[i].filterProduct(products, filterData[i]);
         }
-
         //Applying the sort
         for(let i = 0; i < sorts.length; i++){
             products = desiredProducts;
             desiredProducts = sorts[i].sortProduct(products, sortData[i]);
         }
-
+        console.log("6666  " + desiredProducts.length);
         let totalProducts= desiredProducts.length;
         if(page != null)
         {
