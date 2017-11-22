@@ -7,6 +7,7 @@ import {UserManagement} from "../usermanagement";
 import {Inventory} from "../Models/inventory";
 import {User} from "../Models/user";
 import {Catalog} from "../catalog";
+import {Cart} from "../Models/cart";
 
 var db = new dbconnection().getDBConnector();
 let purchasemanagement = PurchaseManagement.getInstance();
@@ -73,4 +74,20 @@ describe('Returning an inventory', () => {
         expect(returnItem.getReturnDate()).to.not.be.null;
         expect(PurchaseManagement.getInstance().findInventoryBySerialNumber(returnItem.getserialNumber())).to.not.be.undefined;
     })
+});
+
+describe('Getting a cart by user id', () => {
+
+    it('should return a cart for a given client', () => {
+
+        const client: User = UserManagement.getInstance().getAllClients()[0];
+        purchasemanagement.startTransaction(client.getId());
+        const cart = PurchaseManagement.getInstance().getCart(client.getId());
+        
+        expect(cart).to.exist;
+        expect(cart).to.be.an.instanceof(Cart);
+        expect(cart).to.have.property('id');
+        expect(cart).to.have.property('userId');
+        expect(cart).to.have.property('inventory');
+    });
 });
