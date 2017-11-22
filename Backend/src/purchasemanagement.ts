@@ -61,17 +61,32 @@ export class PurchaseManagement {
 	@afterMethod(function(meta) {
 		assert(PurchaseManagement.getInstance().findCart(meta.args[0]) == null, "cart was not removed from active carts");
 	})
-	public cancelTransaction(userId: String): void{
+	public cancelTransaction(userId: string): void{
 		for (let i = 0; i < this.activeCarts.length; i++){
-			if (String(this.activeCarts[i].getUserId()) == userId){
-				let tempCart = this.activeCarts[i].getInventory();
-				for (let a = 0; a < this.activeCarts[i].getInventory().length; a++){
-					tempCart[a].setLockedUntil(null);
-				}
-				this.activeCarts.splice(i,1);
-			}
-		}
-	}
+			if (this.activeCarts[i].getUserId() == userId){
+                let cart = this.activeCarts[i];
+				let cartInventories = this.activeCarts[i].getInventory();
+				for (let inventory of cartInventories){
+                    this.removeFromCartById(inventory.getserialNumber(), cart);
+                }
+                this.activeCarts.splice(i,1);
+            }
+        }
+    }
+
+    @afterMethod(meta => InventoryLockingAdvice.ensureUnlocked(meta.args[0]))
+    private removeFromCartById(serialNumber: string, cart: Cart) {
+        let cartInventory = cart.getInventory();
+        for (let i = 0; i < cartInventory.length; i++) {
+            if (cartInventory[i].getserialNumber() === serialNumber) {
+                cartInventory[i].setCartId(null);
+                cartInventory.splice(i, 1);
+                cart.setInventory(cartInventory);
+                return;
+            }
+        }
+        return null;
+    }
 
 	@beforeMethod(function(meta){
 		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
