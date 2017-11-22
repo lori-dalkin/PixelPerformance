@@ -132,10 +132,10 @@ describe ('Adding an Inventory by ID', () => {
         let valueShouldBeTrue: boolean = true;
 
         //verify I can add the new monitor to my inventory;
-        let newMonitorAdded = catalog.addInventory(newTestMonitor.getId());
-        newMonitorAdded.then(function (newMonitorAdded) {
+        var newMonitorAdded = catalog.addInventory(newTestMonitor.getId());
+        // newMonitorAdded.then(function (newMonitorAdded) {
             expect(newMonitorAdded).to.equal(valueShouldBeTrue);
-        })
+        // })
 
     });
 });
