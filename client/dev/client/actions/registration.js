@@ -24,8 +24,14 @@ export const attemptRegistration = (credentials) => {
 
                     dispatch(customSnackbar(message));
                 }
+
+                return res;
             },
-            error => dispatch(receiveAttemptRegistration({ data: undefined }))
+            error => {
+                dispatch(receiveAttemptRegistration({ data: undefined }));
+                dispatch(customSnackbar('There was an error in registering, try again.'));
+                return res;
+            }
         );
     }
 }

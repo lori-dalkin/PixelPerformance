@@ -39,8 +39,9 @@ class Registration extends Component {
             address_error: false,
             phone_error: false
         };
+
         this.register = () => {
-            this.props.attemptRegistration({
+            return this.props.attemptRegistration({
                 fname: this.state.fname,
                 lname: this.state.lname,
                 email: this.state.email,
@@ -49,9 +50,11 @@ class Registration extends Component {
                 phone: this.state.phone
             });
         };
+
         this.syncStateToInputValue = (field, event) => {
             this.setState({...this.state, [field]: event.target.value});
         }
+
         this.validate = () => {
             if(this.state.fname === "" || this.state.lname === "" || this.state.email === "" || this.state.password === "" || this.state.address === "" || this.state.phone === "") {
                 this.state.fname === "" ? this.setState({ fname_error: true }) : this.setState({ fname_error: false });
@@ -60,11 +63,18 @@ class Registration extends Component {
                 this.state.password === "" ? this.setState({ password_error: true }) : this.setState({ password_error: false });
                 this.state.address === "" ? this.setState({ address_error: true }) : this.setState({ address_error: false });
                 this.state.phone === "" ? this.setState({ phone_error: true }) :  this.setState({ phone_error: false });
-            }else{
-                this.register();
-                this.resetForm();
+            } else {
+                this.register().then(
+                    res => {
+                        if (!res.error) {
+                            this.resetForm();
+                        }
+                    },
+                    error => console.log('error in calling register')
+                );
             }
         };
+
         this.resetForm = () => {
             this.setState({ fname: "" });
             this.setState({ lname: "" });
@@ -101,6 +111,7 @@ class Registration extends Component {
                                     helperText={this.state.fname_error ? "Required" : ""}
                                     error={this.state.fname_error}
                                     onChange={(event) => this.syncStateToInputValue("fname", event)}
+                                    value={this.state.fname}
                                 />
                             </Grid>
                             <Grid item xs={6}>
@@ -113,6 +124,7 @@ class Registration extends Component {
                                     helperText={this.state.lname_error ? "Required" : ""}
                                     error={this.state.lname_error}
                                     onChange={(event) => this.syncStateToInputValue("lname", event)}
+                                    value={this.state.lname}
                                 />
                             </Grid>
                         </Grid>
@@ -127,6 +139,7 @@ class Registration extends Component {
                                     helperText={this.state.email_error ? "Required" : ""}
                                     error={this.state.email_error}
                                     onChange={(event) => this.syncStateToInputValue("email", event)}
+                                    value={this.state.email}
                                 />
                             </Grid>
                             <Grid item xs={6}>
@@ -140,6 +153,7 @@ class Registration extends Component {
                                     helperText={this.state.password_error ? "Required" : ""}
                                     error={this.state.password_error}
                                     onChange={(event) => this.syncStateToInputValue("password", event)}
+                                    value={this.state.password}
                                 />
                             </Grid>
                         </Grid>
@@ -154,6 +168,7 @@ class Registration extends Component {
                                     helperText={this.state.address_error ? "Required" : ""}
                                     error={this.state.address_error}
                                     onChange={(event) => this.syncStateToInputValue("address", event)}
+                                    value={this.state.address}
                                 />
                             </Grid>
                             <Grid item xs={6}>
@@ -166,6 +181,7 @@ class Registration extends Component {
                                     helperText={this.state.phone_error ? "Required" : ""}
                                     error={this.state.phone_error}
                                     onChange={(event) => this.syncStateToInputValue("phone", event)}
+                                    value={this.state.phone}
                                 />
                             </Grid>
                         </Grid>
