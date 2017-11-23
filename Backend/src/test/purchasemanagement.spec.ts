@@ -50,20 +50,36 @@ describe('Getting all inventory in a cart', () => {
 describe('Getting all purchase records', () => {
 
     it('should return a list of all purchase records for a given client', () => {
-
         const client: User = UserManagement.getInstance().getAllClients()[0];
         const userPurchases: Inventory[] = purchasemanagement.viewPurchases(client.getId());
 
-        db.many("SELECT * FROM bought_inventory WHERE cart_id IN (SELECT cart_id FROM cart WHERE client_id='"+client.getId()+"');")
-            .then(function (data) {
-                for (var i = 0; i < data.length; i++) {
-                    let purchaseRecord = new Inventory(data[i].serialNumber, Inventory.getProduct(data[i].electronicID));
-                    purchaseRecord.setReturnDate(new Date(data[i].return_date));
+        if(userPurchases.length != 0) {
 
-                    //All purchases in working memory should be equal to all purchases in the db
-                    expect(userPurchases[i]).to.deep.equal(purchaseRecord);
-                }
+
+            db.many("SELECT * FROM bought_inventory WHERE cart_id IN (SELECT cart_id FROM cart WHERE client_id='" + client.getId() + "');")
+                .then(function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        let purchaseRecord = new Inventory(data[i].serialNumber, Inventory.getProduct(data[i].electronicID));
+                        purchaseRecord.setReturnDate(new Date(data[i].return_date));
+
+                        //All purchases in working memory should be equal to all purchases in the db
+                        expect(userPurchases[i]).to.deep.equal(purchaseRecord);
+                    }
+                }).catch(function (err) {
+                console.log("No previous purchases");
             });
+        }
+        else{
+            //Make a purchase for a client
+            const purchaseItem: Inventory = Catalog.getInstance().inventories[0];
+            const client: User = UserManagement.getInstance().getAllClients()[0];
+            PurchaseManagement.getInstance().addItemToCart(client.getId(), purchaseItem.getinventoryType().getId());
+            PurchaseManagement.getInstance().checkout(client.getId());
+
+            //Retrieve the new purchase
+            let userPurchases: Inventory[] = purchasemanagement.viewPurchases(client.getId());
+        }
+
         for (let purchase of userPurchases) {
             //All purchases should have these properties
             expect(purchase).to.have.property('serialNumber');
@@ -102,7 +118,7 @@ describe('Returning an inventory', () => {
         returnItem = userPurchases[userPurchases.length-1];
         expect(returnItem.getReturnDate()).to.not.be.null;
         expect(PurchaseManagement.getInstance().findInventoryBySerialNumber(returnItem.getserialNumber())).to.not.be.undefined;
-    })
+    });
 });
 
 describe('Getting a cart by user id', () => {

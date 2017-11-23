@@ -119,7 +119,7 @@ export class Laptop extends ComputerSystem {
             .then(function (rows) {
 				let laptops: Electronic[] = new Array<Electronic>();
                 for(let i=0; i< rows.length; i++){
-					if(rows[i].decommissioned == false){
+					if(!rows[i].decommissioned){
 						laptops.push(new Laptop(rows[i].id,rows[i].weight,rows[i].modelnumber, rows[i].brand,
 							rows[i].price,rows[i].decommissioned,rows[i].processor, rows[i].ram, rows[i].cpus, rows[i].harddrive, rows[i].os,
 							rows[i].displaysize, rows[i].battery, rows[i].camera,rows[i].touchscreen));

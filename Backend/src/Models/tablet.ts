@@ -73,7 +73,7 @@ export class Tablet extends ComputerSystem{
             .then(function(rows){
                 let tablets: Electronic[] = new Array<Electronic>();
                 for(let i=0; i< rows.length; i++){
-                    if(rows[i].decommissioned == false){
+                    if(!rows[i].decommissioned){
                         tablets.push(new Tablet(rows[i].id,rows[i].weight,rows[i].modelnumber, rows[i].brand, rows[i].price, rows[i].decommissioned,
                             rows[i].processor, rows[i].ram, rows[i].cpus, rows[i].harddrive, rows[i].os,
                             rows[i].displaysize, rows[i].dimensions, rows[i].battery, rows[i].camera));
