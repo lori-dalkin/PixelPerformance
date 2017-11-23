@@ -157,3 +157,27 @@ describe('Deleting a cart by id', () => {
         expect(userActiveCart).to.equal(false);
     });
 });
+
+describe('Deleteing inventory from cart by id', () => {
+
+    it('should remove all items from user cart', () => {
+
+        const client: User = UserManagement.getInstance().getAllClients()[0];
+        const inventory: Inventory = Catalog.getInstance().inventories[0];
+
+        PurchaseManagement.getInstance().addItemToCart(client.getId(),inventory.getinventoryType().getId());   
+        
+        PurchaseManagement.getInstance().removeFromCart(client.getId(), inventory.getserialNumber());
+
+        let deletedInventory = true;
+
+        for (let i = 0; i < PurchaseManagement.getInstance().getCart(client.getId()).getInventory().length; i++){
+            if ( PurchaseManagement.getInstance().getCart(client.getId()).getInventory()[i].getserialNumber() == inventory.getserialNumber()){
+                deletedInventory = false;
+            }
+        }
+
+        expect(deletedInventory).to.equal(true);
+
+    });
+});
