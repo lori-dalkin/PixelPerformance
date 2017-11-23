@@ -136,3 +136,24 @@ describe('Getting a cart by user id', () => {
         expect(cart).to.have.property('inventory');
     });
 });
+
+describe('Deleting a cart by id', () => {
+
+    it('should remove current user avtive cart', () => {
+        
+        const client: User = UserManagement.getInstance().getAllClients()[0];
+        purchasemanagement.startTransaction(client.getId());
+        const cart = PurchaseManagement.getInstance().getCart(client.getId());
+
+        purchasemanagement.cancelTransaction(client.getId());
+
+        let userActiveCart = false;
+        for (let i = 0; i < purchasemanagement.activeCarts.length; i ++){
+            if (purchasemanagement.activeCarts[i].getUserId() == client.getId()){
+                userActiveCart = true;
+            }
+        }
+
+        expect(userActiveCart).to.equal(false);
+    });
+});
