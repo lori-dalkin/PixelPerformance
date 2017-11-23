@@ -4,7 +4,8 @@ import { expect } from 'chai';
 import 'mocha';
 import {dbconnection} from "../Models/dbconnection";
 import {UserManagement} from "../usermanagement";
-import {Inventory} from "../Models/inventory";
+import { Inventory } from "../Models/inventory";
+import { InventoryRecord } from "../Models/inventoryrecord";
 import {User} from "../Models/user";
 import {Catalog} from "../catalog";
 import {Cart} from "../Models/cart";
@@ -59,7 +60,7 @@ describe('Getting all purchase records', () => {
             db.many("SELECT * FROM bought_inventory WHERE cart_id IN (SELECT cart_id FROM cart WHERE client_id='" + client.getId() + "');")
                 .then(function (data) {
                     for (var i = 0; i < data.length; i++) {
-                        let purchaseRecord = new Inventory(data[i].serialNumber, Inventory.getProduct(data[i].electronicID));
+                        let purchaseRecord = new InventoryRecord(data[i].serialNumber, Inventory.getProduct(data[i].electronicID));
                         purchaseRecord.setReturnDate(new Date(data[i].return_date));
 
                         //All purchases in working memory should be equal to all purchases in the db
@@ -103,7 +104,7 @@ describe('Returning an inventory', () => {
 
         //Retrieve the new purchase
         let userPurchases: Inventory[] = purchasemanagement.viewPurchases(client.getId());
-        let returnItem: Inventory = userPurchases[userPurchases.length-1];
+        let returnItem: InventoryRecord = userPurchases[userPurchases.length-1] as InventoryRecord;
 
         //Assert that the purchase exists, that it has not been returned and that the inventory is no longer available to be purchased
         expect(returnItem.getinventoryType().getId()).to.equal(purchaseItem.getinventoryType().getId());
@@ -115,7 +116,7 @@ describe('Returning an inventory', () => {
 
         //Assert that the return was made and that the item is available for purchasing again
         userPurchases = purchasemanagement.viewPurchases(client.getId());
-        returnItem = userPurchases[userPurchases.length-1];
+        returnItem = userPurchases[userPurchases.length-1] as InventoryRecord;
         expect(returnItem.getReturnDate()).to.not.be.null;
         expect(PurchaseManagement.getInstance().findInventoryBySerialNumber(returnItem.getserialNumber())).to.not.be.undefined;
     });

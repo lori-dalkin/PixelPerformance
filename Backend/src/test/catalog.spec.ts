@@ -234,7 +234,6 @@ describe('Getting an Inventory by ID', () =>{
                 expect(inventory.getinventoryType()).to.equal(catalog.getInventory(inventory.getserialNumber()).getinventoryType());
                 expect(inventory.getLockedUntil()).to.equal(catalog.getInventory(inventory.getserialNumber()).getLockedUntil());
                 expect(inventory.getCartId()).to.equal(catalog.getInventory(inventory.getserialNumber()).getCartId());
-                expect(inventory.getReturnDate()).to.equal(catalog.getInventory(inventory.getserialNumber()).getReturnDate());
             }
         });
     });

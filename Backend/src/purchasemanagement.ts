@@ -5,10 +5,6 @@ import { InventoryRecord } from "./Models/inventoryrecord";
 import {afterMethod, beforeInstance, beforeMethod} from 'kaop-ts'
 import  validator = require('validator');
 import assert = require('assert');
-import {Inventory} from "./Models/inventory";
-import { afterMethod, beforeInstance, beforeMethod } from 'kaop-ts'
-import { assert } from "./assert";
-import validator = require('validator');
 import * as uuid from "uuid";
 import {isUndefined} from "util";
 import {UnitOfWork} from "./unitofwork";
@@ -210,6 +206,7 @@ export class PurchaseManagement {
         let returnedInv: Inventory;
         let modifiedCartId: string;
         let returnSuccess: boolean = true;
+        let decomissionedOrNot : boolean = false;
         let dateReturned: Date;
         let currInv: Inventory[];
 
@@ -224,9 +221,11 @@ export class PurchaseManagement {
                 for (let invIndex = 0; invIndex < currInv.length; invIndex++) {
                     if (currInv[invIndex].getserialNumber() == serialNumber) {
                         if (currInv[invIndex].getserialNumber() == serialNumber) {
+
+                            decomissionedOrNot = currInv[invIndex].getinventoryType().getDecommissioned();                            
+
                             if (currInv[invIndex].constructor.name == "Inventory") {
                                 returningInv = new InventoryRecord(currInv[invIndex].getserialNumber(), currInv[invIndex].getinventoryType());
-                                //returningInv = currInv[invIndex] as InventoryRecord;
                                 modifiedCartId = allPurchases[i].getId();
                             }
                             else {
@@ -261,25 +260,50 @@ export class PurchaseManagement {
         //Modify the cart to remove the inventory from its records
         console.log("Modifying db");
         let uow: UnitOfWork = this.unitOfWork;
-        for (let i = 0; i < allPurchases.length; i++) {
-            if (allPurchases[i].getId() == modifiedCartId) {
+        if (decomissionedOrNot == false) {
+            for (let i = 0; i < allPurchases.length; i++) {
+                if (allPurchases[i].getId() == modifiedCartId) {
 
-                returningInv.returnInventoryRecord(serialNumber, dateReturned).then((data) => {
-                    returnSuccess = data;
-                });
-                if (returnSuccess) {
-                    availableInventory.returnInventory(returnedInv);
-                    uow.registerNew(returnedInv);
+                    returningInv.returnInventoryRecord(serialNumber, dateReturned).then((data) => {
+                        returnSuccess = data;
+                    });
+                    if (returnSuccess) {
+                        availableInventory.returnInventory(returnedInv);
+                        uow.registerNew(returnedInv);
 
-                    if (allPurchases[i].getInventory().length == 0) {
-                        let emptyCart: Cart = allPurchases[i];
-                        uow.registerDeleted(emptyCart);
+                        if (allPurchases[i].getInventory().length == 0) {
+                            let emptyCart: Cart = allPurchases[i];
+                            uow.registerDeleted(emptyCart);
+                        }
+                        return returnSuccess;
                     }
-                    return returnSuccess;
+                    else {
+                        console.log("Error processing return: could not remove purchase record for inventory with serial number: " + serialNumber)
+                        return false;
+                    }
                 }
-                else {
-                    console.log("Error processing return: could not remove purchase record for inventory with serial number: " + serialNumber)
-                    return false;
+            }
+        }
+        else {
+            for (let i = 0; i < allPurchases.length; i++) {
+                if (allPurchases[i].getId() == modifiedCartId) {
+
+                    returningInv.returnInventoryRecord(serialNumber, dateReturned).then((data) => {
+                        returnSuccess = data;
+                    });
+                    if (returnSuccess) {
+                        uow.registerNew(returnedInv);
+
+                        if (allPurchases[i].getInventory().length == 0) {
+                            let emptyCart: Cart = allPurchases[i];
+                            uow.registerDeleted(emptyCart);
+                        }
+                        return returnSuccess;
+                    }
+                    else {
+                        console.log("Error processing return: could not remove purchase record for inventory with serial number: " + serialNumber)
+                        return false;
+                    }
                 }
             }
         }
