@@ -1,5 +1,6 @@
 import * as actions from './action-types';
 import callApi from '../utils/apiCaller';
+import { forceLogoutOrError } from './index';
 import { fetchInventory } from './adminProductActions';
 
 export const addToCart = (productId) => {
@@ -14,7 +15,9 @@ export const addToCart = (productId) => {
                         dispatch(addToCartSuccessSnackbar());
                         dispatch(fetchInventory(productId));
                     },
-                    error => dispatch(addToCartFailure())
+                    error => forceLogoutOrError(error, dispatch, () => {
+                        dispatch(addToCartFailure());
+                    })
                 );
             }
         }
