@@ -252,7 +252,9 @@ describe ('Adding an Inventory by ID', () => {
         let newTestMonitor: Electronic = catalog.electronics[catalog.electronics.length - 1];
 
         //verify I can add the new monitor to my inventory;
-        expect(catalog.addInventory(newTestMonitor.getId())).equal(true);
+        let newAddedInventory = catalog.addInventory(newTestMonitor.getId());
+        console.log(newAddedInventory);
+        expect(newAddedInventory).equal(true);
 
         catalog.deleteProduct(mId);
     });
