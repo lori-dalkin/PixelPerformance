@@ -249,10 +249,10 @@ describe ('Adding an Inventory by ID', () => {
         catalog.addProduct(monitor);
 
         // get the array of electronics        
-        let newTestMonitor = catalog.electronics[catalog.electronics.length - 1];
+        let newTestMonitor: Electronic = catalog.electronics[catalog.electronics.length - 1];
 
         //verify I can add the new monitor to my inventory;
-        expect(catalog.addInventory(newTestMonitor.getId())).to.equal(true);
+        expect(catalog.addInventory(newTestMonitor.getId())).equal(true);
 
         catalog.deleteProduct(mId);
     });
@@ -269,8 +269,7 @@ describe('Deleting an Inventory by its ID', () => {
             //get the array of electronics
             const electronics = catalog.electronics;
             
-            let newTestMonitor = electronics[electronics.length - 1];
-            let valueShouldBeTrue: boolean = true;
+            let newTestMonitor: Electronic = electronics[electronics.length - 1];
 
             //adding the newly created monitor just to verify that it can be deleted too
             var newMonitorAdded = catalog.addInventory(newTestMonitor.getId());
@@ -281,7 +280,7 @@ describe('Deleting an Inventory by its ID', () => {
             //     expect(newMonitorDeleted).to.equal(valueShouldBeTrue);
             // })
 
-            expect(catalog.deleteInventory(newTestMonitor.getId())).to.equal(valueShouldBeTrue);
+            expect(catalog.deleteInventory(newTestMonitor.getId())).to.equal(true);
     
             // //try deleting all the other items within our electronic inventory
             // let length = catalog.electronics.length;
