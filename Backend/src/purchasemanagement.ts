@@ -285,28 +285,26 @@ export class PurchaseManagement {
             }
         }
         else {
-            for (let i = 0; i < allPurchases.length; i++) {
-                if (allPurchases[i].getId() == modifiedCartId) {
+              for (let i = 0; i < allPurchases.length; i++) {
+                  if (allPurchases[i].getId() == modifiedCartId) {
 
-                    returningInv.returnInventoryRecord(serialNumber, dateReturned).then((data) => {
-                        returnSuccess = data;
-                    });
-                    if (returnSuccess) {
-                        uow.registerNew(returnedInv);
-
-                        if (allPurchases[i].getInventory().length == 0) {
-                            let emptyCart: Cart = allPurchases[i];
-                            uow.registerDeleted(emptyCart);
-                        }
-                        return returnSuccess;
-                    }
-                    else {
+                      returningInv.returnInventoryRecord(serialNumber, dateReturned).then((data) => {
+                          returnSuccess = data;
+                      });
+                  }
+                  if (returnSuccess) {
+                      if (allPurchases[i].getInventory().length == 0) {
+                          let emptyCart: Cart = allPurchases[i];
+                          uow.registerDeleted(emptyCart);
+                      }
+                      return returnSuccess;
+                  }
+                  else {
                         console.log("Error processing return: could not remove purchase record for inventory with serial number: " + serialNumber)
                         return false;
                     }
                 }
             }
-        }
         return false;
     }
 
