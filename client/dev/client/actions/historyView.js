@@ -1,5 +1,6 @@
-import * as actions from './action-types'
+import * as actions from './action-types';
 import callApi from '../utils/apiCaller';
+import { forceLogoutOrError } from './index';
 
 export const getHistoryOfProductsRequest = () => { return { type: actions.GET_HISTORY_OF_PRODUCTS_REQUEST }; }
 
@@ -48,7 +49,9 @@ export const getHistoryOfProducts = () => {
 
                         dispatch(getHistoryOfProductsSuccess(products));
                     },
-                    error => dispatch(getHistoryOfProductsFailure(error))
+                    error => forceLogoutOrError(error, dispatch, () => {
+                        dispatch(getHistoryOfProductsFailure(error));
+                    })
                 );
             }
         }
@@ -60,7 +63,9 @@ export const refundProduct = (product) => {
         if (getState().authentication && getState().authentication.token) {
             return callApi(`api/records/inventory/${product.serialNumber}`, 'delete', undefined, `Bearer ${getState().authentication.token}`).then(
                 res => dispatch(getHistoryOfProducts()),
-                error => console.log("error in refunding")
+                error => forceLogoutOrError(error, dispatch, () => {
+                    console.log("error in refunding");
+                })
             );
         }
     };

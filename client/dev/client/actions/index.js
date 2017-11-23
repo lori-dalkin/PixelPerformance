@@ -1,5 +1,15 @@
+import callApi from '../utils/apiCaller';
 import * as actions from './action-types';
 import { fetchInventory } from './adminProductActions';
+
+export const forceLogoutOrError = (error, dispatch, callback) =>{
+    if(error.status === 401){
+        dispatch(deleteToken());
+        dispatch(deleteUserType());
+    }else{
+        callback();
+    }
+}
 
 // -----------------------------------------------
 //                    TOKEN
@@ -12,13 +22,26 @@ export const setToken = (token) => {
 }
 
 export const deleteToken = () => {
-    return (dispatch) => {
-        dispatch(resetFilters());
-        dispatch({
-            type: actions.DELETE_TOKEN
-        });
+    return (dispatch, getState) => {
+        if (getState().authentication && getState().authentication.token) {
+          return callApi('api/users/logout', 'post', undefined, `Bearer ${getState().authentication.token}`).then(
+              res => {
+                    dispatch(resetFilters());
+                    dispatch({
+                        type: actions.DELETE_TOKEN
+                    });
+                },
+              error => {
+                    dispatch(resetFilters());
+                    dispatch({
+                        type: actions.DELETE_TOKEN
+                    });
+                    console.log(error)
+                }
+          );
+        }
     }
-}
+};
 
 // -----------------------------------------------
 //                    FILTERS
