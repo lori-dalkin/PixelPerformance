@@ -1,28 +1,20 @@
 import * as jwt from "jsonwebtoken";
 import { AdvicePool, beforeMethod } from 'kaop-ts';
-import { UserManagement } from "./usermanagement";
-import { User } from "./Models/user";
+import { UserManagement } from "../usermanagement";
+import { User } from "../Models/user";
 
 export class RoutingAdvice extends AdvicePool {
 
- static requireLoggedIn(meta) {
-    let self = this;
+  static requireLoggedIn(meta) {
     RoutingAdvice.verifyUserOfType(this, meta, ["User"]);
   }
 
   static requireAdmin(meta) {
-    let self = this;
     RoutingAdvice.verifyUserOfType(this, meta, ["Admin"]);
   }
 
   static requireClient(meta) {
-    let self = this;
     RoutingAdvice.verifyUserOfType(this, meta, ["Client"]);
-  }
-
-  static requireClientOrAdmin(meta) {
-    let self = this;
-    RoutingAdvice.verifyUserOfType(this, meta, ["Client", "User"]);
   }
 
   private static verifyUserOfType(self: any, meta: any, types: string[]): void {
@@ -50,14 +42,14 @@ export class RoutingAdvice extends AdvicePool {
       } else {
         try {
           let user = UserManagement.getInstance().getUserById(verifiedJwt.id);
-          if(types.indexOf("User") !== -1 || types.indexOf(user.getType()) !== -1) {
+          if((types.indexOf("User") !== -1 || types.indexOf(user.getType()) !== -1) && user.token === token) {
             console.log("auth successful : " + user.getId());
             req.user = user;
             self.next();
           } else {
-            console.log(`Authorization Error: invalid user id ${verifiedJwt.id}`);
+            console.log(`Authorization Error: invalid user id ${verifiedJwt.id} or token invalid`);
             self.stop();
-            res.status(401).send({data: false, error: `invalid user id ${verifiedJwt.id}`});
+            res.status(401).send({data: false, error: `invalid user id ${verifiedJwt.id} or token invalid`});
             self.next();
           }
         }

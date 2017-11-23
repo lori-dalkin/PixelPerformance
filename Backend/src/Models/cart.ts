@@ -6,8 +6,6 @@ import  validator = require('validator');
 import assert = require('assert');
 import {Igateway} from "./igateway";
 
-
-
 var db = new dbconnection().getDBConnector();
 export class Cart implements Igateway{
        //This class will have an array of inventory objects, an id, and a userId.
@@ -51,7 +49,7 @@ export class Cart implements Igateway{
      * Function to load all carts with previous purchases
      *********************************************************/
     @afterMethod(function(meta) {
-        assert(meta.result != null);
+        assert(meta.result != null, "Carts were unable to be loaded.");
     })
     public static async findAllRecords(): Promise<Cart[]>{
         let savedInventories: { [key: string]: Inventory[]} = {};
@@ -89,7 +87,7 @@ export class Cart implements Igateway{
 
 
     @afterMethod(function (meta) {
-        assert(meta.result != null);
+        assert(meta.result != null, "Unable to save cart.");
     })
     public async save(): Promise<boolean> {
         let storeOrNot = new Boolean;

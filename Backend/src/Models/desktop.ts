@@ -9,10 +9,10 @@ export class Desktop extends ComputerSystem {
     private dimensions: string;
 
     constructor(id: string, weight: number, modelNumber: string, brand: string,
-                price: number, processor: string, ram: number, cpus: number,
+                price: number, decommissioned: boolean, processor: string, ram: number, cpus: number,
                 hardDrive: number, os: string, dimensions: string) {
         let electronicType = "Desktop";
-        super(id, weight, modelNumber, brand, price, electronicType, processor, ram, cpus, hardDrive, os);
+        super(id, weight, modelNumber, brand, price, decommissioned, electronicType, processor, ram, cpus, hardDrive, os);
         this.dimensions = dimensions;
         this.setModifyStrategy(new DesktopModifyStrategy());
     }
@@ -31,7 +31,7 @@ export class Desktop extends ComputerSystem {
         let queryValues = ["'"+this.getId()+"'", this.getWeight(), "'"+this.getModelNumber()+"'",
                            "'"+this.getBrand()+"'", this.getPrice(), "'"+this.getProcessor()+"'",
                            this.getRam(), this.getCpus(), this.getHardDrive(),
-                           "'"+this.getOs()+"'", "'"+this.getDimensions()+"'"];
+                           "'"+this.getOs()+"'", "'"+this.getDimensions()+"'"+this.getDecommissioned()];
         return db.none("INSERT INTO desktops VALUES (" + queryValues.join(',') + ")")
             .then(function() {
                 console.log("Desktop added to the database.");
@@ -50,7 +50,7 @@ export class Desktop extends ComputerSystem {
         return db.one("SELECT * FROM desktops WHERE id='" + id + "';")
             .then(function(row) {
                 return new Desktop(row.id, row.weight, row.modelnumber,
-                                   row.brand, row.price, row.processor,
+                                   row.brand, row.price, row.decommissioned, row.processor,
                                    row.ram, row.cpus, row.harddrive,
                                    row.os, row.dimensions)
             }).catch(function (err) {
@@ -67,10 +67,12 @@ export class Desktop extends ComputerSystem {
             .then(function(rows) {
                 let desktops: Electronic[] = new Array<Electronic>();
                 for(let i=0; i < rows.length; i++) {
-                    desktops.push(new Desktop(rows[i].id, rows[i].weight, rows[i].modelnumber,
-                                              rows[i].brand, rows[i].price, rows[i].processor,
-                                              rows[i].ram, rows[i].cpus, rows[i].harddrive,
-                                              rows[i].os, rows[i].dimensions));
+                    if(!rows[i].decommissioned){
+                        desktops.push(new Desktop(rows[i].id, rows[i].weight, rows[i].modelnumber,
+                            rows[i].brand, rows[i].price, rows[i].decommissioned, rows[i].processor,
+                            rows[i].ram, rows[i].cpus, rows[i].harddrive,
+                            rows[i].os, rows[i].dimensions));
+                    }
                 }
                 return desktops;
             }).catch(function (err) {
@@ -88,6 +90,7 @@ export class Desktop extends ComputerSystem {
                        + ", modelnumber='" + this.getModelNumber()
                        + "', brand='" + this.getBrand()
                        + "', price=" + this.getPrice()
+                       + ", decommissioned=" + this.getDecommissioned()
                        + ", processor='" + this.getProcessor()
                        + "', ram=" + this.getRam()
                        + ", cpus=" + this.getCpus()
@@ -96,7 +99,7 @@ export class Desktop extends ComputerSystem {
                        + "', dimensions='" + this.getDimensions()
                        + "' WHERE id = '"+ this.getId() + "';")
             .then(function () {
-                console.log("Tablet was modified.");
+                console.log("Desktop was modified.");
                 return true;
             })
             .catch(function (err) {
@@ -109,13 +112,16 @@ export class Desktop extends ComputerSystem {
      * Method to remove the current object from the database
      ********************************************************/    
     public async delete(): Promise<boolean> {
-        return db.none("DELETE FROM monitors WHERE id ='"+ this.getId() + "';")
-            .then(function () {
-                console.log("Desktop object [id: " + this.getId() + "] was deleted.");
-                return true;
-            }).catch(function (err) {
-                console.log("No matching object found for delete: " + err);
-                return false;
-            });
+        this.setDecommissioned(true);
+        return db.none("UPDATE desktops SET decommissioned=" + this.getDecommissioned()
+                        + " WHERE id = '"+ this.getId() + "';")
+        .then(function () {
+            console.log("Desktop was decommissioned");
+            return true;
+        })
+        .catch(function (err) {
+            console.log("Could not decommissioned/delete desktop: " + err);
+            return false;
+        });
     }
 }

@@ -1,5 +1,6 @@
 import * as actions from './action-types';
 import callApi from '../utils/apiCaller';
+import { forceLogoutOrError } from './index';
 import { fetchInventory } from './adminProductActions';
 
 // -----------------------------------------------
@@ -9,6 +10,13 @@ export const setProductFilter = (filters) => {
     return {
         type: actions.SET_PRODUCTS_FILTER,
         filters: filters
+    }
+}
+
+export const setPriceSort = (priceSort) => {
+    return {
+        type: actions.SET_PRICE_SORT,
+        priceSort: priceSort
     }
 }
 
@@ -78,6 +86,9 @@ export const getProducts = () => {
             if(getState().product.filters.maxWeight){
                 endPoint += `&maxWeight=${getState().product.filters.maxWeight}`;
             }
+            if(getState().product.priceSort){
+                endPoint += `&priceSort=${getState().product.priceSort}`;
+            }
         }
 
         return callApi(endPoint, 'get').then(
@@ -85,7 +96,9 @@ export const getProducts = () => {
                 dispatch(setNumProducts(res.totalProducts));
                 dispatch(getProductsSuccess(res.products));
             },
-            error => dispatch(getProductsFailure(error))
+            error => forceLogoutOrError(error, dispatch, () => {
+                dispatch(getProductsFailure(error));
+            })
         );
     };
 }
@@ -155,7 +168,9 @@ export const getBrands = () => {
     return function (dispatch, getState) {
         return callApi('api/products/brands', 'get').then(
             res => dispatch(getBrandSuccess(res)),
-            error => dispatch(getBrandsFailure(error))
+            error => forceLogoutOrError(error, dispatch, () => {
+                dispatch(getBrandsFailure(error));
+            })
         );
     };
 };

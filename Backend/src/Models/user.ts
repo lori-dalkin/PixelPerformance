@@ -6,11 +6,14 @@ export abstract class User {
 	protected lname: string;
 	public email: string;
 	public password: string;
-    constructor(id: string, fname: string, lname: string, email: string, password: string) {
+	public token: string;
+  
+  constructor(id: string, fname: string, lname: string, email: string, password: string, token: string) {
 		this.id = id;
 		this.fname = fname;
 		this.lname = lname;
 		this.email = email;
+		this.token = token;
 		this.password = (password.trim().length == 60 && password.split("$").length == 4) ? password : bcrypt.hashSync(password, 10);
 	}
 

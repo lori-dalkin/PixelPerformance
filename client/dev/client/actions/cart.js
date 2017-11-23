@@ -1,5 +1,6 @@
 import * as actions from './action-types';
 import callApi from '../utils/apiCaller';
+import { forceLogoutOrError } from './index';
 
 export const fetchCartItems = () => {
   return (dispatch, getState) => {
@@ -7,7 +8,10 @@ export const fetchCartItems = () => {
   		dispatch({ type: actions.FETCH_CART_ITEMS });
       return callApi('api/carts', 'get', undefined, `Bearer ${getState().authentication.token}`).then(
           res => dispatch(receiveCartItems((res.data.inventory !== undefined)?res.data.inventory:[])),
-          error => dispatch(receiveCartItems([]))
+          error => forceLogoutOrError(error, dispatch, () => {
+              dispatch(receiveCartItems([]));
+            }
+          )
       );
     }
   };
@@ -23,7 +27,10 @@ export const checkoutCart = () => {
   		dispatch({ type: actions.CHECKOUT_CART });
       return callApi('api/carts', 'post', undefined, `Bearer ${getState().authentication.token}`).then(
           res => dispatch(receiveCheckoutResult(res.status)),
-          error => console.log(error)
+          error => forceLogoutOrError(error, dispatch, () => {
+              console.log(error);
+            }
+          )
       );
     }
   };
@@ -46,7 +53,10 @@ export const removeCartItem = (item) => {
     if (getState().authentication && getState().authentication.token) {
       return callApi(`api/carts/inventory/${item.serialNumber}`, 'delete', undefined, `Bearer ${getState().authentication.token}`).then(
           res => dispatch(fetchCartItems()),
-          error => console.log(error)
+          error => forceLogoutOrError(error, dispatch, () => {
+              console.log(error);
+            }
+          )
       );
     }
   };

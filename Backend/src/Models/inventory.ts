@@ -105,7 +105,7 @@ export class Inventory implements Igateway{
 
     public isLocked(): Boolean
     {
-        if(this.getLockedUntil == null)
+        if(this.getLockedUntil() == null)
             return false; //item is available
         return this.getLockedUntil() > new Date();
     }

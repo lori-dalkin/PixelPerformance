@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import ProductList from './ProductList';
 
-import { showNextProductPage, showPreviousProductPage, showSpecificProductPage, setRowsPerPage, setPage } from '../../actions/productView';
+import { setPriceSort, getProducts, showSpecificProductPage, setRowsPerPage, setPage } from '../../actions/productView';
 import { showProductView, showDeleteProduct } from '../../actions';
 
 const mapStateToProps = state => {
@@ -13,6 +13,7 @@ const mapStateToProps = state => {
         numItems: state.product.numProducts,
         numItemsPerPage: state.product.productsPerPage,
         pagination: true,
+        priceSort: true,
         deleteLabel: "Delete Specification"
     };
 }
@@ -31,7 +32,11 @@ const mapDispatchToProps = dispatch => {
         changeRowsPerPage: (event) => {
             dispatch(setPage(1));
             dispatch(setRowsPerPage(event.target.value));
-        }
+        },
+        onSort: (priceSort) => {
+            dispatch(setPriceSort(priceSort));
+            dispatch(getProducts());
+        },
     };
 }
 

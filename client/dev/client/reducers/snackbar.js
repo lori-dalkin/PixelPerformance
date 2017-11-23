@@ -11,7 +11,7 @@ export default function (state = initialState, action) {
       	return { ...state, open: false };
       	break;
       case actions.REJECT_LOGIN:
-      	return { ...state, open: true, message: "Invalid credentials, try again." };
+      	return { ...state, open: true, message: (action.message === undefined)?"Invalid credentials, try again.":action.message };
       	break;
       case actions.ACCEPT_REGISTRATION:
         return { ...state, open: true, message: "Successfully created account." };

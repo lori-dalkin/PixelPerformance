@@ -3,9 +3,9 @@ import { User } from "./Models/user"
 import { Client } from "./Models/client"
 import { Admin } from "./Models/admin"
 import { dbconnection } from "./Models/dbconnection"
-import {afterMethod, beforeInstance, beforeMethod} from 'kaop-ts'
-import  validator = require('validator');
-import assert = require('assert');
+import { afterMethod, beforeInstance, beforeMethod } from 'kaop-ts'
+import { assert } from "./assert";
+import validator = require('validator');
 import {UnitOfWork} from "./unitofwork";
 
 var db = new dbconnection().getDBConnector();
@@ -74,12 +74,11 @@ export class UserManagement {
     /****************************************************
      * Function to retrieve a single user by email
     ****************************************************/
-    // checkout(userId: string): void
     @beforeMethod(function(meta){
         assert(validator.isEmail(meta.args[0]), "Input parameter is not an Email");
     })
     @afterMethod(function(meta) {
-        assert(meta.result != null);
+        assert(meta.result != null, `No user found with email ${meta.args[0]}`);
     })
     public getUserByEmail(email:string): User {
         for(var i = 0; i<this.users.length; i++)
@@ -93,9 +92,24 @@ export class UserManagement {
     /***************************************
     * Function to add a new Client
      ****************************************/
+    @beforeMethod(function(meta){
+        let param = meta.args[0];
+        for(let attr of ["fname" ,"lname" ,"email" ,"password" ,"address" ,"phone"])
+            assert(param[attr] !== undefined && param[attr].match(/.*\S.*/) !== null, `${attr} cannot be empty or whitespace`);
+        assert(param.fname.match(/^[a-zA-Z]+$/i), "First Name only accepts alphabet characters");
+        assert(param.fname.length <= 20, "First Name is at most 20 characters long");
+        assert(param.lname.match(/^[a-zA-Z]+$/i), "Last Name only accepts alphabet characters");
+        assert(param.lname.length <= 20, "Last Name is at most 20 characters long");
+        assert(validator.isEmail(param.email), "Email type is invalid");
+        assert(param.email.length <= 30, "Email is at most 30 characters long");
+        assert(param.password.length <= 128, "Password is at most 128 characters long");
+        assert(param.address.length <= 30, "Address is at most 30 characters long");
+        assert(param.phone.length <= 30, "Phone is at most 30 characters long");
+        assert(param.phone.match(/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/i), "Phone number formats accepted [1234567890] [123-456-7890] [(123) 456-7890] [123 456 7890] [123.456.7890] [+91 (123) 456-7890]");
+    })
     public addClient(data): boolean {
         let client: Client;
-        client = new Client(uuid.v1(), data.fname, data.lname, data.email, data.password, data.address, data.phone);
+        client = new Client(uuid.v1(), data.fname, data.lname, data.email, data.password, data.address, data.phone, '');
         //client.save();
         this.users.push(client);
         this.unitOfWork.registerNew(client);

@@ -1,7 +1,7 @@
 import * as actions from './action-types';
 import callApi from '../utils/apiCaller';
 import { getProducts } from './productView';
-import { customSnackbar } from './index';
+import { customSnackbar, forceLogoutOrError } from './index';
 
 // -----------------------------------------------
 //                MODIFY PRODUCT
@@ -39,7 +39,10 @@ export const modifyProduct = (body) => {
                             dispatch(modifyProductFailure());
                         }
                     },
-                    error => dispatch(modifyProductFailure())
+                    error => forceLogoutOrError(error, dispatch, () => {
+                          dispatch(modifyProductFailure());
+                        }
+                      )
                 );
             }
         }
@@ -98,7 +101,10 @@ export const addProduct = (body) => {
                             dispatch(addProductFailure());
                         }
                     },
-                    error => dispatch(addProductFailure())
+                    error => forceLogoutOrError(error, dispatch, () => {
+                          dispatch(addProductFailure());
+                        }
+                      )
                 );
             }
         }
@@ -130,7 +136,10 @@ export const deleteProduct = (product) => {
         if (getState().authentication && getState().authentication.token) {
             return callApi(`api/products/${product.id}`, 'delete', undefined, `Bearer ${getState().authentication.token}`).then(
                 res => dispatch(getProducts()),
-                error => console.log("error in deleting")
+                error => forceLogoutOrError(error, dispatch, () => {
+                      console.log("error in deleting");
+                    }
+                  )
             );
         }
     };
@@ -144,7 +153,9 @@ export const fetchInventory = (productId) => {
         dispatch(fetchInventoryRequest());
         return callApi(`api/inventories/product/${productId}`, 'get').then(
             res => dispatch(receiveInventoryCount(res)),
-            error => dispatch(receiveInventoryCount({ count: 0 }))
+            error => forceLogoutOrError(error, dispatch, () => {
+                dispatch(receiveInventoryCount({ count: 0 }));
+            })
         );
     }
 }
@@ -161,7 +172,9 @@ export const addToInventory = (productId) => {
         if (getState().authentication && getState().authentication.token) {
             return callApi(`api/inventories/product/${productId}`, 'post', undefined, `Bearer ${getState().authentication.token}`).then(
                 res => console.log("added to inventory"),
-                error => console.log("failed to add to inventory")
+                error => forceLogoutOrError(error, dispatch, () => {
+                    console.log("failed to add to inventory");
+                })
             );
         }
     }
@@ -172,7 +185,9 @@ export const removeFromInventory = (productId) => {
         if (getState().authentication && getState().authentication.token) {
             return callApi(`api/inventories/product/${productId}`, 'delete', undefined, `Bearer ${getState().authentication.token}`).then(
                 res => console.log("removed from inventory"),
-                error => console.log("failed to remove from inventory")
+                error => forceLogoutOrError(error, dispatch, () => {
+                    console.log("failed to remove from inventory");
+                })
             );
         }
     }

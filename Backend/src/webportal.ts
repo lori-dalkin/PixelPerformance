@@ -6,8 +6,6 @@ import * as path from "path";
 import * as jwt from "jsonwebtoken";
 import * as corser from "corser";
 var cors = require('cors');
-import * as passport from "passport";
-import * as passportJWT from "passport-jwt";
 import * as bcrypt from "bcrypt";
 import errorHandler = require("errorhandler");
 import methodOverride = require("method-override");
@@ -23,7 +21,7 @@ import { PurchaseManagement } from "./purchasemanagement";
 import { SystemMonitor } from "./Models/systemmonitor";
 import * as uuid from "uuid";
 import { AdvicePool, beforeMethod } from 'kaop-ts';
-import { RoutingAdvice } from "./routingadvice";
+import { RoutingAdvice } from "./Aspects/routingadvice";
 import {Inventory} from "./Models/inventory";
 import {UnitOfWork} from "./unitofwork";
 var swaggerUi = require('swagger-ui-express');
@@ -79,7 +77,6 @@ export class WebPortal {
 
         //add api
         this.api();
-
     }
 
     /**
@@ -91,10 +88,6 @@ export class WebPortal {
     public api() {
         let router: express.Router;
         router = express.Router();
-        // some dummy data
-        let monitor = new Monitor('1', 1, "modelNumber", "brand", 1, 1);
-        let monitors = new Array(monitor, monitor, monitor);
-        let token = jwt.sign({ foo: 'bar' }, 'shhhhh');
         //home page
         let routingCatalog = this.catalog;
         let routingUsers = this.usermanagement;
@@ -102,7 +95,7 @@ export class WebPortal {
         let routingSystem = this.systemmonitor;
 
         router.get('/', function (req, res) {
-            res.send('20 dollars is 20 dollars backend home page')
+            res.send('backend home page')
         });
 
         router.post("/api/users/login", this.login);
@@ -144,29 +137,41 @@ export class WebPortal {
         if (body.email && body.password) {
             var email = body.email;
             var password = body.password;
+            var clearTokens = body.clearTokens;
         }
 
         // If password is correct, create an authentication token for the user
         let user = routingUsers.getUserByEmail(email);
-        console.log(user);
         if (user) {
+          try{
+            if(clearTokens)
+              throw 'delete other tokens';
+            if(user.token === ''){
+              throw 'no token';
+            }
+            jwt.verify(user.token, 'tasmanianDevil');
+          }catch (e){
             bcrypt.compare(req.body.password.replace(/ /g, ''), user.password.replace(/ /g, '')).then(function (auth) {
-                if (auth) {
-                    var payload = { id: user.id };
-                    var token = jwt.sign(payload, 'tasmanianDevil');
-                    if (user instanceof Client) {
-                        PurchaseManagement.getInstance().startTransaction(user.getId());
-                        res.json({ message: "Client", data: token });
-                    } else {
-                        res.json({ message: "Admin", data: token });
-                    }
-                    SystemMonitor.getInstance().logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() + " has logged in", token);
-                } else {
-                    res.status(401).json({ message: "Invalid login credentials." });
-                }
+              if (auth) {
+                  var payload = { id: user.id };
+                  var token = jwt.sign(payload, 'tasmanianDevil', { expiresIn: 60*60*24*365 });
+                  routingUsers.getUserByEmail(email).token = token;
+                  if (user instanceof Client) {
+                      PurchaseManagement.getInstance().startTransaction(user.getId());
+                      res.json({ message: "Client", data: token });
+                  } else {
+                      res.json({ message: "Admin", data: token });
+                  }
+                  SystemMonitor.getInstance().logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() + " has logged in", token);
+              } else {
+                  res.status(401).json({ message: "Invalid login credentials." });
+              }
             })
+            return;
+          }
+          res.status(401).json({ message: "User already logged in." });
         } else {
-            res.status(401).json({ message: "no such user found" });
+            res.status(401).json({ message: "Invalid login credentials." });
         }
     }
 
@@ -233,10 +238,11 @@ export class WebPortal {
     }
   }
 
-
-    public logout(req, res) {
-        res.send({ data: true });
-    }
+  @beforeMethod(RoutingAdvice.requireLoggedIn)
+  public logout(req, res) {
+    UserManagement.getInstance().getUserById(req.user.id).token = '';
+    res.send({ data: true });
+  }
 
     public postUser(req, res) {
       try{
@@ -282,6 +288,7 @@ export class WebPortal {
   public deleteClient(req, res){
     try{
       
+      PurchaseManagement.getInstance().cancelTransaction(req.user.id);
       res.send(UserManagement.getInstance().deleteClient(req.user.id));
 
     }catch(e){
@@ -323,7 +330,7 @@ export class WebPortal {
       try{
         let electronics = Catalog.getInstance().getProductPage(parseInt(req.query.page), req.query.type, parseInt(req.query.numOfItems),
                                                                parseInt(req.query.priceLow),parseInt(req.query.priceHigh), req.query.brand,
-                                                               parseInt(req.query.maxSize), parseInt(req.query.maxWeight));
+                                                               parseInt(req.query.maxSize), parseInt(req.query.maxWeight), req.query.priceSort);
         res.send(electronics);
       }catch (e) {
         console.log(e);
