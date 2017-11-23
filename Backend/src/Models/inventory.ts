@@ -13,14 +13,12 @@ export class Inventory implements Igateway{
 	private inventoryType: Electronic;
     private lockedUntil: Date;
     private cartid: string;
-    private returnDate: Date;
 
     constructor(serialNumber: string, inventoryType: Electronic) {
         this.serialNumber = serialNumber;
         this.inventoryType = inventoryType;
         this.lockedUntil = null;
         this.cartid = null;
-        this.returnDate = null;
     }
 
     public setserialNumber(serialNumber:string): void{this.serialNumber = serialNumber;}
@@ -35,8 +33,7 @@ export class Inventory implements Igateway{
     public setCartId(cartid:string){this.cartid = cartid;}
     public getCartId():string{return this.cartid;}
 
-    public setReturnDate(returnDate:Date): void{this.returnDate = returnDate;}
-    public getReturnDate(): Date{return this.returnDate;}
+
 
     async modify(): Promise<boolean> { return Promise.resolve(true)};
 

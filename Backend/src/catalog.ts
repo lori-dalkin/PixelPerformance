@@ -5,7 +5,8 @@ import { dbconnection } from "./Models/dbconnection"
 import { Desktop } from "./Models/desktop";
 import { Tablet } from "./Models/tablet";
 import { Laptop } from "./Models/laptop";
-import { Inventory  } from "./Models/inventory";
+import { Inventory } from "./Models/inventory";
+import { InventoryRecord } from "./Models/inventoryrecord";
 import { ElectronicFactory } from "./electronicfactory";
 
 // Dependencies for contracts
@@ -366,10 +367,10 @@ export class Catalog {
         let allInventories = this.inventories;
         allInventories.push(returned);
     }
-    public checkoutInventory(inventoryId:string) : Inventory{
+    public checkoutInventory(inventoryId:string) : InventoryRecord{
         for(let i=0;i<this.inventories.length;i++){
             if( inventoryId==this.inventories[i].getserialNumber()){
-                return this.inventories.splice(i,1)[0];
+                return this.inventories.splice(i,1)[0] as InventoryRecord;
             }
         }
         return null;

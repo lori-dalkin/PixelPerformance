@@ -6,6 +6,17 @@ var db = new dbconnection().getDBConnector();
 
 export class InventoryRecord extends Inventory {
 
+    private returnDate: Date;
+
+    constructor(serialNumber: string, inventoryType: Electronic) {
+        super(serialNumber, inventoryType);
+        this.returnDate = null;
+    }
+
+    public setReturnDate(returnDate: Date): void { this.returnDate = returnDate; }
+    public getReturnDate(): Date { return this.returnDate; }
+
+
         /****************************************************************
    * Method to return all bought Inventories saved in the database
    *****************************************************************/
@@ -22,7 +33,7 @@ export class InventoryRecord extends Inventory {
                         inventories[rows[i].cart_id] = new Array<Inventory>();
                     }
 
-                    let currInventory: Inventory = new Inventory(rows[i].serialNumber, Inventory.getProduct(rows[i].electronicID));
+                    let currInventory: InventoryRecord = new InventoryRecord(rows[i].serialNumber, Inventory.getProduct(rows[i].electronicID));
 
                     if (rows[i].return_date != null) {
                         currInventory.setReturnDate(new Date(rows[i].return_date));
