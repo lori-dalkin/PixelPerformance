@@ -137,29 +137,40 @@ export class WebPortal {
         if (body.email && body.password) {
             var email = body.email;
             var password = body.password;
+            var clearTokens = body.clearTokens;
         }
 
         // If password is correct, create an authentication token for the user
         let user = routingUsers.getUserByEmail(email);
         console.log(user);
         if (user) {
+          try{
+            if(user.token === ''){
+              throw 'no token';
+            }
+            jwt.verify(user.token, 'tasmanianDevil');
+          }catch (e){
             bcrypt.compare(req.body.password.replace(/ /g, ''), user.password.replace(/ /g, '')).then(function (auth) {
-                if (auth) {
-                    var payload = { id: user.id };
-                    var token = jwt.sign(payload, 'tasmanianDevil');
-                    if (user instanceof Client) {
-                        PurchaseManagement.getInstance().startTransaction(user.getId());
-                        res.json({ message: "Client", data: token });
-                    } else {
-                        res.json({ message: "Admin", data: token });
-                    }
-                    SystemMonitor.getInstance().logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() + " has logged in", token);
-                } else {
-                    res.status(401).json({ message: "Invalid login credentials." });
-                }
+              if (auth) {
+                  var payload = { id: user.id };
+                  var token = jwt.sign(payload, 'tasmanianDevil', { expiresIn: 60*60 });
+                  routingUsers.getUserByEmail(email).token = token;
+                  if (user instanceof Client) {
+                      PurchaseManagement.getInstance().startTransaction(user.getId());
+                      res.json({ message: "Client", data: token });
+                  } else {
+                      res.json({ message: "Admin", data: token });
+                  }
+                  SystemMonitor.getInstance().logRequest(user.getId(), "User: " + user.getFName() + " " + user.getLName() + " has logged in", token);
+              } else {
+                  res.status(401).json({ message: "Invalid login credentials." });
+              }
             })
+            return;
+          }
+          res.status(401).json({ message: "User already logged in." });
         } else {
-            res.status(401).json({ message: "no such user found" });
+            res.status(401).json({ message: "Invalid login credentials." });
         }
     }
 

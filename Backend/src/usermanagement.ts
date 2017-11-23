@@ -108,7 +108,7 @@ export class UserManagement {
     })
     public addClient(data): boolean {
         let client: Client;
-        client = new Client(uuid.v1(), data.fname, data.lname, data.email, data.password, data.address, data.phone);
+        client = new Client(uuid.v1(), data.fname, data.lname, data.email, data.password, data.address, data.phone, '');
         //client.save();
         this.users.push(client);
         this.unitOfWork.registerNew(client);
