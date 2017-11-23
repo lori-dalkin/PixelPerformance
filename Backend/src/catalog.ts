@@ -315,7 +315,7 @@ export class Catalog {
         let inventoryObj: Inventory = new Inventory(uuid.v1(), electronic);
         this.inventories.push(inventoryObj);
         this.unitOfWork.registerNew(inventoryObj);
-        Promise.resolve(true);
+        return Promise.resolve(true);
     }
        
 
