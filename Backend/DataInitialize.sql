@@ -40,10 +40,13 @@ INSERT INTO monitors(weight, modelNumber, brand, price, size, decommissioned) VA
 INSERT INTO monitors(weight, modelNumber, brand, price, size, decommissioned) VALUES(18 ,'DELLX27','Dell',4719.18, 27,False);
 
 DELETE FROM admins;
-INSERT INTO admins(fname, lname, email, password) VALUES('Super','Admin','superadmin@pp.com','$2a$10$w1bjyHs8Zlph7mithtJgE.AeOE9chj19/.YbUzO0wmvOQDVNWd5GC'); /*Password is bcrypt hashed string "!"*/
+INSERT INTO admins(fname, lname, email, password, token) VALUES('Super','Admin','admin1@pp.com','$2a$10$bh6.lfqek5oYNz334kigFeQzKgn5YMrvlk94FAzD9gmVcLOAO39Ku', ''); /*Password is bcrypt hashed string "AdminPassword123"*/
+INSERT INTO admins(fname, lname, email, password, token) VALUES('Super','Admin','admin2@pp.com','$2a$10$bh6.lfqek5oYNz334kigFeQzKgn5YMrvlk94FAzD9gmVcLOAO39Ku', ''); /*Password is bcrypt hashed string "AdminPassword123"*/
 
 DELETE FROM clients CASCADE ;
-INSERT INTO clients(fname, lname, email, password, address, phone) VALUES('John','Smith','jsmith@gmail.com','$2a$10$d.tFEsZRoRz/PVjKO/GjTuUOZGQYG0lRd1Xmu0Ex3m2pqe5p7fa5m','Canada','555-5555'); /*Password is bcrypt hashed string "10"*/
+INSERT INTO clients(fname, lname, email, password, address, phone, token) VALUES('John','Smith','client1@gmail.com','$2a$10$kVJwf.L05kDDhSVbZvOeRuE9OOrVDEMelaHzkSbiSC8XJLa5tpnWq','Canada','552-5551', ''); /*Password is bcrypt hashed string "ClientPassword123"*/
+INSERT INTO clients(fname, lname, email, password, address, phone, token) VALUES('Bob','Stewart','client2@gmail.com','$2a$10$kVJwf.L05kDDhSVbZvOeRuE9OOrVDEMelaHzkSbiSC8XJLa5tpnWq','Canada','552-5552', ''); /*Password is bcrypt hashed string "ClientPassword123"*/
+INSERT INTO clients(fname, lname, email, password, address, phone, token) VALUES('Kelly','Lane','client3@gmail.com','$2a$10$kVJwf.L05kDDhSVbZvOeRuE9OOrVDEMelaHzkSbiSC8XJLa5tpnWq','Canada','552-5553', ''); /*Password is bcrypt hashed string "ClientPassword123"*/
 
 DELETE FROM inventories;
 INSERT INTO inventories("electronicID") SELECT id FROM monitors;

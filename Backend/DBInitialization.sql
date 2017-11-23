@@ -81,6 +81,7 @@ CREATE TABLE admins(
 	lname varchar(20),
 	email varchar(30),
 	password CHAR(128),
+	token varchar(512),
 	PRIMARY KEY(id)
 );
 
@@ -95,6 +96,7 @@ CREATE TABLE clients(
 	password CHAR(128),
 	address varchar(30),
 	phone varchar(30),
+	token varchar(512),
 	PRIMARY KEY(id)
 );
 

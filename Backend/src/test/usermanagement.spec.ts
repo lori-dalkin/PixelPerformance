@@ -28,7 +28,7 @@ describe('Getting all clients', () => {
     .then(function (data) {
         for(var i=0; i<data.length; i++){
             let client = new Client(data[i].id,data[i].fname,data[i].lname,
-            data[i].email, data[i].password, data[i].address, data[i].phone);
+            data[i].email, data[i].password, data[i].address, data[i].phone, '');
             expect(users[i]).to.deep.equal(client);
         }
     });
@@ -69,7 +69,7 @@ describe('Adding a new client', function() {
       db.one(`SELECT * FROM clients WHERE email='${testEmail}';`)
         .then(function (row) {
 
-          let dbClient = new Client(row.id, row.fname, row.lname, row.email, row.password.trim(/ *$/), row.address, row.phone);
+          let dbClient = new Client(row.id, row.fname, row.lname, row.email, row.password.trim(/ *$/), row.address, row.phone, '');
 
           for (let client of [workingMemoryClient, dbClient]) {
             expect(client).to.have.property('id');
