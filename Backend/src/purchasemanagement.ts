@@ -1,5 +1,10 @@
 import { Catalog } from "./catalog";
 import { Cart } from "./Models/cart";
+import { Inventory } from "./Models/inventory";
+import { InventoryRecord } from "./Models/inventoryrecord";
+import {afterMethod, beforeInstance, beforeMethod} from 'kaop-ts'
+import  validator = require('validator');
+import assert = require('assert');
 import {Inventory} from "./Models/inventory";
 import { afterMethod, beforeInstance, beforeMethod } from 'kaop-ts'
 import { assert } from "./assert";
@@ -198,66 +203,77 @@ export class PurchaseManagement {
 		// Unlock the given Inventory item
 		InventoryLockingAdvice.ensureUnlocked(meta.args[1])
     })
-    public returnInventory(userId: string, serialNumber: string): boolean{
-		let allPurchases = this.purchaseRecords;
-		let availableInventory = this.catalog;
-        let returningInv: Inventory;
+    public returnInventory(userId: string, serialNumber: string): boolean {
+        let allPurchases = this.purchaseRecords;
+        let availableInventory = this.catalog;
+        let returningInv: InventoryRecord;
+        let returnedInv: Inventory;
         let modifiedCartId: string;
         let returnSuccess: boolean = true;
         let dateReturned: Date;
         let currInv: Inventory[];
 
         //for each purchase record belonging to this user,
-		//collect all inventories that were sold
-		console.log("Finding all user's past purchases");
-		for(let i = allPurchases.length - 1; i >= 0; i--){
-			if (allPurchases[i].getUserId() == userId){
+        //collect all inventories that were sold
+        console.log("Finding all user's past purchases");
+        for (let i = allPurchases.length - 1; i >= 0; i--) {
+            if (allPurchases[i].getUserId() == userId) {
                 currInv = allPurchases[i].getInventory();
 
                 //Find the inventory to return
                 for (let invIndex = 0; invIndex < currInv.length; invIndex++) {
-                	if (currInv[invIndex].getserialNumber() == serialNumber) {
-                        returningInv = currInv[invIndex];
-                        modifiedCartId = allPurchases[i].getId();
+                    if (currInv[invIndex].getserialNumber() == serialNumber) {
+                        if (currInv[invIndex].getserialNumber() == serialNumber) {
+                            if (currInv[invIndex].constructor.name == "Inventory") {
+                                returningInv = new InventoryRecord(currInv[invIndex].getserialNumber(), currInv[invIndex].getinventoryType());
+                                //returningInv = currInv[invIndex] as InventoryRecord;
+                                modifiedCartId = allPurchases[i].getId();
+                            }
+                            else {
+                                returningInv = currInv[invIndex] as InventoryRecord;
+                                modifiedCartId = allPurchases[i].getId();
+                            }
 
+                        }
                         // The object has previously been returned
-                        if (currInv[invIndex].getReturnDate() != null) {
-                        	console.log("Inventory has already been returned");
-                        	return false;
+                        if (returningInv.getReturnDate() != null) {
+                            console.log("Inventory has already been returned");
+                            return false;
                         }
 
                         dateReturned = new Date();
                         returningInv.setReturnDate(dateReturned);
-
+                        currInv[invIndex] = returningInv;
                         break;
                     }
-                }
 
+                }
+               //    allPurchases[i].setInventory(currInv);
                 if (returningInv != null) {
-                	break;
+                    break;
                 }
-			}
-		}
+            }
+        }
+        returnedInv = new Inventory(returningInv.getserialNumber(), returningInv.getinventoryType());
 
-		//set the cart and lockedUntil variables to null
-		returningInv = new Inventory(returningInv.getserialNumber(), returningInv.getinventoryType());
-		returningInv.setCartId(null);
 
-		//Modify the cart to remove the inventory from its records
-		console.log("Modifying db");
-		let uow: UnitOfWork = this.unitOfWork;
-		for (let i=0; i<allPurchases.length; i++){
-			if (allPurchases[i].getId() == modifiedCartId){
-				allPurchases[i].returnInventoryRecord(serialNumber, dateReturned).then((data) => {
-					returnSuccess = data;
-				});
+
+        //Modify the cart to remove the inventory from its records
+        console.log("Modifying db");
+        let uow: UnitOfWork = this.unitOfWork;
+        for (let i = 0; i < allPurchases.length; i++) {
+            if (allPurchases[i].getId() == modifiedCartId) {
+
+                returningInv.returnInventoryRecord(serialNumber, dateReturned).then((data) => {
+                    returnSuccess = data;
+                });
                 if (returnSuccess) {
-                    availableInventory.returnInventory(returningInv);
-                    uow.registerNew(returningInv);
+                    availableInventory.returnInventory(returnedInv);
+                    uow.registerNew(returnedInv);
 
-                    if (allPurchases[i].getInventory().length == 0){
-                    	let emptyCart: Cart = allPurchases[i];
-                    	uow.registerDeleted(emptyCart);
+                    if (allPurchases[i].getInventory().length == 0) {
+                        let emptyCart: Cart = allPurchases[i];
+                        uow.registerDeleted(emptyCart);
                     }
                     return returnSuccess;
                 }
@@ -265,11 +281,10 @@ export class PurchaseManagement {
                     console.log("Error processing return: could not remove purchase record for inventory with serial number: " + serialNumber)
                     return false;
                 }
-			}
-		}
-		return false;
+            }
+        }
+        return false;
     }
-
 
 	@beforeMethod(function(meta){
 		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
@@ -292,8 +307,8 @@ export class PurchaseManagement {
 			}
 		}
 		this.purchaseRecords.push(cart);
-		for(let inventory of cart.getInventory()){
-			let invtodelete: Inventory = inventory;
+        for (let inventory of cart.getInventory()) {
+            let invtodelete: Inventory = inventory ;
 			this.catalog.checkoutInventory(inventory.getserialNumber());
 			uow.registerDeleted(invtodelete);
 		}

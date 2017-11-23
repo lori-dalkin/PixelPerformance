@@ -1,8 +1,9 @@
 import { Inventory } from "./inventory";
-import {dbconnection} from "./dbconnection";
-import { afterMethod, beforeMethod } from 'kaop-ts'
-import { assert } from "../assert";
-import validator = require('validator');
+import { dbconnection } from "./dbconnection";
+import { InventoryRecord } from "./inventoryrecord";
+import {afterMethod, beforeMethod} from 'kaop-ts'
+import  validator = require('validator');
+import assert = require('assert');
 import {Igateway} from "./igateway";
 
 var db = new dbconnection().getDBConnector();
@@ -64,7 +65,7 @@ export class Cart implements Igateway{
         });
 
         //find all previously purchased inventories
-        dataPromises.push(Inventory.findAllPurchased());
+        dataPromises.push(InventoryRecord.findAllPurchased());
         dataPromises[1].then( (data) => {
             for (let cartid in data){
                 savedInventories[cartid] = data[cartid];
@@ -91,19 +92,15 @@ export class Cart implements Igateway{
     public async save(): Promise<boolean> {
         let storeOrNot = new Boolean;
         var cart = this;
-        let dataPromises = new Array<Promise<void>>();
+        let dataPromises = new Array<Promise<boolean>>();
         dataPromises.push(db.none("INSERT INTO cart VALUES ('" + this.id + "','" + this.userId + "')")
             .then(function () {
                 console.log("UserCart added to db");
                 for (let i = 0; i < cart.inventory.length; i++) {
-                    dataPromises.push(db.none("INSERT INTO bought_inventory VALUES ('" + cart.inventory[i].getserialNumber() + "','" + cart.inventory[i].getinventoryType().getId() + "','" + cart.id + "')")
-                        .then(function () {
-                            console.log("UserCart added to db");
-                            return true;
-                        }).catch(function (err) {
-                            console.log("Error adding UserCart to the db: " + err);
-                            return false;
-                        }));
+                    
+                    let record: InventoryRecord = new InventoryRecord(cart.inventory[i].getserialNumber(), cart.inventory[i].getinventoryType());
+                    record.setCartId(cart.id);
+                    dataPromises.push(record.save());
                 }
                 return true;
             }).catch(function (err) {
@@ -121,19 +118,7 @@ export class Cart implements Igateway{
 
 
 
-    /********************************************************
-     * Method to delete cart item and database item
-     *********************************************************/
-
-    public async returnInventoryRecord(id: String, date: Date): Promise<boolean> {
-        return db.none("UPDATE bought_inventory SET \"return_date\" = '"+ (date.toISOString()) +"' WHERE \"serialNumber\" ='"+ id + "';")
-        .then(function () {
-            return true;
-        }).catch(function (err) {
-            console.log("No matching object found for delete:"+ err);
-            return false;
-        });
-    }
+   
 
     /********************************************************
         * Method to remove the current object from the database
