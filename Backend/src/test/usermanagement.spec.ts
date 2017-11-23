@@ -8,7 +8,7 @@ import 'mocha';
 
 var db = new dbconnection().getDBConnector();
 let userManagement = UserManagement.getInstance();
-let unitOfWork = UnitOfWork.getInstance();
+//let unitOfWork = UnitOfWork.getInstance();
 
 let testEmail = "test@test.com";
 
@@ -61,7 +61,7 @@ describe('Adding a new client', function() {
     };
 
     userManagement.addClient(body);
-    unitOfWork.commit();
+    //unitOfWork.commit();
 
     let workingMemoryClient = userManagement.getUserByEmail(body.email);
 

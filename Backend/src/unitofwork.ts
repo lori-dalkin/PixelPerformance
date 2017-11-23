@@ -66,7 +66,6 @@ export class UnitOfWork {
     }
 
     public commit(): void {
-        console.log("New products:\n" + this.newProducts);
         this.saveNewProducts();
         this.deleteUnusedProducts();
         this.updateDirtyProducts();

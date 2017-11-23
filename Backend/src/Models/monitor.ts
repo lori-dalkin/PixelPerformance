@@ -48,7 +48,7 @@ export class Monitor extends Electronic {
 			.then(function(data){
                 let monitorObjects: Electronic[] = new Array<Electronic>();
                 for(let i=0;i< data.length;i++){
-					if(data[i].decomissioned == false){
+					if(!data[i].decomissioned){
 					monitorObjects.push(new Monitor( data[i].id,parseInt(data[i].weight),data[i].modelnumber, data[i].brand, parseFloat(data[i].price), data[i].decommissioned, parseInt(data[i].size)));
 					}
 				}
