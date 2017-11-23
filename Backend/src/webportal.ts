@@ -142,9 +142,10 @@ export class WebPortal {
 
         // If password is correct, create an authentication token for the user
         let user = routingUsers.getUserByEmail(email);
-        console.log(user);
         if (user) {
           try{
+            if(clearTokens)
+              throw 'delete other tokens';
             if(user.token === ''){
               throw 'no token';
             }
@@ -153,7 +154,7 @@ export class WebPortal {
             bcrypt.compare(req.body.password.replace(/ /g, ''), user.password.replace(/ /g, '')).then(function (auth) {
               if (auth) {
                   var payload = { id: user.id };
-                  var token = jwt.sign(payload, 'tasmanianDevil', { expiresIn: 60*60 });
+                  var token = jwt.sign(payload, 'tasmanianDevil', { expiresIn: 60*60*24*365 });
                   routingUsers.getUserByEmail(email).token = token;
                   if (user instanceof Client) {
                       PurchaseManagement.getInstance().startTransaction(user.getId());
@@ -237,10 +238,11 @@ export class WebPortal {
     }
   }
 
-
-    public logout(req, res) {
-        res.send({ data: true });
-    }
+  @beforeMethod(RoutingAdvice.requireLoggedIn)
+  public logout(req, res) {
+    UserManagement.getInstance().getUserById(req.user.id).token = '';
+    res.send({ data: true });
+  }
 
     public postUser(req, res) {
       try{
