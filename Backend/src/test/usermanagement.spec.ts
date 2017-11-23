@@ -8,7 +8,7 @@ import 'mocha';
 
 var db = new dbconnection().getDBConnector();
 let userManagement = UserManagement.getInstance();
-let unitOfWork = UnitOfWork.getInstance();
+//let unitOfWork = UnitOfWork.getInstance();
 
 let testEmail = "test@test.com";
 
@@ -45,11 +45,9 @@ describe('Getting all clients', () => {
 
 });
 
-describe('Adding a new client', function() {
+describe('Adding a new client', () => {
 
-  this.timeout(5000);
-
-  it('should add a new client', (done) => {
+  it('should add a new client', () => {
 
     let body = {
       fname: "Testfirst",
@@ -61,60 +59,31 @@ describe('Adding a new client', function() {
     };
 
     userManagement.addClient(body);
-    unitOfWork.commit();
+    let client = userManagement.getUserByEmail(body.email);
 
-    let workingMemoryClient = userManagement.getUserByEmail(body.email);
-
-    setTimeout(function() {
-      db.one(`SELECT * FROM clients WHERE email='${testEmail}';`)
-        .then(function (row) {
-
-          let dbClient = new Client(row.id, row.fname, row.lname, row.email, row.password.trim(/ *$/), row.address, row.phone, '');
-
-          for (let client of [workingMemoryClient, dbClient]) {
-            expect(client).to.have.property('id');
-            expect(client).to.have.property('fname');
-            expect(client).to.have.property('lname');
-            expect(client).to.have.property('email');
-            expect(client).to.have.property('id');
-            expect(client).to.have.property('address');
-            expect(client).to.have.property('phone');
-          }
-
-          expect(workingMemoryClient).to.deep.equal(dbClient);
-
-          done();
-        })
-        .catch(function (err) {
-          done(err);
-        });
-    }, 500);
+    expect(client).to.have.property('id');
+    expect(client).to.have.property('fname');
+    expect(client).to.have.property('lname');
+    expect(client).to.have.property('email');
+    expect(client).to.have.property('id');
+    expect(client).to.have.property('address');
+    expect(client).to.have.property('phone');
 
   });
 
 });
 
-describe('Deleting a client', function() {
+describe('Deleting a client', () => {
 
-  this.timeout(5000);
-
-  it('should delete a client', function(done) {
+  it('should delete a client', () => {
 
     let user = userManagement.getUserByEmail(testEmail);
 
+    // should be returning true if the operation completes successfully
     expect(userManagement.deleteClient(user.getId())).to.equal(true);
 
-    setTimeout(function() {
-      expect(userManagement.getUserById.bind(userManagement, user.getId())).to.throw();
-      db.one(`SELECT count(*) FROM clients WHERE email='${testEmail}';`)
-        .then(function (row) {
-          expect(row.count).to.equal('0');
-          done();
-        })
-        .catch(function (err) {
-          done(err);
-        })
-    }, 1000);
+    // should throw an error if the user is not found
+    expect(userManagement.getUserById.bind(userManagement, user.getId())).to.throw();
 
   });
 

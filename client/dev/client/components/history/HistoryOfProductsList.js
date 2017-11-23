@@ -9,7 +9,8 @@ const mapStateToProps = state => {
         pageType: "history",
         products: state.history.products,
         pagination: false,
-        deleteLabel: "Refund"
+        deleteLabel: "Refund",
+        priceSort: false
     };
 }
 

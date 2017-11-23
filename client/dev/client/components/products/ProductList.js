@@ -6,7 +6,7 @@ import Button from 'material-ui/Button';
 
 import Table, { TableBody, TableCell, TableHead, TableFooter, TableRow, TablePagination } from 'material-ui/Table';
 
-const ProductList = ({ onSort, userType, products, onProductClick, onProductDelete, onAddToCartClick, currPage, numItems, numItemsPerPage, gotoPage, changeRowsPerPage, pagination, deleteLabel, pageType }) => {
+const ProductList = ({ onSort, userType, products, onProductClick, onProductDelete, onAddToCartClick, currPage, numItems, numItemsPerPage, gotoPage, changeRowsPerPage, pagination, deleteLabel, pageType, priceSort }) => {
   return (
     <Grid container spacing={8} style={{ margin: '0px', marginTop: '5px' }}>
       <Grid item xs={12}>
@@ -17,8 +17,14 @@ const ProductList = ({ onSort, userType, products, onProductClick, onProductDele
               <TableCell>Electronic Type</TableCell>
               <TableCell>Product Brand</TableCell>
               <TableCell numeric>
-                <a style={{cursor: 'pointer'}} onClick={ () => onSort('asc') }>Price ▲</a>
-                <a style={{cursor: 'pointer'}} onClick={ () => onSort('desc') }>▼</a>
+                  Price
+                  { priceSort && (
+                      <span>
+                          <a style={{cursor: 'pointer'}} onClick={ () => onSort('asc') }> ▲</a>,
+                          <a style={{cursor: 'pointer'}} onClick={ () => onSort('desc') }>▼</a>
+                      </span>
+                    )
+                  }
               </TableCell>
               <TableCell numeric>Actions</TableCell>
             </TableRow>
@@ -66,6 +72,7 @@ const ProductList = ({ onSort, userType, products, onProductClick, onProductDele
 ProductList.propTypes = {
     onProductClick: PropTypes.func.isRequired,
     pagination: PropTypes.bool.isRequired,
+    priceSort: PropTypes.bool.isRequired,
     deleteLabel: PropTypes.string.isRequired,
     products: PropTypes.arrayOf(
         PropTypes.shape({
@@ -81,7 +88,6 @@ ProductList.propTypes = {
     numItems: PropTypes.number,
     numItemsPerPage: PropTypes.number,
     pageType: PropTypes.string,
-    onSort: PropTypes.func.isRequired,
 };
 
 export default ProductList;
