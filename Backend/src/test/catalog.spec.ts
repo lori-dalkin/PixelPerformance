@@ -249,12 +249,11 @@ describe ('Adding an Inventory by ID', () => {
         catalog.addProduct(monitor);
 
         // get the array of electronics        
-        let newTestMonitor: Electronic = catalog.electronics[catalog.electronics.length - 1];
+        let newTestMonitor = catalog.electronics[catalog.electronics.length - 1];
 
         //verify I can add the new monitor to my inventory;
-        var newAddedInventory = catalog.addInventory(newTestMonitor.getId());
-        newAddedInventory.then(function(newAddedInventory){
-            expect(newAddedInventory).to.equal(true);
+        catalog.addInventory(newTestMonitor.getId()).then( function(data) {
+            expect(data).to.equal(true);
         })
 
         catalog.deleteProduct(mId);
@@ -271,7 +270,7 @@ describe('Deleting an Inventory by its ID', () => {
             catalog.addProduct(monitor);
 
             //get the array of electronics 
-            let newTestMonitor: Electronic = catalog.electronics[catalog.electronics.length - 1];
+            let newTestMonitor = catalog.electronics[catalog.electronics.length - 1];
 
             //adding the newly created monitor just to verify that it can be deleted too
             var newMonitorAdded = catalog.addInventory(newTestMonitor.getId());
@@ -281,20 +280,5 @@ describe('Deleting an Inventory by its ID', () => {
             newMonitorDeleted.then(function (newMonitorDeleted){
                 expect(newMonitorDeleted).to.equal(true);
             })
-
-            //expect(catalog.deleteInventory(newTestMonitor.getId())).to.equal(true);
-    
-            // //try deleting all the other items within our electronic inventory
-            // let length = catalog.electronics.length;
-            // for (let i = 0; i <= length - 1; i++) {
-            //     var value = catalog.deleteInventory(catalog.electronics[0].getId());
-            //     value.then(function (value) {
-            //         expect(value).to.equal(valueShouldBeTrue);
-            //     });
-            // }
-    
-            // //verify the array is null after deleting all the electronics, just to verify that the last loop effectively called deleteInventory(electronicID)
-            // expect(0).to.equal(catalog.electronics.length);
         });
-    
     });
