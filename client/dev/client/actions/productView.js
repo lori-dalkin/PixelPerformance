@@ -1,5 +1,6 @@
 import * as actions from './action-types';
 import callApi from '../utils/apiCaller';
+import { forceLogoutOrError } from './index';
 import { fetchInventory } from './adminProductActions';
 
 // -----------------------------------------------
@@ -95,7 +96,9 @@ export const getProducts = () => {
                 dispatch(setNumProducts(res.totalProducts));
                 dispatch(getProductsSuccess(res.products));
             },
-            error => dispatch(getProductsFailure(error))
+            error => forceLogoutOrError(error, dispatch, () => {
+                dispatch(getProductsFailure(error));
+            })
         );
     };
 }
@@ -165,7 +168,9 @@ export const getBrands = () => {
     return function (dispatch, getState) {
         return callApi('api/products/brands', 'get').then(
             res => dispatch(getBrandSuccess(res)),
-            error => dispatch(getBrandsFailure(error))
+            error => forceLogoutOrError(error, dispatch, () => {
+                dispatch(getBrandsFailure(error));
+            })
         );
     };
 };

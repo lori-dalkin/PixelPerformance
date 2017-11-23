@@ -42,14 +42,14 @@ export class RoutingAdvice extends AdvicePool {
       } else {
         try {
           let user = UserManagement.getInstance().getUserById(verifiedJwt.id);
-          if(types.indexOf("User") !== -1 || types.indexOf(user.getType()) !== -1) {
+          if((types.indexOf("User") !== -1 || types.indexOf(user.getType()) !== -1) && user.token === token) {
             console.log("auth successful : " + user.getId());
             req.user = user;
             self.next();
           } else {
-            console.log(`Authorization Error: invalid user id ${verifiedJwt.id}`);
+            console.log(`Authorization Error: invalid user id ${verifiedJwt.id} or token invalid`);
             self.stop();
-            res.status(401).send({data: false, error: `invalid user id ${verifiedJwt.id}`});
+            res.status(401).send({data: false, error: `invalid user id ${verifiedJwt.id} or token invalid`});
             self.next();
           }
         }

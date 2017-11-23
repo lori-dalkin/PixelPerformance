@@ -7,9 +7,10 @@ export const attemptLogin = (credentials) => {
         return callApi('api/users/login', 'post', {
             email: credentials.email,
             password: credentials.password,
+            clearTokens: credentials.clearTokens
         }).then(
             res => dispatch(receiveAttemptLogin(res)),
-            error => dispatch(receiveAttemptLogin({ data: undefined }))
+            error => dispatch(receiveAttemptLogin({ data: undefined, message: error.message }))
         );
     };
 }
@@ -27,7 +28,8 @@ export const receiveAttemptLogin = (result) => {
         };
     } else {
         return {
-            type: actions.REJECT_LOGIN
+            type: actions.REJECT_LOGIN,
+            message: result.message
         };
     }
 }
