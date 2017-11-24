@@ -75,7 +75,7 @@ export class UserManagement {
      * Function to retrieve a single user by email
     ****************************************************/
     @beforeMethod(function(meta){
-        assert(validator.isEmail(meta.args[0]), "Input parameter is not an Email");
+        assert(validator.isEmail(meta.args[0]), "Email address has an incorrect format.");
     })
     @afterMethod(function(meta) {
         assert(meta.result != null, `No user found with email ${meta.args[0]}`);

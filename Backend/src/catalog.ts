@@ -107,7 +107,7 @@ export class Catalog {
      * Deletes the first instance of the product found in the inventory array regardless of it's serial number
      **************************************************************************************************/
     @beforeMethod(function(meta) {
-        assert(validator.isUUID(meta.args[0]), "electronicID needs to be a uuid");
+        assert(validator.isUUID(meta.args[0]), "Electronic ID must be a uuid");
         assert(Catalog.getInstance().inventoryExists(meta.args[0]), "electronicID must refer to an Electronic for which inventory exists");
     })
     @afterMethod(function(meta) {
@@ -135,7 +135,7 @@ export class Catalog {
     * Function to retrieve a single product via its id
      ****************************************************/
     @beforeMethod(function(meta){
-        assert(validator.isUUID(meta.args[0]), "productId needs to be a uuid");
+        assert(validator.isUUID(meta.args[0]), "Product ID must be a uuid");
         assert(Catalog.getInstance().productExists(meta.args[0]), "productId must refer to an existing Electronic");
     })
     @afterMethod(function(meta) { 
@@ -155,13 +155,13 @@ export class Catalog {
 	 ********************************************************/
 	@beforeMethod(function(meta) {
         let catalog = Catalog.getInstance();
-        assert(meta.args[0] > 0 || meta.args[0] == null || isNaN(meta.args[0]), "page must be greater than 0");
-        assert(meta.args[2] > 0 || meta.args[2] == null || isNaN(meta.args[2]), "numOfItems must be greater than 0");
-        assert(meta.args[2] % 1 === 0 || meta.args[2] == null ||isNaN( meta.args[2]), "numOfItems must be a whole number");
-        assert(catalog.validElectronicType(meta.args[1]) || meta.args[1] == null || isNaN(meta.args[1]), "type must be null or a valid subtype of Electronic");
+        assert(meta.args[0] > 0 || meta.args[0] == null || isNaN(meta.args[0]), "Page must be greater than 0");
+        assert(meta.args[2] > 0 || meta.args[2] == null || isNaN(meta.args[2]), "Number Of Items must be greater than 0");
+        assert(meta.args[2] % 1 === 0 || meta.args[2] == null ||isNaN( meta.args[2]), "Number Of Items must be a whole number");
+        assert(catalog.validElectronicType(meta.args[1]) || meta.args[1] == null || isNaN(meta.args[1]), "Type must be null or a valid subtype of Electronic");
     })
     @afterMethod(function(meta) {
-        assert(meta.result != null, "Unable to create valid responseData for getProductPage call");
+        assert(meta.result != null, "Unable to create valid response for getProductPage call");
     })
     public getProductPage(page:number, type:string, numOfItems:number, 
                             priceLow:number, priceHigh:number, brand:string,
@@ -233,7 +233,7 @@ export class Catalog {
     }
     
     @beforeMethod(function(meta){
-		assert(!validator.isEmpty(meta.args[0]), "Electronic id can't be empty");
+		assert(!validator.isEmpty(meta.args[0]), "Electronic ID cannot be empty.");
     })
     @afterMethod(function(meta)
     {
@@ -256,12 +256,12 @@ export class Catalog {
 	* Function to add a new product
 	 ********************************************************/
     @beforeMethod(function(meta){
-        assert(meta.args[0] != null,  "Product data cannot be null");
+        assert(meta.args[0] != null,  "Product data cannot be null.");
         Catalog.getInstance().validateElectronicParameter(meta.args[0], false);
 	})
 	@afterMethod(function(meta) {
         //compare most recent object with object sent to function
-        assert(meta.args[0].modelNumber != Catalog.getInstance().electronics[Catalog.getInstance().electronics.length - 1], "Product wasn't found." )
+        assert(meta.args[0].modelNumber != Catalog.getInstance().electronics[Catalog.getInstance().electronics.length - 1], "Product was not found.");
 		assert(meta.result == true, "Product wasn't added.");
 	})
 	public addProduct(data): boolean {
@@ -284,8 +284,8 @@ export class Catalog {
                 found = true;
             }
         }
-        assert(meta.args[0] != null, "electronic ID cannot be null");
-        assert(found, "Product not in Catalog");
+        assert(meta.args[0] != null, "Electronic ID cannot be null.");
+        assert(found, "Product not in Catalog.");
 	})
 	@afterMethod(function(meta) {
         let electronic: Electronic;
@@ -295,17 +295,17 @@ export class Catalog {
                 break;
             }
         }
-        assert(Catalog.getInstance().inventories.length != 0, "Inventory empty");
+        assert(Catalog.getInstance().inventories.length != 0, "Inventory is empty.");
          //compare latest inventory type with electronic sent as argument
-        assert(Catalog.getInstance().inventories[Catalog.getInstance().inventories.length - 1].getinventoryType().getId() == electronic.getId(), "Inventory not added inventory array");
+        assert(Catalog.getInstance().inventories[Catalog.getInstance().inventories.length - 1].getinventoryType().getId() == electronic.getId(), "Inventory not added to inventory array.");
 	})
     public addInventory(electronidId: string): Promise<boolean> {
-        console.log("adding to inventory: " + electronidId);
+        console.log(`adding to inventory: ${electronidId}`);
         let electronic: Electronic;
         for (var i = 0; i < this.electronics.length; i++) {
             if (this.electronics[i].getId() == electronidId) {
                 electronic = this.electronics[i];
-                console.log("inventory id belongs to a " + electronic.getElectronicType());
+                console.log(`inventory id belongs to a ${electronic.getElectronicType()}`);
                 break;
             }
         }
@@ -341,7 +341,7 @@ export class Catalog {
     * Function to update data fields in existing product specifications
      *******************************************************************/
     @beforeMethod(function(meta){
-        assert(meta.args[0] != null,  "Product data cannot be null");
+        assert(meta.args[0] != null,  "Product data cannot be null.");
         Catalog.getInstance().validateElectronicParameter(meta.args[1], true);
 	})
     public async modifyProduct(electronicID: string, data): Promise<boolean> {
@@ -352,11 +352,11 @@ export class Catalog {
                 elec = elec.getModifyStrategy().modifyElectronic(elec, data);
                 this.unitOfWork.registerDirty(elec);
 
-                console.log("Modification completed successfully");
+                console.log("Modification completed successfully.");
                 return Promise.resolve(true);
             }
         }
-        console.log("Object doesn't exist in the database");
+        console.log("Object does not exist in the database.");
         return Promise.resolve(false);
 
     }
@@ -450,60 +450,59 @@ export class Catalog {
     }
 
     private isNotEmpty(param: string, paramName: string) {
-        assert(param !== undefined && param.match(/.*\S.*/) !== null, `${paramName} cannot be empty or whitespace`);
+        assert(param !== undefined && param !== "", `${paramName} cannot be empty.`)
+        assert(param.match(/.*\S.*/) !== null, `${paramName} cannot contain only whitespace characters.`);
     }
     private isTwoDigitNumber(par:any, message:string) {
         Catalog.getInstance().validatePositiveNumber(par, message);
-        assert((Number(par)*100)%1 === 0, message + " has at most two decimals");
+        assert((Number(par)*100)%1 === 0, `${message} must have at most two decimals.`);
     }
     private isWholeNumber(par:any, message:string) {
         Catalog.getInstance().validatePositiveNumber(par, message);
-        assert(Number(par)%1 === 0, message + " needs to be an integer");
-        assert(Number(par) < 100000, message + " needs to be less than 100000")
+        assert(Number(par)%1 === 0, `${message} must be an integer.`);
+        assert(Number(par) < 100000, `${message} must be less than 100000.`);
     }
     private validatePositiveNumber(par:any, message:string) {
-        assert((typeof par == "number" || par.trim(" ") !== "") && !Number.isNaN(Number(par)), message + " needs to be a number");
-        assert(Number(par) >= 0, message + " needs to be positive");
+        assert((typeof par == "number" || par.trim(" ") !== "") && !Number.isNaN(Number(par)), `${message} must be a number.`);
+        assert(Number(par) >= 0, `${message} must be positive.`);
     }
     private validateElectronicParameter(parameter:any, modify:boolean) {
-        assert(typeof parameter.modelNumber == "string", "Model Number needs to be a string");
-        assert(typeof parameter.brand == "string", "Brand needs to be a string");
-        for(let paramName of ["modelNumber", "brand"])
-            Catalog.getInstance().isNotEmpty(parameter[paramName], paramName);
+        assert(typeof parameter.modelNumber == "string", "Model Number must be a string.");
+        assert(typeof parameter.brand == "string", "Brand must be a string.");
+        Catalog.getInstance().isNotEmpty(parameter.modelNumber, "Model Number");
+        Catalog.getInstance().isNotEmpty(parameter.brand, "Brand");
         Catalog.getInstance().isTwoDigitNumber(parameter.weight, "Weight");
-        assert(parameter.weight < 100, "Weight must be less than 100");
-        assert(parameter.modelNumber.length <= 20, "Model Number is at most 20 characters long");
-        assert(parameter.modelNumber.match(/^[a-z0-9]+$/i), "Model Number must be alphanumeric");
-        assert(parameter.brand.length <= 30, "Brand is at most 30 characters long");
+        assert(parameter.weight < 100, "Weight must be less than 100.");
+        assert(parameter.modelNumber.length <= 20, "Model Number must be at most 20 characters.");
+        assert(parameter.modelNumber.match(/^[a-z0-9]+$/i), "Model Number must be alphanumeric.");
+        assert(parameter.brand.length <= 30, "Brand must be at most 30 characters.");
         Catalog.getInstance().isTwoDigitNumber(parameter.price, "Price");
-        assert(Number(parameter.price) < 10000, "Price should be less than 10000" );
-        if(modify) {
-            assert(Catalog.getInstance().verifyModifyModelNumber(parameter.id, parameter.modelNumber),"Model Number already given to other specification");
-        }
-        else {
-            assert(!Catalog.getInstance().modelNumberExists(parameter.modelNumber),"Model Number already exists");
-        }
+        assert(Number(parameter.price) < 10000, "Price must be less than 10000.");
+        if(modify)
+            assert(Catalog.getInstance().verifyModifyModelNumber(parameter.id, parameter.modelNumber), "Model Number is already in use by another product.");
+        else
+            assert(!Catalog.getInstance().modelNumberExists(parameter.modelNumber),"Model Number is already in use by another product.");
         let eType:string = parameter.electronicType;
-        assert(typeof eType == "string", "Electronic Type needs to be a string");
+        assert(typeof eType == "string", "Electronic Type must be a string.");
         if(eType === "Monitor") {
             Catalog.getInstance().isWholeNumber(parameter.size, "Size");
         }
         else {
-            for(let paramName of ["processor", "os"])
-                Catalog.getInstance().isNotEmpty(parameter[paramName], paramName);
-            assert(typeof parameter.processor == "string", "Processor needs to be a string");
-            assert(parameter.processor.length <= 20, "Processor is at most 20 characters long");
+            Catalog.getInstance().isNotEmpty(parameter.processor, "Processor");
+            Catalog.getInstance().isNotEmpty(parameter.os, "OS");
+            assert(typeof parameter.processor == "string", "Processor must be a string.");
+            assert(parameter.processor.length <= 20, "Processor must be at most 20 characters.");
             Catalog.getInstance().isWholeNumber(parameter.ram, "Ram");
             Catalog.getInstance().isWholeNumber(parameter.cpus, "Number of CPU's");
             Catalog.getInstance().isWholeNumber(parameter.hardDrive, "Hard Drive");
-            assert(typeof parameter.os == "string", "Operating System needs to be a string");
-            assert(parameter.os.length <= 15, "Operating System is at most 15 characters long");
+            assert(typeof parameter.os == "string", "Operating System must be a string.");
+            assert(parameter.os.length <= 15, "Operating System must be at most 15 characters.");
             switch(eType) {
                 
                 case "Desktop":
-                    assert(typeof parameter.dimensions == "string", "Dimensions needs to be a string");
-                    Catalog.getInstance().isNotEmpty(parameter.dimensions, "dimensions");
-                    assert(parameter.dimensions.length <= 20, "Dimensions is at most 20 characters long");
+                    assert(typeof parameter.dimensions == "string", "Dimensions must be a string.");
+                    Catalog.getInstance().isNotEmpty(parameter.dimensions, "Dimensions");
+                    assert(parameter.dimensions.length <= 20, "Dimensions must be at most 20 characters.");
                     break;
                 case "Laptop":
                 case "Tablet":
@@ -512,15 +511,17 @@ export class Catalog {
                     assert((Number(parameter.displaySize))<100,"Display size should be less than 100");
                     Catalog.getInstance().isWholeNumber(parameter.battery, "Battery");
                     if(eType === "Laptop") {
-                        //Catalog.getInstance().isNotEmpty(parameter.touchScreen, "touchScreen");
-                        //assert(typeof parameter.camera == "boolean", "Camera needs to be a boolean"); // todo: typecast string of "camera" as boolean
-                        //assert(typeof parameter.touchScreen == "boolean", "Touchscreen needs to be a boolean"); // todo: typecast as boolean
+                        assert(parameter.camera !== undefined && parameter.camera !== "", "Camera must be true or false.");
+                        assert(parameter.touchScreen !== undefined && parameter.touchScreen !== "", "Touch Screen must be true or false.");
+                        assert(parameter.camera == "true" || parameter.camera == "false", "Camera must be true or false.");
+                        assert(parameter.touchScreen == "true" || parameter.touchScreen == "false", "Touchscreen must be true or false.");
                     }
                     else if(eType === "Tablet") {
-                        assert(typeof parameter.dimensions == "string", "Dimensions needs to be a string");
-                        Catalog.getInstance().isNotEmpty(parameter.dimensions, "dimensions");
-                        assert(parameter.dimensions.length <= 20, "Dimensions is at most 20 characters long");
-                        //assert(typeof parameter.camera == "boolean", "Camera needs to be a boolean"); // todo: typecast to boolean
+                        assert(typeof parameter.dimensions == "string", "Dimensions must be a string.");
+                        Catalog.getInstance().isNotEmpty(parameter.dimensions, "Dimensions");
+                        assert(parameter.dimensions.length <= 20, "Dimensions must be at most 20 characters.");
+                        assert(parameter.camera !== undefined && parameter.camera !== "", "Camera must be true or false.");
+                        assert(parameter.camera == "true" || parameter.camera == "false", "Camera must be true or false.");
                     }
                     break;
                 default:
