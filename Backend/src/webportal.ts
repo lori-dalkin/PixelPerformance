@@ -209,7 +209,7 @@ export class WebPortal {
     }catch (e) {
       console.log(e);
       res.status = 500;
-      res.send({data: false, error: e});
+      res.send({data: false, error: { message: e.message} });
     }
   }
     
@@ -360,7 +360,7 @@ export class WebPortal {
         catch (e) {
           console.log(e);
           res.status = 500;
-          res.send({ data: false, error: e });
+          res.send({ data: false, error: { message: e.message } });
         }
     }
 
