@@ -141,8 +141,8 @@ export class WebPortal {
         }
 
         // If password is correct, create an authentication token for the user
-        let user = routingUsers.getUserByEmail(email);
-        if (user) {
+        try {
+          let user = routingUsers.getUserByEmail(email);
           try{
             if(clearTokens)
               throw 'delete other tokens';
@@ -170,8 +170,9 @@ export class WebPortal {
             return;
           }
           res.status(401).json({ message: "User already logged in." });
-        } else {
-            res.status(401).json({ message: "Invalid login credentials." });
+        } catch(err) {
+            console.log(err);
+            res.status(401).json({ message: err.message });
         }
     }
 
