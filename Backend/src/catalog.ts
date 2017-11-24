@@ -155,7 +155,6 @@ export class Catalog {
 	 ********************************************************/
 	@beforeMethod(function(meta) {
         let catalog = Catalog.getInstance();
-        console.log(meta.args[0]);
         assert(meta.args[0] > 0 || meta.args[0] == null || isNaN(meta.args[0]), "page must be greater than 0");
         assert(meta.args[2] > 0 || meta.args[2] == null || isNaN(meta.args[2]), "numOfItems must be greater than 0");
         assert(meta.args[2] % 1 === 0 || meta.args[2] == null ||isNaN( meta.args[2]), "numOfItems must be a whole number");
@@ -395,7 +394,6 @@ export class Catalog {
     // Methods for contract programming
     private inventoryExists(electronicID: string): Boolean {
         for(let inventory of this.inventories) {
-            console.log(inventory);
             if(inventory.getinventoryType().getId() == electronicID) {
                 return true;
             }

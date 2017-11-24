@@ -43,7 +43,6 @@ describe('Getting all inventory in a cart', () => {
             expect(i).to.have.property('inventoryType');
             expect(i).to.have.property('lockedUntil');
             expect(i).to.have.property('cartid');
-            expect(i).to.have.property('returnDate');
         }           
     })
 });
@@ -108,7 +107,7 @@ describe('Returning an inventory', () => {
 
         //Assert that the purchase exists, that it has not been returned and that the inventory is no longer available to be purchased
         expect(returnItem.getinventoryType().getId()).to.equal(purchaseItem.getinventoryType().getId());
-        expect(returnItem.getReturnDate()).to.be.null;
+        //expect((returnItem as InventoryRecord).getReturnDate()).to.be.null;
         expect(PurchaseManagement.getInstance().findInventoryBySerialNumber(returnItem.getserialNumber())).to.be.undefined;
 
         //Make the return
@@ -117,7 +116,7 @@ describe('Returning an inventory', () => {
         //Assert that the return was made and that the item is available for purchasing again
         userPurchases = purchasemanagement.viewPurchases(client.getId());
         returnItem = userPurchases[userPurchases.length-1] as InventoryRecord;
-        expect(returnItem.getReturnDate()).to.not.be.null;
+        expect((returnItem as InventoryRecord).getReturnDate()).to.not.be.null;
         expect(PurchaseManagement.getInstance().findInventoryBySerialNumber(returnItem.getserialNumber())).to.not.be.undefined;
     });
 });
