@@ -551,15 +551,3 @@ export class Catalog {
         return brandSet;
     }
 }
-
-
-
-class responseData{
-    public products:Electronic[];
-    public totalProducts: number;
-    constructor(products:Electronic[], totalProducts: number){
-
-        this.products=products;
-        this.totalProducts=totalProducts;
-    }
-}
