@@ -195,15 +195,6 @@ describe ('Checking out a cart', () => {
 
         PurchaseManagement.getInstance().checkout(client.getId());
 
-        let deletedCart = true;
-        for (let i = 0; i < PurchaseManagement.getInstance().activeCarts.length; i++){
-            if(PurchaseManagement.getInstance().activeCarts[i] == cart){
-                deletedCart = false;
-            }
-        }
-
-        expect(deletedCart).to.equal(true);
-
         let purchasedCart = false;
         for (let a = 0; a < PurchaseManagement.getInstance().purchaseRecords.length; a++){
             if (PurchaseManagement.getInstance().purchaseRecords[a] == cart){
