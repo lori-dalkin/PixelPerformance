@@ -136,3 +136,81 @@ describe('Getting a cart by user id', () => {
         expect(cart).to.have.property('inventory');
     });
 });
+
+describe('Deleting a cart by id', () => {
+
+    it('should remove current user avtive cart', () => {
+        
+        const client: User = UserManagement.getInstance().getAllClients()[0];
+        purchasemanagement.startTransaction(client.getId());
+        const cart = PurchaseManagement.getInstance().getCart(client.getId());
+
+        purchasemanagement.cancelTransaction(client.getId());
+
+        let userActiveCart = false;
+        for (let i = 0; i < purchasemanagement.activeCarts.length; i ++){
+            if (purchasemanagement.activeCarts[i].getUserId() == client.getId()){
+                userActiveCart = true;
+            }
+        }
+
+        expect(userActiveCart).to.equal(false);
+    });
+});
+
+describe('Deleteing inventory from cart by id', () => {
+
+    it('should remove specific item from user cart', () => {
+
+        const client: User = UserManagement.getInstance().getAllClients()[0];
+        const inventory: Inventory = Catalog.getInstance().inventories[0];
+
+        PurchaseManagement.getInstance().addItemToCart(client.getId(),inventory.getinventoryType().getId());   
+        
+        PurchaseManagement.getInstance().removeFromCart(client.getId(), inventory.getserialNumber());
+
+        let deletedInventory = true;
+
+        for (let i = 0; i < PurchaseManagement.getInstance().getCart(client.getId()).getInventory().length; i++){
+            if ( PurchaseManagement.getInstance().getCart(client.getId()).getInventory()[i].getserialNumber() == inventory.getserialNumber()){
+                deletedInventory = false;
+            }
+        }
+
+        expect(deletedInventory).to.equal(true);
+
+    });
+});
+
+describe ('Checking out a cart', () => {
+
+    it('should remove current user active cart and move to purchased record', () => {
+        const client: User = UserManagement.getInstance().getAllClients()[0];
+        purchasemanagement.startTransaction(client.getId());
+
+        const inventory: Inventory = Catalog.getInstance().inventories[0];
+        PurchaseManagement.getInstance().addItemToCart(client.getId(),inventory.getinventoryType().getId());
+
+        const cart = PurchaseManagement.getInstance().getCart(client.getId());
+
+        PurchaseManagement.getInstance().checkout(client.getId());
+
+        let deletedCart = true;
+        for (let i = 0; i < PurchaseManagement.getInstance().activeCarts.length; i++){
+            if(PurchaseManagement.getInstance().activeCarts[i] == cart){
+                deletedCart = false;
+            }
+        }
+
+        expect(deletedCart).to.equal(true);
+
+        let purchasedCart = false;
+        for (let a = 0; a < PurchaseManagement.getInstance().purchaseRecords.length; a++){
+            if (PurchaseManagement.getInstance().purchaseRecords[a] == cart){
+                purchasedCart = true;
+            }
+        }
+
+        expect(purchasedCart).to.equal(true);
+    });
+});
