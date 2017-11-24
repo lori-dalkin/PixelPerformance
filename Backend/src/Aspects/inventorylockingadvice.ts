@@ -9,9 +9,6 @@ export class InventoryLockingAdvice extends AdvicePool {
 		let currInventory: Inventory = InventoryLockingAdvice.findInventory(serialNumber);
 
 		if (currInventory != null) {
-			console.log("requireUnlocked: ");
-			console.log(currInventory);
-
 			if (!currInventory.isLocked()) {
 				this.next();
 			} else {

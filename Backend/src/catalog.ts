@@ -155,7 +155,6 @@ export class Catalog {
 	 ********************************************************/
 	@beforeMethod(function(meta) {
         let catalog = Catalog.getInstance();
-        console.log(meta.args[0]);
         assert(meta.args[0] > 0 || meta.args[0] == null || isNaN(meta.args[0]), "page must be greater than 0");
         assert(meta.args[2] > 0 || meta.args[2] == null || isNaN(meta.args[2]), "numOfItems must be greater than 0");
         assert(meta.args[2] % 1 === 0 || meta.args[2] == null ||isNaN( meta.args[2]), "numOfItems must be a whole number");
@@ -230,7 +229,7 @@ export class Catalog {
             var startProduct = (page-1) * numOfItems;
             desiredProducts = desiredProducts.slice(startProduct,startProduct+numOfItems); //includes the first num, not the second. If not in bounds, should return empty array. To be dealt with in frontend    
         }
-        return new responseData(desiredProducts,totalProducts);
+        return { products: desiredProducts, totalProducts:totalProducts}; //new responseData(desiredProducts,totalProducts);
     }
     
     @beforeMethod(function(meta){
@@ -395,7 +394,6 @@ export class Catalog {
     // Methods for contract programming
     private inventoryExists(electronicID: string): Boolean {
         for(let inventory of this.inventories) {
-            console.log(inventory);
             if(inventory.getinventoryType().getId() == electronicID) {
                 return true;
             }
@@ -551,18 +549,5 @@ export class Catalog {
             brandSet.add(e.getBrand());
         }
         return brandSet;
-    }
-}
-
-
-
-class responseData{
-    public products:Electronic[];
-    public totalProducts: number;
-    constructor(products:Electronic[], totalProducts: number){
-        console.log(this.products);
-        console.log(this.totalProducts);
-        this.products=products;
-        this.totalProducts=totalProducts;
     }
 }

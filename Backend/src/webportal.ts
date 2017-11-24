@@ -100,32 +100,32 @@ export class WebPortal {
 
         router.post("/api/users/login", this.login);
         router.post("/api/users/logout", this.logout);
-        router.post("/api/users/", this.postUser);
+        router.post("/api/users/", this.registerUser);
         router.get("/api/users/", this.getAllClients);
         router.delete("/api/users/", this.deleteClient);
 
-        router.get("/api/products/", this.getProducts);
+        router.get("/api/products/", this.searchCatalog);
         router.get("/api/products/brands/", this.getBrands);
-        router.post("/api/products/", this.postProduct);
+        router.post("/api/products/", this.addProduct);
 
         router.get("/api/products/:id", this.getProductById);
-        router.delete("/api/products/:id", this.deleteProductById);
-        router.put("/api/products/:id", this.modifyProductById);
+        router.delete("/api/products/:id", this.deleteProduct);
+        router.put("/api/products/:id", this.modifyProduct);
 
-        router.get("/api/inventories/product/:id", this.getInventoriesById);
-        router.post("/api/inventories/product/:id", this.postInventoryById);
-        router.delete("/api/inventories/product/:id", this.deleteInventoryById);
+        router.get("/api/inventories/product/:id", this.viewInventory);
+        router.post("/api/inventories/product/:id", this.addInventory);
+        router.delete("/api/inventories/product/:id", this.removeInventory);
 
         router.get("/api/carts/", this.getCart);
-        router.post("/api/carts/", this.postCartCheckout);
-        router.delete("/api/cart", this.deleteCart);
+        router.post("/api/carts/", this.checkout);
+        router.delete("/api/cart", this.cancelTransaction);
       
-        router.get("/api/carts/inventory/", this.getCartInventory);
-        router.post("/api/carts/inventory/:id", this.postCartInventoryById);
-        router.delete("/api/carts/inventory/:id", this.deleteCartInventoryById);
+        router.get("/api/carts/inventory/", this.viewCartInventory);
+        router.post("/api/carts/inventory/:id", this.addItemToCart);
+        router.delete("/api/carts/inventory/:id", this.removeFromCart);
        
         router.get("/api/records/", this.viewPurchases);
-        router.delete("/api/records/inventory/:id", this.deleteRecordsInventoryById);
+        router.delete("/api/records/inventory/:id", this.returnInventory);
 
         //use router middleware
         this.app.use(router);
@@ -186,7 +186,7 @@ export class WebPortal {
   }
 
   @beforeMethod(RoutingAdvice.requireAdmin)
-  public deleteProductById(req, res) {
+  public deleteProduct(req, res) {
     try{
       Catalog.getInstance().deleteProduct(req.params.id).then((success)=>{
           UnitOfWork.getInstance().commit();
@@ -200,7 +200,7 @@ export class WebPortal {
   }
 
   @beforeMethod(RoutingAdvice.requireAdmin)
-  public modifyProductById(req, res) {
+  public modifyProduct(req, res) {
     try{
       Catalog.getInstance().modifyProduct(req.params.id, req.body).then((success) => {
           UnitOfWork.getInstance().commit();
@@ -213,7 +213,7 @@ export class WebPortal {
     }
   }
     
-  public getInventoriesById(req, res) {
+  public viewInventory(req, res) {
     try{
       let inventories = Catalog.getInstance().getAllInventories(req.params.id);
       res.send( {count: inventories.length, inventories: inventories});
@@ -225,7 +225,7 @@ export class WebPortal {
   }
 
   @beforeMethod(RoutingAdvice.requireAdmin)
-  public postInventoryById(req, res) {
+  public addInventory(req, res) {
     try {
       Catalog.getInstance().addInventory(req.params.id);
       UnitOfWork.getInstance().commit();
@@ -243,7 +243,7 @@ export class WebPortal {
     res.send({ data: true });
   }
 
-    public postUser(req, res) {
+    public registerUser(req, res) {
       try{
         let userSuccess = UserManagement.getInstance().addClient(req.body);
         UnitOfWork.getInstance().commit();
@@ -298,7 +298,7 @@ export class WebPortal {
   }
 
   @beforeMethod(RoutingAdvice.requireAdmin)
-  public deleteInventoryById(req, res) {
+  public removeInventory(req, res) {
     try{
       Catalog.getInstance().deleteInventory(req.params.id).then((success)=>{
           UnitOfWork.getInstance().commit();
@@ -325,7 +325,7 @@ export class WebPortal {
       
 
 
-    public getProducts(req, res) {
+    public searchCatalog(req, res) {
       try{
         let electronics = Catalog.getInstance().getProductPage(parseInt(req.query.page), req.query.type, parseInt(req.query.numOfItems),
                                                                parseInt(req.query.priceLow),parseInt(req.query.priceHigh), req.query.brand,
@@ -351,7 +351,7 @@ export class WebPortal {
     }
 
     @beforeMethod(RoutingAdvice.requireAdmin)
-    public postProduct(req, res) {
+    public addProduct(req, res) {
         try {
             Catalog.getInstance().addProduct(req.body);
             UnitOfWork.getInstance().commit();
@@ -365,7 +365,7 @@ export class WebPortal {
     }
 
     @beforeMethod(RoutingAdvice.requireClient)
-    public getCartInventory(req, res) {
+    public viewCartInventory(req, res) {
         try {
             let inventories = PurchaseManagement.getInstance().viewCart(req.user.id)
             res.send({ data: inventories });
@@ -379,7 +379,7 @@ export class WebPortal {
 
 
     @beforeMethod(RoutingAdvice.requireClient)
-    public postCartInventoryById(req, res) {
+    public addItemToCart(req, res) {
         try {
             PurchaseManagement.getInstance().addItemToCart(req.user.id, req.params.id)
             res.send({ data: true });
@@ -393,7 +393,7 @@ export class WebPortal {
 
 
     @beforeMethod(RoutingAdvice.requireClient)
-    public deleteCart(req, res) {
+    public cancelTransaction(req, res) {
         try {
             PurchaseManagement.getInstance().cancelTransaction(req.user.id);
             res.send({ data: true });
@@ -406,7 +406,7 @@ export class WebPortal {
     }
 
     @beforeMethod(RoutingAdvice.requireClient)
-    public deleteCartInventoryById(req, res) {
+    public removeFromCart(req, res) {
         console.log("deleting...");
         try {
             PurchaseManagement.getInstance().removeFromCart(req.user.id, req.params.id);
@@ -420,7 +420,7 @@ export class WebPortal {
     }
 
     @beforeMethod(RoutingAdvice.requireClient)
-    public postCartCheckout(req, res) {
+    public checkout(req, res) {
         try {
             PurchaseManagement.getInstance().checkout(req.user.id);
             UnitOfWork.getInstance().commit();
@@ -447,7 +447,7 @@ export class WebPortal {
         }
     }
     @beforeMethod(RoutingAdvice.requireClient)
-    public deleteRecordsInventoryById(req, res) {
+    public returnInventory(req, res) {
         try {
             let returnSuccess = PurchaseManagement.getInstance().returnInventory(req.user.id, req.params.id);
             UnitOfWork.getInstance().commit();
