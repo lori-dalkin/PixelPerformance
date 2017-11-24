@@ -142,7 +142,7 @@ export class PurchaseManagement {
 		cart.getInventory().push(inventoryObj);
 
 		//if obj was previously in another cart, remove it
-		let prevCart =  this.findCart(inventoryObj.getCartId());
+		let prevCart = this.findCartByCartId(inventoryObj.getCartId());
 		if(prevCart != null)
 			this.removeFromCart(prevCart.getUserId(),inventoryObj.getserialNumber());
 		//set inventory's cart to this cart
@@ -169,7 +169,6 @@ export class PurchaseManagement {
 
     @beforeMethod(function (meta) {
         assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
-        // assert(PurchaseManagement.getInstance().findCart(meta.args[0]) != null, "there are no purchases associated to this account");
     })
     @afterMethod(function (meta) {
         assert(meta.result != null, "There was an error in retrieving your previous purchases");
@@ -212,7 +211,6 @@ export class PurchaseManagement {
 
         //for each purchase record belonging to this user,
         //collect all inventories that were sold
-        console.log("Finding all user's past purchases");
         for (let i = allPurchases.length - 1; i >= 0; i--) {
             if (allPurchases[i].getUserId() == userId) {
                 currInv = allPurchases[i].getInventory();
@@ -393,6 +391,15 @@ export class PurchaseManagement {
 	public findCart( userId:string){
 		for(let cart of this.activeCarts){
 			if( cart.getUserId() == userId){
+				return cart;
+			}
+		}
+		return null
+	}
+
+	private findCartByCartId(cartId: string){
+		for(let cart of this.activeCarts){
+			if(cart.getId() == cartId){
 				return cart;
 			}
 		}
