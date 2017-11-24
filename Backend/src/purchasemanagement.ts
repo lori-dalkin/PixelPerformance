@@ -103,10 +103,6 @@ export class PurchaseManagement {
 		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
 		assert(validator.isUUID(meta.args[1]), "electronic id needs to be a uuid");
 		assert(Catalog.getInstance().getInventoryByElectronic(meta.args[1]) != null,"electronic id  does not correspond to any item within Inventory");
-		//assert(PurchaseManagement.getInstance().findCart(meta.args[0]) == null || PurchaseManagement.getInstance().findCart(meta.args[0]).getInventory().length < 7,"Your cart is already full. (7 Max)")
-	})
-	@afterMethod(function(meta) {
-		//assert(PurchaseManagement.getInstance().checkItemAddedToCart(meta.args[0],meta.args[1]), "Item was not added to cart" )
 	})
 	public addItemToCart(userId: string, electronicId: string): Boolean
 	{
@@ -117,11 +113,12 @@ export class PurchaseManagement {
 	@beforeMethod(function(meta){
 		assert(validator.isUUID(meta.args[0]), "userId needs to be a uuid");
 		assert(validator.isUUID(meta.args[1]), "serial number needs to be a uuid");
-		InventoryLockingAdvice.requireUnlocked(meta.args[1])
-		//assert(PurchaseManagement.getInstance().findCart(meta.args[0]) == null || PurchaseManagement.getInstance().findCart(meta.args[0]).getInventory().length < 7,"Your cart is already full. (7 Max)")
+		InventoryLockingAdvice.requireUnlocked(meta.args[1]);
+		if(PurchaseManagement.getInstance().findCart(meta.args[0]) != null) {
+			assert(PurchaseManagement.getInstance().findCart(meta.args[0]).getInventory().length < 7,"Your cart is already full. (7 Max)")
+		}
 	})
 	@afterMethod(function(meta) {
-		//assert(PurchaseManagement.getInstance().checkItemAddedToCart(meta.args[0],meta.args[1]), "Item was not added to cart" )
 		InventoryLockingAdvice.ensureLocked(meta.args[1])
 	})
 	public addItemToCartBySerialNumber(userId: string, serialNumber: string): Boolean
@@ -313,9 +310,7 @@ export class PurchaseManagement {
 	})
 	@afterMethod(function(meta) {
 		var purchaseManagement = PurchaseManagement.getInstance();
-		//assert( purchaseManagement.findCart(meta.args[0]) == null, "cart was not removed from active carts");
 		assert( purchaseManagement.findRecord(meta.args[0]) != null , "cart was not added to records");
-		//assert(purchaseManagement.ifInventoriesExist(purchaseManagement.findRecord(meta.args[0]).getInventory()), "inventories weren't removed from catalog")
 	})
 	public checkout(userId: string):void{
 		let cart:Cart =  this.findCart(userId);
