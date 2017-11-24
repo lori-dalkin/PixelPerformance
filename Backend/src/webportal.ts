@@ -134,11 +134,9 @@ export class WebPortal {
     public login(req, res) {
         let routingUsers = UserManagement.getInstance();
         let body = req.body as any;
-        if (body.email && body.password) {
-            var email = body.email;
-            var password = body.password;
-            var clearTokens = body.clearTokens;
-        }
+        var email = body.email || "";
+        var password = body.password || "";
+        var clearTokens = body.clearTokens || "";
 
         // If password is correct, create an authentication token for the user
         try {
