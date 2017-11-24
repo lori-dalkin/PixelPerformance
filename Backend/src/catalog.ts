@@ -229,7 +229,7 @@ export class Catalog {
             var startProduct = (page-1) * numOfItems;
             desiredProducts = desiredProducts.slice(startProduct,startProduct+numOfItems); //includes the first num, not the second. If not in bounds, should return empty array. To be dealt with in frontend    
         }
-        return new responseData(desiredProducts,totalProducts);
+        return { products: desiredProducts, totalProducts:totalProducts}; //new responseData(desiredProducts,totalProducts);
     }
     
     @beforeMethod(function(meta){
@@ -558,8 +558,7 @@ class responseData{
     public products:Electronic[];
     public totalProducts: number;
     constructor(products:Electronic[], totalProducts: number){
-        console.log(this.products);
-        console.log(this.totalProducts);
+
         this.products=products;
         this.totalProducts=totalProducts;
     }
